@@ -197,3 +197,40 @@ class StateStore:
             self._conn.execute("ROLLBACK")
             raise
         return CommitResult(status="OK", new_version=new_version)
+
+    # ---- 回滚原语（07 §7.5 R6 / §9：仅撤销本次 Commit，不动其它历史 version，I7）----
+    def delete_state_version(self, story_id: str, version: int) -> None:
+        self._conn.execute(
+            "DELETE FROM states WHERE story_id = ? AND version = ?",
+            (story_id, version),
+        )
+
+    def delete_commit_log(self, story_id: str, chapter_no: int, proposal_set_hash: str) -> None:
+        self._conn.execute(
+            "DELETE FROM commit_log WHERE story_id = ? AND chapter_no = ? AND proposal_set_hash = ?",
+            (story_id, chapter_no, proposal_set_hash),
+        )
+
+    def revert_commit(self, story_id: str, version: int, chapter_no: int,
+                      proposal_set_hash: str, event_log: EventLog) -> None:
+        """§7.5 R6：回滚 version 指针 + 清幂等键 + 本章事件标 orphan（不删除，供诊断）。"""
+        self._conn.execute("BEGIN IMMEDIATE")
+        try:
+            self._conn.execute(
+                "DELETE FROM states WHERE story_id = ? AND version = ?",
+                (story_id, version),
+            )
+            self._conn.execute(
+                "DELETE FROM snapshots WHERE story_id = ? AND version = ?",
+                (story_id, version),
+            )
+            self._conn.execute(
+                "DELETE FROM commit_log WHERE story_id = ? AND chapter_no = ? AND proposal_set_hash = ?",
+                (story_id, chapter_no, proposal_set_hash),
+            )
+            self._conn.execute("COMMIT")
+        except sqlite3.Error:
+            self._conn.execute("ROLLBACK")
+            raise
+        event_log.mark_orphan(story_id, chapter_no)
+
