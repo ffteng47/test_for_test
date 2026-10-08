@@ -650,3 +650,37 @@ def _run_contract(contract, arc, state: StoryState) -> List[Finding]:
                                f"change {c.character_id}.{c.field} target 为空（V10）"))
 
     return findings
+
+
+def _h8_gate(proposals: List[EventProposal], state: StoryState
+             ) -> Tuple[List[EventProposal], List[Finding]]:
+    """H8 抽取置信度闸门（07 §4.3）。返回 (进入模拟的 active, HARD findings)。
+
+    - 任一 conf < 500 → 整批 FAIL：active=[]，只落 H8.1（06 §4.0 归因 extraction）。
+    - 500 ≤ conf < 700 → 该 Proposal 隔离（不入批），逐条落 H8.2 EXTRACTION_UNVERIFIED。
+    - markup Proposal 引用不存在事实 → H6.2（归因抽取层，R4），一并隔离。
+    """
+    if any(p.extraction_confidence < 500 for p in proposals):
+        low = min(p.extraction_confidence for p in proposals)
+        return [], [_f("H8.1", "hard",
+                       f"整批抽取置信度不足（最低 {low} < 500）→ FAIL",
+                       suggestion="归因 extraction，整批重抽取（06 §4.0）")]
+
+    active: List[EventProposal] = []
+    findings: List[Finding] = []
+    for p in proposals:
+        eid = proposal_event_id(p)
+        if p.extraction_method == "markup":
+            fact = p.payload.get("fact_id")
+            if fact is not None and fact not in state.facts:
+                findings.append(_f("H6.2", "hard",
+                                   f"markup 标注引用不存在事实 {fact}（{eid}）",
+                                   evidence=fact, suggestion="归因 markup/抽取层（07 §4.3 R4）"))
+                continue
+        if 500 <= p.extraction_confidence < 700:
+            findings.append(_f("H8.2", "hard",
+                               f"EXTRACTION_UNVERIFIED：{eid} 置信度 {p.extraction_confidence} 隔离",
+                               evidence=eid, suggestion="触发重抽取（不触发 Writer 重写 / Contract 重议）"))
+        else:
+            active.append(p)
+    return active, findings
