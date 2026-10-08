@@ -57,7 +57,7 @@ def _downgrade(ledger: List[KnowledgeEntry], char_id: str, fact_id: str,
         "source_event_id": event_id, "last_updated_chapter": chapter})
 
 
-def _evidence_strength(ledger: List[KnowledgeEntry], char_id: str, evidence_ids: List[int]) -> int:
+def _evidence_strength(ledger: List[KnowledgeEntry], char_id: str, evidence_ids: List[str]) -> int:
     vals = [e.strength for e in ledger
             if e.character_id == char_id and e.fact_id in evidence_ids]
     return min(vals) if vals else 1000
