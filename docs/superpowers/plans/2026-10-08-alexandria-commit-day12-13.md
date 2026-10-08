@@ -79,8 +79,8 @@ class CommitOutcome(BaseModel):
     validation: Optional["ValidationResult"] = None
 ```
 
-- [ ] Tests: CommitRequest 允许 scene_plan=None；CommitStatus 六个值都合法、第七值 ValidationError；CommitTrace result="OK" 构造；CommitOutcome.ok helper? 不加，保持薄。
-- [ ] Commit `feat(plot-engine): commit request/trace/outcome models (07 §4.1/§11.1)`
+- [x] Tests: CommitRequest 允许 scene_plan=None；CommitStatus 六个值都合法、第七值 ValidationError；CommitTrace result="OK" 构造；CommitOutcome.ok helper? 不加，保持薄。
+- [x] Commit `feat(plot-engine): commit request/trace/outcome models (07 §4.1/§11.1)`
 
 ## Task 2: reduce_commit — 单一 reduce 驱动 + 一致性闸
 
@@ -101,8 +101,8 @@ def reduce_commit(state, proposals, contract, draft, epoch,
 ```
 Stage 1 verdict 由 `Validator.validate` 提供（authoritative ValidationResult）；随后同一 merge/simulate 产出 `new_state=sim.cur`、`applied=sim.applied`（只含成功施加者，天然排除 H8.2/MALFORMED，I9）。对 `new_state` + `applied` 跑 `assert_consistent`，任何 severity==hard 也阻断（Review Focus #5）。
 
-- [ ] Tests: 干净批 → committable、new_state hash 与直接 `apply_events` 逐字节相等（Review Focus #1）；dead actor 批 → 不可提交；H8.2 隔离批 → quarantined==1 且 applied 不含被隔离者；consistency hard（如 ledger 引不存在 source）→ 不可提交。
-- [ ] Commit `feat(plot-engine): reduce_commit single reduce driver + consistency gate (07 §6)`
+- [x] Tests: 干净批 → committable、new_state hash 与直接 `apply_events` 逐字节相等（Review Focus #1）；dead actor 批 → 不可提交；H8.2 隔离批 → quarantined==1 且 applied 不含被隔离者；consistency hard（如 ledger 引不存在 source）→ 不可提交。
+- [x] Commit `feat(plot-engine): reduce_commit single reduce driver + consistency gate (07 §6)`
 
 ## Task 3: Store rollback primitives
 
@@ -117,8 +117,8 @@ def revert_commit(self, story_id, version, chapter_no, proposal_set_hash, event_
 ```
 仅用于 §7.5 R6 parity 失败回滚；不改写历史其它 version（I7）。
 
-- [ ] Tests: persist→revert→load_latest 回到旧 version；revert 后 read_chapter(非 orphan) 为空而含 orphan 可见；revert 后同幂等键可再次 persist（commit_log 已清）。
-- [ ] Commit `feat(plot-engine): store revert primitives for replay-parity rollback (07 §7.5 R6, §9)`
+- [x] Tests: persist→revert→load_latest 回到旧 version；revert 后 read_chapter(非 orphan) 为空而含 orphan 可见；revert 后同幂等键可再次 persist（commit_log 已清）。
+- [x] Commit `feat(plot-engine): store revert primitives for replay-parity rollback (07 §7.5 R6, §9)`
 
 ## Task 4: CommitOrchestrator 四阶段管道
 
@@ -140,19 +140,19 @@ class CommitOrchestrator:
 ```
 `arc_state` 即当前 `StoryState`（从 store.load_latest 取，或调用方传入）。`expected_version` 来自 request。
 
-- [ ] Tests (e2e, tmp_path sqlite):
+- [x] Tests (e2e, tmp_path sqlite):
   (a) genesis + 附录A 章47 → OK、load_latest.version==1、verify_parity True；
   (b) 重复同 proposals → DUPLICATE、version 不变；
   (c) expected_version 错 → CONFLICT、未写新 version；
   (d) dead-actor 批 → FAIL、store 无新 version、eventlog 空（无副作用）；
   (e) 幂等键按 applied 事件算：同 draft 不同抽取顺序 → 同 psh。
-- [ ] Commit `feat(plot-engine): four-stage commit orchestrator + replay rollback (07 §5–§9)`
+- [x] Commit `feat(plot-engine): four-stage commit orchestrator + replay rollback (07 §5–§9)`
 
 ## Task 5: 全绿 + 回归
 
-- [ ] `python -m pytest plot_engine/tests -q` 全绿。
-- [ ] 金标章47 e2e 跑通：CommitTrace.result=="OK"，`verify_parity` 真。
-- [ ] Commit `test(plot-engine): commit pipeline regression`
+- [x] `python -m pytest plot_engine/tests -q` 全绿。
+- [x] 金标章47 e2e 跑通：CommitTrace.result=="OK"，`verify_parity` 真。
+- [x] Commit `test(plot-engine): commit pipeline regression`
 
 ## Out of scope (subsequent plans)
 
