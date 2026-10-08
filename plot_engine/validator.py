@@ -344,3 +344,198 @@ def _run_l1(sim: Simulation, state: StoryState, proposals: List[EventProposal],
     findings += _l1_h4(sim, state)
     findings += _l1_h6(sim, state, proposals, committed_event_ids)
     return findings
+
+
+# --- Level 2：结构化检查（H2 / H5 + markup M-rules），05 §7 Level 2 ---
+_K_RANK: Dict[str, int] = {"unknown": 0, "suspected": 1, "believed": 2,
+                           "known": 3, "confirmed": 4}
+_READING_KINDS = {"READER_LEARNS": "learns", "READER_HINTED": "hinted",
+                  "READER_DECEIVED": "deceived"}
+_SIGNAL_TO_READER = {"knows": "READER_LEARNS", "hinted": "READER_HINTED",
+                     "deceived": "READER_DECEIVED"}
+_KNOWLEDGE_ESTABLISH = {"OBSERVES", "READS", "IS_TOLD", "INFERS", "BELIEVES", "SUSPECTS"}
+_SIMPLE_FIELDS: Dict[str, str] = {"location": "current_location", "realm": "realm",
+                                  "status": "status", "faction": "faction_id",
+                                  "attributes": "attributes", "abilities": "abilities"}
+
+
+def _referenced_fact(ev: Event) -> Optional[str]:
+    return (ev.payload.get("fact_id") or ev.payload.get("conclusion_fact_id")
+            or ev.payload.get("stated_fact_id") or ev.target)
+
+
+def _kentry(ledger, char_id: str, fact_id: str):
+    return next((e for e in ledger
+                 if e.character_id == char_id and e.fact_id == fact_id), None)
+
+
+def _knowledge_meets(cur, char_id: str, fact_id: str, expected) -> bool:
+    e = _kentry(cur.knowledge_ledger, char_id, fact_id)
+    if e is None:
+        return False
+    if expected is None:
+        return True
+    return _K_RANK.get(e.knowledge_state, 0) >= _K_RANK.get(str(expected), 0)
+
+
+def _reader_key(p: EventProposal) -> Optional[Tuple[str, str]]:
+    if p.proposed_event_type in _READING_KINDS:
+        fact = p.payload.get("fact_id") or p.target
+        return (_READING_KINDS[p.proposed_event_type], fact)
+    return None
+
+
+def _l2_h2(sim: Simulation, state: StoryState, proposals: List[EventProposal],
+           contract, markup) -> List[Finding]:
+    findings: List[Finding] = []
+    forbidden = set(getattr(contract, "knowledge_forbidden", []))
+
+    # H2.1 角色在 pre-state 已知 forbidden fact
+    for e in sim.pre.knowledge_ledger:
+        if e.fact_id in forbidden and e.knowledge_state in ("known", "confirmed"):
+            findings.append(_f("H2.1", "hard",
+                               f"{e.character_id} 掌握禁止知识 {e.fact_id}", evidence=e.fact_id))
+
+    # H2.2 must_change(field=knowledge) 未在 post-state 实现
+    for ch in getattr(contract, "must_change", []):
+        if ch.field == "knowledge" and ch.operation in ("add", "update"):
+            if not _knowledge_meets(sim.cur, ch.character_id, ch.target, ch.expected_value):
+                findings.append(_f("H2.2", "hard",
+                                   f"{ch.character_id} 未取得知识 {ch.target}（期望 {ch.expected_value}）",
+                                   evidence=ch.target))
+
+    # H2.3 markup↔proposal 配对（M2 HARD / M3 SOFT）
+    anno_keys = {(a.kind, a.fact_id) for a in markup.readers if a.fact_id}
+    proposal_keys = {k for k in (_reader_key(p) for p in proposals) if k}
+    for key in sorted(anno_keys - proposal_keys):
+        findings.append(_f("H2.3", "hard",
+                           f"reader 标注 {key[0]}:{key[1]} 无对应 READER_* Proposal（M2）",
+                           evidence=f"{key[0]}:{key[1]}"))
+    for p in proposals:
+        if p.extraction_method == "markup":
+            continue
+        key = _reader_key(p)
+        if key and key[1] is not None and key not in anno_keys:
+            findings.append(_f("H2.3", "soft",
+                               f"READER_* Proposal {key[0]}:{key[1]} 缺 Draft 标注（M3）",
+                               evidence=f"{key[0]}:{key[1]}"))
+    return findings
+
+
+def _l2_h5(sim: Simulation, state: StoryState, proposals: List[EventProposal],
+           contract, markup) -> List[Finding]:
+    findings: List[Finding] = []
+    applied_types = [ev.event_type for ev in sim.applied]
+    forbidden = set(getattr(contract, "knowledge_forbidden", []))
+    allowed = set(getattr(contract, "knowledge_allowed", []))
+
+    # H5.1 required_event 未达标
+    for req in getattr(contract, "required_events", []):
+        if applied_types.count(req.event_type) < req.minimum_count:
+            findings.append(_f("H5.1", "hard",
+                               f"必需事件 {req.event_type} 数量不足（{applied_types.count(req.event_type)}<{req.minimum_count}）",
+                               evidence=req.event_type))
+
+    # H5.2 forbidden_event 出现
+    for fb in getattr(contract, "forbidden_events", []):
+        if fb.event_type in applied_types:
+            findings.append(_f("H5.2", "hard",
+                               f"禁用事件 {fb.event_type} 出现", evidence=fb.event_type))
+
+    # H5.3 must_change 无对应实现事件（W1）
+    for ch in getattr(contract, "must_change", []):
+        if not _change_implemented(sim, ch):
+            findings.append(_f("H5.3", "hard",
+                               f"must_change {ch.character_id}.{ch.field} 无实现事件（W1）",
+                               evidence=ch.field))
+
+    # H5.4 must_not_change 被违反（W2）
+    for ch in getattr(contract, "must_not_change", []):
+        if _must_not_changed(sim, ch):
+            findings.append(_f("H5.4", "hard",
+                               f"must_not_change {ch.character_id}.{ch.field} 被修改（W2）",
+                               evidence=ch.field))
+
+    # H5.5 hook 标注（W7 / M1 / M5）
+    if not _hook_ok(markup, contract):
+        findings.append(_f("H5.5", "hard",
+                           f"章尾 hook 标注不合规（期望 ending.type={contract.ending.type}）",
+                           evidence="hook"))
+
+    # H5.6 knowledge_allowed 中 must_change 目标未建立（W6）
+    for ch in getattr(contract, "must_change", []):
+        if (ch.field == "knowledge" and ch.target in allowed
+                and not _knowledge_meets(sim.cur, ch.character_id, ch.target, ch.expected_value)):
+            findings.append(_f("H5.6", "hard",
+                               f"允许知识 {ch.target} 未建立（W6）", evidence=ch.target))
+
+    # H5.7 整批建立了 forbidden fact（W5）
+    for ev in sim.applied:
+        if ev.event_type in _KNOWLEDGE_ESTABLISH:
+            fact = _referenced_fact(ev)
+            if fact in forbidden:
+                findings.append(_f("H5.7", "hard",
+                                   f"整批建立禁止知识 {fact}（{ev.event_id}，W5）", evidence=fact))
+
+    # W8 reader_signal 未命中 → SOFT SIGNAL_UNHIT
+    proposal_keys = {k for k in (_reader_key(p) for p in proposals) if k}
+    for sig in getattr(contract, "reader_signals", []):
+        want = _SIGNAL_TO_READER.get(sig.target_state)
+        if want is None:
+            continue
+        key = (_READING_KINDS[want], sig.fact_id)
+        if key not in proposal_keys:
+            findings.append(_f("SIGNAL_UNHIT", "soft",
+                               f"reader_signal {sig.fact_id}→{sig.target_state} 未命中（W8）",
+                               evidence=sig.fact_id))
+    return findings
+
+
+def _change_implemented(sim: Simulation, ch) -> bool:
+    if ch.field in ("knowledge", "belief"):
+        return any(ev.event_type in _KNOWLEDGE_ESTABLISH
+                   and (_referenced_fact(ev) == ch.target)
+                   and (ev.actor == ch.character_id)
+                   for ev in sim.applied)
+    if ch.field in _SIMPLE_FIELDS:
+        return any(ev.event_type == "CHANGES" and ev.payload.get("field") == ch.field
+                   and ev.actor == ch.character_id for ev in sim.applied)
+    if ch.field == "relationship":
+        return any(ev.event_type == "RELATIONSHIP_CHANGED" for ev in sim.applied)
+    if ch.field == "inventory":
+        return any(ev.event_type in ("ITEM_ACQUIRED", "ITEM_CONSUMED") for ev in sim.applied)
+    return True
+
+
+def _must_not_changed(sim: Simulation, ch) -> bool:
+    pre_c = sim.pre.characters.get(ch.character_id)
+    cur_c = sim.cur.characters.get(ch.character_id)
+    if ch.field in _SIMPLE_FIELDS:
+        attr = _SIMPLE_FIELDS[ch.field]
+        pv = getattr(pre_c, attr, None) if pre_c else None
+        cv = getattr(cur_c, attr, None) if cur_c else None
+        return pv != cv
+    if ch.field == "knowledge":
+        pre_f = {e.fact_id for e in sim.pre.knowledge_ledger if e.character_id == ch.character_id}
+        cur_f = {e.fact_id for e in sim.cur.knowledge_ledger if e.character_id == ch.character_id}
+        return pre_f != cur_f
+    return False
+
+
+def _hook_ok(markup, contract) -> bool:
+    hooks = markup.hooks
+    if len(hooks) != 1:
+        return False
+    hk = hooks[0]
+    in_last3 = hk.para_index >= markup.para_count - 3
+    strength_ok = hk.strength is not None and 0 <= hk.strength <= 1000
+    kind_ok = hk.kind == contract.ending.type
+    return in_last3 and strength_ok and kind_ok
+
+
+def _run_l2(sim: Simulation, state: StoryState, proposals: List[EventProposal],
+            *, contract, markup) -> List[Finding]:
+    findings: List[Finding] = []
+    findings += _l2_h2(sim, state, proposals, contract, markup)
+    findings += _l2_h5(sim, state, proposals, contract, markup)
+    return findings
