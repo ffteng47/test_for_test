@@ -18,6 +18,8 @@ from plot_engine.models.event import Event, EventType
 from plot_engine.models.proposal import EventProposal, proposal_event_id, to_event
 from plot_engine.models.state import StoryState
 from plot_engine.reducer import Reducer
+from plot_engine.markup import parse_markup
+from plot_engine.markup_channel import markup_to_proposals
 
 _VALID_EVENT_TYPES = frozenset(get_args(EventType))
 
@@ -516,9 +518,10 @@ def _must_not_changed(sim: Simulation, ch) -> bool:
         cv = getattr(cur_c, attr, None) if cur_c else None
         return pv != cv
     if ch.field == "knowledge":
-        pre_f = {e.fact_id for e in sim.pre.knowledge_ledger if e.character_id == ch.character_id}
-        cur_f = {e.fact_id for e in sim.cur.knowledge_ledger if e.character_id == ch.character_id}
-        return pre_f != cur_f
+        def _rank(ledger):
+            e = _kentry(ledger, ch.character_id, ch.target)
+            return _K_RANK.get(e.knowledge_state, 0) if e else -1
+        return _rank(sim.pre.knowledge_ledger) != _rank(sim.cur.knowledge_ledger)
     return False
 
 
@@ -684,3 +687,69 @@ def _h8_gate(proposals: List[EventProposal], state: StoryState
         else:
             active.append(p)
     return active, findings
+
+
+def _reader_fact_key(p: EventProposal) -> Tuple[str, Optional[str]]:
+    return (p.proposed_event_type, p.payload.get("fact_id") or p.target)
+
+
+def _merge_markup(caller: List[EventProposal],
+                  markup_props: List[EventProposal]) -> Tuple[List[EventProposal], List[Finding]]:
+    """markup 通道 Proposal 优先；与 caller 同 (READER_*, fact_id) 的 caller 项被丢弃并落 OBSERVATION（禁止静默去重）。"""
+    markup_keys = {_reader_fact_key(p) for p in markup_props}
+    kept: List[EventProposal] = list(markup_props)
+    obs: List[Finding] = []
+    for p in caller:
+        key = _reader_fact_key(p)
+        if p.proposed_event_type in _READING_KINDS and key in markup_keys:
+            obs.append(_f("MARKUP_DEDUPE", "observation",
+                          f"caller 与 markup 通道重复 {key[0]}:{key[1]}，保留 markup 版本",
+                          evidence=str(key)))
+            continue
+        kept.append(p)
+    return kept, obs
+
+
+_SEV_ORD = {"hard": 0, "soft": 1, "observation": 2}
+
+
+def _bucket(findings: List[Finding]) -> ValidationResult:
+    """按 severity 分桶；桶内确定性排序，保证幂等与 canonical 稳定（05 §8）。"""
+    ordered = sorted(findings, key=lambda f: (_SEV_ORD[f.severity], f.rule_id,
+                                               f.evidence or "", f.message))
+    res = ValidationResult()
+    for f in ordered:
+        if f.severity == "hard":
+            res.hard_violations.append(f)
+        elif f.severity == "soft":
+            res.soft_warnings.append(f)
+        else:
+            res.observations.append(f)
+    return res
+
+
+class Validator:
+    """Commit 前确定性闸门（05 §10）。只读、幂等、输出可序列化。"""
+
+    def validate(self, draft: str, proposals: List[EventProposal], contract, state: StoryState,
+                 *, committed_event_ids: frozenset = frozenset()) -> ValidationResult:
+        """四段顺序：H8 闸门 → markup 解析与通道合并 → 沙盒模拟 → L1 → L2（05 §7）。"""
+        markup = parse_markup(draft)
+        active, h8_findings = _h8_gate(proposals, state)
+        # H8.1 整批 FAIL → 短路，只返回该族（07 §4.3 R1）
+        if any(f.rule_id == "H8.1" for f in h8_findings):
+            return _bucket(h8_findings)
+        start_seq = max((p.seq for p in proposals), default=-1) + 1
+        markup_props = markup_to_proposals(markup, contract.chapter_no, start_seq)
+        merged, dedupe_obs = _merge_markup(active, markup_props)
+        sim = _simulate(state, merged, state.epoch)
+        findings = list(h8_findings)
+        findings += _run_l1(sim, state, merged, contract=contract,
+                            committed_event_ids=committed_event_ids)
+        findings += _run_l2(sim, state, merged, contract=contract, markup=markup)
+        findings += dedupe_obs
+        return _bucket(findings)
+
+    def validate_contract(self, contract, arc, state: StoryState) -> ValidationResult:
+        """Contract 生成后自校验（04 §5.1 H7 族）。"""
+        return _bucket(_run_contract(contract, arc, state))
