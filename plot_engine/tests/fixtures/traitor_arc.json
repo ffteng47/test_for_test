@@ -1,0 +1,86 @@
+{
+  "_comment": "03 §9 完整示例（定点化 + 6 位 ID）。偏差说明：(1) §9 示例把 OBSERVES 强度写成 1000，属演示值；Phase 0 依 03 §4.3 R1 取下限 900，因此 INFERS 结论强度 = 900*700//1000 = 630（示例中为 700）。(2) §9 的 Facts JSON 未含 fact_type（02 §3 必填），此处按语义补：fact_000001 existence、fact_000002 identity、fact_000003 existence。",
+  "genesis": {
+    "story_id": "s1",
+    "chapter_no": 0,
+    "version": 0,
+    "epoch": "epoch_0",
+    "characters": {
+      "char_000001": {
+        "character_id": "char_000001",
+        "name": "张三",
+        "status": "alive",
+        "introduced_at_chapter": 1,
+        "epoch": "epoch_0"
+      }
+    },
+    "locations": {
+      "loc_000012": {
+        "location_id": "loc_000012",
+        "name": "藏宝阁",
+        "introduced_at_chapter": 1,
+        "epoch": "epoch_0"
+      }
+    },
+    "facts": {
+      "fact_000001": {
+        "fact_id": "fact_000001",
+        "fact_type": "existence",
+        "proposition": "宗门内存在叛徒",
+        "canonical_form": "traitor_exists(sect_A)",
+        "narrative_truth": "true",
+        "objective_truth": "true",
+        "reveal_stage": "hinted",
+        "defined_at_chapter": 47,
+        "epoch": "epoch_0"
+      },
+      "fact_000002": {
+        "fact_id": "fact_000002",
+        "fact_type": "identity",
+        "proposition": "李四是叛徒",
+        "canonical_form": "traitor_identity(sect_A, li_si)",
+        "narrative_truth": "unknown",
+        "objective_truth": "false",
+        "reveal_stage": "hidden",
+        "defined_at_chapter": 47,
+        "epoch": "epoch_0"
+      },
+      "fact_000003": {
+        "fact_id": "fact_000003",
+        "fact_type": "existence",
+        "proposition": "印章 17 为伪造品",
+        "canonical_form": "forged_seal(seal_17, sect_A)",
+        "narrative_truth": "true",
+        "objective_truth": "true",
+        "reveal_stage": "confirmed",
+        "defined_at_chapter": 47,
+        "epoch": "epoch_0"
+      }
+    }
+  },
+  "chapter47_events": [
+    {
+      "event_id": "evt_00000047_001", "epoch": "epoch_0", "schema_version": 2,
+      "event_type": "OBSERVES", "actor": "char_000001", "target": "fact_000003",
+      "location": "loc_000012", "chapter": 47, "scene": "scn_0047_01", "seq": 0,
+      "preconditions": [], "causes": [],
+      "payload": { "fact_id": "fact_000003", "method": "sight" },
+      "confidence": 1000, "source_ref": "para:4"
+    },
+    {
+      "event_id": "evt_00000047_002", "epoch": "epoch_0", "schema_version": 2,
+      "event_type": "INFERS", "actor": "char_000001", "target": "fact_000001",
+      "chapter": 47, "scene": "scn_0047_02", "seq": 1,
+      "preconditions": ["evt_00000047_001"], "causes": [],
+      "payload": { "conclusion_fact_id": "fact_000001", "evidence_fact_ids": ["fact_000003"] },
+      "confidence": 700, "source_ref": "para:6"
+    },
+    {
+      "event_id": "evt_00000047_003", "epoch": "epoch_0", "schema_version": 2,
+      "event_type": "READER_LEARNS", "chapter": 47, "scene": "scn_0047_01", "seq": 2,
+      "preconditions": ["evt_00000047_001"], "causes": [],
+      "payload": { "fact_id": "fact_000003", "strength": 900 },
+      "confidence": 1000, "source_ref": "markup:reader_learns#1"
+    }
+  ]
+}
