@@ -733,12 +733,23 @@ class Validator:
 
     def validate(self, draft: str, proposals: List[EventProposal], contract, state: StoryState,
                  *, committed_event_ids: frozenset = frozenset()) -> ValidationResult:
-        """四段顺序：H8 闸门 → markup 解析与通道合并 → 沙盒模拟 → L1 → L2（05 §7）。"""
+        result, _sim = self._review(draft, proposals, contract, state,
+                                    committed_event_ids=committed_event_ids)
+        return result
+
+    def _review(self, draft: str, proposals: List[EventProposal], contract, state: StoryState,
+                *, committed_event_ids: frozenset = frozenset()
+                ) -> Tuple[ValidationResult, Optional[Simulation]]:
+        """四段顺序：H8 闸门 → markup 解析与通道合并 → 沙盒模拟 → L1 → L2（05 §7）。
+
+        返回判定与沙盒 `Simulation`（供 `reduce_commit` 复用同一条 reduce 路径，零漂移）。
+        H8.1 整批短路时不产生模拟，返回 sim=None。
+        """
         markup = parse_markup(draft)
         active, h8_findings = _h8_gate(proposals, state)
         # H8.1 整批 FAIL → 短路，只返回该族（07 §4.3 R1）
         if any(f.rule_id == "H8.1" for f in h8_findings):
-            return _bucket(h8_findings)
+            return _bucket(h8_findings), None
         start_seq = max((p.seq for p in proposals), default=-1) + 1
         markup_props = markup_to_proposals(markup, contract.chapter_no, start_seq)
         merged, dedupe_obs = _merge_markup(active, markup_props)
@@ -748,7 +759,7 @@ class Validator:
                             committed_event_ids=committed_event_ids)
         findings += _run_l2(sim, state, merged, contract=contract, markup=markup)
         findings += dedupe_obs
-        return _bucket(findings)
+        return _bucket(findings), sim
 
     def validate_contract(self, contract, arc, state: StoryState) -> ValidationResult:
         """Contract 生成后自校验（04 §5.1 H7 族）。"""
