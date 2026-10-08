@@ -539,3 +539,114 @@ def _run_l2(sim: Simulation, state: StoryState, proposals: List[EventProposal],
     findings += _l2_h2(sim, state, proposals, contract, markup)
     findings += _l2_h5(sim, state, proposals, contract, markup)
     return findings
+
+
+# --- Contract 自校验：H7 族（04 §5.1 V1–V10 + §4.4 兼容矩阵）---
+_COMPAT_MATRIX: Dict[str, set] = {
+    "revelation": {"revelation", "cliffhanger"},
+    "escalation": {"cliffhanger", "decision"},
+    "setup": {"question", "arrival"},
+    "resolution": {"none", "decision"},
+    "transition": {"arrival", "decision"},
+    "confrontation": {"cliffhanger", "decision"},
+    "reflection": {"question", "none"},
+}
+_DERIVED_RE = re.compile(r"^arc_\d{3}\.(knowledge_gates|turning_points)\[([^\]]+)\]$")
+
+
+def _ref_pool(ref: str, state: StoryState):
+    prefix = ref.split("_", 1)[0] if "_" in ref else ""
+    pool = {"fact": state.facts, "char": state.characters, "loc": state.locations,
+            "item": state.items, "realm": state.realms, "fac": state.factions,
+            "abil": state.abilities}.get(prefix)
+    return pool  # None → 非实体引用（scn/evt/arc），不检
+
+
+def _contract_referenced_ids(contract) -> List[str]:
+    ids: List[str] = list(contract.knowledge_allowed) + list(contract.knowledge_forbidden)
+    ids += [s.fact_id for s in contract.reader_signals]
+    for ch in list(contract.must_change) + list(contract.must_not_change):
+        ids += [ch.character_id, ch.target]
+    for req in contract.required_events:
+        ids += list(req.actors_involved)
+    return [i for i in ids if isinstance(i, str) and i]
+
+
+def _run_contract(contract, arc, state: StoryState) -> List[Finding]:
+    """Contract 生成后自校验（04 §5.1）；返回未分桶的 Finding 列表。只读。"""
+    findings: List[Finding] = []
+
+    # H7.1 (V1)：schema_version 与 epoch 一致 + 必填非空退化
+    if contract.schema_version != 2:
+        findings.append(_f("H7.1", "hard", f"schema_version={contract.schema_version} 应为 2"))
+    if not contract.story_goal.strip():
+        findings.append(_f("H7.1", "hard", "story_goal 为空"))
+
+    # H7.2 (V2)：chapter_no 命中 arc_range 且 arc_id 匹配
+    start, end = arc.chapter_range
+    if not (start <= contract.chapter_no <= end):
+        findings.append(_f("H7.2", "hard",
+                           f"chapter_no {contract.chapter_no} 不在 arc 范围 ({start},{end})"))
+    if contract.arc_id != arc.arc_id:
+        findings.append(_f("H7.2", "hard",
+                           f"contract.arc_id {contract.arc_id} != arc.arc_id {arc.arc_id}"))
+
+    # H7.3 (V3)：张力偏差 > 300 落 SOFT（v0.2 降档；05 单源阈值 300，04 D2' 记 200，取 300）
+    idx = contract.chapter_no - start
+    if 0 <= idx < len(arc.tension_curve):
+        if abs(contract.tension_target - arc.tension_curve[idx]) > 300:
+            findings.append(_f("H7.3", "soft",
+                               f"tension_target {contract.tension_target} 与曲线 {arc.tension_curve[idx]} 偏差 > 300"))
+
+    # H7.4 (V4 / I7)：allowed ∩ forbidden 非空
+    overlap = set(contract.knowledge_allowed) & set(contract.knowledge_forbidden)
+    for fact in sorted(overlap):
+        findings.append(_f("H7.4", "hard", f"fact {fact} 同时在 allowed 与 forbidden"))
+
+    # H7.5 (V5)：required 与 forbidden 同 event_type 冲突
+    req_types = {r.event_type for r in contract.required_events}
+    for fb in contract.forbidden_events:
+        if fb.event_type in req_types:
+            findings.append(_f("H7.5", "hard", f"event_type {fb.event_type} 同时 required 与 forbidden"))
+
+    # H7.6 (V6)：must_change 与 must_not_change 同 (character_id, field, target) 冲突
+    change_keys = {(c.character_id, c.field, c.target) for c in contract.must_change}
+    for c in contract.must_not_change:
+        if (c.character_id, c.field, c.target) in change_keys:
+            findings.append(_f("H7.6", "hard",
+                               f"{c.character_id}.{c.field}[{c.target}] 同时 must_change 与 must_not_change"))
+
+    # H7.7 (V7 / D8)：ending.type 与 story_goal_type 兼容
+    compat = _COMPAT_MATRIX.get(contract.story_goal_type, set())
+    if contract.ending.type not in compat:
+        findings.append(_f("H7.7", "hard",
+                           f"ending.type {contract.ending.type} 与 story_goal_type {contract.story_goal_type} 不兼容"))
+
+    # H7.8 (V8)：derived_from 引用的 Arc 项存在
+    gate_facts = {g.fact_id for g in arc.knowledge_gates}
+    tp_chapters = {tp.chapter for tp in arc.turning_points}
+    for entry in contract.derived_from:
+        m = _DERIVED_RE.match(entry)
+        if not m:
+            continue
+        kind, val = m.group(1), m.group(2)
+        if kind == "knowledge_gates":
+            if val not in gate_facts:
+                findings.append(_f("H7.8", "hard", f"derived_from 引用不存在的 gate {val}"))
+        else:
+            if not val.isdigit() or int(val) not in tp_chapters:
+                findings.append(_f("H7.8", "hard", f"derived_from 引用不存在的 turning_point {val}"))
+
+    # H7.10 (V9 / I5)：引用实体存在于 Story State（V9 映射为 H7.10，H7.9 保留）
+    for ref in _contract_referenced_ids(contract):
+        pool = _ref_pool(ref, state)
+        if pool is not None and ref not in pool:
+            findings.append(_f("H7.10", "hard", f"引用实体不存在：{ref}（V9）", evidence=ref))
+
+    # H7.11 (V10)：field 枚举由 pydantic 保证；残留 target 为空 → HARD
+    for c in list(contract.must_change) + list(contract.must_not_change):
+        if not c.target.strip():
+            findings.append(_f("H7.11", "hard",
+                               f"change {c.character_id}.{c.field} target 为空（V10）"))
+
+    return findings
