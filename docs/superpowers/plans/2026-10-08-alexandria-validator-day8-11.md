@@ -90,8 +90,8 @@ class Validator:
 
 **Interfaces:** Produces (verbatim from spec): `KnowledgeGate`, `TurningPoint`, `ArcContract` (`arc_id ^arc_\d{3}$`, `chapter_range: Tuple[int,int]`, `tension_curve: List[int]`), `CharacterChange` (10-field enum, `operation ∈ add|remove|update`), `RequiredEvent`(`minimum_count=1`), `ForbiddenEvent`, `ChapterHook`(6-type enum, `strength ge/le 0..1000`), `ReaderSignal`, `ChapterContract` (all fields incl. `ending: ChapterHook`, `schema_version=2`).
 
-- [ ] Step 1 failing tests: golden ChapterContract from 04 附录 A round-trip; bad `arc_id="arc_1"` rejected; `strength=1001` rejected; `field="bogus"` rejected.
-- [ ] Steps 2–5: run-fail → implement → run-pass → commit `feat(plot-engine): contract models (04 §3.1/§4.1)`.
+- [x] Step 1 failing tests: golden ChapterContract from 04 附录 A round-trip; bad `arc_id="arc_1"` rejected; `strength=1001` rejected; `field="bogus"` rejected.
+- [x] Steps 2–5: run-fail → implement → run-pass → commit `feat(plot-engine): contract models (04 §3.1/§4.1)`.
 
 ## Task 2: EventProposal + deterministic to_event (07 §4.2)
 
@@ -104,8 +104,8 @@ def proposal_event_id(p, ) -> str  # f"evt_{p.chapter:08d}_{p.seq:03d}"
 def to_event(p, epoch: str) -> Event  # proposed_event_type→event_type, confidence→confidence
 ```
 
-- [ ] Tests: round-trip keeps payload; id format `evt_00000047_002`; `extraction_method="bogus"` rejected; duplicate (chapter,seq) → same event_id (this IS the Review Focus #5 hook).
-- [ ] Commit `feat(plot-engine): EventProposal model + deterministic event_id (07 §4.2)`.
+- [x] Tests: round-trip keeps payload; id format `evt_00000047_002`; `extraction_method="bogus"` rejected; duplicate (chapter,seq) → same event_id (this IS the Review Focus #5 hook).
+- [x] Commit `feat(plot-engine): EventProposal model + deterministic event_id (07 §4.2)`.
 
 ## Task 3: Draft markup parser (07 §4.4)
 
@@ -122,8 +122,8 @@ def parse_markup(draft: str) -> DraftMarkup
 ```
 Grammar: HTML comments only. Paragraphs = split on blank lines. Hook regex `<!--\s*hook:\s*(\w+)\s+strength=(\d+)\s*-->`; reader regex `<!--\s*reader_(learns|hinted|deceived):\s*(\S+)\s*-->`. Malformed/near-miss comments (`reader_knows`, strength=1001 parse-fail) land in the right defect bucket — NEVER dropped (I6). Parser does NOT enforce counts/positions (validator rules M1/M5 do).
 
-- [ ] Tests: well-formed chapter (hook in last 3 paras) parses; `strength=1001` → HookAnno(kind set, strength=1001) (validator judges range); `<!-- reader_knows: fact_000001 -->` → `unknown`; three reader kinds each captured; CJK body unaffected; empty draft → para_count 0.
-- [ ] Commit `feat(plot-engine): draft markup parser channel (07 §4.4 M-rules input)`.
+- [x] Tests: well-formed chapter (hook in last 3 paras) parses; `strength=1001` → HookAnno(kind set, strength=1001) (validator judges range); `<!-- reader_knows: fact_000001 -->` → `unknown`; three reader kinds each captured; CJK body unaffected; empty draft → para_count 0.
+- [x] Commit `feat(plot-engine): draft markup parser channel (07 §4.4 M-rules input)`.
 
 ## Task 4: markup → Proposal generation, channel 1 (07 §4.3)
 
@@ -135,8 +135,8 @@ def markup_to_proposals(markup, chapter, start_seq) -> list[EventProposal]
 ```
 reader annos → `READER_LEARNS/READER_HINTED/READER_DECEIVED`, `payload={"fact_id":...}`, `extraction_method="markup"`, `extraction_confidence=1000` (07 §4.3 通道1), actor None, source_ref=f"markup:reader_{kind}#{seq}". seq increments from `start_seq`. Fact-less/unknown annos are NOT turned into proposals (validator pairs annotations↔proposals instead).
 
-- [ ] Tests: 2 annos → 2 proposals confidence 1000 method markup, seq contiguous; kind mapping exact.
-- [ ] Commit `feat(plot-engine): markup proposal channel (07 §4.3 通道1)`.
+- [x] Tests: 2 annos → 2 proposals confidence 1000 method markup, seq contiguous; kind mapping exact.
+- [x] Commit `feat(plot-engine): markup proposal channel (07 §4.3 通道1)`.
 
 ## Task 5: Validator core — Simulation + Level-1 rules (H1/H3/H4/H6)
 
@@ -160,8 +160,8 @@ reader annos → `READER_LEARNS/READER_HINTED/READER_DECEIVED`, `payload={"fact_
 - **H6.4** — duplicate computed event_id → HARD (first kept, later excluded via Simulation.failed with MALFORMED_PROPOSAL note).
 - **H6.5** — precondition event_id with chapter > own chapter → HARD (stays HARD per 01 §5.2 R4).
 
-- [ ] Tests (one per bullet above; ~15 tests). Include Review Focus #2: proposal missing payload key → `MALFORMED_PROPOSAL` HARD, validator returns (doesn't raise), state untouched. Review Focus #4: precondition vs committed_event_ids three-way. Idempotence smoke: same input twice → equal result.
-- [ ] Commit `feat(plot-engine): validator level-1 rules via sandbox simulation (05 §4 H1/H3/H4/H6)`.
+- [x] Tests (one per bullet above; ~15 tests). Include Review Focus #2: proposal missing payload key → `MALFORMED_PROPOSAL` HARD, validator returns (doesn't raise), state untouched. Review Focus #4: precondition vs committed_event_ids three-way. Idempotence smoke: same input twice → equal result.
+- [x] Commit `feat(plot-engine): validator level-1 rules via sandbox simulation (05 §4 H1/H3/H4/H6)`.
 
 ## Task 6: Level-2 rules — H2 / H5 + markup M-rules
 
@@ -181,8 +181,8 @@ reader annos → `READER_LEARNS/READER_HINTED/READER_DECEIVED`, `payload={"fact_
 - **H5.7** — batch establishes any fact ∈ knowledge_forbidden (any Knowledge/Belief-class payload fact_id) → HARD (W5).
 - **W8/W9 (record-only)** — reader_signal declared but no matching READER_* proposal this chapter → SOFT `rule_id "SIGNAL_UNHIT"`; `contract.tension_target` vs post-sim scene tension absent in Phase 0 → skip. These two are the ONLY codes outside the H table (both SOFT, non-blocking — 05 §9 I2 holds).
 
-- [ ] Tests: one per code + Review Focus #1 (three markup defect drafts: wrong-type hook, strength=1001, anno outside last-3) + H2.3 both directions.
-- [ ] Commit `feat(plot-engine): validator level-2 rules + markup M-rule wiring (05 H2/H5, 07 M1–M5)`.
+- [x] Tests: one per code + Review Focus #1 (three markup defect drafts: wrong-type hook, strength=1001, anno outside last-3) + H2.3 both directions.
+- [x] Commit `feat(plot-engine): validator level-2 rules + markup M-rule wiring (05 H2/H5, 07 M1–M5)`.
 
 ## Task 7: validate_contract — H7 set (04 §5.1 V1–V10)
 
@@ -199,8 +199,8 @@ reader annos → `READER_LEARNS/READER_HINTED/READER_DECEIVED`, `payload={"fact_
 - V9 → reuse I2-style existence: contract-referenced fact/char/loc/item/realm ids ∈ state → HARD, rule_id "H7.9" reserved? NO — V9 maps to H2-consistency family; emit rule_id "H7.8" is wrong. Resolution: V9 gets rule_id "H7.10" documented as 04 V9 mapping.
 - V10 — field enum: pydantic guarantees; residual `operation`/`target` existence → HARD "H7.11".
 
-- [ ] Tests: one per code; golden 附录 A contract vs its arc passes clean (`can_commit()` True, no hard).
-- [ ] Commit `feat(plot-engine): validate_contract H7 rules + compat matrix (04 §5.1)`.
+- [x] Tests: one per code; golden 附录 A contract vs its arc passes clean (`can_commit()` True, no hard).
+- [x] Commit `feat(plot-engine): validate_contract H7 rules + compat matrix (04 §5.1)`.
 
 ## Task 8: H8 extraction-confidence gate (07 §4.3 R1–R4)
 
@@ -211,8 +211,8 @@ reader annos → `READER_LEARNS/READER_HINTED/READER_DECEIVED`, `payload={"fact_
 - **R3 interaction** — after quarantine, remaining proposals still evaluated → required_event shortfall fires H5.1 normally (Review Focus #3).
 - **R4** — markup proposal whose fact_id ∉ state.facts → HARD "H6.2" with suggestion "归因 markup/抽取层".
 
-- [ ] Tests: <500 short-circuit; two quarantined + H5.1; boundary 500/700 exact (500 isolates? NO: `< 500` fails, `[500,700)` isolates, `≥700` passes — pin: 499→H8.1, 500→H8.2, 699→H8.2, 700→clean).
-- [ ] Commit `feat(plot-engine): H8 extraction gate + quarantine semantics (07 §4.3)`.
+- [x] Tests: <500 short-circuit; two quarantined + H5.1; boundary 500/700 exact (500 isolates? NO: `< 500` fails, `[500,700)` isolates, `≥700` passes — pin: 499→H8.1, 500→H8.2, 699→H8.2, 700→clean).
+- [x] Commit `feat(plot-engine): H8 extraction gate + quarantine semantics (07 §4.3)`.
 
 ## Task 9: Top-level wiring, idempotence & integration
 
@@ -220,9 +220,9 @@ reader annos → `READER_LEARNS/READER_HINTED/READER_DECEIVED`, `payload={"fact_
 
 **Interfaces:** Complete `Validator.validate()` per File Structure order. Wire `markup_to_proposals` merge: parsed annos generate channel-1 proposals which are APPENDED to caller-provided proposals only if the caller has none from markup (dedupe on (READER_*, fact_id) — markup proposals take priority, duplicates dropped silently is forbidden: dedupe emits observation). Also expose `plot_engine.validator` from nothing new — store/commit layer (Day 12–13) will import `Validator`, `ValidationResult`.
 
-- [ ] Tests: (a) 05 §8 R1–R4: double-run equality; `canonical_json(result.model_dump(mode="json"))` stable; input state `model_dump()` byte-equal after run. (b) Golden: 附录 A chapter-47 contract + the 3 traitor-arc events-as-proposals + markup'd draft (reuse traitor_arc fixture text) → `can_commit()` True, zero hard/soft. (c) Same batch with dead actor → H1.1 hard → False.
-- [ ] Full suite green: `python -m pytest plot_engine/tests -q`.
-- [ ] Commit `feat(plot-engine): Validator top-level wiring + golden contract e2e (05 §10, 07 §5)`.
+- [x] Tests: (a) 05 §8 R1–R4: double-run equality; `canonical_json(result.model_dump(mode="json"))` stable; input state `model_dump()` byte-equal after run. (b) Golden: 附录 A chapter-47 contract + the 3 traitor-arc events-as-proposals + markup'd draft (reuse traitor_arc fixture text) → `can_commit()` True, zero hard/soft. (c) Same batch with dead actor → H1.1 hard → False.
+- [x] Full suite green: `python -m pytest plot_engine/tests -q`.
+- [x] Commit `feat(plot-engine): Validator top-level wiring + golden contract e2e (05 §10, 07 §5)`.
 
 ## Out of scope (subsequent plans)
 
