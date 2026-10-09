@@ -193,3 +193,25 @@ def test_prompt_states_the_payload_schema_and_paragraph_numbering():
     assert "evidence_fact_ids" in joined
     assert "段落编号" in joined and "paragraph" in joined
     assert "1. 第一段。" in joined                    # 正文按段号给出，引用只回数字
+
+
+def test_undeclared_payload_key_is_stripped_but_event_kept():
+    """实测：qwen3:8b 把 schema 提示 `OBSERVES:fact_id` 回声成 payload 里的 {"OBSERVES": "fact_id"}。
+    回声键进了 EventLog 就是提示词脚手架污染事件流；但该事件在正文里确实发生，
+    整条丢弃会把真通过变成假失败 —— 所以剥键、记账、留事件。"""
+    props, bad = parse_proposals(
+        '[{"event_type": "OBSERVES", "actor": "char_000001", '
+        '"payload": {"fact_id": "fact_000001", "OBSERVES": "fact_id"}}]', 47, _state())
+    assert len(props) == 1
+    assert props[0].payload == {"fact_id": "fact_000001"}
+    assert bad[0]["reason"] == "stripped_payload_key"
+    assert bad[0]["item"] == "OBSERVES.OBSERVES"
+
+
+def test_evidence_fact_ids_list_is_not_mistaken_for_a_key():
+    props, bad = parse_proposals(
+        '[{"event_type": "INFERS", "actor": "char_000001", "payload": '
+        '{"conclusion_fact_id": "fact_000001", "evidence_fact_ids": ["fact_000001"]}}]',
+        47, _state())
+    assert len(props) == 1 and bad == []
+    assert props[0].payload["evidence_fact_ids"] == ["fact_000001"]

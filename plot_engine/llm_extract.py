@@ -40,8 +40,10 @@ PAYLOAD_SCHEMA: Dict[str, Tuple[str, ...]] = {
     "HAPPENS": (),
     "REVEALS": ("fact_id", "new_narrative_truth"),
 }
-_SCHEMA_HINT = "；".join(f"{t}:{','.join(k) or '可空'}"
-                         for t, k in PAYLOAD_SCHEMA.items())
+# 提示词不能用 `TYPE:key` 形态 —— 实测模型会把它整段抄成 payload 里的 {"TYPE": "key"}。
+_SCHEMA_HINT = "；".join(
+    f"type {t} 的 payload 只放 {','.join(k) if k else '空对象'}"
+    for t, k in PAYLOAD_SCHEMA.items())
 
 
 def _known_ids(state: Optional[StoryState]) -> Optional[set]:
@@ -124,6 +126,12 @@ def parse_proposals(raw: str, chapter: int,
             bad.append({"reason": "missing_payload_keys",
                         "item": f"{etype} 缺 {','.join(missing)}"})
             continue
+        # 模型会把 schema 提示 `OBSERVES:fact_id` 回声成 payload 键。事件本身有效，
+        # 剥掉回声键并记账，别让提示词脚手架进 EventLog（08 §10 I3：不可静默）。
+        declared = set(PAYLOAD_SCHEMA[etype])
+        for extra in [k for k in payload if k not in declared]:
+            bad.append({"reason": "stripped_payload_key", "item": f"{etype}.{extra}"})
+            payload.pop(extra)
         seq = len(out)
         para = item.get("paragraph")
         source_ref = (item.get("source_ref")
@@ -163,6 +171,7 @@ def extract_prompt(draft, scene_plan, contract, state) -> List[dict]:
         '"payload": object, "paragraph": 整数段号}。',
         f"event_type 只能取（本阶段只承接这些，其余写了也没用）: {taxonomy}。",
         f"payload 必须给全这些键: {_SCHEMA_HINT}。",
+        "payload 的键名只能是上面列出的键名本身，绝不要把事件类型名（如 OBSERVES）写成键。",
         "payload 与 actor/target 的值只能是下面词表里的 id 或整数，"
         "绝不能用「印章」这类自由文本代替 id。",
         "id 只能使用下面词表里出现过的，绝不自造 id。",
