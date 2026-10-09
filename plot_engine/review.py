@@ -178,6 +178,8 @@ def _write_chapter_dump(dump_dir, ch: int, draft: str, props, out) -> None:
             lines.append(f"- HARD {f.rule_id}: {f.message}")
         for f in out.validation.soft_warnings:
             lines.append(f"- SOFT {f.rule_id}: {f.message}")
+        for f in out.validation.observations:
+            lines.append(f"- OBS {f.rule_id}: {f.message} | {f.evidence or ''}")
         lines.append("")
     lines += ["## Draft", draft.strip(), "", "## Proposals"]
     lines += [f"- {p.proposed_event_type} actor={p.actor} target={p.target} "
