@@ -59,12 +59,9 @@
 - Consumes: `LlmClient.complete("extract", messages)`（Task 1）；`EventProposal`（07 §4.2）；`stage0_extract(..., llm_channel=)` 签名 `llm_channel(draft, scene_plan, contract, state)`。
 - Produces: `make_llm_channel(client: LlmClient, *, max_items: int = 24) -> RuleChannel`；`parse_proposals(raw: str, chapter: int) -> Tuple[List[EventProposal], List[dict]]`（返回 proposals + 坏条目记录）。
 
-- [ ] **Step 1: 写失败测试** —— 覆盖：围栏 JSON 可解析；`extraction_method == "llm"`；seq 被重编为 `0..n-1`；非法 `event_type`/缺字段进 `bad` 列表且不产 Proposal；非 JSON 回复 → 空列表 + 一条 `MALFORMED_PROPOSAL` 记录；payload float 被拒或转定点。
-
-Run: `python -m pytest plot_engine/tests/test_llm_extract.py -q` → 预期 FAIL（模块不存在）。
-
-- [ ] **Step 2: 实现** —— prompt 含 Draft、`contract` 的 required_events/knowledge_allowed、以及**明确禁止清单**；要求模型只回 JSON 数组，元素字段 `event_type/actor/target/payload/source_ref`。解析用「抓第一个 `[`…最后一个 `]`」再 `json.loads`，逐条 `EventProposal.model_validate` + 校验 `extraction_confidence`。
-- [ ] **Step 3: 全绿后提交** `feat(plot-engine): LLM extraction channel with untrusted-output parsing (07 §4.3)`。
+- [x] **Step 1: 写失败测试** —— 覆盖：围栏 JSON 可解析；`extraction_method == "llm"`；seq 被重编为 `0..n-1`；非法 `event_type`/缺字段进 `bad` 列表且不产 Proposal；非 JSON 回复 → 空列表 + 一条 `MALFORMED_PROPOSAL` 记录；payload float 被拒或转定点。
+- [x] **Step 2: 实现** —— prompt 含 Draft、`contract` 的 required_events/knowledge_allowed、以及**明确禁止清单**；要求模型只回 JSON 数组，元素字段 `event_type/actor/target/payload/source_ref`。解析用「抓第一个 `[`…最后一个 `]`」再 `json.loads`，逐条 `EventProposal.model_validate` + 校验 `extraction_confidence`。
+- [x] **Step 3: 全绿后提交** `feat(plot-engine): LLM extraction channel with untrusted-output parsing (07 §4.3)`（`71d2364`，14 tests）。
 
 ### Task 3: 真实 SceneWriter（`plot_engine/llm_writer.py`）
 
@@ -76,9 +73,9 @@ Run: `python -m pytest plot_engine/tests/test_llm_extract.py -q` → 预期 FAIL
 - Consumes: `LlmClient.complete("writer", messages)`；`SceneWriter = Callable[[Scene, ChapterContract, Optional[StoryState]], str]`；`compose_chapter_draft`（负责补 hook / reader 标注，Writer 自身**不得**产 markup）。
 - Produces: `make_scene_writer(client: LlmClient, *, min_paras: int = 2, max_chars: int = 1200) -> SceneWriter`；`scene_prompt(scene, contract, state) -> list[dict]`。
 
-- [ ] **Step 1: 写失败测试** —— 覆盖：返回段落以空行分隔；输出不含 `<!--`（markup 由组装器负责）；prompt 中不出现 `knowledge_forbidden` 的 fact_id；空回复 → 抛 `WriterError`（让 `compose_chapter_draft` 记 `scene_failed`，不静默产空章）；角色名/地点从 `state` 取，未知 id 不崩。
-- [ ] **Step 2: 实现**：system 提示写明「悬疑长篇正文，中文，只写本 Scene 目的，不揭示禁止知识，不写元数据」；temperature 走 endpoint 配置。
-- [ ] **Step 3: 提交** `feat(plot-engine): LLM scene writer seam (07 §4.4)`。
+- [x] **Step 1: 写失败测试** —— 覆盖：返回段落以空行分隔；输出不含 `<!--`（markup 由组装器负责）；prompt 中不出现 `knowledge_forbidden` 的 fact_id；空回复 → 抛 `WriterError`（让 `compose_chapter_draft` 记 `scene_failed`，不静默产空章）；角色名/地点从 `state` 取，未知 id 不崩。
+- [x] **Step 2: 实现**：system 提示写明「悬疑长篇正文，中文，只写本 Scene 目的，不揭示禁止知识，不写元数据」；temperature 走 endpoint 配置。
+- [x] **Step 3: 提交** `feat(plot-engine): LLM scene writer seam (07 §4.4)`（`ab66723`，8 tests）。
 
 ### Task 4: 真实逐章源 + `review --live` 接线
 
@@ -92,10 +89,10 @@ Run: `python -m pytest plot_engine/tests/test_llm_extract.py -q` → 预期 FAIL
 - Consumes: Task 1–3 全部；`ChapterArtifacts`；`RevisionLoop`（06 §5）。
 - Produces: `build_live_source(client, *, contracts, plans) -> ChapterSource`；`main()` 支持 `--live`；缺 Ollama 时打印「本地模型不可达：<url>」并返回 2。
 
-- [ ] **Step 1: 写失败测试** —— 用 fake transport 走 `run_experiment(..., llm_client=client)`，断言报告 `total_tokens > 0`、`total_duration_ms >= 0`、且离线（无 client）路径逐字节不变。
-- [ ] **Step 2: 实现并全绿**。
-- [ ] **Step 3: 单章真实冒烟** `python -m plot_engine.review --live --chapters 1`，记录耗时与 token；确认 Draft 长度、Proposal 数量、Commit 状态合理后再进 Step 4。
-- [ ] **Step 4: 提交** `feat(plot-engine): live model wiring + token/cost accounting (08 §2/§3)`。
+- [x] **Step 1: 写失败测试** —— 用 fake transport 走 `run_experiment(..., llm_client=client)`，断言报告 `total_tokens > 0`、`total_duration_ms >= 0`、且离线（无 client）路径逐字节不变。
+- [x] **Step 2: 实现并全绿**（`d8cd4e9` + `80563eb` + `fdb03dc`；319 tests，零联网）。
+- [x] **Step 3: 单章真实冒烟** `python -m plot_engine.review --live --chapters 1` → exit 0：端点探测列出 4 个本地模型，生成 1 章 / 提交 0 章，失败落进 §6 三个桶（Extraction 2 / Writer-Validator 2 / Contract-Arc 6），E2 False、E3 False。**这是 Phase 0 要的答案本身**：真实 14b 在确定性世界约束下首轮不合规。
+- [x] **Step 4: 提交**。
 
 ### Task 5: 10 章真实实验与决策单落盘
 
