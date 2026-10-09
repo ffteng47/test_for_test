@@ -1,0 +1,55 @@
+"""硬指标分类器：把 Commit/consistency/replay 产物映射到 08 §4 九项桶。
+
+只做**计数与归类**，不改判据（08 I2：实验期不得修改 HARD 规则）。
+未知 rule_id 兜底归 CANON，但仍单记 `by_rule`，绝不静默丢弃（05 §9 I6）。
+"""
+from __future__ import annotations
+
+import dataclasses
+from typing import Dict, List, Optional
+
+from plot_engine.models.commit import CommitOutcome
+from plot_engine.models.experiment import RULE_TO_METRIC, HardMetric
+
+
+@dataclasses.dataclass
+class MetricCounts:
+    by_metric: Dict[HardMetric, int] = dataclasses.field(
+        default_factory=lambda: {m: 0 for m in HardMetric})
+    by_rule: Dict[str, int] = dataclasses.field(default_factory=dict)
+
+
+def classify_outcome(outcome: CommitOutcome, *, consistency: Optional[List[dict]] = None,
+                     replay_ok: Optional[bool] = None) -> MetricCounts:
+    mc = MetricCounts()
+
+    def add(rule_id: str) -> None:
+        mc.by_rule[rule_id] = mc.by_rule.get(rule_id, 0) + 1
+        mc.by_metric[RULE_TO_METRIC.get(rule_id, HardMetric.CANON)] += 1
+
+    if outcome.validation is not None:
+        for f in outcome.validation.hard_violations:
+            add(f.rule_id)
+
+    for c in consistency or []:
+        if c.get("severity") == "hard":
+            add(c["code"])
+
+    if outcome.status == "REPLAY_INCONSISTENT":
+        mc.by_metric[HardMetric.REPLAY] += 1
+        mc.by_rule["REPLAY_INCONSISTENT"] = mc.by_rule.get("REPLAY_INCONSISTENT", 0) + 1
+    if replay_ok is False:
+        mc.by_metric[HardMetric.REPLAY] += 1
+        mc.by_rule["REPLAY_INCONSISTENT"] = mc.by_rule.get("REPLAY_INCONSISTENT", 0) + 1
+
+    return mc
+
+
+def to_report_fields(mc: MetricCounts) -> dict:
+    """映射到 ExperimentReport 命名字段；`hard_violations` 按 rule_id 确定性排序。"""
+    return {
+        "canon_contradictions": mc.by_metric[HardMetric.CANON],
+        "knowledge_contradictions": mc.by_metric[HardMetric.KNOWLEDGE],
+        "timeline_contradictions": mc.by_metric[HardMetric.TIMELINE],
+        "hard_violations": {k: mc.by_rule[k] for k in sorted(mc.by_rule)},
+    }
