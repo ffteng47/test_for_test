@@ -160,7 +160,7 @@ def _offline_dry_run(chapters: int, defects: Dict[int, str]) -> ExperimentReport
                           scene_writer=fx.dummy_writer, revision_loop=loop)
 
 
-def _live_run(chapters: int, model_config: dict, *, client=None, defects=None):
+def _live_run(chapters: int, model_config: dict, *, client=None):
     """真实模型实验：Writer/抽取换成本地端点，其余管道与离线演练完全一致。
 
     返回 `(report|None, 端点说明, 抽取诊断)`：端点不可达时不烧预算，直接给出原因。
