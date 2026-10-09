@@ -22,7 +22,7 @@ _DRAFT = ("张三凝视印章。\n\n<!-- reader_learns: fact_000003 -->\n\n"
           "<!-- hook: cliffhanger strength=800 -->")
 
 
-def _plan(ch: int) -> ScenePlan:
+def plan_for(ch: int) -> ScenePlan:
     def beat(i):
         return Beat(beat_id=f"bt_{i:06d}", seq=i % 3, intent="x", beat_type="setup")
     scenes = [Scene(scene_id=f"scn_{ch:04d}_{n:02d}", chapter_no=ch, seq=n - 1,
@@ -33,7 +33,7 @@ def _plan(ch: int) -> ScenePlan:
                     created_at="2026-10-09T00:00:00Z")
 
 
-def _contract(ch: int) -> ChapterContract:
+def contract_for(ch: int) -> ChapterContract:
     return ChapterContract(
         chapter_no=ch, arc_id="arc_003", epoch=EPOCH, story_goal="g",
         story_goal_type="revelation",
@@ -80,7 +80,7 @@ def build_source(defects: dict[int, str] | None = None):
         actor = "char_000009" if defect == "dead" else "char_000001"
         observed = "fact_000002" if defect == "leak" else "fact_000003"
         rule, llm = _channels(ch, actor, observed)
-        return ChapterArtifacts(contract=_contract(ch), scene_plan=_plan(ch),
+        return ChapterArtifacts(contract=contract_for(ch), scene_plan=plan_for(ch),
                                 draft=_DRAFT, rule_channel=rule, llm_channel=llm)
     return src
 

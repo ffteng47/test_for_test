@@ -7,6 +7,7 @@ Revision 循环（06）未落地 → `revision_*` 记未运行、E3 标 N/A；to
 """
 from __future__ import annotations
 
+import time
 from typing import Callable, Dict, Optional
 
 from plot_engine.classify import MetricCounts, classify_outcome, consistency_counts
@@ -14,6 +15,7 @@ from plot_engine.commit import CommitOrchestrator
 from plot_engine.consistency import assert_consistent
 from plot_engine.eventlog import EventLog
 from plot_engine.extract import stage0_extract
+from plot_engine.llm import LlmClient
 from plot_engine.models.commit import CommitOutcome, CommitRequest
 from plot_engine.models.experiment import ChapterArtifacts, ExperimentConfig, ExperimentReport
 from plot_engine.models.state import StoryState
@@ -31,11 +33,13 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
                    chapter_source: ChapterSource, scene_writer: SceneWriter,
                    reducer: Optional[Reducer] = None,
                    validator: Optional[Validator] = None,
-                   revision_loop: Optional[RevisionLoop] = None) -> ExperimentReport:
+                   revision_loop: Optional[RevisionLoop] = None,
+                   llm_client: Optional[LlmClient] = None) -> ExperimentReport:
     reducer = reducer or Reducer()
     validator = validator or Validator()
     orch = CommitOrchestrator(store, log, reducer, validator)
     story = config.story_id
+    started = time.perf_counter()
 
     total = MetricCounts()
     soft_map: Dict[str, int] = {}
@@ -119,7 +123,11 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
         replay_mismatch_chapters=sorted(set(mismatch)),
         revision_rounds={k: rounds_by_chapter[k] for k in sorted(rounds_by_chapter)},
         revision_success_rate=(fixed_by_revision / needed_revision) if needed_revision
-        else (1.0 if rounds_by_chapter else 0.0))
+        else (1.0 if rounds_by_chapter else 0.0),
+        # 08 §3 成本字段：只有真实模型运行才记账（离线夹具恒 0，保持 Day 20–25 结果可比）
+        total_tokens=llm_client.total_tokens if llm_client else 0,
+        total_cost_usd=llm_client.total_cost_usd if llm_client else 0.0,
+        total_duration_ms=int((time.perf_counter() - started) * 1000) if llm_client else 0)
     return report
 
 
