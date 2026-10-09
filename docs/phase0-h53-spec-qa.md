@@ -48,7 +48,13 @@
 | D 修 `_KNOWLEDGE_ESTABLISH` 按 10 §4.3 分表 + 补 `DOUBTS` | 实现偏离协议文本；使判定变严 | 否（我的判断） |
 | B 派生守卫 `raise ArcConflict` | 生成器对输入的校验，HARD 判据一条不动 | 否（我的判断） |
 | C 补 04 §4.3 D10 | 协议文本 | **是，需批准 ⇒ 已撤回** |
-| `RULE_TO_LEVEL` 补 `H5.3 → contract`；`RULE_TO_METRIC` 补 `I9 → KNOWLEDGE` | 失败归因路由，非判据 | 否 |
+| `RULE_TO_LEVEL` 补 `H5.3 → contract`；`consistency_counts` 未映射 code 的处置与 `classify_outcome` 对齐 | 失败归因路由，非判据 | 否 |
+
+**更正（批次 0 核实）**：本文原列的「`RULE_TO_METRIC` 补 `I9 → KNOWLEDGE`」是**误报**。
+表定义在 `models/experiment.py:35-57`（`classify.py:12` 只是 import），`"I9": HardMetric.KNOWLEDGE` 在 `:50`，
+自 `ff37e2b` 起就存在、`66f87e2` 里也在 ⇒ 第 1 次采样的 §6 归桶**没有**把 I9 落 CANON，**无需重读**。
+未映射 code 的**真**不一致在别处：`classify.py:70-72` 的 `consistency_counts` 是 `if key:` ⇒ 静默**丢弃**，
+而 `classify_outcome:28` 是兜底归 CANON。两条路径对"未映射"处置不同，需对齐。
 
 这条线涉及协议文本的解释权，**由你拍板**。
 
