@@ -119,6 +119,18 @@ def test_cli_live_prints_decision_sheet_with_real_token_accounting(monkeypatch, 
     assert "tokens=" in out and "抽取产出" in out      # 08 §3 记账 + 坏料可见
 
 
+def test_cli_live_dumps_drafts_and_proposals_for_triage(tmp_path, monkeypatch):
+    """失败章不进 State：唯一能区分「模型没写」与「抽取漏了」的证据就是这份逐章快照。"""
+    import plot_engine.live as live
+    monkeypatch.setattr(live, "check_reachable", lambda c: (True, "ok"))
+    monkeypatch.setattr(live, "build_client", lambda cfg: _fake_live_client())
+    assert review_main(["--live", "--chapters", "2", "--dump-dir", str(tmp_path)]) == 0
+    assert sorted(p.name for p in tmp_path.glob("ch*.md")) == ["ch01.md", "ch02.md"]
+    text = (tmp_path / "ch01.md").read_text(encoding="utf-8")
+    assert "status=" in text and "## Draft" in text and "## Proposals" in text
+    assert "OBSERVES" in text
+
+
 def test_model_config_accepts_inline_json_and_file(tmp_path):
     from plot_engine.review import _read_model_config
 

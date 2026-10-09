@@ -129,3 +129,22 @@ def test_report_deterministic_across_runs(tmp_path):
     # 报告含 §3 float 字段（cost/success_rate），canonical 禁浮点，故用确定性 json.dumps 比对
     dump = lambda r: json.dumps(r.model_dump(mode="json"), sort_keys=True, ensure_ascii=False)
     assert dump(a) == dump(b)
+
+
+def test_on_chapter_records_every_chapter_including_failures(tmp_path):
+    """08 §10 I3：所有 failure 必须被记录。失败章不进 State，triage 只能靠这份逐章快照。"""
+    from plot_engine.eventlog import EventLog as _Log
+    from plot_engine.store import StateStore as _Store
+
+    seen = []
+    cfg = _config(3)
+    store, log = _Store(str(tmp_path / "s.db")), _Log(str(tmp_path / "e.db"))
+    store.init_genesis(cfg.story_id, cfg.initial_state)
+    rep = run_experiment(cfg, store=store, log=log, chapter_source=_source(bad_chapter=2),
+                         scene_writer=lambda s, c, st: s.scene_id,
+                         on_chapter=lambda ch, draft, props, out: seen.append(
+                             (ch, draft, len(props), out.status)))
+    assert [s[0] for s in seen] == [1, 2, 3]
+    assert all(s[1] for s in seen)                      # 失败章的 draft 也一样记录
+    assert seen[1][3] != "OK" and rep.unresolved_chapters == [2]
+    assert all(s[2] >= 2 for s in seen)                 # 抽取产物同步交给归因层

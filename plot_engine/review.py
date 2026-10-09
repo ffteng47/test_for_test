@@ -160,7 +160,33 @@ def _offline_dry_run(chapters: int, defects: Dict[int, str]) -> ExperimentReport
                           scene_writer=fx.dummy_writer, revision_loop=loop)
 
 
-def _live_run(chapters: int, model_config: dict, *, client=None):
+def _write_chapter_dump(dump_dir, ch: int, draft: str, props, out) -> None:
+    """逐章落盘 正文 + 抽取产物 + 判定（08 §10 I3：所有 failure 必须记录）。
+
+    失败章不进 State，事后无从复现；这份快照是唯一能区分
+    「Writer 没写出必需事件」与「抽取漏掉了必需事件」的证据。
+    """
+    from pathlib import Path
+
+    d = Path(dump_dir)
+    d.mkdir(parents=True, exist_ok=True)
+    lines = [f"# Chapter {ch} — status={out.status}",
+             f"message={out.message}", ""]
+    if out.validation is not None:
+        lines.append("## Findings")
+        for f in out.validation.hard_violations:
+            lines.append(f"- HARD {f.rule_id}: {f.message}")
+        for f in out.validation.soft_warnings:
+            lines.append(f"- SOFT {f.rule_id}: {f.message}")
+        lines.append("")
+    lines += ["## Draft", draft.strip(), "", "## Proposals"]
+    lines += [f"- {p.proposed_event_type} actor={p.actor} target={p.target} "
+              f"payload={p.payload}" for p in props] or ["- （无）"]
+    lines.append("")
+    (d / f"ch{ch:02d}.md").write_text("\n".join(lines), encoding="utf-8")
+
+
+def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None):
     """真实模型实验：Writer/抽取换成本地端点，其余管道与离线演练完全一致。
 
     返回 `(report|None, 端点说明, 抽取诊断)`：端点不可达时不烧预算，直接给出原因。
@@ -201,8 +227,13 @@ def _live_run(chapters: int, model_config: dict, *, client=None):
     loop = RevisionLoop(actions={"rerun_extraction": lambda ctx: ctx,
                                  "rewrite_scene": rewrite, "rewrite_chapter": rewrite})
     source = build_live_source(client, contracts=fx.contract_for, plans=fx.plan_for)
+    on_chapter = None
+    if dump_dir is not None:
+        on_chapter = lambda ch, draft, props, out: _write_chapter_dump(
+            dump_dir, ch, draft, props, out)
     report = run_experiment(cfg, store=store, log=log, chapter_source=source,
-                            scene_writer=writer, revision_loop=loop, llm_client=client)
+                            scene_writer=writer, revision_loop=loop, llm_client=client,
+                            on_chapter=on_chapter)
     return report, msg, extraction_diagnostics(source.channels)
 
 
@@ -218,7 +249,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--live", action="store_true",
                     help="用真实模型（默认本机 Ollama）跑实验；换 vLLM 只改 --model-config")
     ap.add_argument("--model-config", metavar="JSON", default=None,
-                    help='模型路由 JSON 或 @文件路径，例：{"writer":{"base_url":"http://192.168.31.213:8000/v1","model":"qwen2.5-14b"}}')
+                    help='模型路由 JSON 或 @文件路径，例：{"writer":{"base_url":"http://<host>:8000/v1","model":"qwen2.5-14b"}}')
+    ap.add_argument("--dump-dir", metavar="DIR", default=None,
+                    help="逐章落盘 正文/抽取产物/判定，供失败归因（08 §10 I3）；仅 --live 生效")
     args = ap.parse_args(argv)
 
     import sys
@@ -236,7 +269,8 @@ def main(argv: Optional[List[str]] = None) -> int:
             ap.error(f"--defect {spec!r}: CH 必须是整数")
 
     if args.live:
-        report, msg, diag = _live_run(args.chapters, _read_model_config(args.model_config))
+        report, msg, diag = _live_run(args.chapters, _read_model_config(args.model_config),
+                                      dump_dir=args.dump_dir)
         print(msg)
         if report is None:
             return 2

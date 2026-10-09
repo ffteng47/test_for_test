@@ -8,7 +8,7 @@ Revision 循环（06）未落地 → `revision_*` 记未运行、E3 标 N/A；to
 from __future__ import annotations
 
 import time
-from typing import Callable, Dict, Optional
+from typing import Callable, Dict, List, Optional
 
 from plot_engine.classify import MetricCounts, classify_outcome, consistency_counts
 from plot_engine.commit import CommitOrchestrator
@@ -18,6 +18,7 @@ from plot_engine.extract import stage0_extract
 from plot_engine.llm import LlmClient
 from plot_engine.models.commit import CommitOutcome, CommitRequest
 from plot_engine.models.experiment import ChapterArtifacts, ExperimentConfig, ExperimentReport
+from plot_engine.models.proposal import EventProposal
 from plot_engine.models.state import StoryState
 from plot_engine.reducer import Reducer
 from plot_engine.replay import verify_parity
@@ -34,7 +35,10 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
                    reducer: Optional[Reducer] = None,
                    validator: Optional[Validator] = None,
                    revision_loop: Optional[RevisionLoop] = None,
-                   llm_client: Optional[LlmClient] = None) -> ExperimentReport:
+                   llm_client: Optional[LlmClient] = None,
+                   on_chapter: Optional[Callable[[int, str, List[EventProposal],
+                                                  CommitOutcome], None]] = None,
+                   ) -> ExperimentReport:
     reducer = reducer or Reducer()
     validator = validator or Validator()
     orch = CommitOrchestrator(store, log, reducer, validator)
@@ -57,10 +61,12 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
         cur, cur_version = env.state, env.version
         art = chapter_source(ch, cur)
         draft = art.draft or compose_chapter_draft(art.scene_plan, art.contract, cur, scene_writer).draft
+        captured: Dict[str, object] = {"draft": draft, "props": []}
 
         def recommit(ctx: ChapterContext) -> "CommitOutcome":
             props = stage0_extract(ctx.draft, ctx.scene_plan, ctx.contract, cur, chapter=ch,
                                    rule_channel=art.rule_channel, llm_channel=art.llm_channel)
+            captured["draft"], captured["props"] = ctx.draft, props
             req = CommitRequest(story_id=story, chapter_no=ch, draft=ctx.draft,
                                 contract=ctx.contract, scene_plan=ctx.scene_plan,
                                 expected_version=cur_version, trace_id=f"exp-{ch}")
@@ -75,6 +81,8 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
             if trace.rounds:
                 needed_revision += 1
                 fixed_by_revision += int(out.status == "OK")
+        if on_chapter is not None:
+            on_chapter(ch, str(captured["draft"]), list(captured["props"]), out)
         generated += 1
 
         # §4/§6：validation 层硬规则按 rule_id 计入 hard_violations（含被拒章，作失败分类信号）。
