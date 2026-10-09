@@ -1,0 +1,144 @@
+# 07 §4.3 通道 3：真实模型抽取。模型输出是**不可信输入**，坏料必须可判定、不可静默。
+import pytest
+
+from plot_engine.llm import LlmClient, LlmRouter, ModelEndpoint
+from plot_engine.llm_extract import extract_prompt, make_llm_channel, parse_proposals
+from plot_engine.models.contract import ChapterContract, ChapterHook
+from plot_engine.models.entity import Character
+from plot_engine.models.fact import Fact
+from plot_engine.models.state import StoryState
+
+EPOCH = "epoch_0"
+DRAFT = "张三凝视印章。印泥是干的。"
+
+
+def _state():
+    return StoryState(
+        story_id="s1", chapter_no=46, version=46, epoch=EPOCH,
+        characters={"char_000001": Character(character_id="char_000001", name="张三",
+            status="alive", introduced_at_chapter=1, epoch=EPOCH)},
+        facts={"fact_000001": Fact(fact_id="fact_000001", fact_type="existence",
+            proposition="印泥已干", canonical_form="c1", narrative_truth="unknown",
+            objective_truth="unknown", defined_at_chapter=1, epoch=EPOCH),
+            "fact_000002": Fact(fact_id="fact_000002", fact_type="existence",
+            proposition="真凶", canonical_form="c2", narrative_truth="unknown",
+            objective_truth="unknown", defined_at_chapter=1, epoch=EPOCH)},
+        state_hash="0" * 64)
+
+
+def _contract():
+    return ChapterContract(chapter_no=47, arc_id="arc_003", epoch=EPOCH, story_goal="g",
+                           story_goal_type="revelation",
+                           knowledge_allowed=["fact_000001"], knowledge_forbidden=["fact_000002"],
+                           ending=ChapterHook(type="cliffhanger", strength=800, description="d"),
+                           created_at="2026-10-09T00:00:00Z")
+
+
+def _reply(items):
+    return {"choices": [{"message": {"content": items}}],
+            "usage": {"prompt_tokens": 100, "completion_tokens": 20}}
+
+
+def _client(replies):
+    it = iter(replies)
+    return LlmClient(LlmRouter(endpoints={"extract": ModelEndpoint(model="m")}),
+                     transport=lambda url, payload, headers, timeout_s: next(it))
+
+
+def test_fenced_json_array_parses_into_llm_proposals():
+    props, bad = parse_proposals(
+        "```json\n[{\"event_type\": \"OBSERVES\", \"actor\": \"char_000001\", "
+        "\"target\": \"fact_000001\", \"payload\": {\"fact_id\": \"fact_000001\"}, "
+        "\"source_ref\": \"para:1\"}]\n```", 47, _state())
+    assert bad == [] and len(props) == 1
+    p = props[0]
+    assert p.extraction_method == "llm"
+    assert (p.proposed_event_type, p.actor, p.chapter) == ("OBSERVES", "char_000001", 47)
+
+
+def test_seq_is_renumbered_so_the_model_cannot_collide_event_ids():
+    """event_id 由 (chapter, seq) 推出；模型若回 5,5 或从 1 起编号 → H6.4 误爆。"""
+    props, _ = parse_proposals(
+        '[{"event_type": "OBSERVES", "seq": 5}, {"event_type": "READS", "seq": 5}]', 47, _state())
+    assert [p.seq for p in props] == [0, 1]
+
+
+def test_surrounding_prose_is_skipped_not_failed():
+    props, bad = parse_proposals(
+        "好的，以下是事件：\n[{\"event_type\": \"OBSERVES\"}]\n希望有帮助。", 47, _state())
+    assert len(props) == 1 and bad == []
+
+
+def test_illegal_event_type_is_dropped_and_recorded_not_committed():
+    props, bad = parse_proposals('[{"event_type": "MURDERS"}]', 47, _state())
+    assert props == []
+    assert bad and bad[0]["reason"] == "unknown_event_type"
+
+
+def test_unparsable_reply_yields_no_proposals_and_one_malformed_record():
+    props, bad = parse_proposals("我不确定这段里发生了什么。", 47, _state())
+    assert props == []
+    assert bad and bad[0]["reason"] == "malformed_reply"
+
+
+def test_float_in_payload_or_confidence_is_rejected():
+    """05 §5.5 定点铁律：float 进 payload 会让 canonical_json 在 commit 阶段炸。"""
+    _props, bad = parse_proposals(
+        '[{"event_type": "OBSERVES", "payload": {"w": 0.7}}]', 47, _state())
+    assert bad and bad[0]["reason"] == "float_in_payload"
+    _p2, bad2 = parse_proposals('[{"event_type": "OBSERVES", "confidence": 0.9}]', 47, _state())
+    assert bad2 and bad2[0]["reason"] == "float_in_payload"
+
+
+def test_ids_that_are_not_in_state_are_dropped():
+    """模型编造 char_999999 会在下游炸成一串无法归因的违例，抽取层就得拦下。"""
+    props, bad = parse_proposals('[{"event_type": "OBSERVES", "actor": "char_999999"}]',
+                                 47, _state())
+    assert props == [] and bad[0]["reason"] == "unknown_id"
+
+
+def test_missing_source_ref_is_filled_deterministically():
+    props, _ = parse_proposals('[{"event_type": "OBSERVES"}]', 47, _state())
+    assert props[0].source_ref.startswith("llm:")
+
+
+def test_channel_wires_into_the_stage0_seam_and_accumulates_tokens():
+    channel = make_llm_channel(_client([_reply(
+        '[{"event_type": "OBSERVES", "target": "fact_000001"}]')]))
+    props = channel(DRAFT, None, _contract(), _state())
+    assert len(props) == 1
+    assert channel.total_tokens == 120
+
+
+def test_channel_records_bads_for_observability_instead_of_silently_dropping():
+    channel = make_llm_channel(_client([_reply('[{"event_type": "MURDERS"}]')]))
+    assert channel(DRAFT, None, _contract(), _state()) == []
+    assert [b["reason"] for b in channel.malformed] == ["unknown_event_type"]
+
+
+def test_channel_caps_output_at_max_items():
+    many = "[" + ",".join('{"event_type": "OBSERVES"}' for _ in range(6)) + "]"
+    channel = make_llm_channel(_client([_reply(many)]), max_items=3)
+    props = channel(DRAFT, None, _contract(), _state())
+    assert len(props) == 3
+    assert channel.malformed[-1]["reason"] == "over_cap"
+
+
+@pytest.mark.parametrize("over", [{"temperature": 200}, {"max_items": 1}])
+def test_channel_never_invents_events_when_the_model_says_nothing(over):
+    if "temperature" in over:
+        router = LlmRouter(endpoints={"extract": ModelEndpoint(model="m", **over)})
+        client = LlmClient(router, transport=lambda *a: _reply("[]"))
+    else:
+        client = _client([_reply("[]")])
+    channel = make_llm_channel(client, **{k: v for k, v in over.items() if k == "max_items"})
+    assert channel(DRAFT, None, _contract(), _state()) == []
+
+
+def test_prompt_carries_the_draft_and_the_known_id_vocabulary():
+    msgs = extract_prompt(DRAFT, None, _contract(), _state())
+    joined = "\n".join(m["content"] for m in msgs)
+    assert DRAFT in joined
+    assert "char_000001" in joined and "fact_000001" in joined
+    assert "OBSERVES" in joined                       # Taxonomy 必须显式给出，否则模型自造类型
+    assert "JSON" in joined or "json" in joined
