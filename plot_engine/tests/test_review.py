@@ -65,12 +65,16 @@ def test_cli_prints_decision_sheet(capsys):
     out = capsys.readouterr().out
     assert "生成 10 / 提交 10" in out
     assert "§6 失败分类" in out and "§8 退出条件" in out
+    # 06 已接入：离线演练带 Revision 循环 → E3 可判，不再是 N/A
+    assert "Revision：需修 0 章 / 最多 0 轮 / 修复率 1.00" in out
+    assert "E3: True" in out
 
 
 def test_cli_defect_flag_shows_failure_class(capsys):
     assert review_main(["--chapters", "3", "--defect", "2:leak"]) == 0
     out = capsys.readouterr().out
     assert "未决 [2]" in out
+    assert "Revision：需修 1 章" in out             # 2 章进过修订循环
 
 
 def test_cli_rejects_unknown_defect_kind(capsys):

@@ -14,11 +14,12 @@ from plot_engine.commit import CommitOrchestrator
 from plot_engine.consistency import assert_consistent
 from plot_engine.eventlog import EventLog
 from plot_engine.extract import stage0_extract
-from plot_engine.models.commit import CommitRequest
+from plot_engine.models.commit import CommitOutcome, CommitRequest
 from plot_engine.models.experiment import ChapterArtifacts, ExperimentConfig, ExperimentReport
 from plot_engine.models.state import StoryState
 from plot_engine.reducer import Reducer
 from plot_engine.replay import verify_parity
+from plot_engine.revision import ChapterContext, Recommit, RevisionLoop
 from plot_engine.store import StateStore
 from plot_engine.validator import Validator
 from plot_engine.writer import SceneWriter, compose_chapter_draft
@@ -29,7 +30,8 @@ ChapterSource = Callable[[int, StoryState], ChapterArtifacts]
 def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog,
                    chapter_source: ChapterSource, scene_writer: SceneWriter,
                    reducer: Optional[Reducer] = None,
-                   validator: Optional[Validator] = None) -> ExperimentReport:
+                   validator: Optional[Validator] = None,
+                   revision_loop: Optional[RevisionLoop] = None) -> ExperimentReport:
     reducer = reducer or Reducer()
     validator = validator or Validator()
     orch = CommitOrchestrator(store, log, reducer, validator)
@@ -41,6 +43,9 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
     committed: list[int] = []
     unresolved: list[int] = []
     mismatch: list[int] = []
+    rounds_by_chapter: Dict[int, int] = {}
+    fixed_by_revision = 0
+    needed_revision = 0
     generated = 0
 
     for ch in range(1, config.chapters + 1):
@@ -48,13 +53,24 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
         cur, cur_version = env.state, env.version
         art = chapter_source(ch, cur)
         draft = art.draft or compose_chapter_draft(art.scene_plan, art.contract, cur, scene_writer).draft
-        props = stage0_extract(draft, art.scene_plan, art.contract, cur, chapter=ch,
-                               rule_channel=art.rule_channel, llm_channel=art.llm_channel)
 
-        req = CommitRequest(story_id=story, chapter_no=ch, draft=draft, contract=art.contract,
-                            scene_plan=art.scene_plan, expected_version=cur_version,
-                            trace_id=f"exp-{ch}")
-        out = orch.commit(req, props, cur)
+        def recommit(ctx: ChapterContext) -> "CommitOutcome":
+            props = stage0_extract(ctx.draft, ctx.scene_plan, ctx.contract, cur, chapter=ch,
+                                   rule_channel=art.rule_channel, llm_channel=art.llm_channel)
+            req = CommitRequest(story_id=story, chapter_no=ch, draft=ctx.draft,
+                                contract=ctx.contract, scene_plan=ctx.scene_plan,
+                                expected_version=cur_version, trace_id=f"exp-{ch}")
+            return orch.commit(req, props, cur)
+
+        ctx = ChapterContext(contract=art.contract, scene_plan=art.scene_plan, draft=draft)
+        if revision_loop is None:
+            out = recommit(ctx)
+        else:
+            trace, out = revision_loop.run_chapter(story, ch, ctx, recommit)
+            rounds_by_chapter[ch] = trace.rounds
+            if trace.rounds:
+                needed_revision += 1
+                fixed_by_revision += int(out.status == "OK")
         generated += 1
 
         # §4/§6：validation 层硬规则按 rule_id 计入 hard_violations（含被拒章，作失败分类信号）。
@@ -100,12 +116,18 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
         timeline_contradictions=named["timeline"],
         unresolved_chapters=sorted(unresolved),
         replay_consistency=(len(mismatch) == 0),
-        replay_mismatch_chapters=sorted(set(mismatch)))
+        replay_mismatch_chapters=sorted(set(mismatch)),
+        revision_rounds={k: rounds_by_chapter[k] for k in sorted(rounds_by_chapter)},
+        revision_success_rate=(fixed_by_revision / needed_revision) if needed_revision
+        else (1.0 if rounds_by_chapter else 0.0))
     return report
 
 
+_MAX_REVISION_ROUNDS = 3      # 08 §8 E3' 的字面上限
+
+
 def evaluate_exit_conditions(report: ExperimentReport) -> Dict[str, Optional[bool]]:
-    """08 §8 退出条件。E3'（Revision 后成功率）依赖 06，Phase 0 未落地 → N/A(None)。"""
+    """08 §8 退出条件。E3' 需 06 Revision 循环实际运行（逐章轮数有记录）才可判。"""
     gen = report.chapters_generated
     e1 = gen == report.config.chapters
     commit_rate = (report.chapters_committed / gen) if gen else 0.0
@@ -117,4 +139,8 @@ def evaluate_exit_conditions(report: ExperimentReport) -> Dict[str, Optional[boo
     e5 = ((gen - mism) / gen) >= 0.90 if gen else False
     e6 = (report.replay_consistency and report.canon_contradictions == 0
           and report.knowledge_contradictions == 0 and report.timeline_contradictions == 0)
-    return {"E1": e1, "E2": e2, "E3": None, "E4": e4, "E5": e5, "E6": e6}
+    rounds = report.revision_rounds
+    e3: Optional[bool] = None
+    if len(rounds) == gen and gen:            # 每章都有轮数记录 = Revision 确实跑过
+        e3 = commit_rate >= 0.90 and max(rounds.values()) <= _MAX_REVISION_ROUNDS
+    return {"E1": e1, "E2": e2, "E3": e3, "E4": e4, "E5": e5, "E6": e6}

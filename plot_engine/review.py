@@ -76,6 +76,11 @@ def architecture_review(report: ExperimentReport) -> dict:
             "committed": report.chapters_committed,
             "unresolved_chapters": report.unresolved_chapters,
             "replay_consistency": report.replay_consistency,
+            "revision_chapters_needed": sum(1 for v in report.revision_rounds.values() if v),
+            "revision_max_rounds": max(report.revision_rounds.values(), default=0),
+            "revision_success_rate": report.revision_success_rate,
+            "revision_ran": len(report.revision_rounds) == report.chapters_generated
+            and report.chapters_generated > 0,
         },
         "failure_classes": classes,
         "freeze_gate": gate,
@@ -86,9 +91,15 @@ def architecture_review(report: ExperimentReport) -> dict:
 def render_review_text(sheet: dict) -> str:
     """把决策单渲染成人类可读文本（Review 会上直接用）。"""
     s = sheet["summary"]
+    if s["revision_ran"]:
+        rev = (f"需修 {s['revision_chapters_needed']} 章 / 最多 {s['revision_max_rounds']} 轮"
+               f" / 修复率 {s['revision_success_rate']:.2f}")
+    else:
+        rev = "未运行（E3 不可判）"
     lines = [f"# Architecture Review — {sheet['experiment_id']}",
              f"生成 {s['generated']} / 提交 {s['committed']} / 未决 {s['unresolved_chapters']}"
              f" / replay一致 {s['replay_consistency']}",
+             f"Revision：{rev}",
              "", "## §6 失败分类"]
     for cls, info in sheet["failure_classes"].items():
         if info["count"]:
@@ -113,14 +124,19 @@ def _offline_dry_run(chapters: int, defects: Dict[int, str]) -> ExperimentReport
 
     夹具在 `plot_engine/tests/fixtures/`（测试与开发命令共用同一份 arc 定义，避免二套假数据）。
     store/log 落在临时目录，不污染仓库。
+    带上 06 Revision 循环，但夹具 Writer 是确定性的 → 重写只会得到同一份 Draft，
+    因此本演练只证明「阶梯/预算/振荡/trace」机制在跑；真实收敛率与 E3' 需接真实 Writer。
     """
+    import dataclasses
     import sys
     import tempfile
     from pathlib import Path
 
     from plot_engine.eventlog import EventLog
     from plot_engine.experiment import run_experiment
+    from plot_engine.revision import RevisionLoop
     from plot_engine.store import StateStore
+    from plot_engine.writer import compose_chapter_draft
 
     fixtures = Path(__file__).parent / "tests" / "fixtures"
     sys.path.insert(0, str(fixtures))
@@ -131,9 +147,17 @@ def _offline_dry_run(chapters: int, defects: Dict[int, str]) -> ExperimentReport
     store = StateStore(str(tmp / "state.db"))
     log = EventLog(str(tmp / "event.db"))
     store.init_genesis(cfg.story_id, cfg.initial_state)
+
+    def rewrite(ctx):
+        asm = compose_chapter_draft(ctx.scene_plan, ctx.contract,
+                                    store.load_latest(cfg.story_id).state, fx.dummy_writer)
+        return dataclasses.replace(ctx, draft=asm.draft)
+
+    loop = RevisionLoop(actions={"rerun_extraction": lambda ctx: ctx,
+                                 "rewrite_scene": rewrite, "rewrite_chapter": rewrite})
     return run_experiment(cfg, store=store, log=log,
                           chapter_source=fx.build_source(defects),
-                          scene_writer=fx.dummy_writer)
+                          scene_writer=fx.dummy_writer, revision_loop=loop)
 
 
 def main(argv: Optional[List[str]] = None) -> int:
