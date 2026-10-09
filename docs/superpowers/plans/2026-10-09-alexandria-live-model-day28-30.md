@@ -96,10 +96,13 @@
 
 ### Task 5: 10 章真实实验与决策单落盘
 
-- [ ] **Step 1:** `python -m plot_engine.review --live --chapters 10 > docs/phase0-live-run-10ch.md`（预计 45–60 分钟，后台跑）。
-- [ ] **Step 2:** 按 08 §6/§7 归类每个 failure；不满足冻结闸的一律记 backlog，**不改架构、不改 HARD**。
-- [ ] **Step 3:** 按 08 §8 判 E1'–E6'，写结论：进 Phase 1 / 继续 Phase 0。
-- [ ] **Step 4:** 提交 `test(plot-engine): Phase-0 live-model 10-chapter experiment report`。
+- [x] **Step 1:** 实跑改用 `--live --chapters 10 --dump-dir <dir>`，落在局域网服务器（qwen3:8b，307s / 52795 tokens）。
+- [x] **Step 2:** 按 08 §6/§7 归类每个 failure；不满足冻结闸的一律记 backlog，**不改架构、不改 HARD**。
+- [x] **Step 3:** 按 08 §8 判 E1'–E6'，结论：继续 Phase 0（见 `docs/phase0-live-run-10ch.md` §1/§7）。
+- [x] **Step 4:** 提交 `test(plot-engine): Phase-0 live-model 10-chapter experiment report`。
+
+**计划外的必须项**（实测逼出来的，均已完成并有测试）：抽取通道必须看不到 Contract 的答案键与
+composer 的 markup（否则 H5 可被抽取器自证）；FAIL 消息必须写明拒绝原因（否则 8 章失败无从归因）。
 
 ## Known Gap（本计划不覆盖）
 
