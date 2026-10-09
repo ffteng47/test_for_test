@@ -22,6 +22,27 @@ from plot_engine.models.state import StoryState
 _VALID_TYPES = frozenset(get_args(EventType))
 _ID_RE = re.compile(r"^(?:char|fact|item|loc|faction|realm|ability|region|rel)_\d+$")
 
+# 本通道只承接 reducer 真能消费的 event_type，且键名逐一对齐 01 §4.1 的实际取用（reducer 里
+# 的 event.payload[...]）。缺键的产物放下去只会变成 MALFORMED_PROPOSAL 级联，归因反而更难。
+PAYLOAD_SCHEMA: Dict[str, Tuple[str, ...]] = {
+    "OBSERVES": ("fact_id",),
+    "READS": ("fact_id",),
+    "IS_TOLD": ("fact_id", "trust_level", "message_strength"),
+    "INFERS": ("conclusion_fact_id", "evidence_fact_ids"),
+    "FACT_CONTRADICTED": ("fact_id",),
+    "BELIEVES": ("fact_id", "belief_strength"),
+    "SUSPECTS": ("fact_id",),
+    "DOUBTS": ("fact_id",),
+    "STATES": ("fact_id", "audience"),
+    "LIES": ("stated_fact_id", "audience"),
+    "OMITS": (),
+    "HINTS": ("fact_id", "audience"),
+    "HAPPENS": (),
+    "REVEALS": ("fact_id", "new_narrative_truth"),
+}
+_SCHEMA_HINT = "；".join(f"{t}:{','.join(k) or '可空'}"
+                         for t, k in PAYLOAD_SCHEMA.items())
+
 
 def _known_ids(state: Optional[StoryState]) -> Optional[set]:
     if state is None:
@@ -86,6 +107,9 @@ def parse_proposals(raw: str, chapter: int,
         if etype not in _VALID_TYPES:
             bad.append({"reason": "unknown_event_type", "item": etype})
             continue
+        if etype not in PAYLOAD_SCHEMA:
+            bad.append({"reason": "type_not_supported", "item": etype})
+            continue
         payload = item.get("payload") or {}
         conf = item.get("confidence", 700)
         if not isinstance(payload, dict) or _has_float(payload) or _has_float(conf):
@@ -95,14 +119,23 @@ def parse_proposals(raw: str, chapter: int,
         if known is not None and any(_has_unknown_id(r, known) for r in refs):
             bad.append({"reason": "unknown_id", "item": etype})
             continue
+        missing = [k for k in PAYLOAD_SCHEMA[etype] if k not in payload]
+        if missing:
+            bad.append({"reason": "missing_payload_keys",
+                        "item": f"{etype} 缺 {','.join(missing)}"})
+            continue
         seq = len(out)
+        para = item.get("paragraph")
+        source_ref = (item.get("source_ref")
+                      or (f"para:{para}" if isinstance(para, int) and not isinstance(para, bool)
+                          else f"llm:{chapter}#{seq}"))
         out.append(EventProposal(
             proposed_event_type=etype,
             actor=item.get("actor"), target=item.get("target"),
             chapter=chapter, seq=seq,
             payload=dict(payload),
             confidence=conf if isinstance(conf, int) else 700,
-            source_ref=item.get("source_ref") or f"llm:{chapter}#{seq}",
+            source_ref=source_ref,
             extraction_method="llm", extraction_confidence=1000))
     return out, bad
 
@@ -113,26 +146,34 @@ def _vocab(state: StoryState) -> str:
     return f"已知角色: {chars or '（无）'}\n已知事实: {facts or '（无）'}"
 
 
+def _numbered(draft: str) -> str:
+    """正文按段号给出：模型只需回 `paragraph: N`，抽取产物才是可对齐的 span。"""
+    paras = [p.strip() for p in re.split(r"\n\s*\n", (draft or "").strip()) if p.strip()]
+    return "\n".join(f"{i}. {p[:400]}" for i, p in enumerate(paras, 1))
+
+
 def extract_prompt(draft, scene_plan, contract, state) -> List[dict]:
-    """抽取提示：Taxonomy、State 词表、Contract 要求 + Draft 全文。"""
-    taxonomy = " / ".join(sorted(_VALID_TYPES))
+    """抽取提示：可承接的事件类型 + payload 键 + State 词表 + Contract 要求 + 带段号正文。"""
+    taxonomy = " / ".join(sorted(PAYLOAD_SCHEMA))
     required = " / ".join(e.event_type for e in contract.required_events) or "（无）"
     forbidden = " / ".join(contract.knowledge_forbidden) or "（无）"
     rules = [
         "你是叙事事件抽取器。只输出一个 JSON 数组，不要任何解释文字。",
-        f"数组每个元素形如 "
-        '{"event_type": str, "actor": str|null, "target": str|null, '
-        '"payload": object, "source_ref": str}。',
-        f"event_type 只能取: {taxonomy}。",
+        '数组每个元素形如 {"event_type": str, "actor": str|null, "target": str|null, '
+        '"payload": object, "paragraph": 整数段号}。',
+        f"event_type 只能取（本阶段只承接这些，其余写了也没用）: {taxonomy}。",
+        f"payload 必须给全这些键: {_SCHEMA_HINT}。",
+        "payload 与 actor/target 的值只能是下面词表里的 id 或整数，"
+        "绝不能用「印章」这类自由文本代替 id。",
         "id 只能使用下面词表里出现过的，绝不自造 id。",
         "数值一律整数（不要小数）。不要输出 preconditions。",
         f"本章 Contract 要求的事件类型: {required}。",
         f"禁止把这些事实作为事件内容泄露: {forbidden}。",
     ]
     if state is not None:
-        rules.insert(3, _vocab(state))
+        rules.insert(5, _vocab(state))
     return [{"role": "system", "content": "\n".join(rules)},
-            {"role": "user", "content": f"正文：\n{draft[:6000]}"}]
+            {"role": "user", "content": f"正文（段落编号）：\n{_numbered(draft)[:6000]}"}]
 
 
 def make_llm_channel(client: LlmClient, *, max_items: int = 24,

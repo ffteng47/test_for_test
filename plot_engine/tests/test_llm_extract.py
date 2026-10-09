@@ -59,13 +59,16 @@ def test_fenced_json_array_parses_into_llm_proposals():
 def test_seq_is_renumbered_so_the_model_cannot_collide_event_ids():
     """event_id 由 (chapter, seq) 推出；模型若回 5,5 或从 1 起编号 → H6.4 误爆。"""
     props, _ = parse_proposals(
-        '[{"event_type": "OBSERVES", "seq": 5}, {"event_type": "READS", "seq": 5}]', 47, _state())
+        '[{"event_type": "OBSERVES", "seq": 5, "payload": {"fact_id": "fact_000001"}},'
+        ' {"event_type": "READS", "seq": 5, "payload": {"fact_id": "fact_000001"}}]',
+        47, _state())
     assert [p.seq for p in props] == [0, 1]
 
 
 def test_surrounding_prose_is_skipped_not_failed():
     props, bad = parse_proposals(
-        "好的，以下是事件：\n[{\"event_type\": \"OBSERVES\"}]\n希望有帮助。", 47, _state())
+        '好的，以下是事件：\n[{"event_type": "OBSERVES", "payload": {"fact_id": '
+        '"fact_000001"}}]\n希望有帮助。', 47, _state())
     assert len(props) == 1 and bad == []
 
 
@@ -97,14 +100,50 @@ def test_ids_that_are_not_in_state_are_dropped():
     assert props == [] and bad[0]["reason"] == "unknown_id"
 
 
+def test_source_ref_uses_paragraph_numbers_so_dual_channels_can_align():
+    """07 §4.3 交叉验证靠 source_ref 的 span 对齐；模型回原文长引用 → 与规则通道永远对不上。"""
+    props, _ = parse_proposals(
+        '[{"event_type": "OBSERVES", "payload": {"fact_id": "fact_000001"}, "paragraph": 3}]',
+        47, _state())
+    assert props[0].source_ref == "para:3"
+
+
 def test_missing_source_ref_is_filled_deterministically():
-    props, _ = parse_proposals('[{"event_type": "OBSERVES"}]', 47, _state())
+    props, _ = parse_proposals(
+        '[{"event_type": "OBSERVES", "payload": {"fact_id": "fact_000001"}}]', 47, _state())
     assert props[0].source_ref.startswith("llm:")
+
+
+# —— payload 契约：reducer 按 01 §4.1 取键，缺键不是「reducer 的错」而是抽取层的产物不合格
+def test_payload_missing_required_key_is_dropped_and_recorded():
+    """实测：qwen2.5:14b 会回 {"object": "印章"} —— 放下去就是 MALFORMED_PROPOSAL 级联。"""
+    props, bad = parse_proposals('[{"event_type": "OBSERVES", "payload": {"object": "印章"}}]',
+                                 47, _state())
+    assert props == []
+    assert bad and bad[0]["reason"] == "missing_payload_keys"
+    assert "fact_id" in bad[0]["item"]
+
+
+def test_infers_needs_conclusion_and_evidence():
+    props, bad = parse_proposals(
+        '[{"event_type": "INFERS", "payload": {"conclusion_fact_id": "fact_000001"}}]',
+        47, _state())
+    assert props == [] and bad[0]["reason"] == "missing_payload_keys"
+    props2, _ = parse_proposals(
+        '[{"event_type": "INFERS", "payload": {"conclusion_fact_id": "fact_000001",'
+        ' "evidence_fact_ids": ["fact_000001"]}}]', 47, _state())
+    assert len(props2) == 1
+
+
+def test_types_the_reducers_cannot_consume_are_not_accepted():
+    props, bad = parse_proposals('[{"event_type": "CASE_SOLVED"}]', 47, _state())
+    assert props == [] and bad[0]["reason"] == "type_not_supported"
 
 
 def test_channel_wires_into_the_stage0_seam_and_accumulates_tokens():
     channel = make_llm_channel(_client([_reply(
-        '[{"event_type": "OBSERVES", "target": "fact_000001"}]')]))
+        '[{"event_type": "OBSERVES", "target": "fact_000001",'
+        ' "payload": {"fact_id": "fact_000001"}}]')]))
     props = channel(DRAFT, None, _contract(), _state())
     assert len(props) == 1
     assert channel.total_tokens == 120
@@ -117,11 +156,13 @@ def test_channel_records_bads_for_observability_instead_of_silently_dropping():
 
 
 def test_channel_caps_output_at_max_items():
-    many = "[" + ",".join('{"event_type": "OBSERVES"}' for _ in range(6)) + "]"
+    one = '{"event_type": "OBSERVES", "payload": {"fact_id": "fact_000001"}}'
+    many = "[" + ",".join(one for _ in range(6)) + "]"
     channel = make_llm_channel(_client([_reply(many)]), max_items=3)
     props = channel(DRAFT, None, _contract(), _state())
     assert len(props) == 3
     assert channel.malformed[-1]["reason"] == "over_cap"
+    assert channel.produced == 3
 
 
 @pytest.mark.parametrize("over", [{"temperature": 200}, {"max_items": 1}])
@@ -142,3 +183,13 @@ def test_prompt_carries_the_draft_and_the_known_id_vocabulary():
     assert "char_000001" in joined and "fact_000001" in joined
     assert "OBSERVES" in joined                       # Taxonomy 必须显式给出，否则模型自造类型
     assert "JSON" in joined or "json" in joined
+
+
+def test_prompt_states_the_payload_schema_and_paragraph_numbering():
+    """模型不知道 reducer 要什么键；不给 schema，它就把「印章」当 payload 交上来（实测已发生）。"""
+    joined = "\n".join(m["content"] for m in extract_prompt(
+        "第一段。\n\n第二段。", None, _contract(), _state()))
+    assert "fact_id" in joined and "conclusion_fact_id" in joined
+    assert "evidence_fact_ids" in joined
+    assert "段落编号" in joined and "paragraph" in joined
+    assert "1. 第一段。" in joined                    # 正文按段号给出，引用只回数字
