@@ -56,6 +56,21 @@ def build_live_source(client: LlmClient, *,
     只挂 `llm_channel`（规则通道尚未实现 → 单通道置信度 700，仍高于 H8.2 隔离线）。
     """
     def source(ch: int, cur: StoryState) -> ChapterArtifacts:
+        channel = make_llm_channel(client)
+        source.channels.append(channel)
         return ChapterArtifacts(contract=contracts(ch), scene_plan=plans(ch), draft="",
-                                llm_channel=make_llm_channel(client))
+                                llm_channel=channel)
+
+    source.channels: list = []
     return source
+
+
+def extraction_diagnostics(channels) -> Dict[str, object]:
+    """逐章通道的抽取汇总：产出数 + 坏料归因。跑完不丢，否则 §6 抽取桶无从解释。"""
+    malformed: Dict[str, int] = {}
+    proposals = 0
+    for channel in channels:
+        proposals += channel.produced
+        for bad in channel.malformed:
+            malformed[bad["reason"]] = malformed.get(bad["reason"], 0) + 1
+    return {"proposals": proposals, "malformed": malformed, "chapters": len(channels)}

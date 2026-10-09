@@ -95,3 +95,24 @@ def test_build_client_from_config_dict_selects_router_roles():
     assert client.router.endpoints["writer"].model == "qwen2.5:32b"
     assert client.router.endpoints["writer"].timeout_s == 900
     assert client.router.roles() == ["writer"]
+
+
+def test_live_source_keeps_channels_so_baddies_are_visible():
+    """坏料只在通道里，跑完就丢 → 抽取质量无法归因（05 §9 I6）。"""
+    client = _client()
+    src = build_live_source(client, contracts=fx.contract_for, plans=fx.plan_for)
+    art = src(1, fx.make_config(1).initial_state)
+    art.llm_channel("正文", None, fx.contract_for(1), fx.make_config(1).initial_state)
+    assert src.channels == [art.llm_channel]
+
+
+def test_extraction_diagnostics_counts_proposals_and_bad_reasons():
+    from plot_engine.live import extraction_diagnostics
+
+    client = _client()
+    src = build_live_source(client, contracts=fx.contract_for, plans=fx.plan_for)
+    state = fx.make_config(1).initial_state
+    src(1, state).llm_channel("正文", None, fx.contract_for(1), state)
+    src(2, state).llm_channel("正文", None, fx.contract_for(2), state)
+    diag = extraction_diagnostics(src.channels)
+    assert diag["proposals"] == 2 and diag["malformed"] == {}

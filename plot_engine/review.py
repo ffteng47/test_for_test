@@ -163,7 +163,7 @@ def _offline_dry_run(chapters: int, defects: Dict[int, str]) -> ExperimentReport
 def _live_run(chapters: int, model_config: dict, *, client=None, defects=None):
     """真实模型实验：Writer/抽取换成本地端点，其余管道与离线演练完全一致。
 
-    返回 `(report|None, 说明)`：端点不可达时不烧预算，直接给出原因。
+    返回 `(report|None, 端点说明, 抽取诊断)`：端点不可达时不烧预算，直接给出原因。
     `client` 可注入，供测试保持零网络。
     """
     import dataclasses
@@ -172,7 +172,8 @@ def _live_run(chapters: int, model_config: dict, *, client=None, defects=None):
 
     from plot_engine.eventlog import EventLog
     from plot_engine.experiment import run_experiment
-    from plot_engine.live import build_client, build_live_source, check_reachable
+    from plot_engine.live import (build_client, build_live_source, check_reachable,
+                                  extraction_diagnostics)
     from plot_engine.llm_writer import make_scene_writer
     from plot_engine.revision import RevisionLoop
     from plot_engine.store import StateStore
@@ -182,7 +183,7 @@ def _live_run(chapters: int, model_config: dict, *, client=None, defects=None):
     client = client or build_client(model_config)
     ok, msg = check_reachable(client)
     if not ok:
-        return None, msg
+        return None, msg, None
 
     cfg = fx.make_config(chapters)
     tmp = Path(tempfile.mkdtemp(prefix="phase0-live-"))
@@ -199,11 +200,10 @@ def _live_run(chapters: int, model_config: dict, *, client=None, defects=None):
 
     loop = RevisionLoop(actions={"rerun_extraction": lambda ctx: ctx,
                                  "rewrite_scene": rewrite, "rewrite_chapter": rewrite})
-    report = run_experiment(cfg, store=store, log=log,
-                            chapter_source=build_live_source(client, contracts=fx.contract_for,
-                                                             plans=fx.plan_for),
+    source = build_live_source(client, contracts=fx.contract_for, plans=fx.plan_for)
+    report = run_experiment(cfg, store=store, log=log, chapter_source=source,
                             scene_writer=writer, revision_loop=loop, llm_client=client)
-    return report, msg
+    return report, msg, extraction_diagnostics(source.channels)
 
 
 def main(argv: Optional[List[str]] = None) -> int:
@@ -236,11 +236,13 @@ def main(argv: Optional[List[str]] = None) -> int:
             ap.error(f"--defect {spec!r}: CH 必须是整数")
 
     if args.live:
-        model_config = _read_model_config(args.model_config)
-        report, msg = _live_run(args.chapters, model_config)
+        report, msg, diag = _live_run(args.chapters, _read_model_config(args.model_config))
         print(msg)
         if report is None:
             return 2
+        print(f"tokens={report.total_tokens} cost=${report.total_cost_usd:.4f} "
+              f"用时={report.total_duration_ms / 1000:.0f}s｜"
+              f"抽取产出 {diag['proposals']} 条 / 坏料 {diag['malformed'] or '无'}")
         print(render_review_text(architecture_review(report)))
         return 0
 

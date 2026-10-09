@@ -147,8 +147,10 @@ def make_llm_channel(client: LlmClient, *, max_items: int = 24,
             bad.append({"reason": "over_cap", "item": len(props)})
             props = props[:max_items]
         channel.malformed.extend(bad)
+        channel.produced += len(props)
         return props
 
     channel.total_tokens = 0
+    channel.produced = 0
     channel.malformed: List[dict] = []
     return channel

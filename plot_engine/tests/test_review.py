@@ -116,6 +116,7 @@ def test_cli_live_prints_decision_sheet_with_real_token_accounting(monkeypatch, 
     out = capsys.readouterr().out
     assert "可用模型: m" in out and "§8 退出条件" in out
     assert "生成 2 /" in out
+    assert "tokens=" in out and "抽取产出" in out      # 08 §3 记账 + 坏料可见
 
 
 def test_model_config_accepts_inline_json_and_file(tmp_path):
