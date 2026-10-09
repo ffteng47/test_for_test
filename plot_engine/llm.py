@@ -15,7 +15,7 @@ import os
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
-from typing import Callable, Dict, List, Mapping, Optional, Tuple
+from typing import Any, Callable, Dict, List, Mapping, Optional, Tuple
 
 from pydantic import BaseModel, Field
 
@@ -39,6 +39,7 @@ class ModelEndpoint(BaseModel):
     timeout_s: int = 300
     api_key_env: Optional[str] = None
     api_key: Optional[str] = None
+    extra_body: Dict[str, Any] = Field(default_factory=dict)   # 供应商私有字段透传（如 think:false）
 
 
 class LlmRouter(BaseModel):
@@ -108,7 +109,8 @@ class LlmClient:
     def complete(self, role: str, messages: List[dict]) -> Tuple[str, Usage]:
         ep = self.router.endpoints[role]                    # 未配置角色 = 配置错误，直接抛
         payload = {"model": ep.model, "messages": messages,
-                   "temperature": ep.temperature / 1000.0, "max_tokens": ep.max_tokens}
+                   "temperature": ep.temperature / 1000.0, "max_tokens": ep.max_tokens,
+                   **ep.extra_body}
         headers = {"Authorization": f"Bearer {ep.api_key}"} if ep.api_key else {}
         resp = self._transport(f"{ep.base_url.rstrip('/')}/chat/completions",
                                payload, headers, ep.timeout_s)

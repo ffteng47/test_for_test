@@ -148,3 +148,18 @@ def test_unreachable_endpoint_raises_llm_unavailable(monkeypatch):
     monkeypatch.setattr("plot_engine.llm.urllib.request.urlopen", boom)
     with pytest.raises(LlmUnavailable):
         _urllib_transport("http://127.0.0.1:11434/v1/chat/completions", {}, {}, 5)
+
+
+def test_extra_body_is_merged_into_the_request_payload():
+    """qwen3 一类 thinking 模型必须能显式关思考，否则抽取通道只收到推理文本。"""
+    transport, seen = _fake_transport([{"choices": [{"message": {"content": "x"}}], "usage": {}}])
+    r = LlmRouter(endpoints={"extract": ModelEndpoint(model="qwen3:8b",
+                                                     extra_body={"think": False})})
+    LlmClient(r, transport=transport).complete("extract", [{"role": "user", "content": "y"}])
+    assert seen[0][1]["think"] is False
+
+
+def test_extra_body_defaults_empty_and_is_reportable():
+    r = LlmRouter(endpoints={"writer": ModelEndpoint()})
+    assert r.endpoints["writer"].extra_body == {}
+    assert r.to_config()["writer"]["extra_body"] == {}
