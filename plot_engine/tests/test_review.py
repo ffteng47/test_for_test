@@ -4,11 +4,13 @@ import pathlib
 import sys
 import tempfile
 
+import pytest
+
 from plot_engine.eventlog import EventLog
 from plot_engine.experiment import run_experiment
 from plot_engine.review import (
     FAILURE_EXTRACTION, FAILURE_WRITER_VALIDATOR, FAILURE_ARCH_BLOCKER,
-    architecture_review, render_review_text,
+    architecture_review, main as review_main, render_review_text,
 )
 from plot_engine.store import StateStore
 
@@ -55,3 +57,23 @@ def test_sheet_is_json_serializable_and_text_renders(tmp_path):
     assert json.loads(json.dumps(sheet, ensure_ascii=False)) == sheet
     text = render_review_text(sheet)
     assert "§6 失败分类" in text and "§7 架构冻结闸" in text and "§8 退出条件" in text
+
+
+# —— `python -m plot_engine.review` 入口：必须有输出，且只写临时目录
+def test_cli_prints_decision_sheet(capsys):
+    assert review_main([]) == 0
+    out = capsys.readouterr().out
+    assert "生成 10 / 提交 10" in out
+    assert "§6 失败分类" in out and "§8 退出条件" in out
+
+
+def test_cli_defect_flag_shows_failure_class(capsys):
+    assert review_main(["--chapters", "3", "--defect", "2:leak"]) == 0
+    out = capsys.readouterr().out
+    assert "未决 [2]" in out
+
+
+def test_cli_rejects_unknown_defect_kind(capsys):
+    with pytest.raises(SystemExit):
+        review_main(["--defect", "2:typo"])
+    assert "leak|dead" in capsys.readouterr().err

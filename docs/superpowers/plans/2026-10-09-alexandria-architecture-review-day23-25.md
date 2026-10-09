@@ -25,6 +25,7 @@
 3. **未 commit 章不得算作通过** —— `unresolved_chapters` 参与 G3 判定，缺章即锁闸。→ T2。
 4. **退出条件不得被工作表重新定义** —— E1/E2/E4/E5/E6 必须逐字来自 `evaluate_exit_conditions`，review 层只呈现。→ T3。
 5. **工作表可序列化、可人工阅读** —— dict 结果需 JSON-safe，渲染文本需含 §6/§7/§8 三节标题。→ T4。
+6. **对外承诺的命令必须真能跑出结果** —— 计划/说明里写过的 `python -m plot_engine.review` 若无 `__main__` 入口即静默退出（0 输出），等于交付不可复现；Windows GBK 控制台还需强制 stdout UTF-8 以免中文乱码。→ T5。
 
 ---
 
@@ -78,10 +79,26 @@
 - [x] **Step 1:** 写失败测试：sheet 经 `json.dumps` 可序列化；渲染文本含 `§6 失败分类` / `§7 架构冻结闸` / `§8 退出条件`。
 - [x] **Step 2 → Step 5:** 同上节奏；渲染为 Markdown 三段，E3 显示 `N/A（06 Revision 未落地）`。
 
+### Task 5: `python -m plot_engine.review` 离线演练入口（Review Focus #6）
+
+**Files:**
+- Modify: `plot_engine/review.py`（`_offline_dry_run` / `main` / `__main__`）
+- Test: `plot_engine/tests/test_review.py`
+
+**Interfaces:**
+- Consumes: `tests/fixtures/experiment_10ch`（`make_config` / `build_source` / `dummy_writer`）、`StateStore`、`EventLog`、`run_experiment`
+- Produces: `main(argv=None) -> int`；`--chapters N`（默认 10）、`--defect CH:KIND`（KIND ∈ leak|dead，可重复）
+
+- [x] **Step 1:** 写失败测试：`review_main([])` 返回 0 且 stdout 含 `生成 10 / 提交 10`；`--defect 2:leak` → `未决 [2]`；`--defect 2:typo` → `SystemExit` 且 stderr 提示 `leak|dead`。
+- [x] **Step 2:** 运行确认失败（原实现无入口，命令静默无输出）。
+- [x] **Step 3:** 实现：临时目录建 store/eventlog → `init_genesis` → `run_experiment` → 渲染决策单；`sys.stdout.reconfigure(encoding="utf-8")` 保 Windows 控制台不乱码。夹具路径在 `_offline_dry_run` 内延迟导入，开发命令专用，不污染包导入图。
+- [x] **Step 4:** 运行确认通过 → 246 passed。
+- [x] **Step 5:** 提交。
+
 ---
 
 ## Self-Review
 
 - 覆盖：08 §6 六类、§7 G1–G4、§8 E1'–E6' 全部有对应产出；无 TBD。
 - 边界：本层无写操作、无网络；真实模型接入与 `frontend/`/`backend/` 页面**不在本计划内**，需用户单独批准。
-- 全量测试：`python -m pytest plot_engine/tests -q` → 243 passed。
+- 全量测试：`python -m pytest plot_engine/tests -q` → 246 passed。

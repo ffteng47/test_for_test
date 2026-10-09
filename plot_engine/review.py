@@ -3,10 +3,11 @@
 **只读**：把 `ExperimentReport` 整理成人类 Review 所需的分类 + 闸口判定，
 绝不因样本失败而自动改协议/改 HARD/改架构（08 §7 冻结要求，I6）。
 是否进 Phase 1 的最终决定权始终在人。§6 分类是**启发式归因辅助**，非自动裁决。
+`python -m plot_engine.review` 是离线演练入口：临时目录里跑确定性夹具，同样不写仓库状态。
 """
 from __future__ import annotations
 
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from plot_engine.experiment import evaluate_exit_conditions
 from plot_engine.models.experiment import ExperimentReport
@@ -105,3 +106,64 @@ def render_review_text(sheet: dict) -> str:
         label = "N/A（06 Revision 未落地）" if v is None else v
         lines.append(f"- {k}: {label}")
     return "\n".join(lines)
+
+
+def _offline_dry_run(chapters: int, defects: Dict[int, str]) -> ExperimentReport:
+    """离线演练：用确定性夹具源充当 Writer/抽取模型，走完整管道产出 Report（网络无关）。
+
+    夹具在 `plot_engine/tests/fixtures/`（测试与开发命令共用同一份 arc 定义，避免二套假数据）。
+    store/log 落在临时目录，不污染仓库。
+    """
+    import sys
+    import tempfile
+    from pathlib import Path
+
+    from plot_engine.eventlog import EventLog
+    from plot_engine.experiment import run_experiment
+    from plot_engine.store import StateStore
+
+    fixtures = Path(__file__).parent / "tests" / "fixtures"
+    sys.path.insert(0, str(fixtures))
+    import experiment_10ch as fx
+
+    cfg = fx.make_config(chapters)
+    tmp = Path(tempfile.mkdtemp(prefix="phase0-"))
+    store = StateStore(str(tmp / "state.db"))
+    log = EventLog(str(tmp / "event.db"))
+    store.init_genesis(cfg.story_id, cfg.initial_state)
+    return run_experiment(cfg, store=store, log=log,
+                          chapter_source=fx.build_source(defects),
+                          scene_writer=fx.dummy_writer)
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    import argparse
+
+    ap = argparse.ArgumentParser(
+        prog="python -m plot_engine.review",
+        description="Phase-0 离线实验 → 08 §6 失败分类 / §7 冻结闸 / §8 退出条件决策单（只读）")
+    ap.add_argument("--chapters", type=int, default=10)
+    ap.add_argument("--defect", action="append", default=[], metavar="CH:KIND",
+                    help="注入缺陷章，KIND ∈ {leak, dead}；可重复。用于验证分类归因是否落对桶")
+    args = ap.parse_args(argv)
+
+    import sys
+    if hasattr(sys.stdout, "reconfigure"):        # Windows GBK 控制台下中文不乱码
+        sys.stdout.reconfigure(encoding="utf-8")
+
+    defects: Dict[int, str] = {}
+    for spec in args.defect:
+        ch, _, kind = spec.partition(":")
+        if kind not in ("leak", "dead"):
+            ap.error(f"--defect {spec!r}: KIND 必须是 leak|dead")
+        try:
+            defects[int(ch)] = kind
+        except ValueError:
+            ap.error(f"--defect {spec!r}: CH 必须是整数")
+
+    print(render_review_text(architecture_review(_offline_dry_run(args.chapters, defects))))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
