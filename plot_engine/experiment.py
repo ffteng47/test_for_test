@@ -14,6 +14,7 @@ from typing import Callable, Dict, List, Optional
 from plot_engine.classify import MetricCounts, classify_outcome, consistency_counts
 from plot_engine.commit import CommitOrchestrator
 from plot_engine.consistency import assert_consistent
+from plot_engine.derive import ArcConflict, NoChapterIntent
 from plot_engine.eventlog import EventLog
 from plot_engine.extract import stage0_extract
 from plot_engine.llm import LlmClient
@@ -37,8 +38,9 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
                    validator: Optional[Validator] = None,
                    revision_loop: Optional[RevisionLoop] = None,
                    llm_client: Optional[LlmClient] = None,
-                   on_chapter: Optional[Callable[[int, ChapterContext, List[EventProposal],
-                                                  CommitOutcome], None]] = None,
+                   on_chapter: Optional[Callable[[int, Optional[ChapterContext],
+                                                  List[EventProposal], "CommitOutcome | str"],
+                                                 None]] = None,
                    ) -> ExperimentReport:
     reducer = reducer or Reducer()
     validator = validator or Validator()
@@ -60,7 +62,17 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
     for ch in range(1, config.chapters + 1):
         env = store.load_latest(story)
         cur, cur_version = env.state, env.version
-        art = chapter_source(ch, cur)
+        try:
+            art = chapter_source(ch, cur)
+        except (ArcConflict, NoChapterIntent) as exc:
+            # 契约在本章开工前就判死（04 §4.3 / 06 §4.3 Arc Error）：管道一步没跑，
+            # 不算 generated、不花 token。但它必须留痕（08 §10 I3）并归进 §6 的
+            # Contract/Arc 桶 —— 让整场实验换成 traceback 等于把一份报告换成一个错误。
+            unresolved.append(ch)
+            total.by_rule["ARC_CONFLICT"] = total.by_rule.get("ARC_CONFLICT", 0) + 1
+            if on_chapter is not None:
+                on_chapter(ch, None, [], str(exc))     # ctx=None ⇒ 第 4 参是异常消息
+            continue
         draft = art.draft or compose_chapter_draft(art.scene_plan, art.contract, cur, scene_writer).draft
         captured: Dict[str, list] = {"props": []}
 

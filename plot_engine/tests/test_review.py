@@ -162,3 +162,12 @@ def test_model_config_accepts_inline_json_and_file(tmp_path):
     got = _read_model_config(f"@{p}")
     assert got["writer"]["base_url"].endswith(":8000/v1")     # 换 vLLM = 改配置，不改代码
 
+
+
+def test_chapter_dump_records_arc_conflict_without_context(tmp_path):
+    """契约没派生出来的章也要有快照（08 §10 I3）：正文没有，异常消息就是全部证据。"""
+    from plot_engine.review import _write_chapter_dump
+
+    _write_chapter_dump(tmp_path, 2, None, [], "第 2 章事实同时 allowed/forbidden：fact_000001")
+    text = (tmp_path / "ch02.md").read_text(encoding="utf-8")
+    assert "status=ARC_CONFLICT" in text and "allowed/forbidden" in text

@@ -148,3 +148,30 @@ def test_on_chapter_records_every_chapter_including_failures(tmp_path):
     assert all(s[1] for s in seen)                      # 失败章的 draft 也一样记录
     assert seen[1][3] != "OK" and rep.unresolved_chapters == [2]
     assert all(s[2] >= 2 for s in seen)                 # 抽取产物同步交给归因层
+
+
+def test_arc_conflict_chapter_recorded_and_run_continues(tmp_path):
+    """前置 0：derive 判死的章（04 §4.3 / 06 §4.3）不该把整场实验换成 traceback。
+
+    本章一步管道都没跑 ⇒ 不算 generated、不花 token；但 08 §10 I3 要求它被记录，
+    所以它进 unresolved + §6 的 Contract/Arc 桶，实验接着跑完剩下的章。
+    """
+    from plot_engine.derive import ArcConflict
+
+    def src(ch, cur):
+        if ch == 2:
+            raise ArcConflict("arc_003 第 2 章事实同时 allowed/forbidden：fact_000001")
+        return _source()(ch, cur)
+
+    cfg = _config(3)
+    store, log = StateStore(str(tmp_path / "s.db")), EventLog(str(tmp_path / "e.db"))
+    store.init_genesis(cfg.story_id, cfg.initial_state)
+    seen = []
+    rep = run_experiment(cfg, store=store, log=log, chapter_source=src,
+                         scene_writer=_dummy_writer,
+                         on_chapter=lambda ch, ctx, props, out: seen.append((ch, ctx, str(out))))
+    assert rep.chapters_generated == 2 and rep.chapters_committed == 2
+    assert rep.unresolved_chapters == [2]
+    assert rep.hard_violations["ARC_CONFLICT"] == 1
+    assert [s[0] for s in seen] == [1, 2, 3]           # 每章都有快照，失败章不缺
+    assert seen[1][1] is None and "allowed/forbidden" in seen[1][2]

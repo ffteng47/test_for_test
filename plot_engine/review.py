@@ -30,6 +30,8 @@ _RULE_CLASS: Dict[str, str] = {
     "MALFORMED_PROPOSAL": FAILURE_EXTRACTION,
     "H5.1": FAILURE_CONTRACT_ARC, "H5.2": FAILURE_CONTRACT_ARC, "H5.3": FAILURE_CONTRACT_ARC,
     "H5.4": FAILURE_CONTRACT_ARC, "H5.5": FAILURE_CONTRACT_ARC, "H5.6": FAILURE_CONTRACT_ARC,
+    # 派生阶段就判死的章（04 §4.3 ArcConflict）：没跑校验器，只能自己占一个 code。
+    "ARC_CONFLICT": FAILURE_CONTRACT_ARC,
     "I1": FAILURE_FACT_ONTOLOGY, "R7": FAILURE_FACT_ONTOLOGY,
     "REPLAY_INCONSISTENT": FAILURE_ARCH_BLOCKER,
 }
@@ -175,6 +177,11 @@ def _write_chapter_dump(dump_dir, ch: int, ctx, props, out) -> None:
 
     d = Path(dump_dir)
     d.mkdir(parents=True, exist_ok=True)
+    if ctx is None:
+        # 契约在本章开工前就判死（04 §4.3）：管道一步没跑，`out` 槽位放的是异常消息。
+        (d / f"ch{ch:02d}.md").write_text(
+            f"# Chapter {ch} — status=ARC_CONFLICT\nmessage={out}\n", encoding="utf-8")
+        return
     lines = [f"# Chapter {ch} — status={out.status}",
              f"message={out.message}",
              f"contract_version={ctx.contract.version} "
