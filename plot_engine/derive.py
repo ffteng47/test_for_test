@@ -15,7 +15,7 @@ knowledge_allowed/forbidden、到期未揭示的 gate 必须变成 REVEALS 硬�
 """
 from __future__ import annotations
 
-from typing import Dict, List, Literal, Sequence, Set
+from typing import Dict, List, Literal, Optional, Sequence, Set
 
 from pydantic import BaseModel, ValidationError
 
@@ -23,7 +23,9 @@ from plot_engine.models.contract import (
     ArcContract, ChapterContract, ChapterHook, CharacterChange, ForbiddenEvent,
     KnowledgeGate, ReaderSignal, RequiredEvent,
 )
+from plot_engine.models.sceneplan import Beat, Scene, ScenePlan
 from plot_engine.models.state import StoryState
+from plot_engine.sceneplan import _SIGNAL_TO_READER
 
 REVEAL_EVENT = "REVEALS"
 
@@ -174,3 +176,92 @@ def derive_chapter_contract(arc: ArcContract, chapter_no: int, state: StoryState
                         for f, s in sorted(signals.items())],
         tension_target=tension, ending=intent.ending,
         derived_from=list(dict.fromkeys(derived)), created_at=created_at)
+
+
+MIN_SCENES, MAX_SCENES = 3, 7
+MIN_BEATS, MAX_BEATS = 3, 7
+
+
+def _contract_cast(contract: ChapterContract) -> List[str]:
+    ids = [c.character_id for c in list(contract.must_change) + list(contract.must_not_change)]
+    for req in contract.required_events:
+        ids += list(req.actors_involved)
+    return sorted({i for i in ids if i})
+
+
+def _scene_location(contract: ChapterContract, state: StoryState) -> Optional[str]:
+    """地点不是契约的一部分：只有当本章角色在 State 里位置唯一时，才把那个既成事实带进场景。"""
+    locs = {state.characters[c].current_location for c in _contract_cast(contract)
+            if c in state.characters}
+    locs.discard(None)
+    return locs.pop() if len(locs) == 1 else None
+
+
+def _beat_slot(items: List[dict]) -> dict:
+    """同槽合并：SP2 只看并集，SP4 要求读者信号逐条在位 → 信号先分槽，事件才可能并进来。"""
+    merged = {"expected_event_types": [], "actors": []}
+    for it in items:
+        merged["expected_event_types"] += it["expected_event_types"]
+        merged["actors"] += it["actors"]
+        if it.get("reader_fact_id"):
+            merged["reader_target"] = it["reader_target"]
+            merged["reader_fact_id"] = it["reader_fact_id"]
+    merged["intent"] = "；".join(dict.fromkeys(i["intent"] for i in items))
+    merged["actors"] = sorted(set(merged["actors"]))
+    return merged
+
+
+def _pack(items: List[dict], slots: int) -> List[dict]:
+    buckets: List[List[dict]] = [[] for _ in range(slots)]
+    for i, it in enumerate(items):                     # 信号拍优先：各自占一槽，不被合并吃掉
+        buckets[i % slots].append(it)
+    return [_beat_slot(b) for b in buckets]
+
+
+def derive_scene_plan(contract: ChapterContract, state: StoryState, *,
+                      created_at: str) -> ScenePlan:
+    """Contract → ScenePlan（04 附录 B）：SP2/SP4 由构造覆盖，SP3 依赖 H7.5 已排除的冲突。
+
+    Beat 只承载契约里已有的东西（要求的事件类型、要建立的读者信号）；不足 3×3 时补的是
+    纯结构过渡拍（无事件、无事实），因为 Schema 要求每场景 3~7 拍，而契约没说话。
+    """
+    event_beats = [{"expected_event_types": [req.event_type], "intent": req.description,
+                    "actors": list(req.actors_involved)}
+                   for req in contract.required_events]
+    signal_beats = [{"expected_event_types": [], "intent": f"建立读者对 {sig.fact_id} 的认知",
+                     "actors": [], "reader_target": target, "reader_fact_id": sig.fact_id}
+                    for sig in contract.reader_signals
+                    for target in [_SIGNAL_TO_READER.get(sig.target_state)] if target]
+
+    items = signal_beats + event_beats
+    scenes_n = max(MIN_SCENES, min(MAX_SCENES, -(-len(items) // MAX_BEATS) or MIN_SCENES))
+    per_scene = max(MIN_BEATS, min(MAX_BEATS, -(-len(items) // scenes_n) or MIN_BEATS))
+    slots = scenes_n * per_scene
+    rows = _pack(items, slots) if len(items) >= slots else items + [
+        {"expected_event_types": [], "intent": "过渡", "actors": []}] * (slots - len(items))
+
+    location = _scene_location(contract, state)
+    cast = _contract_cast(contract)
+    scenes: List[Scene] = []
+    for i in range(-(-len(rows) // per_scene)):
+        chunk = rows[i * per_scene:(i + 1) * per_scene]
+        actors = sorted({a for r in chunk for a in r["actors"]})
+        beats = [Beat(beat_id=f"bt_{i * per_scene + j:06d}", seq=j,
+                      beat_type=("setup" if j == 0 else
+                                 "turn" if j == len(chunk) - 1 else "pressure"),
+                      location=None, **r)
+                 for j, r in enumerate(chunk)]
+        scenes.append(Scene(scene_id=f"scn_{contract.chapter_no:04d}_{i + 1:02d}",
+                            chapter_no=contract.chapter_no, seq=i, location=location,
+                            characters=actors or cast, tension=contract.tension_target,
+                            beats=beats))
+
+    provenance = ([f"chapter_contract[{contract.chapter_no}].required_events[{e.event_type}]"
+                   for e in contract.required_events]
+                  + [f"chapter_contract[{contract.chapter_no}].reader_signals[{s.fact_id}]"
+                     for s in contract.reader_signals])
+    return ScenePlan(plan_id=f"sop_{contract.chapter_no:08d}",
+                     chapter_no=contract.chapter_no, arc_id=contract.arc_id,
+                     contract_version=contract.version, scenes=scenes,
+                     derived_from=list(dict.fromkeys(provenance)),
+                     epoch=contract.epoch, created_at=created_at)
