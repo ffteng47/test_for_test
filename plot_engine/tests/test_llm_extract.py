@@ -257,3 +257,24 @@ def test_extract_prompt_does_not_leak_the_contracts_required_events():
 def test_extract_prompt_tells_id_keys_to_give_id_strings():
     system = extract_prompt(DRAFT, None, _contract(), _state())[0]["content"]
     assert "fact_id" in system and "字符串" in system
+
+
+def test_channel_withholds_markup_from_the_model_so_channels_stay_independent():
+    """实测：带 `<!-- reader_learns: fact_000003 -->` 的空正文会让模型照抄 markup 里的 fact id，
+    换成不存在的 fact_000001 它也照造。markup 是通道 1，LLM 是通道 3；通道 3 读到通道 1 的答案，
+    cross_validate 就永远「一致」——那是假的一致（07 §4.3）。"""
+    from plot_engine.llm import LlmClient, LlmRouter, ModelEndpoint
+
+    seen = []
+
+    def transport(url, payload, headers, timeout_s):
+        seen.append(payload["messages"])
+        return _reply("[]")
+
+    channel = make_llm_channel(LlmClient(
+        LlmRouter(endpoints={"extract": ModelEndpoint(model="m")}), transport=transport))
+    channel(DRAFT + "\n\n<!-- reader_learns: fact_000003 -->\n\n"
+            "<!-- hook: cliffhanger strength=800 -->", None, _contract(), _state())
+    user_msg = seen[0][-1]["content"]
+    assert "reader_learns" not in user_msg and "cliffhanger" not in user_msg
+    assert "张三凝视印章" in user_msg                       # 正文本身照常送入

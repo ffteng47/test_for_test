@@ -184,6 +184,11 @@ def _vocab(state: StoryState) -> str:
     return f"已知角色: {chars or '（无）'}\n已知事实: {facts or '（无）'}"
 
 
+def _strip_markup(draft: str) -> str:
+    """composer 的 `<!-- ... -->` 标记是通道 1 的答案；LLM 通道读到它就失去独立性（07 §4.3）。"""
+    return re.sub(r"<!--.*?-->", "", draft or "", flags=re.S).strip()
+
+
 def _numbered(draft: str) -> str:
     """正文按段号给出：模型只需回 `paragraph: N`，抽取产物才是可对齐的 span。"""
     paras = [p.strip() for p in re.split(r"\n\s*\n", (draft or "").strip()) if p.strip()]
@@ -224,7 +229,8 @@ def make_llm_channel(client: LlmClient, *, max_items: int = 24,
                      extract_role: str = "extract"):
     """产出 `stage0_extract(..., llm_channel=)` 需要的通道：(draft, scene_plan, contract, state) -> Proposal。"""
     def channel(draft, scene_plan, contract, state) -> List[EventProposal]:
-        text, usage = client.complete(extract_role, extract_prompt(draft, scene_plan,
+        text, usage = client.complete(extract_role, extract_prompt(_strip_markup(draft),
+                                                                   scene_plan,
                                                                    contract, state))
         channel.total_tokens += usage.total
         props, bad = parse_proposals(text, getattr(contract, "chapter_no", 0), state)
