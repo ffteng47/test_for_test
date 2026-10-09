@@ -63,8 +63,8 @@ def stage0_extract(draft, scene_plan, contract, state, *, chapter,
                    rule_channel=None, llm_channel=None) -> List[EventProposal]
     # rule()+llm()→cross_validate→重排 seq（按 span、再 method）；返回叙事 Proposal
 ```
-- [ ] Tests: 同段一致→1 条 hybrid/1000；仅规则→rule/700；仅 LLM→llm/700；同 span 不同结果→2 条各 500；输出不含 READER_*（Stage-0 只管叙事）；seq 唯一且从 0 连续；默认通道 None→返回 []。
-- [ ] Commit `feat(plot-engine): four-channel extraction + confidence linkage (07 §4.3)`
+- [x] Tests: 同段一致→1 条 hybrid/1000；仅规则→rule/700；仅 LLM→llm/700；同 span 不同结果→2 条各 500；输出不含 READER_*（Stage-0 只管叙事）；seq 唯一且从 0 连续；默认通道 None→返回 []。
+- [x] Commit `feat(plot-engine): four-channel extraction + confidence linkage (07 §4.3)`
 
 ## Task 2: Writer 整章 Draft 组装 + Scene 重写缝
 
@@ -83,23 +83,23 @@ def compose_chapter_draft(scene_plan, contract, state, scene_writer
     # 逐 scene 调 scene_writer；异常→记 failed、该 scene 跳过（不整章重写）
     # 末尾追加恰好一条 hook（type/strength 取 contract.ending）与每条 reader_signal 的 reader 标注
 ```
-- [ ] Tests: 两 scene 成功→draft 含两段+hook+reader；某 scene 抛错→仅该 scene 进 scene_failed、其余照常、整章仍含合规 markup；产出能被 `parse_markup` 回读（hook 唯一、reader 命中）；hook 落末 3 段内。
-- [ ] Commit `feat(plot-engine): writer chapter assembly + scene rewrite seam (04 §8.4, 07 §4.4)`
+- [x] Tests: 两 scene 成功→draft 含两段+hook+reader；某 scene 抛错→仅该 scene 进 scene_failed、其余照常、整章仍含合规 markup；产出能被 `parse_markup` 回读（hook 唯一、reader 命中）；hook 落末 3 段内。
+- [x] Commit `feat(plot-engine): writer chapter assembly + scene rewrite seam (04 §8.4, 07 §4.4)`
 
 ## Task 3: Level-3 注入缝（只产 SOFT/OBSERVATION）
 
 **Files:** Modify `plot_engine/validator.py`（`Validator.validate`/`_review` 增可选 `level3_fn`）; Test `test_validator_l3.py`
 
 **Interfaces:** Produces：`Validator.validate(..., *, committed_event_ids=..., level3_fn=None)`；`level3_fn: Callable[[draft, sim_cur_state, contract], List[Finding]]`，仅当 L1/L2 无 HARD 时调用；返回的 finding 中 `severity=="hard"` 一律降级为 `observation` 并记 message 前缀 `L3_DOWNGRADED`（05 §9 I1）。`_review` 透传，`reduce_commit` 不受影响（默认 None）。
-- [ ] Tests: `level3_fn=None` 行为与旧一致（金标仍绿）；注入产 SOFT→落入 soft_warnings 且 can_commit True；注入产 HARD→被降为 observation，hard_violations 仍为空；有 L1/L2 HARD 时 `level3_fn` 不被调用（用计数断言）；State 逐字节不变（I3）。
-- [ ] Commit `feat(plot-engine): optional Level-3 validator seam, never produces HARD (05 §7/§9 I1)`
+- [x] Tests: `level3_fn=None` 行为与旧一致（金标仍绿）；注入产 SOFT→落入 soft_warnings 且 can_commit True；注入产 HARD→被降为 observation，hard_violations 仍为空；有 L1/L2 HARD 时 `level3_fn` 不被调用（用计数断言）；State 逐字节不变（I3）。
+- [x] Commit `feat(plot-engine): optional Level-3 validator seam, never produces HARD (05 §7/§9 I1)`
 
 ## Task 4: Stage-0 贯通 e2e + 回归
 
 **Files:** Test `test_stage0_e2e.py`
-- [ ] Tests: `compose_chapter_draft`（占位 writer 产带 reader/hook 的段）→ `stage0_extract`（注入 rule/llm 产 OBSERVES+INFERS，一致 hybrid）→ `Validator.validate`（金标契约）→ `CommitOrchestrator.commit` → OK + parity。再跑一条 rule≠llm 冲突：cross 产 500 → H8.2 隔离 → 批 FAIL（required 未满足）或 applied 不含冲突者。
-- [ ] `python -m pytest plot_engine/tests -q` 全绿。
-- [ ] Commit `test(plot-engine): stage-0 extraction e2e + writer/validator regression`
+- [x] Tests: `compose_chapter_draft`（占位 writer 产带 reader/hook 的段）→ `stage0_extract`（注入 rule/llm 产 OBSERVES+INFERS，一致 hybrid）→ `Validator.validate`（金标契约）→ `CommitOrchestrator.commit` → OK + parity。再跑一条 rule≠llm 冲突：cross 产 500 → H8.2 隔离 → 批 FAIL（required 未满足）或 applied 不含冲突者。
+- [x] `python -m pytest plot_engine/tests -q` 全绿。
+- [x] Commit `test(plot-engine): stage-0 extraction e2e + writer/validator regression`
 
 ## Out of scope (subsequent plans)
 
