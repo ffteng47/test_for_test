@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple
+from typing import Callable, Dict, List, Optional, Tuple
 from typing import Literal, get_args
 
 from pydantic import BaseModel, Field, ValidationError
@@ -728,22 +728,43 @@ def _bucket(findings: List[Finding]) -> ValidationResult:
     return res
 
 
+def _demote_l3(findings: List[Finding]) -> List[Finding]:
+    """Level-3 只允许 SOFT/OBSERVATION；返回的 HARD 降级为 observation（05 §9 I1）。"""
+    out: List[Finding] = []
+    for f in findings:
+        if f.severity == "hard":
+            out.append(f.model_copy(update={"severity": "observation",
+                                            "rule_id": f"L3_{f.rule_id}",
+                                            "message": f"L3_DOWNGRADED：{f.message}"}))
+        else:
+            out.append(f)
+    return out
+
+
 class Validator:
     """Commit 前确定性闸门（05 §10）。只读、幂等、输出可序列化。"""
 
     def validate(self, draft: str, proposals: List[EventProposal], contract, state: StoryState,
-                 *, committed_event_ids: frozenset = frozenset()) -> ValidationResult:
+                 *, committed_event_ids: frozenset = frozenset(),
+                 level3_fn: Optional[Callable[[str, StoryState, object], List[Finding]]] = None,
+                 ) -> ValidationResult:
         result, _sim = self._review(draft, proposals, contract, state,
-                                    committed_event_ids=committed_event_ids)
+                                    committed_event_ids=committed_event_ids,
+                                    level3_fn=level3_fn)
         return result
 
     def _review(self, draft: str, proposals: List[EventProposal], contract, state: StoryState,
-                *, committed_event_ids: frozenset = frozenset()
+                *, committed_event_ids: frozenset = frozenset(),
+                level3_fn: Optional[Callable[[str, StoryState, object], List[Finding]]] = None,
                 ) -> Tuple[ValidationResult, Optional[Simulation]]:
         """四段顺序：H8 闸门 → markup 解析与通道合并 → 沙盒模拟 → L1 → L2（05 §7）。
 
         返回判定与沙盒 `Simulation`（供 `reduce_commit` 复用同一条 reduce 路径，零漂移）。
         H8.1 整批短路时不产生模拟，返回 sim=None。
+
+        Level-3（05 §7/§9 I1）：仅当 L1/L2 无 HARD 时对沙盒 `sim.cur` 调用 `level3_fn`；
+        其返回的 `severity=="hard"` 一律降级为 observation（前缀 L3_DOWNGRADED），
+        L3 永不产 HARD、永不改真实 State（只读沙盒投影）。`level3_fn=None` 完全跳过。
         """
         markup = parse_markup(draft)
         active, h8_findings = _h8_gate(proposals, state)
@@ -759,6 +780,8 @@ class Validator:
                             committed_event_ids=committed_event_ids)
         findings += _run_l2(sim, state, merged, contract=contract, markup=markup)
         findings += dedupe_obs
+        if level3_fn is not None and not _bucket(findings).hard_violations:
+            findings += _demote_l3(level3_fn(draft, sim.cur, contract))
         return _bucket(findings), sim
 
     def validate_contract(self, contract, arc, state: StoryState) -> ValidationResult:
