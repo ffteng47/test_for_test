@@ -9,14 +9,14 @@ from __future__ import annotations
 
 from typing import Callable, Dict, Optional
 
-from plot_engine.classify import MetricCounts, classify_outcome, to_report_fields
+from plot_engine.classify import MetricCounts, classify_outcome, consistency_counts
 from plot_engine.commit import CommitOrchestrator
+from plot_engine.consistency import assert_consistent
 from plot_engine.eventlog import EventLog
 from plot_engine.extract import stage0_extract
 from plot_engine.models.commit import CommitRequest
 from plot_engine.models.experiment import ChapterArtifacts, ExperimentConfig, ExperimentReport
 from plot_engine.models.state import StoryState
-from plot_engine.reduce import reduce_commit
 from plot_engine.reducer import Reducer
 from plot_engine.replay import verify_parity
 from plot_engine.store import StateStore
@@ -57,13 +57,10 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
         out = orch.commit(req, props, cur)
         generated += 1
 
-        # 分类快照：只读再 reduce 取 consistency findings（I 码），不触发写入
-        rb = reduce_commit(cur, props, art.contract, draft, cur.epoch, validator=validator)
-        mc = classify_outcome(out, consistency=rb.consistency)
+        # §4/§6：validation 层硬规则按 rule_id 计入 hard_violations（含被拒章，作失败分类信号）。
+        mc = classify_outcome(out)
         for k, v in mc.by_rule.items():
             total.by_rule[k] = total.by_rule.get(k, 0) + v
-        for m, v in mc.by_metric.items():
-            total.by_metric[m] += v
 
         val = out.validation
         if val is not None:
@@ -86,15 +83,24 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
         if not verify_parity(store, log, reducer, story, last) and last not in mismatch:
             mismatch.append(last)
 
+    # committed 状态的设定/知识/时序矛盾：只对真正入库的故事负责（08 §4 三项命名指标）。
+    final_env = store.load_latest(story)
+    committed_events = log.read_range(story, 1, final_env.state.chapter_no) \
+        if committed else []
+    named = consistency_counts(assert_consistent(final_env.state, committed_events))
+
     report = ExperimentReport(
         experiment_id=f"exp-{story}-{config.seed}", config=config,
         chapters_generated=generated, chapters_committed=len(committed),
+        hard_violations={k: total.by_rule[k] for k in sorted(total.by_rule)},
         soft_warnings={k: soft_map[k] for k in sorted(soft_map)},
         observations={k: obs_map[k] for k in sorted(obs_map)},
+        canon_contradictions=named["canon"],
+        knowledge_contradictions=named["knowledge"],
+        timeline_contradictions=named["timeline"],
         unresolved_chapters=sorted(unresolved),
         replay_consistency=(len(mismatch) == 0),
-        replay_mismatch_chapters=sorted(set(mismatch)),
-        **to_report_fields(total))
+        replay_mismatch_chapters=sorted(set(mismatch)))
     return report
 
 

@@ -53,3 +53,21 @@ def to_report_fields(mc: MetricCounts) -> dict:
         "timeline_contradictions": mc.by_metric[HardMetric.TIMELINE],
         "hard_violations": {k: mc.by_rule[k] for k in sorted(mc.by_rule)},
     }
+
+
+def consistency_counts(findings: List[dict]) -> Dict[str, int]:
+    """committed 状态的设定/知识/时序矛盾计数（08 §4 三项命名指标）。
+
+    只统计 `assert_consistent` 的 HARD finding；被拒章的沙盒不一致不在此列——
+    它们的失败信号已由 `validate` 的 rule_id 计入 `hard_violations`，不该反向拉低 §8 E6。
+    """
+    acc = {"canon": 0, "knowledge": 0, "timeline": 0}
+    bucket_to_key = {HardMetric.CANON: "canon", HardMetric.KNOWLEDGE: "knowledge",
+                     HardMetric.TIMELINE: "timeline"}
+    for f in findings:
+        if f.get("severity") != "hard":
+            continue
+        key = bucket_to_key.get(RULE_TO_METRIC.get(f["code"]))
+        if key:
+            acc[key] += 1
+    return acc
