@@ -51,8 +51,8 @@ plot_engine/
 - `Scene`: `scene_id`(`^scn_\d{4}_\d{2}$`), `chapter_no:int`, `seq`(0..6), `location`Optional[str]=None, `characters`List[str]=[], `purpose`str="", `tension`(0..1000, def 500), `beats`(3..7).
 - `ScenePlan`: `plan_id`(`^sop_\d{8}$`), `chapter_no`, `arc_id`, `contract_version:int`, `scenes`(3..7), `derived_from`List[str]=[], `epoch`, `created_at`, `schema_version:int=2`.
 
-- [ ] Tests: 合法最小计划构造成功；`beat_id="bt_1"`→ValidationError；`scene_id="scn_47_1"`→ValidationError；`Scene.beats` 长度 2→ValidationError、8→ValidationError；`ScenePlan.scenes` 长度 2/8→ValidationError；`tension=1001`→ValidationError。
-- [ ] Commit `feat(plot-engine): Scene/Beat/ScenePlan schema models (04 附录 B §8.2)`
+- [x] Tests: 合法最小计划构造成功；`beat_id="bt_1"`→ValidationError；`scene_id="scn_47_1"`→ValidationError；`Scene.beats` 长度 2→ValidationError、8→ValidationError；`ScenePlan.scenes` 长度 2/8→ValidationError；`tension=1001`→ValidationError。
+- [x] Commit `feat(plot-engine): Scene/Beat/ScenePlan schema models (04 附录 B §8.2)`
 
 ## Task 2: SP1–SP7 self-check + reachability
 
@@ -74,8 +74,8 @@ def validate_scene_plan(plan: ScenePlan, contract, state: StoryState) -> Validat
 - SP6：同章内 `scene_id` 全局唯一、`beat_id` 全局唯一（跨 scene）；重复 → HARD。
 - SP7：每个 scene.tension 与 contract.tension_target 偏差 > 300 → SOFT（阈值与 H7.3 一致，05 单源）。
 
-- [ ] Tests: 干净计划 → can_commit 且无 hard；SP1 坏 char/坏 fact → hard；SP2 缺 required event_type → hard；SP3 声明 forbidden REVEALS → hard；SP4 未覆盖 reader_signal → hard；SP5 travel 豁免 + 反向边可达（W-S1）+ 不可达 hard；SP6 重复 beat_id → hard；SP7 偏差 → soft 不阻断。
-- [ ] Commit `feat(plot-engine): SP1–SP7 scene-plan self-check + symmetric reachability (04 附录 B §8.3)`
+- [x] Tests: 干净计划 → can_commit 且无 hard；SP1 坏 char/坏 fact → hard；SP2 缺 required event_type → hard；SP3 声明 forbidden REVEALS → hard；SP4 未覆盖 reader_signal → hard；SP5 travel 豁免 + 反向边可达（W-S1）+ 不可达 hard；SP6 重复 beat_id → hard；SP7 偏差 → soft 不阻断。
+- [x] Commit `feat(plot-engine): SP1–SP7 scene-plan self-check + symmetric reachability (04 附录 B §8.3)`
 
 ## Task 3: 类型接入 scene_plan + 金标 e2e + Commit 回归
 
@@ -83,13 +83,13 @@ def validate_scene_plan(plan: ScenePlan, contract, state: StoryState) -> Validat
 
 **Interfaces:** Consumes Task 1/2 + 现有 `CommitOrchestrator`（Day 12-13）。金标：手写在 04 附录 A/Day 4-7 语境内构造一个能通过 SP 的 ch47 ScenePlan（3 scene，覆盖 OBSERVES/INFERS，含 fact_000003 reader learns，位置可达）。
 
-- [ ] Tests: (a) 金标 ScenePlan 过 `validate_scene_plan`（hard==[]）；(b) 同一计划注入 SP3/SP4 各一处 → 对应 hard 命中；(c) `CommitRequest(scene_plan=<ScenePlan>)` 与 `scene_plan=None` 都能构造；(d) 复用 Day 12-13 `test_commit_orchestrator` 的金标 e2e 仍 OK（回归：scene_plan 字段收紧不破坏 commit）。
-- [ ] Commit `feat(plot-engine): typed scene_plan on CommitRequest + golden SP e2e (04 附录 B)`
+- [x] Tests: (a) 金标 ScenePlan 过 `validate_scene_plan`（hard==[]）；(b) 同一计划注入 SP3/SP4 各一处 → 对应 hard 命中；(c) `CommitRequest(scene_plan=<ScenePlan>)` 与 `scene_plan=None` 都能构造；(d) 复用 Day 12-13 `test_commit_orchestrator` 的金标 e2e 仍 OK（回归：scene_plan 字段收紧不破坏 commit）。
+- [x] Commit `feat(plot-engine): typed scene_plan on CommitRequest + golden SP e2e (04 附录 B)`
 
 ## Task 4: 全绿 + 回归
 
-- [ ] `python -m pytest plot_engine/tests -q` 全绿。
-- [ ] Commit `test(plot-engine): scene-plan layer regression`
+- [x] `python -m pytest plot_engine/tests -q` 全绿。
+- [x] Commit `test(plot-engine): scene-plan layer regression`
 
 ## Out of scope (subsequent plans)
 
