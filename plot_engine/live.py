@@ -47,10 +47,11 @@ def check_reachable(client: LlmClient) -> Tuple[bool, str]:
 
 
 def build_live_source(client: LlmClient, *,
-                      contracts: Callable[[int], ChapterContract],
-                      plans: Callable[[int], ScenePlan]
+                      contracts: Callable[[int, StoryState], ChapterContract],
+                      plans: Callable[[ChapterContract, StoryState], ScenePlan]
                       ) -> Callable[[int, StoryState], ChapterArtifacts]:
-    """逐章产物：契约/场景由调用方给，Draft 与抽取现场交给真实模型。
+    """逐章产物：契约/场景由调用方给（对**当前** State 派生，不是 genesis），
+    Draft 与抽取现场交给真实模型。
 
     `draft=""` 让 `run_experiment` 走 `compose_chapter_draft` + 注入的 LLM SceneWriter；
     只挂 `llm_channel`（规则通道尚未实现 → 单通道置信度 700，仍高于 H8.2 隔离线）。
@@ -58,8 +59,9 @@ def build_live_source(client: LlmClient, *,
     def source(ch: int, cur: StoryState) -> ChapterArtifacts:
         channel = make_llm_channel(client)
         source.channels.append(channel)
-        return ChapterArtifacts(contract=contracts(ch), scene_plan=plans(ch), draft="",
-                                llm_channel=channel)
+        contract = contracts(ch, cur)
+        return ChapterArtifacts(contract=contract, scene_plan=plans(contract, cur),
+                                draft="", llm_channel=channel)
 
     source.channels: list = []
     return source

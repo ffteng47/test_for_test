@@ -24,7 +24,7 @@ def _report(tmp_path, defects, suffix=""):
     log = EventLog(str(tmp_path / f"e{suffix}.db"))
     store.init_genesis(cfg.story_id, cfg.initial_state)
     return run_experiment(cfg, store=store, log=log,
-                          chapter_source=fixture.build_source(defects),
+                          chapter_source=fixture.build_source(defects, cfg.arc_contract),
                           scene_writer=fixture.dummy_writer)
 
 
@@ -129,6 +129,8 @@ def test_cli_live_dumps_drafts_and_proposals_for_triage(tmp_path, monkeypatch):
     text = (tmp_path / "ch01.md").read_text(encoding="utf-8")
     assert "status=" in text and "## Draft" in text and "## Proposals" in text
     assert "OBSERVES" in text
+    # 06 §4.2 的重议只能从这份快照看出来（08 §3 报告字段是逐字表，不许加字段）
+    assert "contract_version=1" in text
 
 
 def test_model_config_accepts_inline_json_and_file(tmp_path):

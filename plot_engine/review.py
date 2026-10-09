@@ -135,6 +135,7 @@ def _offline_dry_run(chapters: int, defects: Dict[int, str]) -> ExperimentReport
     from plot_engine.eventlog import EventLog
     from plot_engine.experiment import run_experiment
     from plot_engine.revision import RevisionLoop
+    from plot_engine.revision_actions import renegotiate_contract
     from plot_engine.store import StateStore
     from plot_engine.writer import compose_chapter_draft
 
@@ -154,24 +155,31 @@ def _offline_dry_run(chapters: int, defects: Dict[int, str]) -> ExperimentReport
         return dataclasses.replace(ctx, draft=asm.draft)
 
     loop = RevisionLoop(actions={"rerun_extraction": lambda ctx: ctx,
-                                 "rewrite_scene": rewrite, "rewrite_chapter": rewrite})
+                                 "rewrite_scene": rewrite, "rewrite_chapter": rewrite,
+                                 "renegotiate_contract": renegotiate_contract(
+                                     cfg.arc_contract, created_at=fx.NOW)})
     return run_experiment(cfg, store=store, log=log,
-                          chapter_source=fx.build_source(defects),
+                          chapter_source=fx.build_source(defects, cfg.arc_contract),
                           scene_writer=fx.dummy_writer, revision_loop=loop)
 
 
-def _write_chapter_dump(dump_dir, ch: int, draft: str, props, out) -> None:
+def _write_chapter_dump(dump_dir, ch: int, ctx, props, out) -> None:
     """逐章落盘 正文 + 抽取产物 + 判定（08 §10 I3：所有 failure 必须记录）。
 
     失败章不进 State，事后无从复现；这份快照是唯一能区分
     「Writer 没写出必需事件」与「抽取漏掉了必需事件」的证据。
+    `contract_version` 一起落盘：重议契约（06 §4.2）是否真的发生过，只能从这里看出来
+    ——`ExperimentReport` 的字段是 08 §3 逐字表，不能往里加。
     """
     from pathlib import Path
 
     d = Path(dump_dir)
     d.mkdir(parents=True, exist_ok=True)
     lines = [f"# Chapter {ch} — status={out.status}",
-             f"message={out.message}", ""]
+             f"message={out.message}",
+             f"contract_version={ctx.contract.version} "
+             f"required_events={sorted(e.event_type for e in ctx.contract.required_events)}",
+             ""]
     if out.validation is not None:
         lines.append("## Findings")
         for f in out.validation.hard_violations:
@@ -181,7 +189,7 @@ def _write_chapter_dump(dump_dir, ch: int, draft: str, props, out) -> None:
         for f in out.validation.observations:
             lines.append(f"- OBS {f.rule_id}: {f.message} | {f.evidence or ''}")
         lines.append("")
-    lines += ["## Draft", draft.strip(), "", "## Proposals"]
+    lines += ["## Draft", ctx.draft.strip(), "", "## Proposals"]
     lines += [f"- {p.proposed_event_type} actor={p.actor} target={p.target} "
               f"payload={p.payload}" for p in props] or ["- （无）"]
     lines.append("")
@@ -204,6 +212,7 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None):
                                   extraction_diagnostics)
     from plot_engine.llm_writer import make_scene_writer
     from plot_engine.revision import RevisionLoop
+    from plot_engine.revision_actions import renegotiate_contract
     from plot_engine.store import StateStore
     from plot_engine.writer import compose_chapter_draft
     from plot_engine.tests.fixtures import experiment_10ch as fx
@@ -227,12 +236,18 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None):
         return dataclasses.replace(ctx, draft=asm.draft)
 
     loop = RevisionLoop(actions={"rerun_extraction": lambda ctx: ctx,
-                                 "rewrite_scene": rewrite, "rewrite_chapter": rewrite})
-    source = build_live_source(client, contracts=fx.contract_for, plans=fx.plan_for)
+                                 "rewrite_scene": rewrite, "rewrite_chapter": rewrite,
+                                 "renegotiate_contract": renegotiate_contract(
+                                     cfg.arc_contract, created_at=fx.NOW)})
+    # 逐章契约/场景对**当前** State 派生：Arc 只有一份，约束必须一章一个样（backlog #1）。
+    source = build_live_source(client,
+                               contracts=lambda ch, cur: fx.contract_for(cfg.arc_contract,
+                                                                         ch, cur),
+                               plans=fx.plan_for)
     on_chapter = None
     if dump_dir is not None:
-        on_chapter = lambda ch, draft, props, out: _write_chapter_dump(
-            dump_dir, ch, draft, props, out)
+        on_chapter = lambda ch, ctx, props, out: _write_chapter_dump(
+            dump_dir, ch, ctx, props, out)
     report = run_experiment(cfg, store=store, log=log, chapter_source=source,
                             scene_writer=writer, revision_loop=loop, llm_client=client,
                             on_chapter=on_chapter)

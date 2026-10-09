@@ -56,7 +56,7 @@ class ChapterIntent(BaseModel):
 _STAGE_TO_READER = {"hinted": "hinted", "partial": "hinted", "confirmed": "knows"}
 
 
-def _intents(arc: ArcContract) -> Dict[int, ChapterIntent]:
+def intents_by_chapter(arc: ArcContract) -> Dict[int, ChapterIntent]:
     out: Dict[int, ChapterIntent] = {}
     for i, raw in enumerate(arc.reader_beats):
         if not isinstance(raw, dict) or "chapter_no" not in raw:
@@ -67,6 +67,17 @@ def _intents(arc: ArcContract) -> Dict[int, ChapterIntent]:
             raise NoChapterIntent(f"arc.reader_beats[{i}] 不是合法的逐章意图：{e}") from e
         out[intent.chapter_no] = intent
     return out
+
+
+def arc_mandated_event_types(arc: ArcContract, chapter_no: int) -> Set[str]:
+    """Arc 强制本章出现的事件类型（D3 turning_point + D6 逾期 gate）。
+    作者与 Revision 都无权删——06 §4.2 的「重议」只放宽作者自订的要求。"""
+    mandated = {etype for tp in arc.turning_points if tp.chapter == chapter_no
+                for etype in tp.required_event_types}
+    if any(g.must_reveal_by_chapter is not None and chapter_no > g.must_reveal_by_chapter
+           for g in arc.knowledge_gates):
+        mandated.add(REVEAL_EVENT)
+    return mandated
 
 
 def _cast(intent: ChapterIntent) -> List[str]:
@@ -104,7 +115,7 @@ def derive_chapter_contract(arc: ArcContract, chapter_no: int, state: StoryState
     start, end = arc.chapter_range
     if not (start <= chapter_no <= end):                      # D1
         raise ValueError(f"chapter_no {chapter_no} 不在 arc 范围 ({start}, {end})")
-    intent = _intents(arc).get(chapter_no)
+    intent = intents_by_chapter(arc).get(chapter_no)
     if intent is None:
         raise NoChapterIntent(f"arc {arc.arc_id} 第 {chapter_no} 章没有 reader_beats 意图")
 

@@ -18,7 +18,7 @@ def _run(tmp_path, defects, loop=None, chapters=10):
     log = EventLog(str(tmp_path / "e.db"))
     store.init_genesis(cfg.story_id, cfg.initial_state)
     return run_experiment(cfg, store=store, log=log,
-                          chapter_source=fixture.build_source(defects),
+                          chapter_source=fixture.build_source(defects, cfg.arc_contract),
                           scene_writer=fixture.dummy_writer, revision_loop=loop)
 
 

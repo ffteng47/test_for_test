@@ -65,17 +65,17 @@ plot_engine/
 
 **Interfaces:** Consumes `derive_*`、`RevisionLoop(actions=...)`、`run_experiment(..., chapter_source=...)`；Produces `traitor_arc_full.arc()` / `.intent_for(ch)` 与 `renegotiate(ctx) -> ChapterContext`。
 
-- [ ] Step 1：写失败测试 `test_revision_renegotiate.py`：
+- [x] Step 1：写失败测试 `test_revision_renegotiate.py`：
   - 契约层 RootCause 触发重议 → `ctx.contract.version == 原版本 + 1`，`draft` 未被重写（06 §4.2「不重写 Draft」）；
   - **重议不得丢掉 Arc 强制项**：由 D3 turning_point 或 D6 逾期 gate 派生的 event_type，重议后仍在 `required_events` 里；
   - 只剩作者自订要求可放宽时，重议把该要求去掉并记 `reason`；
   - Arc 强制项就是失败原因且无法放宽 → 走 `escalate_to_arc`（`_LEVEL_TO_ACTION["arc"]`），落 `needs_human`，不静默通过。
-- [ ] Step 2：确认失败 = `ModuleNotFoundError: plot_engine.revision_actions`。
-- [ ] Step 3：实现 `revision_actions.py`：`renegotiate_contract(arc, chapter_no, state, *, created_at)` → 用 `derive_chapter_contract(..., version=cur+1)` 重派生，剔除**仅作者自订**且被 HARD 判 impossible 的 required/forbidden 项；Arc 派生项保留；`ArcConflict` 继续上抛。
-- [ ] Step 4：夹具 `tests/fixtures/traitor_arc_full.py`：`chapter_range=(1,10)`、`tension_curve` 10 值、3 个 turning_points（第 3/6/9 章）、3 个 knowledge_gates（含一个 `must_reveal_by_chapter` 逾期）、10 条逐章 `reader_beats` 意图。
-- [ ] Step 5：改 `review.py` 的 `_offline_dry_run` 与 `_live_run`：`contracts=lambda ch: derive_chapter_contract(arc, ch, state, ...)`、`plans=lambda ...: derive_scene_plan(...)`，并把 `renegotiate_contract` 注册进 `RevisionLoop.actions`。`chapter_source` 需要「当前 State」，而派生发生在 `source(ch, cur)` 里 → 用 `cur` 派生，不用 genesis。
-- [ ] Step 6：加回归：同一 fixture 跑 10 章，断言各章 `required_events` 类型集合**不全相同**（Review Focus #4）；`contract.version` 在报告里可见。
-- [ ] Step 7：全绿 + Commit `feat(plot-engine): 派生契约接入实验 + renegotiate_contract（06 §4.2）`。
+- [x] Step 2：确认失败 = `ModuleNotFoundError: plot_engine.revision_actions`。
+- [x] Step 3：实现 `revision_actions.py`：`renegotiate_contract(arc, chapter_no, state, *, created_at)` → 用 `derive_chapter_contract(..., version=cur+1)` 重派生，剔除**仅作者自订**且被 HARD 判 impossible 的 required/forbidden 项；Arc 派生项保留；`ArcConflict` 继续上抛。
+- [x] Step 4：夹具 `tests/fixtures/traitor_arc_full.py`：`chapter_range=(1,10)`、`tension_curve` 10 值、3 个 turning_points（第 3/6/9 章）、3 个 knowledge_gates（含一个 `must_reveal_by_chapter` 逾期）、10 条逐章 `reader_beats` 意图。
+- [x] Step 5：改 `review.py` 的 `_offline_dry_run` 与 `_live_run`：`contracts=lambda ch: derive_chapter_contract(arc, ch, state, ...)`、`plans=lambda ...: derive_scene_plan(...)`，并把 `renegotiate_contract` 注册进 `RevisionLoop.actions`。`chapter_source` 需要「当前 State」，而派生发生在 `source(ch, cur)` 里 → 用 `cur` 派生，不用 genesis。
+- [x] Step 6：加回归：同一 fixture 跑 10 章，断言各章 `required_events` 类型集合**不全相同**（Review Focus #4）；`contract.version` 在报告里可见。
+- [x] Step 7：全绿 + Commit `feat(plot-engine): 派生契约接入实验 + renegotiate_contract（06 §4.2）`。
 
 ## Task 4：带逐章契约的重跑 + 重复采样判定 E2/E4
 
@@ -83,3 +83,16 @@ plot_engine/
 - [ ] Step 2：`python -m plot_engine.review --live --chapters 10 --model-config @router_qwen3.json --dump-dir <新目录>`，记录 `生成/提交/未决`、`tokens`、§6 分类、§7 闸、§8 E1–E6。
 - [ ] Step 3：**同一配置再跑 2 次**（backlog #6：单次运行含不可量化方差），把三次的 E2/E4 结果并列写进 `docs/phase0-live-run-10ch.md` 新节；结论只按「三次是否一致」下，不取单次作数。
 - [ ] Step 4：把派生契约带来的变化写进报告 §7 backlog（#1 关闭、#2 关闭，以及新暴露的项）。Commit `test(plot-engine): 逐章派生契约下的 10 章重跑（三次采样）`。
+
+
+## 执行记录（Task 3 偏离）
+
+- 夹具落在既有的 `tests/fixtures/experiment_10ch.py`，不新建 `traitor_arc_full.py`：测试与 CLI
+  共用同一份 arc 定义，两套假数据必然漂移。
+- `renegotiate_contract(arc, *, created_at)`：state 改从 `ChapterContext.state` 取（新增字段），
+  签名少一个参数，动作在循环里一次注册即可服务所有章节。
+- 「记 reason」改为 `contract.version` 逐章落进 `--dump-dir` 快照（`contract_version=` 行）：
+  `ExperimentReport` 的字段是 08 §3 逐字表，往里加字段等于改协议。
+- Arc 多了一个 `fact_000004`（只在 State 里定义、事件流从不引用）配一个 `allowed_after_chapter=
+  chapters//2` 的中段闸门：Review Focus #4 要求「十章约束真的不同」，而 D5/D9 的逐章变化只能
+  由**在弧内到期**的闸门产生——三条 gate 全在首章到期就等于没有变化。

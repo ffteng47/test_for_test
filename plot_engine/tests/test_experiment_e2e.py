@@ -16,7 +16,7 @@ def _run(tmp_path, chapters, defects=None, suffix=""):
     log = EventLog(str(tmp_path / f"e{suffix}.db"))
     store.init_genesis(cfg.story_id, cfg.initial_state)
     return run_experiment(cfg, store=store, log=log,
-                          chapter_source=fixture.build_source(defects),
+                          chapter_source=fixture.build_source(defects, cfg.arc_contract),
                           scene_writer=fixture.dummy_writer)
 
 
@@ -28,6 +28,27 @@ def test_ten_chapters_all_valid_meets_exit_conditions(tmp_path):
     assert rep.timeline_contradictions == 0 and rep.hard_violations == {}
     ec = evaluate_exit_conditions(rep)
     assert ec == {"E1": True, "E2": True, "E3": None, "E4": True, "E5": True, "E6": True}
+
+
+def test_ten_chapters_do_not_share_one_constraint_set(tmp_path):
+    """Review Focus #4：十章派生后若各章 `required_events` 全等，说明 Arc 其实只有一个
+    turning point，实验依旧只在测「一条约束重复十遍」而不是跨章推进。"""
+    cfg = fixture.make_config(10)
+    src = fixture.build_source(arc=cfg.arc_contract)
+    arts = [src(ch, cfg.initial_state) for ch in range(1, 11)]
+    required = [frozenset(e.event_type for e in a.contract.required_events) for a in arts]
+    assert len(set(required)) > 1
+    assert required[0] == {"OBSERVES"} and required[4] == {"INFERS"}      # 第 1/5/9 章的拐点
+    assert required[-2] == {"OBSERVES", "INFERS"}
+    # D2'：张力逐章取曲线值 → 十条互不相同
+    assert len({a.contract.tension_target for a in arts}) == 10
+    # D5/D9：中段闸门（第 5 章起对读者暗示 fact_000004）→ 前半程 forbidden、后半程有信号
+    sigs = [frozenset((s.fact_id, s.target_state) for s in a.contract.reader_signals)
+            for a in arts]
+    assert sigs[0] != sigs[4] and sigs[4] == sigs[9]
+    assert ("fact_000004", "hinted") in sigs[4]
+    forbidden = [frozenset(a.contract.knowledge_forbidden) for a in arts]
+    assert "fact_000004" in forbidden[0] and "fact_000004" not in forbidden[4]
 
 
 def test_defects_land_in_correct_hard_metric_buckets(tmp_path):

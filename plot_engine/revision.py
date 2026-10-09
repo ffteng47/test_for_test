@@ -16,6 +16,7 @@ from plot_engine.models.revision import (
     RevisionPolicy, RevisionStep, RevisionTrace, RootCause, RootCauseLevel,
 )
 from plot_engine.models.sceneplan import ScenePlan
+from plot_engine.models.state import StoryState
 from plot_engine.validator import ValidationResult
 
 # 回退动作只改「本章产物」，不碰 State：Contract 层换 Contract，Writer 层换 Draft。
@@ -24,6 +25,11 @@ class ChapterContext:
     contract: ChapterContract
     scene_plan: Optional[ScenePlan] = None
     draft: str = ""
+    # 动作需要的上下文：`state` = 本章开工时的已提交状态（重议契约要对它求解），
+    # `unsatisfied_event_types` = 循环在调用动作前填进来的 H5.1 evidence（事件类型，非中文消息）。
+    state: Optional[StoryState] = None
+    unsatisfied_event_types: List[str] = dataclasses.field(default_factory=list)
+
 
 Action = Callable[[ChapterContext], ChapterContext]
 Recommit = Callable[[ChapterContext], CommitOutcome]
@@ -91,6 +97,13 @@ def is_oscillating(prev: Sequence[str], cur: Sequence[str]) -> bool:
     return bool(prev) and set(prev) == set(cur)
 
 
+def _unsatisfied_types(result: ValidationResult) -> List[str]:
+    """H5.1 的 evidence 就是落空的事件类型（05 结构化字段）；动作靠它判断放宽哪一条，
+    绝不去解析中文消息。"""
+    return sorted({f.evidence for f in result.hard_violations
+                   if f.rule_id == "H5.1" and f.evidence})
+
+
 class RevisionLoop:
     """单章修订循环（06 §6 七步）。`actions` 里没提供的动作一律视为不可执行 → 转人工。"""
 
@@ -148,7 +161,8 @@ class RevisionLoop:
                 trace.final_status = "NEEDS_HUMAN"
                 return trace, outcome
 
-            ctx = self.actions[action](ctx)
+            ctx = self.actions[action](dataclasses.replace(
+                ctx, unsatisfied_event_types=_unsatisfied_types(outcome.validation)))
             trace.rounds += 1
             outcome = recommit(ctx)
             trace.steps.append(RevisionStep(round_no=trace.rounds, root_cause=rc,

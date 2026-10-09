@@ -27,13 +27,20 @@ def _client(n_replies: int = 40):
     return LlmClient(router, transport=transport)
 
 
+def _source(client, cfg):
+    """逐章契约/场景 = 对**当前** State 派生（backlog #1：一份 Arc，十章各不相同）。"""
+    return build_live_source(client,
+                             contracts=lambda ch, cur: fx.contract_for(cfg.arc_contract, ch, cur),
+                             plans=fx.plan_for)
+
+
 def _harness(tmp_path, client, chapters=2):
     cfg = fx.make_config(chapters)
     store = StateStore(str(tmp_path / "state.db"))
     log = EventLog(str(tmp_path / "event.db"))
     store.init_genesis(cfg.story_id, cfg.initial_state)
     from plot_engine.experiment import run_experiment
-    src = build_live_source(client, contracts=fx.contract_for, plans=fx.plan_for)
+    src = _source(client, cfg)
     rep = run_experiment(cfg, store=store, log=log, chapter_source=src,
                          scene_writer=_writer(client), llm_client=client)
     return cfg, store, log, rep
@@ -46,12 +53,13 @@ def _writer(client):
 
 def test_live_source_defers_draft_to_the_real_writer(tmp_path):
     client = _client()
-    src = build_live_source(client, contracts=fx.contract_for, plans=fx.plan_for)
-    art = src(1, fx.make_config(1).initial_state)
+    cfg = fx.make_config(1)
+    src = _source(client, cfg)
+    art = src(1, cfg.initial_state)
     assert isinstance(art, ChapterArtifacts)
     assert art.draft == "" and art.llm_channel is not None and art.rule_channel is None
-    asm = compose_chapter_draft(art.scene_plan, art.contract,
-                                 fx.make_config(1).initial_state, _writer(client))
+    asm = compose_chapter_draft(art.scene_plan, art.contract, cfg.initial_state,
+                                 _writer(client))
     assert "张三凝视印章。" in asm.draft
     assert asm.draft.count("<!-- hook:") == 1
 
@@ -71,7 +79,8 @@ def test_offline_path_is_byte_for_byte_unchanged(tmp_path):
     store = StateStore(str(tmp_path / "s2.db"))
     log = EventLog(str(tmp_path / "e2.db"))
     store.init_genesis(cfg.story_id, cfg.initial_state)
-    rep = run_experiment(cfg, store=store, log=log, chapter_source=fx.build_source(),
+    rep = run_experiment(cfg, store=store, log=log,
+                         chapter_source=fx.build_source(arc=cfg.arc_contract),
                          scene_writer=fx.dummy_writer)
     assert (rep.total_tokens, rep.total_duration_ms) == (0, 0)
 
@@ -100,9 +109,11 @@ def test_build_client_from_config_dict_selects_router_roles():
 def test_live_source_keeps_channels_so_baddies_are_visible():
     """坏料只在通道里，跑完就丢 → 抽取质量无法归因（05 §9 I6）。"""
     client = _client()
-    src = build_live_source(client, contracts=fx.contract_for, plans=fx.plan_for)
-    art = src(1, fx.make_config(1).initial_state)
-    art.llm_channel("正文", None, fx.contract_for(1), fx.make_config(1).initial_state)
+    cfg = fx.make_config(1)
+    src = _source(client, cfg)
+    art = src(1, cfg.initial_state)
+    art.llm_channel("正文", None, fx.contract_for(cfg.arc_contract, 1, cfg.initial_state),
+                    cfg.initial_state)
     assert src.channels == [art.llm_channel]
 
 
@@ -110,9 +121,11 @@ def test_extraction_diagnostics_counts_proposals_and_bad_reasons():
     from plot_engine.live import extraction_diagnostics
 
     client = _client()
-    src = build_live_source(client, contracts=fx.contract_for, plans=fx.plan_for)
-    state = fx.make_config(1).initial_state
-    src(1, state).llm_channel("正文", None, fx.contract_for(1), state)
-    src(2, state).llm_channel("正文", None, fx.contract_for(2), state)
+    cfg = fx.make_config(2)
+    src = _source(client, cfg)
+    state = cfg.initial_state
+    for ch in (1, 2):
+        src(ch, state).llm_channel(
+            "正文", None, fx.contract_for(cfg.arc_contract, ch, state), state)
     diag = extraction_diagnostics(src.channels)
     assert diag["proposals"] == 2 and diag["malformed"] == {}

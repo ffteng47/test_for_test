@@ -1,9 +1,10 @@
 """10 章实验驱动 + Phase-0 退出条件闸门（08_experiment_protocol.md §5/§8）。
 
-网络无关：逐章产物由注入的 `chapter_source` 提供，Writer/抽取通道亦注入；真实模型与
-Arc→Contract→ScenePlan 生成器不在 Phase 0（见 Day 20–22 计划偏离记录）。本模块只**编排**
-既有管道（Writer→Stage-0→CommitOrchestrator）并按 §4 归类硬指标，绝不新增 HARD 判据（08 I2）。
-Revision 循环（06）未落地 → `revision_*` 记未运行、E3 标 N/A；tokens/cost/计时恒 0。
+网络无关：逐章产物由注入的 `chapter_source` 提供，Writer/抽取通道亦注入；Arc→Contract→
+ScenePlan 由 `plot_engine.derive` 确定性派生（04 §4.3），ChapterContext 带上本章开工时的
+State 供契约层回退（06 §4.2）使用。本模块只**编排**既有管道
+（Writer→Stage-0→CommitOrchestrator）并按 §4 归类硬指标，绝不新增 HARD 判据（08 I2）。
+Revision 循环（06）由调用方注入；不注入时 `revision_*` 记未运行、E3 标 N/A。
 """
 from __future__ import annotations
 
@@ -36,7 +37,7 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
                    validator: Optional[Validator] = None,
                    revision_loop: Optional[RevisionLoop] = None,
                    llm_client: Optional[LlmClient] = None,
-                   on_chapter: Optional[Callable[[int, str, List[EventProposal],
+                   on_chapter: Optional[Callable[[int, ChapterContext, List[EventProposal],
                                                   CommitOutcome], None]] = None,
                    ) -> ExperimentReport:
     reducer = reducer or Reducer()
@@ -61,18 +62,19 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
         cur, cur_version = env.state, env.version
         art = chapter_source(ch, cur)
         draft = art.draft or compose_chapter_draft(art.scene_plan, art.contract, cur, scene_writer).draft
-        captured: Dict[str, object] = {"draft": draft, "props": []}
+        captured: Dict[str, list] = {"props": []}
 
         def recommit(ctx: ChapterContext) -> "CommitOutcome":
             props = stage0_extract(ctx.draft, ctx.scene_plan, ctx.contract, cur, chapter=ch,
                                    rule_channel=art.rule_channel, llm_channel=art.llm_channel)
-            captured["draft"], captured["props"] = ctx.draft, props
+            captured["props"] = props
             req = CommitRequest(story_id=story, chapter_no=ch, draft=ctx.draft,
                                 contract=ctx.contract, scene_plan=ctx.scene_plan,
                                 expected_version=cur_version, trace_id=f"exp-{ch}")
             return orch.commit(req, props, cur)
 
-        ctx = ChapterContext(contract=art.contract, scene_plan=art.scene_plan, draft=draft)
+        ctx = ChapterContext(contract=art.contract, scene_plan=art.scene_plan,
+                             draft=draft, state=cur)
         if revision_loop is None:
             out = recommit(ctx)
         else:
@@ -82,7 +84,7 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
                 needed_revision += 1
                 fixed_by_revision += int(out.status == "OK")
         if on_chapter is not None:
-            on_chapter(ch, str(captured["draft"]), list(captured["props"]), out)
+            on_chapter(ch, ctx, list(captured["props"]), out)
         generated += 1
 
         # §4/§6：validation 层硬规则按 rule_id 计入 hard_violations（含被拒章，作失败分类信号）。
