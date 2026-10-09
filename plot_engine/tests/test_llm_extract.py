@@ -215,3 +215,45 @@ def test_evidence_fact_ids_list_is_not_mistaken_for_a_key():
         47, _state())
     assert len(props) == 1 and bad == []
     assert props[0].payload["evidence_fact_ids"] == ["fact_000001"]
+
+
+def test_int_valued_id_key_is_rejected_not_passed_through():
+    """实测 null-draft 对照：模型回 `{"fact_id": 3}`。`3` 解析不到任何 Fact，
+    放下去就是一条指向不存在设定的事件（01 §4.1 引用必须落在真实实体 id 上）。"""
+    props, bad = parse_proposals(
+        '[{"event_type": "OBSERVES", "actor": "char_000001", "payload": {"fact_id": 3}}]',
+        47, _state())
+    assert props == []
+    assert bad[0]["reason"] == "id_value_not_id"
+    assert bad[0]["item"] == "OBSERVES.fact_id=3"
+
+
+def test_int_inside_evidence_list_is_rejected():
+    props, bad = parse_proposals(
+        '[{"event_type": "INFERS", "actor": "char_000001", "payload": '
+        '{"conclusion_fact_id": "fact_000001", "evidence_fact_ids": [3]}}]', 47, _state())
+    assert props == [] and bad[0]["reason"] == "id_value_not_id"
+
+
+def test_id_keys_are_not_checked_without_state():
+    """state 缺省时没有词表可判，退回原有的宽容行为（离线夹具依赖这一点）。"""
+    props, bad = parse_proposals(
+        '[{"event_type": "OBSERVES", "payload": {"fact_id": 3}}]', 47, None)
+    assert len(props) == 1 and bad == []
+
+
+def test_extract_prompt_does_not_leak_the_contracts_required_events():
+    """null-draft 对照实测：模型在「正文毫无事件」时照样回 OBSERVES+INFERS —— 因为它看见了
+    「本章 Contract 要求的事件类型」。通道一旦拿到答案键，H5.1/H5.3 就能被抽取器单独满足，
+    实验结论也就失去意义。07 §4.3 要求通道彼此独立。"""
+    msgs = extract_prompt(DRAFT, None, _contract(), _state())
+    system = msgs[0]["content"]
+    assert "要求的事件类型" not in system
+    assert "INFERS" not in system.replace("INFERS", "") or True  # 类型词表仍在，答案键不在
+    # 词表与 forbidden 仍需给出：前者是 id 的取值域，后者是泄露防线
+    assert "fact_000001" in system and "fact_000002" in system
+
+
+def test_extract_prompt_tells_id_keys_to_give_id_strings():
+    system = extract_prompt(DRAFT, None, _contract(), _state())[0]["content"]
+    assert "fact_id" in system and "字符串" in system

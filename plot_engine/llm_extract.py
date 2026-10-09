@@ -78,6 +78,31 @@ def _has_unknown_id(value, known: set) -> bool:
     return False
 
 
+# 词表里这些键的值必须是可解析的实体 id（整数/自由文本都不行）；
+# 与之相对 trust_level/belief_strength 是定点整数，new_narrative_truth 是枚举。
+_ID_VALUE_KEYS = {"fact_id", "conclusion_fact_id", "stated_fact_id", "audience"}
+_ID_LIST_KEYS = {"evidence_fact_ids"}
+
+
+def _bad_id_key(etype: str, payload: dict, known: set) -> Optional[str]:
+    """返回第一个「该是 id 却不是已知 id」的 `TYPE.key=value` 描述，None 表示干净。"""
+    def check(key, value):
+        if key in _ID_LIST_KEYS:
+            if (isinstance(value, list) and value
+                    and all(isinstance(v, str) and v in known for v in value)):
+                return None
+        elif isinstance(value, str) and value in known:
+            return None
+        return f"{etype}.{key}={value!r}"
+
+    for key in _ID_VALUE_KEYS | _ID_LIST_KEYS:
+        if key in payload:
+            found = check(key, payload[key])
+            if found:
+                return found
+    return None
+
+
 def extract_json_array(raw: str) -> Optional[list]:
     """从模型回复里取第一个完整 JSON 数组：容忍 ``` 围栏与前后废话。"""
     start, end = raw.find("["), raw.rfind("]")
@@ -126,6 +151,11 @@ def parse_proposals(raw: str, chapter: int,
             bad.append({"reason": "missing_payload_keys",
                         "item": f"{etype} 缺 {','.join(missing)}"})
             continue
+        if known is not None:
+            bad_ref = _bad_id_key(etype, payload, known)
+            if bad_ref:
+                bad.append({"reason": "id_value_not_id", "item": bad_ref})
+                continue
         # 模型会把 schema 提示 `OBSERVES:fact_id` 回声成 payload 键。事件本身有效，
         # 剥掉回声键并记账，别让提示词脚手架进 EventLog（08 §10 I3：不可静默）。
         declared = set(PAYLOAD_SCHEMA[etype])
@@ -161,22 +191,27 @@ def _numbered(draft: str) -> str:
 
 
 def extract_prompt(draft, scene_plan, contract, state) -> List[dict]:
-    """抽取提示：可承接的事件类型 + payload 键 + State 词表 + Contract 要求 + 带段号正文。"""
+    """抽取提示：可承接的事件类型 + payload 键 + State 词表 + 带段号正文。
+
+    **不给 Contract 的 required_events**：实测模型看到答案键后，即使正文一个事件都没有
+    也会照单输出 OBSERVES/INFERS，H5.1/H5.3 就变成抽取器自证。通道必须彼此独立（07 §4.3）。
+    """
     taxonomy = " / ".join(sorted(PAYLOAD_SCHEMA))
-    required = " / ".join(e.event_type for e in contract.required_events) or "（无）"
     forbidden = " / ".join(contract.knowledge_forbidden) or "（无）"
     rules = [
         "你是叙事事件抽取器。只输出一个 JSON 数组，不要任何解释文字。",
         '数组每个元素形如 {"event_type": str, "actor": str|null, "target": str|null, '
         '"payload": object, "paragraph": 整数段号}。',
-        f"event_type 只能取（本阶段只承接这些，其余写了也没用）: {taxonomy}。",
+        "event_type 只能取（本阶段只承接这些，其余写了也没用）:",
+        f"  {taxonomy}。",
         f"payload 必须给全这些键: {_SCHEMA_HINT}。",
         "payload 的键名只能是上面列出的键名本身，绝不要把事件类型名（如 OBSERVES）写成键。",
-        "payload 与 actor/target 的值只能是下面词表里的 id 或整数，"
-        "绝不能用「印章」这类自由文本代替 id。",
-        "id 只能使用下面词表里出现过的，绝不自造 id。",
-        "数值一律整数（不要小数）。不要输出 preconditions。",
-        f"本章 Contract 要求的事件类型: {required}。",
+        "fact_id / conclusion_fact_id / stated_fact_id / audience 这些键的值必须是下面词表里"
+        "出现过的 id 字符串（如 \"fact_000001\"），绝不要写成 3 这样的裸整数，也绝不要用"
+        "「印章」这类自由文本代替 id。",
+        "只有 trust_level / message_strength / belief_strength 这类数值键才给整数，且一律整数（不要小数）。",
+        "actor/target 用词表里的 id，或 null。id 绝不自造。不要输出 preconditions。",
+        "只抽取正文里真实发生的事件；正文没有的事件就不要输出，宁缺毋造。",
         f"禁止把这些事实作为事件内容泄露: {forbidden}。",
     ]
     if state is not None:
