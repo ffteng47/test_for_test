@@ -1,16 +1,17 @@
 """Commit 管道数据契约（07 §4.1 输入 / §11.1 追踪 / 结果）。
 
-模型层只做 schema，四阶段编排在 `plot_engine.commit`。`scene_plan` 本应必填
-（07 §4.1 ScenePlan），Phase 0 的 ScenePlan 生成在 Day 14–16 才落地，故此处
-可选并留 `Any`（documented deviation，见 Day 12-13 计划 Global Constraints）。
+模型层只做 schema，四阶段编排在 `plot_engine.commit`。`scene_plan`（07 §4.1 ScenePlan）
+自 Day 14–16 起落地为类型化字段；Phase 0 ScenePlan 由 Plot 层生成、pre-Writer 校验，
+不进 Event Log，故 CommitRequest 仅承载、`CommitOrchestrator` 不强依赖。
 """
 from __future__ import annotations
 
-from typing import Any, Literal, Optional
+from typing import Literal, Optional
 
 from pydantic import BaseModel
 
 from plot_engine.models.contract import ChapterContract
+from plot_engine.models.sceneplan import ScenePlan
 from plot_engine.validator import ValidationResult
 
 CommitStatus = Literal["OK", "FAIL", "CONFLICT", "DUPLICATE", "IO_ERROR",
@@ -23,7 +24,7 @@ class CommitRequest(BaseModel):
     chapter_no: int
     draft: str                              # 含 §4.4 markup 的整章文本
     contract: ChapterContract
-    scene_plan: Optional[Any] = None        # Day 14–16 落地，暂缺省
+    scene_plan: Optional[ScenePlan] = None    # Day 14–16 落地：规划产物，仅承载
     expected_version: int                   # CAS 用
     trace_id: str
 

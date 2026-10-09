@@ -34,11 +34,11 @@ def test_request_scene_plan_optional_none():
     assert req.scene_plan is None
 
 
-def test_request_scene_plan_accepts_arbitrary():
-    req = CommitRequest(story_id="s1", chapter_no=47, draft="正文",
-                        contract=_contract(), scene_plan={"scenes": []},
-                        expected_version=0, trace_id="t1")
-    assert req.scene_plan == {"scenes": []}
+def test_request_scene_plan_rejects_non_sceneplan():
+    with pytest.raises(ValidationError):
+        CommitRequest(story_id="s1", chapter_no=47, draft="正文",
+                      contract=_contract(), scene_plan={"scenes": []},
+                      expected_version=0, trace_id="t1")
 
 
 def test_status_accepts_all_six_literals():
