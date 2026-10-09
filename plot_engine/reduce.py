@@ -47,5 +47,8 @@ def reduce_commit(state: StoryState, proposals: List[EventProposal], contract,
         return ReducedBatch(None, [], result, quarantined, [])
     applied = sim.applied
     new_state = apply_events(state, applied, Reducer())
-    consistency = assert_consistent(new_state, applied) if applied else []
+    consistency = (assert_consistent(new_state, applied,
+                                     committed_ids=set(committed_event_ids)
+                                     | {e.event_id for e in applied})
+                   if applied else [])
     return ReducedBatch(new_state, applied, result, quarantined, consistency)

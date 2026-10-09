@@ -35,6 +35,11 @@ class CommitOrchestrator:
         epoch = arc_state.epoch
         chapter_no = request.chapter_no
         version_before = request.expected_version
+        # EventLog 只追加，被回滚的章标 orphan 后即从读取路径消失 → 日志就是「已提交事件集」。
+        # 调用方（实验、修订循环）不知道该传什么，也不该由它记得：ledger 里指向历史章的
+        # source 指针是既成事实，漏了它就等于每章都判上一章的账为悬空引用（07 §6 R4/R5）。
+        committed_event_ids = committed_event_ids | frozenset(
+            e.event_id for e in self._log.read_story(request.story_id))
 
         def trace(result: CommitStatus, *, hard=0, soft=0, obs=0, quar=0,
                   after: Optional[int] = None) -> CommitTrace:
@@ -68,7 +73,7 @@ class CommitOrchestrator:
             if not reasons:
                 reasons.append("unspecified")
             return CommitOutcome(status="FAIL", trace=trace("FAIL", **counts),
-                                 validation=rb.validation,
+                                 validation=rb.validation, consistency=rb.consistency,
                                  message="not committable: " + "+".join(reasons))
 
         psh = proposal_set_hash([e.model_dump(mode="json") for e in rb.applied])
@@ -80,25 +85,25 @@ class CommitOrchestrator:
                                       events=rb.applied)
         except sqlite3.Error as exc:                       # 07 §7.4 F1/F3/F5
             return CommitOutcome(status="IO_ERROR", trace=trace("IO_ERROR", **counts),
-                                 validation=rb.validation, message=f"persist error: {exc}")
+                                 validation=rb.validation, consistency=rb.consistency, message=f"persist error: {exc}")
 
         if res.status == "CONFLICT":
             return CommitOutcome(status="CONFLICT", current_version=res.current_version,
-                                 trace=trace("CONFLICT", **counts), validation=rb.validation,
+                                 trace=trace("CONFLICT", **counts), validation=rb.validation, consistency=rb.consistency,
                                  message=res.message)
         if res.status == "DUPLICATE":
             return CommitOutcome(status="DUPLICATE", new_version=res.new_version,
                                  trace=trace("DUPLICATE", **counts, after=res.new_version),
-                                 validation=rb.validation, message=res.message)
+                                 validation=rb.validation, consistency=rb.consistency, message=res.message)
 
         # §7.5：提交成功后增量 Replay 对账，不一致则回滚本次 Commit
         if not verify_parity(self._store, self._log, self._reducer, request.story_id, chapter_no):
             self._store.revert_commit(request.story_id, res.new_version, chapter_no, psh, self._log)
             return CommitOutcome(status="REPLAY_INCONSISTENT", trace=trace("REPLAY_INCONSISTENT",
                                                                             **counts),
-                                 validation=rb.validation,
+                                 validation=rb.validation, consistency=rb.consistency,
                                  message="replay state_hash mismatch (07 §7.5 R6)")
 
         return CommitOutcome(status="OK", new_version=res.new_version,
                              trace=trace("OK", **counts, after=res.new_version),
-                             validation=rb.validation)
+                             validation=rb.validation, consistency=rb.consistency)

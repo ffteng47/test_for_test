@@ -188,7 +188,11 @@ def _write_chapter_dump(dump_dir, ch: int, ctx, props, out) -> None:
             lines.append(f"- SOFT {f.rule_id}: {f.message}")
         for f in out.validation.observations:
             lines.append(f"- OBS {f.rule_id}: {f.message} | {f.evidence or ''}")
-        lines.append("")
+    if out.consistency:
+        lines.append("## Consistency")
+        for f in out.consistency:
+            lines.append(f"- {f['severity'].upper()} {f['code']}: {f['detail']}")
+    lines.append("")
     lines += ["## Draft", ctx.draft.strip(), "", "## Proposals"]
     lines += [f"- {p.proposed_event_type} actor={p.actor} target={p.target} "
               f"payload={p.payload}" for p in props] or ["- （无）"]

@@ -6,7 +6,7 @@
 from __future__ import annotations
 
 from collections import Counter
-from typing import Dict, List
+from typing import Dict, List, Optional, Set
 
 from plot_engine.models.event import Event
 from plot_engine.models.state import StoryState
@@ -180,14 +180,21 @@ def _check_contradicted_unknown(state: StoryState, events: List[Event], findings
                      f"对未知事实 {fact_id!r} 施加 FACT_CONTRADICTED（{ev.event_id}，03 §5.4）")
 
 
-def assert_consistent(state: StoryState, events: List[Event]) -> List[dict]:
+def assert_consistent(state: StoryState, events: List[Event], *,
+                      committed_ids: Optional[Set[str]] = None) -> List[dict]:
+    """`events` = 本次施加的事件；`committed_ids` = 判定「已提交事件集」的范围。
+
+    增量提交时二者不同：ledger 记录指向的 source 可能是历史章的事件，只有全量集
+    （Replay / 实验末章对账）才不会把它误判成悬空引用（07 §6 R4/R5）。
+    """
     findings: List[dict] = []
     _check_id_uniqueness(state, findings)
     _check_entity_refs(state, findings)
     _check_edges(state, findings)
     _check_overdraw(events, findings)
     _check_actor_status(state, events, findings)
-    _check_ledgers(state, {e.event_id for e in events}, findings)
+    _check_ledgers(state, committed_ids if committed_ids is not None
+                   else {e.event_id for e in events}, findings)
     _check_reveal_stage(state, findings)
     _check_contradicted_unknown(state, events, findings)
     for ev in events:  # 事件层引用（actor/target/location/payload）

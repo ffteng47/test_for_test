@@ -80,3 +80,16 @@ class EventLog:
             (story_id, from_chapter, to_chapter),
         )
         return [self._hydrate(row[0]) for row in cur.fetchall()]
+
+    def read_story(self, story_id: str) -> List[Event]:
+        """整条故事的已提交事件（被回滚章已标 orphan，天然不在内）。
+
+        「已提交事件集」的定义就是日志本身，不是 `1..state.chapter_no`：
+        实验夹具会跳章（弧范围 47 起），按上界裁会漏掉真实存在的历史事件。
+        """
+        cur = self._conn.execute(
+            "SELECT payload_json FROM events WHERE story_id = ? AND orphan = 0 "
+            "ORDER BY chapter, seq",
+            (story_id,),
+        )
+        return [self._hydrate(row[0]) for row in cur.fetchall()]

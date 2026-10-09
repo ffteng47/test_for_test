@@ -6,7 +6,7 @@
 """
 from __future__ import annotations
 
-from typing import Literal, Optional
+from typing import Any, Dict, List, Literal, Optional
 
 from pydantic import BaseModel
 
@@ -63,3 +63,6 @@ class CommitOutcome(BaseModel):
     message: str = ""
     trace: CommitTrace
     validation: Optional[ValidationResult] = None
+    # Stage 2 不变量判定（{code, severity, detail}）。被拒章也要带出来：
+    # 只有 `consistency_hard=n` 而无 code 的失败进不了 08 §6 任何桶，等于没被记录。
+    consistency: List[Dict[str, Any]] = []

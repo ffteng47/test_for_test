@@ -88,7 +88,8 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
         generated += 1
 
         # §4/§6：validation 层硬规则按 rule_id 计入 hard_violations（含被拒章，作失败分类信号）。
-        mc = classify_outcome(out)
+        # Stage 2 的不变量矛盾同样带 code：只在 message 里出现数字的失败无法归桶。
+        mc = classify_outcome(out, consistency=out.consistency)
         for k, v in mc.by_rule.items():
             total.by_rule[k] = total.by_rule.get(k, 0) + v
 
@@ -115,8 +116,7 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
 
     # committed 状态的设定/知识/时序矛盾：只对真正入库的故事负责（08 §4 三项命名指标）。
     final_env = store.load_latest(story)
-    committed_events = log.read_range(story, 1, final_env.state.chapter_no) \
-        if committed else []
+    committed_events = log.read_story(story) if committed else []
     named = consistency_counts(assert_consistent(final_env.state, committed_events))
 
     report = ExperimentReport(
