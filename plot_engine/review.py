@@ -160,15 +160,65 @@ def _offline_dry_run(chapters: int, defects: Dict[int, str]) -> ExperimentReport
                           scene_writer=fx.dummy_writer, revision_loop=loop)
 
 
+def _live_run(chapters: int, model_config: dict, *, client=None, defects=None):
+    """真实模型实验：Writer/抽取换成本地端点，其余管道与离线演练完全一致。
+
+    返回 `(report|None, 说明)`：端点不可达时不烧预算，直接给出原因。
+    `client` 可注入，供测试保持零网络。
+    """
+    import dataclasses
+    import tempfile
+    from pathlib import Path
+
+    from plot_engine.eventlog import EventLog
+    from plot_engine.experiment import run_experiment
+    from plot_engine.live import build_client, build_live_source, check_reachable
+    from plot_engine.llm_writer import make_scene_writer
+    from plot_engine.revision import RevisionLoop
+    from plot_engine.store import StateStore
+    from plot_engine.writer import compose_chapter_draft
+    from plot_engine.tests.fixtures import experiment_10ch as fx
+
+    client = client or build_client(model_config)
+    ok, msg = check_reachable(client)
+    if not ok:
+        return None, msg
+
+    cfg = fx.make_config(chapters)
+    tmp = Path(tempfile.mkdtemp(prefix="phase0-live-"))
+    store = StateStore(str(tmp / "state.db"))
+    log = EventLog(str(tmp / "event.db"))
+    store.init_genesis(cfg.story_id, cfg.initial_state)
+
+    writer = make_scene_writer(client)
+
+    def rewrite(ctx):
+        asm = compose_chapter_draft(ctx.scene_plan, ctx.contract,
+                                    store.load_latest(cfg.story_id).state, writer)
+        return dataclasses.replace(ctx, draft=asm.draft)
+
+    loop = RevisionLoop(actions={"rerun_extraction": lambda ctx: ctx,
+                                 "rewrite_scene": rewrite, "rewrite_chapter": rewrite})
+    report = run_experiment(cfg, store=store, log=log,
+                            chapter_source=build_live_source(client, contracts=fx.contract_for,
+                                                             plans=fx.plan_for),
+                            scene_writer=writer, revision_loop=loop, llm_client=client)
+    return report, msg
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     import argparse
 
     ap = argparse.ArgumentParser(
         prog="python -m plot_engine.review",
-        description="Phase-0 离线实验 → 08 §6 失败分类 / §7 冻结闸 / §8 退出条件决策单（只读）")
+        description="Phase-0 实验 → 08 §6 失败分类 / §7 冻结闸 / §8 退出条件决策单（只读）")
     ap.add_argument("--chapters", type=int, default=10)
     ap.add_argument("--defect", action="append", default=[], metavar="CH:KIND",
                     help="注入缺陷章，KIND ∈ {leak, dead}；可重复。用于验证分类归因是否落对桶")
+    ap.add_argument("--live", action="store_true",
+                    help="用真实模型（默认本机 Ollama）跑实验；换 vLLM 只改 --model-config")
+    ap.add_argument("--model-config", metavar="JSON", default=None,
+                    help='模型路由 JSON 或 @文件路径，例：{"writer":{"base_url":"http://192.168.31.213:8000/v1","model":"qwen2.5-14b"}}')
     args = ap.parse_args(argv)
 
     import sys
@@ -185,8 +235,31 @@ def main(argv: Optional[List[str]] = None) -> int:
         except ValueError:
             ap.error(f"--defect {spec!r}: CH 必须是整数")
 
+    if args.live:
+        model_config = _read_model_config(args.model_config)
+        report, msg = _live_run(args.chapters, model_config)
+        print(msg)
+        if report is None:
+            return 2
+        print(render_review_text(architecture_review(report)))
+        return 0
+
     print(render_review_text(architecture_review(_offline_dry_run(args.chapters, defects))))
     return 0
+
+
+def _read_model_config(spec: Optional[str]) -> dict:
+    """`--model-config` 接受内联 JSON 或 @path.json；空 → 本地默认路由。"""
+    import json
+    from pathlib import Path
+
+    if not spec:
+        return {}
+    raw = Path(spec[1:]).read_text(encoding="utf-8") if spec.startswith("@") else spec
+    loaded = json.loads(raw)
+    if not isinstance(loaded, dict):
+        raise ValueError("--model-config 必须是 {role: {字段覆盖}} 的 JSON 对象")
+    return loaded
 
 
 if __name__ == "__main__":

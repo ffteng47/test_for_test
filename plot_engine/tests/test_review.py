@@ -81,3 +81,50 @@ def test_cli_rejects_unknown_defect_kind(capsys):
     with pytest.raises(SystemExit):
         review_main(["--defect", "2:typo"])
     assert "leak|dead" in capsys.readouterr().err
+
+
+# —— --live：端点不通必须早退，绝不能烧掉 45 分钟 GPU 预算
+def _fake_live_client():
+    from plot_engine.llm import LlmClient, LlmRouter, ModelEndpoint
+
+    def transport(url, payload, headers, timeout_s):
+        sysmsg = payload["messages"][0]["content"]
+        content = ('[{"event_type": "OBSERVES", "actor": "char_000001", '
+                   '"target": "fact_000003", "payload": {"fact_id": "fact_000003"}}]'
+                   if "事件抽取器" in sysmsg else
+                   "张三凝视印章。\n\n印泥是干的。\n\n他听见身后有呼吸声。")
+        return {"choices": [{"message": {"content": content}}],
+                "usage": {"prompt_tokens": 100, "completion_tokens": 50}}
+    return LlmClient(LlmRouter(endpoints={"writer": ModelEndpoint(model="m"),
+                                          "extract": ModelEndpoint(model="m")}),
+                     transport=transport)
+
+
+def test_cli_live_reports_unreachable_endpoint_and_exits_2(monkeypatch, capsys):
+    import plot_engine.live as live
+    monkeypatch.setattr(live, "check_reachable", lambda c: (False, "模型端点不可达：boom"))
+    monkeypatch.setattr(live, "build_client", lambda cfg: _fake_live_client())
+    assert review_main(["--live", "--chapters", "1"]) == 2
+    assert "不可达" in capsys.readouterr().out
+
+
+def test_cli_live_prints_decision_sheet_with_real_token_accounting(monkeypatch, capsys):
+    import plot_engine.live as live
+    monkeypatch.setattr(live, "check_reachable", lambda c: (True, "可用模型: m"))
+    monkeypatch.setattr(live, "build_client", lambda cfg: _fake_live_client())
+    assert review_main(["--live", "--chapters", "2"]) == 0
+    out = capsys.readouterr().out
+    assert "可用模型: m" in out and "§8 退出条件" in out
+    assert "生成 2 /" in out
+
+
+def test_model_config_accepts_inline_json_and_file(tmp_path):
+    from plot_engine.review import _read_model_config
+
+    assert _read_model_config(None) == {}
+    assert _read_model_config('{"writer": {"model": "m2"}}') == {"writer": {"model": "m2"}}
+    p = tmp_path / "router.json"
+    p.write_text('{"writer": {"base_url": "http://192.168.31.213:8000/v1"}}', encoding="utf-8")
+    got = _read_model_config(f"@{p}")
+    assert got["writer"]["base_url"].endswith(":8000/v1")     # 换 vLLM = 改配置，不改代码
+
