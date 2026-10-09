@@ -55,9 +55,21 @@ class CommitOrchestrator:
 
         # HARD 非空 / 空批 → FAIL，不进入 Stage 3，不写任何东西（07 §5.3 R1 / Review Focus #4）
         if not rb.committable() or not rb.applied:
+            reasons = []
+            if rb.new_state is None:
+                reasons.append("H8.1 整批短路")
+            if not rb.validation.can_commit():
+                reasons.append(f"HARD={len(rb.validation.hard_violations)}")
+            cons = sum(1 for f in rb.consistency if f["severity"] == "hard")
+            if cons:
+                reasons.append(f"consistency_hard={cons}")
+            if not rb.applied:
+                reasons.append("empty batch")
+            if not reasons:
+                reasons.append("unspecified")
             return CommitOutcome(status="FAIL", trace=trace("FAIL", **counts),
                                  validation=rb.validation,
-                                 message="not committable (hard violations or empty batch)")
+                                 message="not committable: " + "+".join(reasons))
 
         psh = proposal_set_hash([e.model_dump(mode="json") for e in rb.applied])
 

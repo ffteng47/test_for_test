@@ -130,3 +130,22 @@ def test_idempotency_key_from_applied_events_order_independent(tmp_path):
     reversed_props = list(reversed(props))
     second = orch.commit(_request(1), reversed_props, arc2)
     assert second.status == "DUPLICATE"
+
+
+def test_fail_message_names_the_actual_reject_reason(tmp_path):
+    """线上实测教训：`"not committable (hard violations or empty batch)"` 一句话说两种拒绝，
+    8 章 FAIL 之后无从归因，白烧一轮 GPU。原因必须写进 outcome，而不是留给读代码的人猜。"""
+    store, log, orch = _stack(tmp_path)
+    arc = store.load_latest("s1").state
+
+    empty = orch.commit(_request(), [], arc)
+    assert empty.status == "FAIL"
+    assert " or " not in empty.message                      # 不再给「二选一」的含糊话
+    assert "HARD=" in empty.message or "empty batch" in empty.message
+
+    dead_arc = arc.model_copy(update={"characters": {
+        "char_000001": Character(character_id="char_000001", name="张三", status="dead",
+                                 death_chapter=10, current_location="loc_000012",
+                                 introduced_at_chapter=1, epoch=EPOCH)}})
+    hard = orch.commit(_request(), _proposals(), dead_arc)
+    assert hard.status == "FAIL" and "HARD=" in hard.message
