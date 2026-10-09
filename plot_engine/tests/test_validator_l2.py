@@ -112,6 +112,42 @@ def test_h5_3_w1_satisfied():
     assert "H5.3" not in _codes(_l2([p], c))
 
 
+# H5.3 的实现事件集必须按 field 分表（10 §4.3）：knowledge 与 belief 不共用，
+# 且 belief 侧要认 DOUBTS。合并集合会让 BELIEVES 冒充 knowledge 跃迁（真实模型第 1 次
+# 采样里 ch02/ch08/ch10 就是这么从 FAIL 变成 OK 的）。
+_KN = {"character_id": "char_000001", "field": "knowledge",
+       "operation": "add", "target": "fact_000001", "expected_value": "known"}
+_BL = {"character_id": "char_000001", "field": "belief",
+       "operation": "add", "target": "fact_000001", "expected_value": "believes"}
+
+
+_BELIEF = {"fact_id": "fact_000001", "belief_strength": 700}
+
+
+def test_h5_3_knowledge_not_implemented_by_belief_event():
+    assert "H5.3" in _codes(_l2([_p(proposed_event_type="BELIEVES", payload=_BELIEF)],
+                                 _contract(must_change=[_KN])))
+
+
+def test_h5_3_belief_implemented_by_doubts():
+    assert "H5.3" not in _codes(_l2([_p(proposed_event_type="DOUBTS", payload=_BELIEF)],
+                                    _contract(must_change=[_BL])))
+
+
+def test_h5_3_belief_not_implemented_by_knowledge_event():
+    assert "H5.3" in _codes(_l2([_p()], _contract(must_change=[_BL])))
+
+
+def test_h5_3_knowledge_still_implemented_by_observes():
+    assert "H5.3" not in _codes(_l2([_p()], _contract(must_change=[_KN])))
+
+
+def test_h5_7_keeps_wide_establish_set():
+    """H5.7 用宽集合是对的（BELIEVES 一个 forbidden fact 确实算建立），分表不得动它。"""
+    c = _contract(knowledge_forbidden=["fact_000001"])
+    assert "H5.7" in _codes(_l2([_p(proposed_event_type="BELIEVES", payload=_BELIEF)], c))
+
+
 def test_h5_4_must_not_change_violated():
     c = _contract(must_not_change=[{"character_id": "char_000001", "field": "status",
         "operation": "update", "target": "status"}])
