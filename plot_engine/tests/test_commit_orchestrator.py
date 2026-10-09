@@ -149,3 +149,26 @@ def test_fail_message_names_the_actual_reject_reason(tmp_path):
                                  introduced_at_chapter=1, epoch=EPOCH)}})
     hard = orch.commit(_request(), _proposals(), dead_arc)
     assert hard.status == "FAIL" and "HARD=" in hard.message
+
+def _bare_contract():
+    """把契约里所有「本章必须发生点什么」的字段清空：这样空批就是唯一的拒绝原因。"""
+    return _contract().model_copy(update={"required_events": [], "must_change": [],
+                                          "must_not_change": [], "reader_signals": []})
+
+
+def test_empty_batch_alone_is_the_reject_reason(tmp_path):
+    """backlog #5：`stage0_extract` 会从 markup 通道补 READER_* 事件，线上至今没出现过
+    纯空批，所以 `empty batch` 这一支一直只有代码在保护、没有测试钉住。这里绕过抽取直接
+    交 0 条 proposal：唯一原因必须是 empty batch，且绝不能顺便推进 version。"""
+    store, log, orch = _stack(tmp_path)
+    arc = store.load_latest("s1").state
+    req = CommitRequest(story_id="s1", chapter_no=47,
+                        draft="<!-- hook: cliffhanger strength=800 -->",
+                        contract=_bare_contract(), expected_version=0, trace_id="t-empty")
+    out = orch.commit(req, [], arc)
+    assert out.validation.can_commit() is True            # 不是契约问题：HARD 为空
+    assert out.status == "FAIL" and "empty batch" in out.message
+    assert "HARD=" not in out.message and " or " not in out.message
+    assert store.load_latest("s1").version == 0           # 无副作用（07 §5.3 R1）
+    assert log.read_chapter("s1", 47) == []
+
