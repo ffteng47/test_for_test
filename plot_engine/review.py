@@ -199,7 +199,8 @@ def _write_chapter_dump(dump_dir, ch: int, ctx, props, out) -> None:
 def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None):
     """真实模型实验：Writer/抽取换成本地端点，其余管道与离线演练完全一致。
 
-    返回 `(report|None, 端点说明, 抽取诊断)`：端点不可达时不烧预算，直接给出原因。
+    返回 `(report|None, 端点说明, 抽取诊断)`：端点不可达时不烧预算，实验中途端点失效时
+    报告作废并给出一句原因——两种情况都是 `report=None`，绝不半成品出数。
     `client` 可注入，供测试保持零网络。
     """
     import dataclasses
@@ -210,6 +211,7 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None):
     from plot_engine.experiment import run_experiment
     from plot_engine.live import (build_client, build_live_source, check_reachable,
                                   extraction_diagnostics)
+    from plot_engine.llm import LlmUnavailable
     from plot_engine.llm_writer import make_scene_writer
     from plot_engine.revision import RevisionLoop
     from plot_engine.revision_actions import renegotiate_contract
@@ -248,9 +250,16 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None):
     if dump_dir is not None:
         on_chapter = lambda ch, ctx, props, out: _write_chapter_dump(
             dump_dir, ch, ctx, props, out)
-    report = run_experiment(cfg, store=store, log=log, chapter_source=source,
-                            scene_writer=writer, revision_loop=loop, llm_client=client,
-                            on_chapter=on_chapter)
+    report = None
+    try:
+        report = run_experiment(cfg, store=store, log=log, chapter_source=source,
+                                scene_writer=writer, revision_loop=loop, llm_client=client,
+                                on_chapter=on_chapter)
+    except LlmUnavailable as e:
+        # `check_reachable` 只保证开工那一刻通；跑一半挂了（服务器端 llama-server 缺失
+        # 就是这样）不能把 traceback 撒在半小时输出后面，也不能假装还有报告。
+        where = f"已落盘的逐章快照：{dump_dir}" if dump_dir else "（未传 --dump-dir，逐章快照没落盘）"
+        return None, f"模型在实验中途不可用，本报告作废。{where}\n原因：{e}", None
     return report, msg, extraction_diagnostics(source.channels)
 
 

@@ -108,6 +108,25 @@ def test_cli_live_reports_unreachable_endpoint_and_exits_2(monkeypatch, capsys):
     assert "不可达" in capsys.readouterr().out
 
 
+def test_mid_run_model_failure_is_one_readable_line_not_a_stack(tmp_path, monkeypatch, capsys):
+    """`check_reachable` 只保证开工前那一刻通：跑一半 500（服务器 Ollama 坏掉就是这样）
+    也必须给人一句话 + 已落盘的快照目录，而不是把 traceback 撒在 30 分钟的输出后面。"""
+    import plot_engine.live as live
+    from plot_engine.llm import LlmUnavailable
+
+    def boom(url, payload, headers, timeout_s):
+        raise LlmUnavailable(f"{url} → HTTP 500: llama-server binary not found")
+
+    client = _fake_live_client()
+    client._transport = boom
+    monkeypatch.setattr(live, "check_reachable", lambda c: (True, "ok"))
+    monkeypatch.setattr(live, "build_client", lambda cfg: client)
+    dumps = tmp_path / "d"
+    assert review_main(["--live", "--chapters", "2", "--dump-dir", str(dumps)]) == 2
+    out = capsys.readouterr().out
+    assert "中途" in out and "Traceback" not in out and "HTTP 500" in out
+
+
 def test_cli_live_prints_decision_sheet_with_real_token_accounting(monkeypatch, capsys):
     import plot_engine.live as live
     monkeypatch.setattr(live, "check_reachable", lambda c: (True, "可用模型: m"))
