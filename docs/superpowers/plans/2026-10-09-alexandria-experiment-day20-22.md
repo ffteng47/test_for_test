@@ -62,8 +62,8 @@ class ExperimentReport(BaseModel):  # 08 §3 verbatim 字段
     revision_rounds: Dict[int,int]; revision_success_rate: float; unresolved_chapters: List[int]
     total_tokens; total_cost_usd; total_duration_ms: int = 0; timestamp: str
 ```
-- [ ] Tests: 报告字段默认与类型齐备；`RULE_TO_METRIC` 覆盖 §4 九项、每项至少一 rule_id；`ChapterArtifacts` 是普通 dataclass；Config 默认 chapters=10、model_router_config={}。
-- [ ] Commit `feat(plot-engine): experiment config/report models + hard-metric map (08 §2/§3/§4)`
+- [x] Tests: 报告字段默认与类型齐备；`RULE_TO_METRIC` 覆盖 §4 九项、每项至少一 rule_id；`ChapterArtifacts` 是普通 dataclass；Config 默认 chapters=10、model_router_config={}。
+- [x] Commit `feat(plot-engine): experiment config/report models + hard-metric map (08 §2/§3/§4)`
 
 ## Task 2: 硬指标分类器
 
@@ -77,8 +77,8 @@ def classify_outcome(outcome, *, consistency: List[dict], replay_ok: Optional[bo
     # replay_ok is False → by_metric[REPLAY]++
 def to_report_fields(mc: MetricCounts) -> dict   # canon/knowledge/timeline 计数 + hard_violations dict
 ```
-- [ ] Tests: 一条 H2.1+一条 H5.1 → knowledge 1 / required_missing 1；REPLAY_INCONSISTENT+replay_ok False → REPLAY 命中；未知 rule "H9.9" 归 CANON 兜底且 by_rule 仍记；soft/observation 不进硬指标桶。
-- [ ] Commit `feat(plot-engine): hard-metric classifier → §4 buckets (08 §4/§6)`
+- [x] Tests: 一条 H2.1+一条 H5.1 → knowledge 1 / required_missing 1；REPLAY_INCONSISTENT+replay_ok False → REPLAY 命中；未知 rule "H9.9" 归 CANON 兜底且 by_rule 仍记；soft/observation 不进硬指标桶。
+- [x] Commit `feat(plot-engine): hard-metric classifier → §4 buckets (08 §4/§6)`
 
 ## Task 3: run_experiment 驱动 + 退出条件闸门
 
@@ -99,15 +99,15 @@ def run_experiment(config, *, store, log, chapter_source, scene_writer,
     # revision_* 置 0/{}/N/A；unresolved=未 commit 章号；组装 ExperimentReport
 def evaluate_exit_conditions(report) -> Dict[str, Optional[bool]]  # E1/E2/E4/E5/E6 计算，E3=None(N/A)
 ```
-- [ ] Tests: 注入恒成功 `chapter_source`（脚本 OBSERVES+INFERS）跑 3 章→ generated=committed=3、replay_consistency True、E1 True；注入第 2 章产 dead-actor→该章 FAIL、committed=2、unresolved=[2]、DEAD_REAPPEAR 命中、E2=2/3；同配置跑两次 report canonical 相等。
-- [ ] Commit `feat(plot-engine): run_experiment driver + Phase-0 exit-condition gate (08 §5/§8)`
+- [x] Tests: 注入恒成功 `chapter_source`（脚本 OBSERVES+INFERS）跑 3 章→ generated=committed=3、replay_consistency True、E1 True；注入第 2 章产 dead-actor→该章 FAIL、committed=2、unresolved=[2]、DEAD_REAPPEAR 命中、E2=2/3；同配置跑两次 report canonical 相等。
+- [x] Commit `feat(plot-engine): run_experiment driver + Phase-0 exit-condition gate (08 §5/§8)`
 
 ## Task 4: 脚本化 10 章 e2e + 回归
 
 **Files:** Create `plot_engine/tests/fixtures/experiment_10ch.py`; Test `test_experiment_e2e.py`
-- [ ] Tests: `chapter_source` 生成 10 章合法 OBSERVES/INFERS（逐章推进 knowledge），`run_experiment`→ `chapters_generated==10`；纯合法批次 `chapters_committed==10`、`replay_consistency True`、`evaluate_exit_conditions` E1/E2/E5/E6 True、E4 True（无规则占比>40%）、E3 None。再跑一条含 1 章 forbidden-leak + 1 章 replay-break 的场景，断言对应桶>0、`replay_mismatch_chapters` 命中、E6 False。
-- [ ] `python -m pytest plot_engine/tests -q` 全绿。
-- [ ] Commit `test(plot-engine): 10-chapter experiment e2e + exit-condition regression`
+- [x] Tests: `chapter_source` 生成 10 章合法 OBSERVES/INFERS（逐章推进 knowledge），`run_experiment`→ `chapters_generated==10`；纯合法批次 `chapters_committed==10`、`replay_consistency True`、`evaluate_exit_conditions` E1/E2/E5/E6 True、E4 True（无规则占比>40%）、E3 None。再跑一条含 1 章 forbidden-leak + 1 章 replay-break 的场景，断言对应桶>0、`replay_mismatch_chapters` 命中、E6 False。
+- [x] `python -m pytest plot_engine/tests -q` 全绿。
+- [x] Commit `test(plot-engine): 10-chapter experiment e2e + exit-condition regression`
 
 ## Out of scope (subsequent plans)
 
