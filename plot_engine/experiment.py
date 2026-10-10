@@ -109,6 +109,9 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
                 # 契约层重议撞开 Arc Error（06 §4.3）：管道已经跑过、token 已花 ⇒ 算 generated，
                 # 但它不是模型失败，同样只作废本章，并把各轮产物交给快照。
                 generated += 1
+                # 轮数照样入账（致命那一轮不落账 ⇒ len(captured)-1，与逐章快照头部同口径）。
+                # 漏了这一笔，`len(rounds)==generated` 就不成立，E3 与「修订跑没跑」一起被假降级。
+                rounds_by_chapter[ch] = max(len(captured) - 1, 0)
                 quarantine(ch, exc, captured)
                 continue
             rounds_by_chapter[ch] = trace.rounds

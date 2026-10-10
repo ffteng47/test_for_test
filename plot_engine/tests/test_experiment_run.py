@@ -205,3 +205,8 @@ def test_arc_conflict_raised_mid_revision_quarantined_too(tmp_path):
     # 中途判死的章已经写出正文：各轮快照必须照样交给 triage，
     # 否则「Arc 要的事件模型没写」与「抽取漏了」就分不开了（08 §10 I3）。
     assert seen[1][1] and isinstance(seen[1][2], str)
+    # finding-1：轮数记录缺章 ⇒ `len(rounds)==generated` 不成立，E3 被假降级成「未测」。
+    # 中途判死的章同样烧了轮次，必须入账（致命那一轮不计，与快照头部 rounds=len(rounds)-1 同口径）。
+    assert set(rep.revision_rounds) == {1, 2, 3}
+    assert rep.revision_rounds[2] == 0
+    assert evaluate_exit_conditions(rep)["E3"] is False
