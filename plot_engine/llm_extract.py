@@ -4,7 +4,8 @@
 绝不因为「模型说了」就提交。三条铁律：
 1. `seq` 由本模块重编为连续 0..n-1 —— event_id 由 (chapter, seq) 推出，模型重复编号会炸成 H6.4。
 2. 凡 payload/confidence 出现 float 一律丢弃 —— 定点 ×1000 是 05 §5.5 的硬约束，float 会让
-   `canonical_json` 在 commit 阶段抛错，归因链就此断掉。
+   `canonical_json` 在 commit 阶段抛错，归因链就此断掉。定点键（trust_level 等）给了 null/字符串
+   也一样丢：reducer 会拿它做整数算术，炸的是整个进程，一次采样的读数一起没了。
 3. 凡 actor/target/payload 里的 id 不在 State 词表里一律丢弃 —— 幻觉 id 会在下游炸成一串无法归因的违例。
 `preconditions` 直接丢弃：Phase 0 允许因果为空（01 §5.2 E3'），模型无法知道本章将要生成的 event_id。
 """
@@ -82,6 +83,20 @@ def _has_unknown_id(value, known: set) -> bool:
 # 与之相对 trust_level/belief_strength 是定点整数，new_narrative_truth 是枚举。
 _ID_VALUE_KEYS = {"fact_id", "conclusion_fact_id", "stated_fact_id", "audience"}
 _ID_LIST_KEYS = {"evidence_fact_ids"}
+# reducer 拿这些键做整数算术（03 §4.3 R3/R4）：null / 字符串 / bool 放下去就是 TypeError，
+# 而 TypeError 会炸掉整个进程——一次采样的读数全丢，比丢一条提案贵得多。
+_FIXED_POINT_KEYS = {"trust_level", "message_strength", "belief_strength"}
+
+
+def _unusable_keys(payload: dict, schema: Tuple[str, ...]) -> List[str]:
+    """schema 里「没有可用值」的键：缺失、为 null，或定点键不是 int。"""
+    def usable(value, key):
+        if value is None:
+            return False
+        if key in _FIXED_POINT_KEYS:
+            return isinstance(value, int) and not isinstance(value, bool)
+        return True
+    return [k for k in schema if not usable(payload.get(k), k)]
 
 
 def _bad_id_key(etype: str, payload: dict, known: set) -> Optional[str]:
@@ -146,7 +161,7 @@ def parse_proposals(raw: str, chapter: int,
         if known is not None and any(_has_unknown_id(r, known) for r in refs):
             bad.append({"reason": "unknown_id", "item": etype})
             continue
-        missing = [k for k in PAYLOAD_SCHEMA[etype] if k not in payload]
+        missing = _unusable_keys(payload, PAYLOAD_SCHEMA[etype])
         if missing:
             bad.append({"reason": "missing_payload_keys",
                         "item": f"{etype} 缺 {','.join(missing)}"})

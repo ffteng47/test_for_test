@@ -135,6 +135,32 @@ def test_infers_needs_conclusion_and_evidence():
     assert len(props2) == 1
 
 
+def test_null_fixed_point_key_is_dropped_rather_than_reaching_the_reducer():
+    """实测：v3a1 ch04 回 `"trust_level": null` —— 键存在就放行，reducer 里 `None * int`
+    抛 TypeError，整次采样连后面 6 章的读数一起没了。null 与缺键是同一类坏料。"""
+    props, bad = parse_proposals(
+        '[{"event_type": "IS_TOLD", "payload": {"fact_id": "fact_000001",'
+        ' "trust_level": null, "message_strength": 700}}]', 47, _state())
+    assert props == []
+    assert bad[0]["reason"] == "missing_payload_keys" and "trust_level" in bad[0]["item"]
+
+
+def test_non_integer_fixed_point_key_is_dropped():
+    """定点 ×1000（05 §5.5）：字符串/bool 一样是「reducer 拿它做算术」的炸点。"""
+    for value in ('"很高"', "true", '"700"'):
+        raw = ('[{"event_type": "BELIEVES", "payload": {"fact_id": "fact_000001",'
+               ' "belief_strength": %s}}]' % value)
+        props, bad = parse_proposals(raw, 47, _state())
+        assert props == [] and "belief_strength" in bad[0]["item"], value
+
+
+def test_integer_fixed_point_keys_still_pass():
+    props, bad = parse_proposals(
+        '[{"event_type": "IS_TOLD", "payload": {"fact_id": "fact_000001",'
+        ' "trust_level": 600, "message_strength": 700}}]', 47, _state())
+    assert len(props) == 1 and bad == []
+
+
 def test_types_the_reducers_cannot_consume_are_not_accepted():
     props, bad = parse_proposals('[{"event_type": "CASE_SOLVED"}]', 47, _state())
     assert props == [] and bad[0]["reason"] == "type_not_supported"
