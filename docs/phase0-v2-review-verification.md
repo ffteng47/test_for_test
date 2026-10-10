@@ -84,7 +84,7 @@ s2（40%）、s3（30%）远离阈值；s1（60%）距阈值一章。三次都�
 | 1 | must_change 系归因与终止策略 | 保留，按本文 §3 改写机制描述 |
 | 2 | `rewrite_scene` ≡ `rewrite_chapter` | 保留（行号更正为 `review.py:279-280`） |
 | 3 | H8.x 九桶归类待 08 §4 裁定 | 保留 |
-| 4 | finding-1 / finding-2 修复 | 保留，修法按本文 §1 收敛成一行 |
+| 4 | finding-1 / finding-2 修复 | finding-1 挂 **P1，绑定下一次采样活动**（`docs/phase0-writer-prompt-ab.md` §5 前置 1），不再是「顺手带上」；finding-2 留 Phase 1 |
 | 5 | writer 提示词是否渲染 required_events / turning point | **已核完**：都没渲染（`llm_writer.py:37-51`）。转为「是否要改 Writer 协议」的拍板项 |
 | 6 | ch07 belief Δ 定性 | 按本文 §2 定性为「契约目标 fact 未进入 Writer 视野」，属夹具方法论 + Writer 接线，不是模型弱项 |
 | 7 | 稳定失败核三层归因 | **已答完**，见本文 §7 |

@@ -16,7 +16,7 @@
 |---|---|
 | §6 | Writer/Validator 2（H2.2）｜Contract/Arc 6（ARC_CONFLICT, H5.1, H5.3, H5.6） |
 | §7 | G1 True｜G2 False｜G3 True｜G4 False｜可讨论改架构 True |
-| §8 | E1 True｜E2 False｜E3 N/A｜E4 True｜E5 True｜E6 True |
+| §8 | E1 True｜E2 False｜**E3 不通过**（提交率 30–60%，单条即否掉 E3 的 ≥90% 判据；渲染器因 finding-1 显示 N/A，读数本身有效）｜E4 True｜E5 True｜E6 True |
 
 逐章（status / contract_version / rounds / HARD）：
 
@@ -47,7 +47,7 @@
 |---|---|
 | §6 | Writer/Validator 3（H2.2）｜Contract/Arc 8（ARC_CONFLICT, H5.3, H5.6） |
 | §7 | G1 True｜G2 False｜G3 True｜G4 False｜可讨论改架构 True |
-| §8 | E1 True｜E2 False｜E3 N/A｜E4 True｜E5 True｜E6 True |
+| §8 | E1 True｜E2 False｜**E3 不通过**（提交率 30–60%，单条即否掉 E3 的 ≥90% 判据；渲染器因 finding-1 显示 N/A，读数本身有效）｜E4 True｜E5 True｜E6 True |
 
 逐章：
 
@@ -76,7 +76,7 @@
 |---|---|
 | §6 | Writer/Validator 3（H2.2）｜Contract/Arc 9（ARC_CONFLICT, H5.3, H5.6） |
 | §7 | G1 True｜G2 False｜G3 True｜G4 False｜可讨论改架构 True |
-| §8 | E1 True｜E2 False｜E3 N/A｜E4 True｜E5 True｜E6 True |
+| §8 | E1 True｜E2 False｜**E3 不通过**（提交率 30–60%，单条即否掉 E3 的 ≥90% 判据；渲染器因 finding-1 显示 N/A，读数本身有效）｜E4 True｜E5 True｜E6 True |
 
 逐章：
 
@@ -108,11 +108,15 @@
 | 生成 / 提交 / 未决 | 10 / 6 / 4 章 | 10 / 4 / 6 章 | 10 / 3 / 7 章 |
 | replay 一致 | True | True | True |
 | §7 G1 / G2 / G3 / G4 / 可讨论改架构 | T / F / T / F / T | T / F / T / F / T | T / F / T / F / T |
-| §8 E1 / E2 / E3 / E4 / E5 / E6 | T / F / N/A / T / T / T | T / F / N/A / T / T / T | T / F / N/A / T / T / T |
+| §8 E1 / E2 / E3 / E4 / E5 / E6 | T / F / **不通过** / T / T / T | T / F / **不通过** / T / T / T | T / F / **不通过** / T / T / T |
 
 E2 三次同为 False，提交率 60% / 40% / 30% 都在阈值 `commit_rate >= 0.70`（`experiment.py:184`）之下；
 裕度不等宽——s1 的 6/10 只差一章就翻真，s2/s3 远离阈值（详见 `docs/phase0-v2-review-verification.md` §4）。
-E3 三次同为 N/A，原因见 finding-1，**不是「修订没跑」**（逐章快照里 r≥1 的章：s1 5 章、s2 6 章、s3 6 章）。
+
+**E3 三次同为不通过**，判定读的是判据本体（`experiment.py:195`：`commit_rate >= 0.90` 且 `max(rounds) <= 3`）：
+三次提交率 30–60%，**第一条判据单独成立就把整条否掉**，所以这个 verdict 直接由这三次已测数据得出，不必为它改代码或重采。
+渲染器打的 `N/A` 与「修订没跑」都是 finding-1 的显示缺陷——修订实际跑了（r≥1 的章 s1 五章、s2/s3 各六章，
+其中被修订救回的章：s1 ch03/ch06、s2 ch06、s3 无）。
 
 ### 辅口径：逐章 commit/fail 模式 —— **三次不一致**
 
@@ -133,15 +137,23 @@ E3 三次同为 N/A，原因见 finding-1，**不是「修订没跑」**（逐�
 
 抖动的 5 章恰好全在**转折章 1/5/9 及其邻章**：`ARC_CONFLICT` 只出现在 arc_003 强制 `INFERS`/`BELIEVES` 的章（1/5/9），它是否触发取决于那一轮模型有没有写出该事件——批次 4 的 fail-fast 守卫按设计只在强制项落空时开火，三次都没让它静默放过。
 
-稳定失败的三章是同一批根因：ch02 / ch10 都是 `H2.2` 知识跃迁（fact_000001 / fact_000002 期望 known）没实现，配对的 `H5.3`+`H5.6`；ch07 三次都停在 `H5.3 must_change char_000001.belief 无实现事件`，且三次都走满 3 轮并 renegotiate 到 `contract_version=4` 后仍不合格。
+稳定失败的三章是同一批根因：ch02 / ch10 都是 `H2.2` 知识跃迁（fact_000001 / fact_000002 期望 known）没实现，配对的 `H5.3`+`H5.6`；ch07 三次都停在 `H5.3 must_change char_000001.belief 无实现事件`，且三次都走满 3 轮并 renegotiate 到 `contract_version=4` 后仍不合格。**注意 ch07 的读法**：三次最终轮都产出了 belief 事件，只是对象是 fact_000001，而本章契约的 belief Δ 指向 fact_000004——尺子判对了，详见 `docs/phase0-v2-review-verification.md` §2/§7。
 
 ### 结论（只按预注册口径下）
 
-1. **尺在三次之间可比**：主口径六布尔值零分歧，§7 四闸零分歧，replay 一致零分歧。冻结面 v2 的度量输出稳定。
-2. **Phase 0 → Phase 1 未达成**：E2 三次同判 False（提交率 30%–60%），E3 因 finding-1 三次不可判。按 08 §8，E2 不过即不放行。
-3. **稳定失败核先于抖动**：要提提交率，第一顺位是 ch02/ch10 的 `H2.2` 知识跃迁与 ch07 的 belief `H5.3`——这三章在三次抽样里没有一个侥幸过；抖动章的处置要等一个可控变量（seed / 更低温度）才有意义。
-4. **禁止事项已遵守**：未取多数、未合并、未挑任一次作为代表读数；三个 `run.log` 与 30 份逐章快照全部保留。
-5. 与旧尺对照：`docs/phase0-live-run-10ch.md` 的 `fix-1`（8/10）与 `fix-2` 残片是 D+A 两次 alignment 之前的读数，**不与本节并列比较**，仅作历史留档。
+1. **闸门判定层在三次之间可比**：replay、§7 四闸、§8 六值零分歧，无崩溃、无 IO_ERROR，管道完整。
+   表述到这一层为止：**逐章结果有显著采样方差**（提交率 60/40/30，差 2 倍），「度量输出稳定」只指闸门判定层，不指逐章输出。
+2. **Phase 0 → Phase 1 未达成**：E2 三次同判 False（提交率 30%–60%，判据 70%）；E3 三次同判**不通过**
+   （判据 90%，由这三次已测的提交率单独成立——渲染器显示的 `N/A` 是 finding-1 的显示缺陷，不是未测）。按 08 §8，E2 不过即不放行。
+3. **成本口径（供 A/B 实验当基线）**：首轮通过率 **40% / 30% / 30%**；修订救回 2 / 1 / 0 章；
+   抽取坏料 s1 `{unknown_id:1, unknown_event_type:1}`、s2 `{id_value_not_id:2}`、s3 `{id_value_not_id:1, stripped_payload_key:1}`；
+   泄漏（最终判定 H5.7）**0/30 章**，轮次级仅 1 次（s1 ch07 第 3 轮）。
+4. **稳定失败核先于抖动**：ch02/ch07/ch10 三章在三次抽样里无一侥幸，且三条都归到同一个上游——
+   writer 提示词里没有本章的 `must_change` 目标与 `required_events` 类型（`llm_writer.py:37-51`）。
+   抖动章（01/03/05/06/09）正是同一机制的另一面：猜对对象就过。
+5. **禁止事项已遵守**：未取多数、未合并、未挑任一次作为代表读数；三个 `run.log` 与 30 份逐章快照全部保留。
+6. **数据血缘**：本节全部读数产自冻结提交 `f99cc00`；此后的代码变更走正常提交，不与本节混代——这是血缘标注，不是缺陷。
+7. 与旧尺对照：`docs/phase0-live-run-10ch.md` 的 `fix-1`（8/10）与 `fix-2` 残片是 D+A 两次 alignment 之前的读数，**不与本节并列比较**，仅作历史留档。
 
 ## finding-1：v2 冻结面上「中途判死章」会让 E3 假降级为 N/A（采样期不修）
 
