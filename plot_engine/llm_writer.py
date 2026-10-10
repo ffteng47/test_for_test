@@ -52,8 +52,29 @@ def _vocab(scene: Scene, contract: ChapterContract, state: Optional[StoryState])
     return "\n".join(lines)
 
 
+def _told_lines(contract: ChapterContract) -> List[str]:
+    """告知型配置（`v1-told`）：只给「作者大纲」，不给「答题卡」。
+
+    红线（`docs/phase0-writer-prompt-ab.md` §3）：`knowledge_forbidden` 里的目标连条目一起抹掉，
+    `expected_value` 之外的状态秘密不进提示。事件类型只给类型名，不给 description/payload。
+    """
+    forbidden = set(contract.knowledge_forbidden)
+    lines = [f"必须发生的跃迁: {c.character_id}.{c.field} {c.operation} {c.target}"
+             + (f" → {c.expected_value}" if c.expected_value is not None else "")
+             for c in contract.must_change if c.target not in forbidden]
+    types = sorted({e.event_type for e in contract.required_events})
+    if types:
+        lines.append("必须出现的事件类型: " + "、".join(types))
+    return lines
+
+
+def prompt_version(told: bool) -> str:
+    return "v1-told" if told else "v0-blind"
+
+
 def scene_prompt(scene: Scene, contract: ChapterContract,
-                 state: Optional[StoryState] = None, *, max_chars: int = 1200) -> List[dict]:
+                 state: Optional[StoryState] = None, *, max_chars: int = 1200,
+                 told: bool = False) -> List[dict]:
     forbidden = set(contract.knowledge_forbidden)
     rules = [
         "你是悬疑长篇正文写手。只写本 Scene 的叙事文本。",
@@ -64,6 +85,10 @@ def scene_prompt(scene: Scene, contract: ChapterContract,
         "中文，第三人称，与既有世界设定保持一致。",
     ]
     body = _vocab(scene, contract, state)
+    if told:
+        lines = _told_lines(contract)
+        if lines:
+            body += "\n" + "\n".join(lines)
     # 兜底：任何禁条 id 都不该出现在提示里（命题已被上面过滤，这里连 id 一起抹）
     for fid in forbidden:
         rules = [r.replace(fid, "（封锁）") for r in rules]
@@ -86,11 +111,11 @@ def _clean(raw: str, max_chars: int) -> str:
 
 
 def make_scene_writer(client: LlmClient, *, max_chars: int = 1200,
-                      role: str = "writer") -> SceneWriter:
+                      role: str = "writer", told: bool = False) -> SceneWriter:
     def write_scene(scene: Scene, contract: ChapterContract,
                     state: Optional[StoryState] = None) -> str:
         text, _usage = client.complete(role, scene_prompt(scene, contract, state,
-                                                          max_chars=max_chars))
+                                                          max_chars=max_chars, told=told))
         draft = _clean(text or "", max_chars)
         if not draft:
             raise WriterError(f"scene {scene.scene_id} 无可用正文（模型返回空或被剥空）")

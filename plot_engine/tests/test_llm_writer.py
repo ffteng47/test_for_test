@@ -125,3 +125,36 @@ def test_scene_writer_plugs_into_compose_chapter_draft():
     assert asm.scene_failed == ["scn_0047_02"]
     assert "好场景。" in asm.draft and "   " not in asm.draft.split("\n\n")
     assert asm.draft.count("<!-- hook:") == 1           # 恰好一条，落在末尾
+
+
+def test_blind_prompt_does_not_name_the_required_transition():
+    """基线配置（v0-blind）：契约要求只当尺子，不进提示词。"""
+    from plot_engine.llm_writer import prompt_version
+    contract = _contract(must_change=[], required_events=[])
+    joined = "\n".join(m["content"] for m in scene_prompt(_scene(), contract, _state()))
+    assert prompt_version(False) == "v0-blind"
+    assert "必须发生的跃迁" not in joined and "必须出现的事件类型" not in joined
+
+
+def test_told_prompt_names_transitions_but_never_the_forbidden_fact():
+    """告知型配置（v1-told）的红线（phase0-writer-prompt-ab §3）：
+    给的是作者大纲（跃迁目标 + 必需事件类型），禁条连 id 带命题一起抹。"""
+    from plot_engine.llm_writer import prompt_version
+    from plot_engine.models.contract import CharacterChange, RequiredEvent
+    contract = _contract(
+        must_change=[CharacterChange(character_id="char_000001", field="knowledge",
+                                     operation="update", target="fact_000001",
+                                     expected_value="known"),
+                     CharacterChange(character_id="char_000001", field="belief",
+                                     operation="add", target="fact_000002",
+                                     expected_value="believes")],
+        required_events=[RequiredEvent(event_type="OBSERVES", description="张三看见印泥"),
+                         RequiredEvent(event_type="INFERS", description="推出真凶")])
+    joined = "\n".join(m["content"] for m in scene_prompt(_scene(), contract, _state(),
+                                                         told=True))
+    assert prompt_version(True) == "v1-told"
+    assert "char_000001.knowledge update fact_000001 → known" in joined
+    assert "INFERS、OBSERVES" in joined
+    # 禁条目标：条目不渲染，且 description 里的 id 也被兜底抹掉
+    assert "belief" not in joined.split("必须发生的跃迁")[1]
+    assert "fact_000002" not in joined and "真凶是李四" not in joined

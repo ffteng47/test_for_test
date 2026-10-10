@@ -235,12 +235,15 @@ def _write_chapter_dump(dump_dir, ch: int, rounds, out, trace) -> None:
     (d / f"ch{ch:02d}.md").write_text("\n".join(lines), encoding="utf-8")
 
 
-def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None):
+def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
+              told: bool = False):
     """真实模型实验：Writer/抽取换成本地端点，其余管道与离线演练完全一致。
 
     返回 `(report|None, 端点说明, 抽取诊断)`：端点不可达时不烧预算，实验中途端点失效时
     报告作废并给出一句原因——两种情况都是 `report=None`，绝不半成品出数。
     `client` 可注入，供测试保持零网络。
+    `told` 选 Writer 提示词配置（`v1-told` 告知型 / `v0-blind` 盲写），版本随端点说明落进 run.log
+    ——提示词是产品配置不是协议，读数的血缘靠这个标签（`docs/phase0-writer-prompt-ab.md` §2）。
     """
     import dataclasses
     import tempfile
@@ -251,7 +254,7 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None):
     from plot_engine.live import (build_client, build_live_source, check_reachable,
                                   extraction_diagnostics)
     from plot_engine.llm import LlmUnavailable
-    from plot_engine.llm_writer import make_scene_writer
+    from plot_engine.llm_writer import make_scene_writer, prompt_version
     from plot_engine.revision import RevisionLoop
     from plot_engine.revision_actions import renegotiate_contract
     from plot_engine.store import StateStore
@@ -269,7 +272,7 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None):
     log = EventLog(str(tmp / "event.db"))
     store.init_genesis(cfg.story_id, cfg.initial_state)
 
-    writer = make_scene_writer(client)
+    writer = make_scene_writer(client, told=told)
 
     def rewrite(ctx):
         asm = compose_chapter_draft(ctx.scene_plan, ctx.contract,
@@ -299,7 +302,7 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None):
         # 就是这样）不能把 traceback 撒在半小时输出后面，也不能假装还有报告。
         where = f"已落盘的逐章快照：{dump_dir}" if dump_dir else "（未传 --dump-dir，逐章快照没落盘）"
         return None, f"模型在实验中途不可用，本报告作废。{where}\n原因：{e}", None
-    return report, msg, extraction_diagnostics(source.channels)
+    return report, f"{msg}｜prompt={prompt_version(told)}", extraction_diagnostics(source.channels)
 
 
 def main(argv: Optional[List[str]] = None) -> int:
@@ -317,6 +320,10 @@ def main(argv: Optional[List[str]] = None) -> int:
                     help='模型路由 JSON 或 @文件路径，例：{"writer":{"base_url":"http://<host>:8000/v1","model":"qwen2.5-14b"}}')
     ap.add_argument("--dump-dir", metavar="DIR", default=None,
                     help="逐章落盘 正文/抽取产物/判定，供失败归因（08 §10 I3）；仅 --live 生效")
+    ap.add_argument("--prompt", choices=("blind", "told"), default="blind",
+                    help="Writer 提示词配置：blind=v0-blind 只给场景与可用事实（基线），"
+                         "told=v1-told 追加本章 must_change 目标与必需事件类型（不给禁条，"
+                         "docs/phase0-writer-prompt-ab.md §3）；仅 --live 生效")
     args = ap.parse_args(argv)
 
     import sys
@@ -335,7 +342,7 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     if args.live:
         report, msg, diag = _live_run(args.chapters, _read_model_config(args.model_config),
-                                      dump_dir=args.dump_dir)
+                                      dump_dir=args.dump_dir, told=args.prompt == "told")
         print(msg)
         if report is None:
             return 2
