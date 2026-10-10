@@ -110,7 +110,9 @@
 | §7 G1 / G2 / G3 / G4 / 可讨论改架构 | T / F / T / F / T | T / F / T / F / T | T / F / T / F / T |
 | §8 E1 / E2 / E3 / E4 / E5 / E6 | T / F / N/A / T / T / T | T / F / N/A / T / T / T | T / F / N/A / T / T / T |
 
-E2 三次同为 False，提交率 60% / 40% / 30% 落在同一侧阈值外；E3 三次同为 N/A，原因见 finding-1，**不是「修订没跑」**（逐章快照里 r≥1 的章：s1 5 章、s2 6 章、s3 6 章）。
+E2 三次同为 False，提交率 60% / 40% / 30% 都在阈值 `commit_rate >= 0.70`（`experiment.py:184`）之下；
+裕度不等宽——s1 的 6/10 只差一章就翻真，s2/s3 远离阈值（详见 `docs/phase0-v2-review-verification.md` §4）。
+E3 三次同为 N/A，原因见 finding-1，**不是「修订没跑」**（逐章快照里 r≥1 的章：s1 5 章、s2 6 章、s3 6 章）。
 
 ### 辅口径：逐章 commit/fail 模式 —— **三次不一致**
 
@@ -149,4 +151,6 @@ E2 三次同为 False，提交率 60% / 40% / 30% 落在同一侧阈值外；E3 
 `render_review_text` 落进「未运行」分支、E3 变 N/A——**而修订确实跑过**。
 
 三次采样同码 ⇒ 该读数在三次之间可比，主口径不受影响；E3 三次都不可判。
-冻结后修法：quarantine 分支同样落 `rounds_by_chapter[ch]`，或把 `revision_ran` 换成「`rounds_by_chapter` 非空」语义。
+冻结后修法：quarantine 分支同样落 `rounds_by_chapter[ch]`（一行：`max(len(captured) - 1, 0)`），
+同一判据在两处（`review.py:87` 渲染、`experiment.py:194` E3 计算），记快照即可两处同时好
+——见 `docs/phase0-v2-review-verification.md` §1。
