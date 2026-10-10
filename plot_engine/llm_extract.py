@@ -17,6 +17,7 @@ from typing import List, Optional, Tuple, get_args
 
 from plot_engine.llm import LlmClient
 from plot_engine.models.event import EventType
+from plot_engine.models.fact import Fact
 from plot_engine.models.proposal import EventProposal
 from plot_engine.models.state import StoryState
 
@@ -86,15 +87,22 @@ _ID_LIST_KEYS = {"evidence_fact_ids"}
 # reducer 拿这些键做整数算术（03 §4.3 R3/R4）：null / 字符串 / bool 放下去就是 TypeError，
 # 而 TypeError 会炸掉整个进程——一次采样的读数全丢，比丢一条提案贵得多。
 _FIXED_POINT_KEYS = {"trust_level", "message_strength", "belief_strength"}
+# 枚举键同理：reducer 用 `model_copy` 写 State，**不过 pydantic 校验**，坏值会先静默进 blob，
+# 到下一次 `load_latest` 才 ValidationError —— 崩的地方离真正的元凶隔了一整章，更难归因。
+# 允许值直接取模型的 Literal，别在这儿抄一份会漂移的副本。
+_ENUM_VALUE_KEYS = {"new_narrative_truth": set(
+    get_args(Fact.model_fields["narrative_truth"].annotation))}
 
 
 def _unusable_keys(payload: dict, schema: Tuple[str, ...]) -> List[str]:
-    """schema 里「没有可用值」的键：缺失、为 null，或定点键不是 int。"""
+    """schema 里「没有可用值」的键：缺失、为 null、定点键不是 int、枚举键不在 Literal 里。"""
     def usable(value, key):
         if value is None:
             return False
         if key in _FIXED_POINT_KEYS:
             return isinstance(value, int) and not isinstance(value, bool)
+        if key in _ENUM_VALUE_KEYS:
+            return value in _ENUM_VALUE_KEYS[key]
         return True
     return [k for k in schema if not usable(payload.get(k), k)]
 

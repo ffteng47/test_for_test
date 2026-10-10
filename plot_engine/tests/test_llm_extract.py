@@ -161,6 +161,24 @@ def test_integer_fixed_point_keys_still_pass():
     assert len(props) == 1 and bad == []
 
 
+def test_non_enum_reveal_truth_is_dropped_before_it_reaches_the_state():
+    """实测：v3b1 崩在下一章门口 —— 模型回 `"new_narrative_truth": true`（JSON 布尔），
+    reducer 用 `model_copy` 写 State 不过校验，布尔就这样进了 blob；下次 `load_latest`
+    才 ValidationError，整次采样的后续读数一起作废。枚举键和定点键是同一类炸点。"""
+    for value in ("true", "false", '"confirmed"', "null"):
+        raw = ('[{"event_type": "REVEALS", "payload": {"fact_id": "fact_000001",'
+               ' "new_narrative_truth": %s}}]' % value)
+        props, bad = parse_proposals(raw, 47, _state())
+        assert props == [] and "new_narrative_truth" in bad[0]["item"], value
+
+
+def test_enum_fixed_keys_still_pass():
+    props, bad = parse_proposals(
+        '[{"event_type": "REVEALS", "payload": {"fact_id": "fact_000001",'
+        ' "new_narrative_truth": "true"}}]', 47, _state())
+    assert len(props) == 1 and bad == []
+
+
 def test_types_the_reducers_cannot_consume_are_not_accepted():
     props, bad = parse_proposals('[{"event_type": "CASE_SOLVED"}]', 47, _state())
     assert props == [] and bad[0]["reason"] == "type_not_supported"
