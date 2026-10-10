@@ -165,6 +165,9 @@ def _proposals(ch: int, defect: Optional[str]) -> List[EventProposal]:
     events = list(_step(ch)["events"])
     if defect == "leak":
         events = events + [_obs(_F2)]                    # 建立本章仍禁止的知识 → H5.7
+    if defect == "no_obs":
+        # 必需的观察事件整条没写出来 → H5.1 + 与之配对的 H5.3（must_change 失去实现事件）
+        events = [e for e in events if e["event_type"] != "OBSERVES"]
     out: List[EventProposal] = []
     for i, e in enumerate(events):
         out.append(EventProposal(

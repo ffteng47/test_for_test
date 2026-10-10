@@ -80,6 +80,9 @@ def architecture_review(report: ExperimentReport) -> dict:
             "replay_consistency": report.replay_consistency,
             "revision_chapters_needed": sum(1 for v in report.revision_rounds.values() if v),
             "revision_max_rounds": max(report.revision_rounds.values(), default=0),
+            # 逐章 `章号:轮数`：聚合值（需修几章 / 最多几轮）盖住了「哪几章」，
+            # 而修订烧在哪一章正是 Review 会上要指着说的东西。预格式化字符串保证 sheet 可 JSON 化。
+            "revision_rounds_list": " ".join(f"{c}:{v}" for c, v in sorted(report.revision_rounds.items())),
             "revision_success_rate": report.revision_success_rate,
             "revision_ran": len(report.revision_rounds) == report.chapters_generated
             and report.chapters_generated > 0,
@@ -96,12 +99,13 @@ def render_review_text(sheet: dict) -> str:
     if s["revision_ran"]:
         rev = (f"需修 {s['revision_chapters_needed']} 章 / 最多 {s['revision_max_rounds']} 轮"
                f" / 修复率 {s['revision_success_rate']:.2f}")
+        lines = [f"Revision：{rev}", f"逐章轮数：{s['revision_rounds_list']}"]
     else:
-        rev = "未运行（E3 不可判）"
+        lines = ["Revision：未运行（E3 不可判）"]
     lines = [f"# Architecture Review — {sheet['experiment_id']}",
              f"生成 {s['generated']} / 提交 {s['committed']} / 未决 {s['unresolved_chapters']}"
              f" / replay一致 {s['replay_consistency']}",
-             f"Revision：{rev}",
+             *lines,
              "", "## §6 失败分类"]
     for cls, info in sheet["failure_classes"].items():
         if info["count"]:
@@ -165,11 +169,18 @@ def _offline_dry_run(chapters: int, defects: Dict[int, str]) -> ExperimentReport
                           scene_writer=fx.dummy_writer, revision_loop=loop)
 
 
-def _write_chapter_dump(dump_dir, ch: int, ctx, props, out) -> None:
+def _proposal_lines(props) -> List[str]:
+    return [f"- {p.proposed_event_type} actor={p.actor} target={p.target} "
+            f"payload={p.payload}" for p in props] or ["- （无）"]
+
+
+def _write_chapter_dump(dump_dir, ch: int, rounds, out, trace) -> None:
     """逐章落盘 正文 + 抽取产物 + 判定（08 §10 I3：所有 failure 必须记录）。
 
     失败章不进 State，事后无从复现；这份快照是唯一能区分
     「Writer 没写出必需事件」与「抽取漏掉了必需事件」的证据。
+    `rounds` 是每一轮进 commit 前的 (ctx, 抽取产物)，下标 0 = 第 0 轮。修订会换掉 Draft，
+    所以主段渲染**最终**那一轮，第 0 轮另起一段保留——只留最终稿就看不出失败是修订前还是修订后的。
     `contract_version` 一起落盘：重议契约（06 §4.2）是否真的发生过，只能从这里看出来
     ——`ExperimentReport` 的字段是 08 §3 逐字表，不能往里加。
     """
@@ -177,11 +188,12 @@ def _write_chapter_dump(dump_dir, ch: int, ctx, props, out) -> None:
 
     d = Path(dump_dir)
     d.mkdir(parents=True, exist_ok=True)
-    if ctx is None:
+    if not rounds:
         # 契约在本章开工前就判死（04 §4.3）：管道一步没跑，`out` 槽位放的是异常消息。
         (d / f"ch{ch:02d}.md").write_text(
             f"# Chapter {ch} — status=ARC_CONFLICT\nmessage={out}\n", encoding="utf-8")
         return
+    ctx, props = rounds[-1]
     if isinstance(out, str):
         # 中途判死的 Arc 章：`out` 槽位同样是异常消息，判定与一致性这一栏还没产出。
         status, message, validation, consistency = "ARC_CONFLICT", out, None, []
@@ -190,9 +202,15 @@ def _write_chapter_dump(dump_dir, ch: int, ctx, props, out) -> None:
         validation, consistency = out.validation, out.consistency
     lines = [f"# Chapter {ch} — status={status}",
              f"message={message}",
-             f"contract_version={ctx.contract.version} "
+             f"contract_version={ctx.contract.version} rounds={len(rounds) - 1} "
              f"required_events={sorted(e.event_type for e in ctx.contract.required_events)}",
              ""]
+    if trace is not None and trace.steps:
+        lines.append("## Revision")
+        lines += [f"- round {s.round_no} level={s.root_cause.level} "
+                  f"rules={','.join(s.violations) or '—'} action={s.action} "
+                  f"committed={s.committed}" for s in trace.steps]
+        lines.append("")
     if validation is not None:
         lines.append("## Findings")
         for f in validation.hard_violations:
@@ -207,8 +225,12 @@ def _write_chapter_dump(dump_dir, ch: int, ctx, props, out) -> None:
             lines.append(f"- {f['severity'].upper()} {f['code']}: {f['detail']}")
     lines.append("")
     lines += ["## Draft", ctx.draft.strip(), "", "## Proposals"]
-    lines += [f"- {p.proposed_event_type} actor={p.actor} target={p.target} "
-              f"payload={p.payload}" for p in props] or ["- （无）"]
+    lines += _proposal_lines(props)
+    if len(rounds) > 1:
+        first, first_props = rounds[0]
+        lines += ["", f"## Round 0（contract_version={first.contract.version}）",
+                  first.draft.strip(), "", "## Round 0 Proposals"]
+        lines += _proposal_lines(first_props)
     lines.append("")
     (d / f"ch{ch:02d}.md").write_text("\n".join(lines), encoding="utf-8")
 
@@ -265,8 +287,8 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None):
                                plans=fx.plan_for)
     on_chapter = None
     if dump_dir is not None:
-        on_chapter = lambda ch, ctx, props, out: _write_chapter_dump(
-            dump_dir, ch, ctx, props, out)
+        on_chapter = lambda ch, rounds, out, trace: _write_chapter_dump(
+            dump_dir, ch, rounds, out, trace)
     report = None
     try:
         report = run_experiment(cfg, store=store, log=log, chapter_source=source,
@@ -288,7 +310,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         description="Phase-0 实验 → 08 §6 失败分类 / §7 冻结闸 / §8 退出条件决策单（只读）")
     ap.add_argument("--chapters", type=int, default=10)
     ap.add_argument("--defect", action="append", default=[], metavar="CH:KIND",
-                    help="注入缺陷章，KIND ∈ {leak, dead}；可重复。用于验证分类归因是否落对桶")
+                    help="注入缺陷章，KIND ∈ {leak, dead, no_obs}；可重复。用于验证分类归因是否落对桶")
     ap.add_argument("--live", action="store_true",
                     help="用真实模型（默认本机 Ollama）跑实验；换 vLLM 只改 --model-config")
     ap.add_argument("--model-config", metavar="JSON", default=None,
@@ -304,8 +326,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     defects: Dict[int, str] = {}
     for spec in args.defect:
         ch, _, kind = spec.partition(":")
-        if kind not in ("leak", "dead"):
-            ap.error(f"--defect {spec!r}: KIND 必须是 leak|dead")
+        if kind not in ("leak", "dead", "no_obs"):
+            ap.error(f"--defect {spec!r}: KIND 必须是 leak|dead|no_obs")
         try:
             defects[int(ch)] = kind
         except ValueError:

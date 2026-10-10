@@ -9,7 +9,7 @@ Revision 循环（06）由调用方注入；不注入时 `revision_*` 记未运�
 from __future__ import annotations
 
 import time
-from typing import Callable, Dict, List, Optional
+from typing import Callable, Dict, List, Optional, Tuple
 
 from plot_engine.classify import MetricCounts, classify_outcome, consistency_counts
 from plot_engine.commit import CommitOrchestrator
@@ -21,6 +21,7 @@ from plot_engine.llm import LlmClient
 from plot_engine.models.commit import CommitOutcome, CommitRequest
 from plot_engine.models.experiment import ChapterArtifacts, ExperimentConfig, ExperimentReport
 from plot_engine.models.proposal import EventProposal
+from plot_engine.models.revision import RevisionTrace
 from plot_engine.models.state import StoryState
 from plot_engine.reducer import Reducer
 from plot_engine.replay import verify_parity
@@ -38,10 +39,12 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
                    validator: Optional[Validator] = None,
                    revision_loop: Optional[RevisionLoop] = None,
                    llm_client: Optional[LlmClient] = None,
-                   on_chapter: Optional[Callable[[int, Optional[ChapterContext],
-                                                  List[EventProposal], "CommitOutcome | str"],
-                                                 None]] = None,
+                   on_chapter: Optional[Callable[
+                       [int, List[Tuple[ChapterContext, List[EventProposal]]],
+                       "CommitOutcome | str", Optional[RevisionTrace]], None]] = None,
                    ) -> ExperimentReport:
+    """`on_chapter(ch, rounds, out, trace)`：rounds 是**每一轮进 recommit 时的 (ctx, 抽取产物)**，
+    下标 0 就是第 0 轮；修订之后最终产物在最后一项，不在 `art` 里（08 §10 I3 取证）。"""
     reducer = reducer or Reducer()
     validator = validator or Validator()
     orch = CommitOrchestrator(store, log, reducer, validator)
@@ -59,18 +62,18 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
     needed_revision = 0
     generated = 0
 
-    def quarantine(ch: int, exc: BaseException, ctx: Optional[ChapterContext] = None,
-                   props: Optional[List[EventProposal]] = None) -> None:
+    def quarantine(ch: int, exc: BaseException, rounds: List[Tuple] = (),
+                   trace: Optional[RevisionTrace] = None) -> None:
         """Arc 层输入缺陷只作废本章：留痕进 §6 的 Contract/Arc 桶（08 §10 I3），实验继续。
         让整场实验换成 traceback，等于把一份报告换成一个错误。
 
-        `ctx` 为空 = 本章开工前就判死（管道一步没跑）；非空 = 中途判死，正文与抽取产物
-        照样交给快照——「Arc 要的事件模型没写」正是最需要区分 Writer/抽取的那一类。
+        `rounds` 为空 = 本章开工前就判死（管道一步没跑）；非空 = 中途判死，各轮正文与抽取
+        产物照样交给快照——「Arc 要的事件模型没写」正是最需要区分 Writer 与抽取的那一类。
         """
         unresolved.append(ch)
         total.by_rule["ARC_CONFLICT"] = total.by_rule.get("ARC_CONFLICT", 0) + 1
         if on_chapter is not None:
-            on_chapter(ch, ctx, list(props or []), str(exc))
+            on_chapter(ch, list(rounds), str(exc), trace)
 
     for ch in range(1, config.chapters + 1):
         env = store.load_latest(story)
@@ -83,12 +86,12 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
             quarantine(ch, exc)
             continue
         draft = art.draft or compose_chapter_draft(art.scene_plan, art.contract, cur, scene_writer).draft
-        captured: Dict[str, list] = {"props": []}
+        captured: List[Tuple[ChapterContext, List[EventProposal]]] = []
 
         def recommit(ctx: ChapterContext) -> "CommitOutcome":
             props = stage0_extract(ctx.draft, ctx.scene_plan, ctx.contract, cur, chapter=ch,
                                    rule_channel=art.rule_channel, llm_channel=art.llm_channel)
-            captured["props"] = props
+            captured.append((ctx, props))
             req = CommitRequest(story_id=story, chapter_no=ch, draft=ctx.draft,
                                 contract=ctx.contract, scene_plan=ctx.scene_plan,
                                 expected_version=cur_version, trace_id=f"exp-{ch}")
@@ -98,21 +101,22 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
                              draft=draft, state=cur)
         if revision_loop is None:
             out = recommit(ctx)
+            trace = None
         else:
             try:
                 trace, out = revision_loop.run_chapter(story, ch, ctx, recommit)
             except (ArcConflict, NoChapterIntent) as exc:
                 # 契约层重议撞开 Arc Error（06 §4.3）：管道已经跑过、token 已花 ⇒ 算 generated，
-                # 但它不是模型失败，同样只作废本章，并把本章已跑出的产物交给快照。
+                # 但它不是模型失败，同样只作废本章，并把各轮产物交给快照。
                 generated += 1
-                quarantine(ch, exc, ctx, captured["props"])
+                quarantine(ch, exc, captured)
                 continue
             rounds_by_chapter[ch] = trace.rounds
             if trace.rounds:
                 needed_revision += 1
                 fixed_by_revision += int(out.status == "OK")
         if on_chapter is not None:
-            on_chapter(ch, ctx, list(captured["props"]), out)
+            on_chapter(ch, captured, out, trace)
         generated += 1
 
         # §4/§6：validation 层硬规则按 rule_id 计入 hard_violations（含被拒章，作失败分类信号）。

@@ -142,8 +142,8 @@ def test_on_chapter_records_every_chapter_including_failures(tmp_path):
     store.init_genesis(cfg.story_id, cfg.initial_state)
     rep = run_experiment(cfg, store=store, log=log, chapter_source=_source(bad_chapter=2),
                          scene_writer=lambda s, c, st: s.scene_id,
-                         on_chapter=lambda ch, draft, props, out: seen.append(
-                             (ch, draft, len(props), out.status)))
+                         on_chapter=lambda ch, rounds, out, trace: seen.append(
+                             (ch, rounds[-1][0].draft, len(rounds[-1][1]), out.status)))
     assert [s[0] for s in seen] == [1, 2, 3]
     assert all(s[1] for s in seen)                      # 失败章的 draft 也一样记录
     assert seen[1][3] != "OK" and rep.unresolved_chapters == [2]
@@ -153,8 +153,9 @@ def test_on_chapter_records_every_chapter_including_failures(tmp_path):
 def test_arc_conflict_chapter_recorded_and_run_continues(tmp_path):
     """前置 0：derive 判死的章（04 §4.3 / 06 §4.3）不该把整场实验换成 traceback。
 
-    本章一步管道都没跑 ⇒ 不算 generated、不花 token；但 08 §10 I3 要求它被记录，
-    所以它进 unresolved + §6 的 Contract/Arc 桶，实验接着跑完剩下的章。
+    本章一步管道都没跑 ⇒ 不算 generated、不花 token，`rounds` 因此是空表；
+    但 08 §10 I3 要求它被记录，所以它进 unresolved + §6 的 Contract/Arc 桶，
+    实验接着跑完剩下的章。
     """
     from plot_engine.derive import ArcConflict
 
@@ -169,12 +170,12 @@ def test_arc_conflict_chapter_recorded_and_run_continues(tmp_path):
     seen = []
     rep = run_experiment(cfg, store=store, log=log, chapter_source=src,
                          scene_writer=_dummy_writer,
-                         on_chapter=lambda ch, ctx, props, out: seen.append((ch, ctx, str(out))))
+                         on_chapter=lambda ch, rounds, out, trace: seen.append((ch, rounds, str(out))))
     assert rep.chapters_generated == 2 and rep.chapters_committed == 2
     assert rep.unresolved_chapters == [2]
     assert rep.hard_violations["ARC_CONFLICT"] == 1
     assert [s[0] for s in seen] == [1, 2, 3]           # 每章都有快照，失败章不缺
-    assert seen[1][1] is None and "allowed/forbidden" in seen[1][2]
+    assert seen[1][1] == [] and "allowed/forbidden" in seen[1][2]
 
 
 def test_arc_conflict_raised_mid_revision_quarantined_too(tmp_path):
@@ -197,10 +198,10 @@ def test_arc_conflict_raised_mid_revision_quarantined_too(tmp_path):
                          scene_writer=_dummy_writer,
                          revision_loop=RevisionLoop(policy=RevisionPolicy(),
                                                     actions={"renegotiate_contract": boom}),
-                         on_chapter=lambda ch, ctx, props, out: seen.append((ch, ctx, props)))
+                         on_chapter=lambda ch, rounds, out, trace: seen.append((ch, rounds, out)))
     assert rep.chapters_generated == 3 and rep.chapters_committed == 2
     assert rep.unresolved_chapters == [2]
     assert rep.hard_violations["ARC_CONFLICT"] == 1
-    # 中途判死的章已经写出正文：快照必须照样拿到，否则「Arc 要的事件模型没写」
-    # 与「抽取漏了」就分不开了（08 §10 I3）。
-    assert seen[1][1] is not None and len(seen[1][2]) >= 2
+    # 中途判死的章已经写出正文：各轮快照必须照样交给 triage，
+    # 否则「Arc 要的事件模型没写」与「抽取漏了」就分不开了（08 §10 I3）。
+    assert seen[1][1] and isinstance(seen[1][2], str)

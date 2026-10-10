@@ -1,8 +1,9 @@
 """10 章实验协议数据契约（08_experiment_protocol.md §2 配置 / §3 报告 / §4 硬指标）。
 
-Phase 0 网络无关：真实 LLM Writer/抽取与 Arc→Contract→ScenePlan 生成器均不在本协议范围，
-实验链路以注入的确定性 `ChapterArtifacts` 充当非确定模型，验证管道接线（见 Day 20–22 计划偏离记录）。
-Revision 循环（06）未落地，报告 `revision_*` 记为未运行、E3 标 N/A。数值一律定点整数×1000。
+`ExperimentReport` 的字段是 08 §3 逐字表，取证信息一律走注入的回调与逐章快照，不往里加。
+链路保持网络无关但真跑过模型：Writer/抽取端点由 `--model-config` 注入，契约与场景计划由
+`plot_engine.derive` 确定性派生，修订循环（06）由调用方注入——不注入时 `revision_*`
+记为未运行、E3 标 N/A。数值一律定点整数×1000。
 """
 from __future__ import annotations
 
