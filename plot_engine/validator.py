@@ -14,6 +14,7 @@ from typing import Literal, get_args
 
 from pydantic import BaseModel, Field, ValidationError
 
+from plot_engine.models.contract import FIELD_EVENT_TYPES
 from plot_engine.models.event import Event, EventType
 from plot_engine.models.proposal import EventProposal, proposal_event_id, to_event
 from plot_engine.models.state import StoryState
@@ -356,13 +357,9 @@ _READING_KINDS = {"READER_LEARNS": "learns", "READER_HINTED": "hinted",
 _SIGNAL_TO_READER = {"knows": "READER_LEARNS", "hinted": "READER_HINTED",
                      "deceived": "READER_DECEIVED"}
 _KNOWLEDGE_ESTABLISH = {"OBSERVES", "READS", "IS_TOLD", "INFERS", "BELIEVES", "SUSPECTS"}
-# 10 §4.3：H5.3 判「must_change 由哪类 Event 实现」必须按 field 分表——两个 ledger 的事件族
-# 不互通，且 belief 侧要认 DOUBTS。共用宽集合会让 BELIEVES 冒充 knowledge 跃迁。
-# H5.7（禁止知识整批建立）用上面那个宽集合是对的，不跟着这张表收窄。
-_FIELD_IMPLEMENTERS: Dict[str, Set[str]] = {
-    "knowledge": {"OBSERVES", "READS", "IS_TOLD", "INFERS"},
-    "belief": {"BELIEVES", "SUSPECTS", "DOUBTS"},
-}
+# 10 §4.3 的 field→实现事件映射表在 models.contract.FIELD_EVENT_TYPES：
+# H5.3 用它按 field 分表（BELIEVES 不能冒充 knowledge 跃迁），
+# H5.7（禁止知识整批建立）用上面那个宽集合，不跟着分表收窄。
 _SIMPLE_FIELDS: Dict[str, str] = {"location": "current_location", "realm": "realm",
                                   "status": "status", "faction": "faction_id",
                                   "attributes": "attributes", "abilities": "abilities"}
@@ -501,8 +498,10 @@ def _l2_h5(sim: Simulation, state: StoryState, proposals: List[EventProposal],
 
 
 def _change_implemented(sim: Simulation, ch) -> bool:
-    implementers = _FIELD_IMPLEMENTERS.get(ch.field)
-    if implementers is not None:
+    implementers = FIELD_EVENT_TYPES.get(ch.field)
+    if implementers is None:
+        return True
+    if ch.field in ("knowledge", "belief"):
         return any(ev.event_type in implementers
                    and (_referenced_fact(ev) == ch.target)
                    and (ev.actor == ch.character_id)
@@ -510,11 +509,7 @@ def _change_implemented(sim: Simulation, ch) -> bool:
     if ch.field in _SIMPLE_FIELDS:
         return any(ev.event_type == "CHANGES" and ev.payload.get("field") == ch.field
                    and ev.actor == ch.character_id for ev in sim.applied)
-    if ch.field == "relationship":
-        return any(ev.event_type == "RELATIONSHIP_CHANGED" for ev in sim.applied)
-    if ch.field == "inventory":
-        return any(ev.event_type in ("ITEM_ACQUIRED", "ITEM_CONSUMED") for ev in sim.applied)
-    return True
+    return any(ev.event_type in implementers for ev in sim.applied)
 
 
 def _must_not_changed(sim: Simulation, ch) -> bool:

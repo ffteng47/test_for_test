@@ -20,8 +20,8 @@ from typing import Dict, List, Literal, Optional, Sequence, Set
 from pydantic import BaseModel, ValidationError
 
 from plot_engine.models.contract import (
-    ArcContract, ChapterContract, ChapterHook, CharacterChange, ForbiddenEvent,
-    KnowledgeGate, ReaderSignal, RequiredEvent,
+    ArcContract, ChapterContract, ChapterHook, CharacterChange, FIELD_EVENT_TYPES,
+    ForbiddenEvent, KnowledgeGate, ReaderSignal, RequiredEvent,
 )
 from plot_engine.models.sceneplan import Beat, Scene, ScenePlan
 from plot_engine.models.state import StoryState
@@ -167,6 +167,16 @@ def derive_chapter_contract(arc: ArcContract, chapter_no: int, state: StoryState
     if overdue_forbidden:
         raise ArcConflict(f"{arc.arc_id} 第 {chapter_no} 章要求揭示 "
                           f"{sorted(overdue_forbidden)}，但同一 gate 又禁止该事实")
+
+    # 04 §4.2：每条 must_change 必须被对应 Event 实现（映射表 10 §4.3）。Δ 在本章
+    # 根本实现不了，是 Arc 给错了输入（06 §4.3）——在这里响亮失败，别让它烧完
+    # 三轮修订才现形，那三轮烧的是 token，换来的还是同一句 H5.3「无实现事件」。
+    implementable = {e.event_type for e in events}
+    unmet = [f"{c.character_id}.{c.field}→{c.target}" for c in intent.must_change
+             if not implementable & FIELD_EVENT_TYPES.get(c.field, set())]
+    if unmet:
+        raise ArcConflict(f"{arc.arc_id} 第 {chapter_no} 章的 must_change 没有可实现它的"
+                          f"事件类型（现有 {sorted(implementable)}）：{unmet}")
 
     # D9：只有到期 gate 才能产生读者信号，未到期的 fact 绝不标 knows
     signals: Dict[str, str] = {}

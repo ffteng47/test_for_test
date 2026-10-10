@@ -21,6 +21,9 @@ def _intent(ch: int, **over) -> dict:
         "ending": {"type": "cliffhanger", "strength": 800, "description": "d"},
         "must_change": [{"character_id": CAST, "field": "knowledge", "operation": "add",
                          "target": "fact_000003", "expected_value": "known"}],
+        # 04 §4.2：Δ 必须被对应 Event 实现 ⇒ 意图自带的 must_change 也要自带实现事件
+        "required_events": [{"event_type": "OBSERVES", "description": "张三亲眼验出印章",
+                             "actors_involved": [CAST]}],
     }
     base.update(over)
     return base
@@ -69,7 +72,8 @@ def test_no_authored_intent_never_invents_a_story_goal():
 # --- D3：turning_point 的事件类型必须进 required_events -----------------------
 def test_d3_turning_point_chapter_gains_its_event_types():
     arc = _arc(tps=[{"chapter": 3, "type": "revelation", "description": "印泥是干的",
-                     "required_event_types": ["OBSERVES", "INFERS"]}])
+                     "required_event_types": ["OBSERVES", "INFERS"]}],
+               beats=[_intent(c, must_change=[], required_events=[]) for c in range(1, 11)])
     hit = derive_chapter_contract(arc, 3, _state(), created_at=NOW)
     miss = derive_chapter_contract(arc, 2, _state(), created_at=NOW)
     assert {"OBSERVES", "INFERS"} <= _types(hit)
@@ -194,3 +198,31 @@ def test_metadata_and_provenance_are_stamped():
         (7, "arc_003", EPOCH, 2, NOW)
     assert c.version == 1
     assert f"arc_003.reader_beats[{c.chapter_no}]" in c.derived_from   # D7/C2：作者意图也记来源
+
+
+# --- 实现性守卫：must_change 的 Δ 必须有能兑现它的事件类型（04 §4.2 / 10 §4.3）---
+def test_unimplementable_must_change_is_arc_error():
+    """Arc 给不出实现事件的 Δ 是输入著作错误（06 §4.3）：在契约生成时就响亮失败，
+    别让 Writer 去撞三轮修订——那三轮烧的是 token，换来的还是同一句「无实现事件」。"""
+    arc = _arc(beats=[_intent(1, required_events=[
+        {"event_type": "RELATIONSHIP_CHANGED", "description": "关系变化"}])])
+    with pytest.raises(ArcConflict):
+        derive_chapter_contract(arc, 1, _state(), created_at=NOW)
+
+
+def test_guard_uses_the_per_field_implementer_table():
+    """分表方向不能反：knowledge 的 Δ 不能用 belief 事件兑现，反之亦然。"""
+    belief_only = _intent(1, must_change=[{"character_id": CAST, "field": "belief",
+                                           "operation": "add", "target": "fact_000003",
+                                           "expected_value": "believes"}],
+                          required_events=[{"event_type": "OBSERVES", "description": "o"}])
+    with pytest.raises(ArcConflict):
+        derive_chapter_contract(_arc(beats=[belief_only]), 1, _state(), created_at=NOW)
+
+
+def test_turning_point_event_also_implements_the_change():
+    """D3 补进来的拐点事件同样是实现事件，守卫看的是最终 required_events。"""
+    arc = _arc(tps=[{"chapter": 1, "type": "revelation", "description": "d",
+                     "required_event_types": ["OBSERVES"]}],
+               beats=[_intent(1, required_events=[])])
+    assert derive_chapter_contract(arc, 1, _state(), created_at=NOW).required_events

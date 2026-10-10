@@ -58,6 +58,20 @@ class CharacterChange(BaseModel):
     expected_value: Optional[Any] = None
 
 
+# 10 §4.3：CharacterChange.field → 能实现该跃迁的事件类型。
+# 两个 ledger 的事件族不互通，且 belief 侧要认 DOUBTS。
+# H5.3（validator）与派生守卫（derive）共用这张表：契约生成时就排除实现不了的 Δ，
+# 别把它交给 Writer 去撞三轮修订。
+FIELD_EVENT_TYPES: Dict[str, set] = {
+    "knowledge": {"OBSERVES", "READS", "IS_TOLD", "INFERS"},
+    "belief": {"BELIEVES", "SUSPECTS", "DOUBTS"},
+    "location": {"CHANGES"}, "realm": {"CHANGES"}, "status": {"CHANGES"},
+    "faction": {"CHANGES"}, "attributes": {"CHANGES"}, "abilities": {"CHANGES"},
+    "relationship": {"RELATIONSHIP_CHANGED"},
+    "inventory": {"ITEM_ACQUIRED", "ITEM_CONSUMED"},
+}
+
+
 class RequiredEvent(BaseModel):
     event_type: str                             # ∈ 01 §3 Taxonomy
     description: str
