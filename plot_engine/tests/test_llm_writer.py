@@ -127,12 +127,13 @@ def test_scene_writer_plugs_into_compose_chapter_draft():
     assert asm.draft.count("<!-- hook:") == 1           # 恰好一条，落在末尾
 
 
-def test_blind_prompt_does_not_name_the_required_transition():
-    """基线配置（v0-blind）：契约要求只当尺子，不进提示词。"""
+def test_beats_prompt_does_not_name_the_required_transition():
+    """基线配置（v0-beats）：契约要求不进汇总行。注意它**并不盲**——
+    `_vocab` 的 `节拍意图` 会原样带出事件类型与 fact ID，实测见 phase0-prompt-ab-results。"""
     from plot_engine.llm_writer import prompt_version
     contract = _contract(must_change=[], required_events=[])
     joined = "\n".join(m["content"] for m in scene_prompt(_scene(), contract, _state()))
-    assert prompt_version(False) == "v0-blind"
+    assert prompt_version(False) == "v0-beats"
     assert "必须发生的跃迁" not in joined and "必须出现的事件类型" not in joined
 
 

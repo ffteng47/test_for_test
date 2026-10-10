@@ -69,7 +69,8 @@ def _told_lines(contract: ChapterContract) -> List[str]:
 
 
 def prompt_version(told: bool) -> str:
-    return "v1-told" if told else "v0-blind"
+    # 基线不叫 blind：`_vocab` 的 节拍意图 无条件带出事件类型与 fact ID（08 采样期实测）。
+    return "v1-told" if told else "v0-beats"
 
 
 def scene_prompt(scene: Scene, contract: ChapterContract,

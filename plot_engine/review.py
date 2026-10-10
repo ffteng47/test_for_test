@@ -242,7 +242,8 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
     返回 `(report|None, 端点说明, 抽取诊断)`：端点不可达时不烧预算，实验中途端点失效时
     报告作废并给出一句原因——两种情况都是 `report=None`，绝不半成品出数。
     `client` 可注入，供测试保持零网络。
-    `told` 选 Writer 提示词配置（`v1-told` 告知型 / `v0-blind` 盲写），版本随端点说明落进 run.log
+    `told` 选 Writer 提示词配置（`v1-told` 告知型 / `v0-beats` 基线；基线**不叫盲写**，
+    `节拍意图` 会带出事件类型与 fact ID），版本随端点说明落进 run.log
     ——提示词是产品配置不是协议，读数的血缘靠这个标签（`docs/phase0-writer-prompt-ab.md` §2）。
     """
     import dataclasses
@@ -320,8 +321,8 @@ def main(argv: Optional[List[str]] = None) -> int:
                     help='模型路由 JSON 或 @文件路径，例：{"writer":{"base_url":"http://<host>:8000/v1","model":"qwen2.5-14b"}}')
     ap.add_argument("--dump-dir", metavar="DIR", default=None,
                     help="逐章落盘 正文/抽取产物/判定，供失败归因（08 §10 I3）；仅 --live 生效")
-    ap.add_argument("--prompt", choices=("blind", "told"), default="blind",
-                    help="Writer 提示词配置：blind=v0-blind 只给场景与可用事实（基线），"
+    ap.add_argument("--prompt", choices=("beats", "told"), default="beats",
+                    help="Writer 提示词配置：beats=v0-beats 基线（无汇总行，但 节拍意图 仍带类型与 fact ID），"
                          "told=v1-told 追加本章 must_change 目标与必需事件类型（不给禁条，"
                          "docs/phase0-writer-prompt-ab.md §3）；仅 --live 生效")
     args = ap.parse_args(argv)
