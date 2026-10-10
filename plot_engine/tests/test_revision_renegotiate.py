@@ -5,7 +5,7 @@
 import dataclasses
 import pytest
 
-from plot_engine.derive import derive_chapter_contract
+from plot_engine.derive import ArcConflict, derive_chapter_contract
 from plot_engine.models.contract import ArcContract, ChapterHook
 from plot_engine.models.entity import Character
 from plot_engine.models.fact import Fact
@@ -67,11 +67,14 @@ def test_renegotiation_drops_only_the_authored_requirement_that_missed():
     assert out.draft == ctx.draft                    # 06 §4.2：不重写 Draft
 
 
-def test_arc_mandated_requirement_is_never_dropped():
+def test_unsatisfiable_arc_mandated_requirement_fails_fast():
+    """批次 4：落空的正好是 Arc 强制项 ⇒ 重议一条也放宽不了，再派生一次只会产出同一份
+    被同一规则拒掉的契约。静默重议等于把 Arc 层缺陷伪装成「重议通过」，
+    还顺手烧掉剩下的修订预算（06 §4.3：Arc Error → 回 Arc 层）。"""
     arc = _arc()
-    ctx = _ctx(arc, unsatisfied=["OBSERVES"])
-    out = renegotiate_contract(arc, created_at=NOW)(ctx)
-    assert "OBSERVES" in {e.event_type for e in out.contract.required_events}
+    ctx = _ctx(arc, unsatisfied=["OBSERVES"])         # D3 拐点要求 OBSERVES，本章给不出
+    with pytest.raises(ArcConflict):
+        renegotiate_contract(arc, created_at=NOW)(ctx)
 
 
 def test_version_bumps_and_provenance_survives():

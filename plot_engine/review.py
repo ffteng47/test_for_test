@@ -182,22 +182,28 @@ def _write_chapter_dump(dump_dir, ch: int, ctx, props, out) -> None:
         (d / f"ch{ch:02d}.md").write_text(
             f"# Chapter {ch} — status=ARC_CONFLICT\nmessage={out}\n", encoding="utf-8")
         return
-    lines = [f"# Chapter {ch} — status={out.status}",
-             f"message={out.message}",
+    if isinstance(out, str):
+        # 中途判死的 Arc 章：`out` 槽位同样是异常消息，判定与一致性这一栏还没产出。
+        status, message, validation, consistency = "ARC_CONFLICT", out, None, []
+    else:
+        status, message = out.status, out.message
+        validation, consistency = out.validation, out.consistency
+    lines = [f"# Chapter {ch} — status={status}",
+             f"message={message}",
              f"contract_version={ctx.contract.version} "
              f"required_events={sorted(e.event_type for e in ctx.contract.required_events)}",
              ""]
-    if out.validation is not None:
+    if validation is not None:
         lines.append("## Findings")
-        for f in out.validation.hard_violations:
+        for f in validation.hard_violations:
             lines.append(f"- HARD {f.rule_id}: {f.message}")
-        for f in out.validation.soft_warnings:
+        for f in validation.soft_warnings:
             lines.append(f"- SOFT {f.rule_id}: {f.message}")
-        for f in out.validation.observations:
+        for f in validation.observations:
             lines.append(f"- OBS {f.rule_id}: {f.message} | {f.evidence or ''}")
-    if out.consistency:
+    if consistency:
         lines.append("## Consistency")
-        for f in out.consistency:
+        for f in consistency:
             lines.append(f"- {f['severity'].upper()} {f['code']}: {f['detail']}")
     lines.append("")
     lines += ["## Draft", ctx.draft.strip(), "", "## Proposals"]

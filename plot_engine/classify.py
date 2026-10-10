@@ -67,7 +67,9 @@ def consistency_counts(findings: List[dict]) -> Dict[str, int]:
     for f in findings:
         if f.get("severity") != "hard":
             continue
-        key = bucket_to_key.get(RULE_TO_METRIC.get(f["code"]))
+        # 未映射 code 兜底 CANON，与 classify_outcome 同口径：I2/I6 这类不进九项的硬矛盾
+        # 一旦被丢掉，§8 E6 会因为「看不见」而判过。
+        key = bucket_to_key.get(RULE_TO_METRIC.get(f["code"], HardMetric.CANON))
         if key:
             acc[key] += 1
     return acc

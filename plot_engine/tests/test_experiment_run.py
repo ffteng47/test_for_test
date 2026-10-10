@@ -175,3 +175,32 @@ def test_arc_conflict_chapter_recorded_and_run_continues(tmp_path):
     assert rep.hard_violations["ARC_CONFLICT"] == 1
     assert [s[0] for s in seen] == [1, 2, 3]           # 每章都有快照，失败章不缺
     assert seen[1][1] is None and "allowed/forbidden" in seen[1][2]
+
+
+def test_arc_conflict_raised_mid_revision_quarantined_too(tmp_path):
+    """批次 4：契约层重议（renegotiate_contract）撞开 ArcConflict 时走同一条隔离路径。
+    与 derive 判死唯一的差别是本章的管道已经跑过 ⇒ 算 generated，但仍不是模型失败：
+    进 Contract/Arc 桶、章末未决，实验接着跑完剩下的章（08 §10 I3/I6）。
+    """
+    from plot_engine.derive import ArcConflict
+    from plot_engine.models.revision import RevisionPolicy
+    from plot_engine.revision import RevisionLoop
+
+    def boom(ctx):
+        raise ArcConflict("arc_003 第 2 章落空的事件类型是 Arc 强制项，契约层无权放宽：['INFERS']")
+
+    cfg = _config(3)
+    store, log = StateStore(str(tmp_path / "s.db")), EventLog(str(tmp_path / "e.db"))
+    store.init_genesis(cfg.story_id, cfg.initial_state)
+    seen = []
+    rep = run_experiment(cfg, store=store, log=log, chapter_source=_source(bad_chapter=2),
+                         scene_writer=_dummy_writer,
+                         revision_loop=RevisionLoop(policy=RevisionPolicy(),
+                                                    actions={"renegotiate_contract": boom}),
+                         on_chapter=lambda ch, ctx, props, out: seen.append((ch, ctx, props)))
+    assert rep.chapters_generated == 3 and rep.chapters_committed == 2
+    assert rep.unresolved_chapters == [2]
+    assert rep.hard_violations["ARC_CONFLICT"] == 1
+    # 中途判死的章已经写出正文：快照必须照样拿到，否则「Arc 要的事件模型没写」
+    # 与「抽取漏了」就分不开了（08 §10 I3）。
+    assert seen[1][1] is not None and len(seen[1][2]) >= 2

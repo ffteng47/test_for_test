@@ -1,5 +1,5 @@
 # 硬指标分类器：CommitOutcome/consistency/replay → §4 桶（08 §4/§6）
-from plot_engine.classify import classify_outcome, to_report_fields
+from plot_engine.classify import classify_outcome, consistency_counts, to_report_fields
 from plot_engine.models.commit import CommitOutcome, CommitTrace
 from plot_engine.models.experiment import HardMetric
 from plot_engine.validator import Finding, ValidationResult
@@ -65,3 +65,15 @@ def test_to_report_fields_shape():
     assert fields["knowledge_contradictions"] == 1    # I9
     assert fields["canon_contradictions"] == 0
     assert fields["hard_violations"]["H3.3"] == 1
+
+
+def test_consistency_counts_does_not_swallow_unmapped_codes():
+    """批次 4：classify_outcome 的口径是「未知 code 兜底进 CANON，但绝不静默丢弃」，
+    §4 三项命名指标用的是另一条路径（consistency_counts），它以前只认映射表里的三个桶 ⇒
+    I2/I6/FACT_CONTRADICTED_UNKNOWN 进了 committed 状态就被看不见，§8 E6 因缺席而判过。"""
+    assert consistency_counts([
+        {"code": "I2", "severity": "hard"},        # 未映射 → canon
+        {"code": "I9", "severity": "hard"},        # knowledge
+        {"code": "H3.1", "severity": "hard"},      # timeline
+        {"code": "I1", "severity": "soft"},        # 非 hard 不计数
+    ]) == {"canon": 1, "knowledge": 1, "timeline": 1}

@@ -46,6 +46,9 @@ RULE_TO_LEVEL: Dict[str, RootCauseLevel] = {
     "I1": "fact", "R7": "fact",
     # §4.2 Contract：Contract 要求的事件在当前 State 下无法发生
     "H5.1": "contract",
+    # §4.2 Contract：must_change 的 Δ 在本章没有实现事件可兑现（W1）。归 writer 的话，
+    # 阶梯要先烧满重写预算才轮到契约层，而重写永远变不出一条不存在的 Δ（批次 4 实测）。
+    "H5.3": "contract",
     # §4.7 State：replay 对不上账
     "REPLAY_INCONSISTENT": "state",
 }

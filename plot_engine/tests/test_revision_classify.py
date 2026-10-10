@@ -29,8 +29,15 @@ def test_unsatisfiable_required_event_is_contract_layer():
 
 
 def test_text_side_rules_map_to_writer():
-    for r in ("H1.1", "H2.1", "H3.1", "H4.1", "H5.2", "H5.3", "H5.7"):
+    for r in ("H1.1", "H2.1", "H3.1", "H4.1", "H5.2", "H5.7"):
         assert classify_root_cause(_res(r)).level == "writer", r
+
+
+def test_h53_is_a_contract_failure_not_a_rewrite():
+    """06 §4.2：must_change 无实现事件（W1）＝契约要一个本章兑现不了的 Δ。
+    归 writer 会让阶梯先烧满重写预算，而重写一百遍也变不出一条不存在的 Δ。"""
+    rc = classify_root_cause(_res("H5.3"))
+    assert rc.level == "contract" and rc.confidence == 1000
 
 
 def test_event_taxonomy_rules_map_to_event_layer():

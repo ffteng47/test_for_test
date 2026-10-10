@@ -59,6 +59,19 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
     needed_revision = 0
     generated = 0
 
+    def quarantine(ch: int, exc: BaseException, ctx: Optional[ChapterContext] = None,
+                   props: Optional[List[EventProposal]] = None) -> None:
+        """Arc 层输入缺陷只作废本章：留痕进 §6 的 Contract/Arc 桶（08 §10 I3），实验继续。
+        让整场实验换成 traceback，等于把一份报告换成一个错误。
+
+        `ctx` 为空 = 本章开工前就判死（管道一步没跑）；非空 = 中途判死，正文与抽取产物
+        照样交给快照——「Arc 要的事件模型没写」正是最需要区分 Writer/抽取的那一类。
+        """
+        unresolved.append(ch)
+        total.by_rule["ARC_CONFLICT"] = total.by_rule.get("ARC_CONFLICT", 0) + 1
+        if on_chapter is not None:
+            on_chapter(ch, ctx, list(props or []), str(exc))
+
     for ch in range(1, config.chapters + 1):
         env = store.load_latest(story)
         cur, cur_version = env.state, env.version
@@ -66,12 +79,8 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
             art = chapter_source(ch, cur)
         except (ArcConflict, NoChapterIntent) as exc:
             # 契约在本章开工前就判死（04 §4.3 / 06 §4.3 Arc Error）：管道一步没跑，
-            # 不算 generated、不花 token。但它必须留痕（08 §10 I3）并归进 §6 的
-            # Contract/Arc 桶 —— 让整场实验换成 traceback 等于把一份报告换成一个错误。
-            unresolved.append(ch)
-            total.by_rule["ARC_CONFLICT"] = total.by_rule.get("ARC_CONFLICT", 0) + 1
-            if on_chapter is not None:
-                on_chapter(ch, None, [], str(exc))     # ctx=None ⇒ 第 4 参是异常消息
+            # 不算 generated、不花 token。
+            quarantine(ch, exc)
             continue
         draft = art.draft or compose_chapter_draft(art.scene_plan, art.contract, cur, scene_writer).draft
         captured: Dict[str, list] = {"props": []}
@@ -90,7 +99,14 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
         if revision_loop is None:
             out = recommit(ctx)
         else:
-            trace, out = revision_loop.run_chapter(story, ch, ctx, recommit)
+            try:
+                trace, out = revision_loop.run_chapter(story, ch, ctx, recommit)
+            except (ArcConflict, NoChapterIntent) as exc:
+                # 契约层重议撞开 Arc Error（06 §4.3）：管道已经跑过、token 已花 ⇒ 算 generated，
+                # 但它不是模型失败，同样只作废本章，并把本章已跑出的产物交给快照。
+                generated += 1
+                quarantine(ch, exc, ctx, captured["props"])
+                continue
             rounds_by_chapter[ch] = trace.rounds
             if trace.rounds:
                 needed_revision += 1
