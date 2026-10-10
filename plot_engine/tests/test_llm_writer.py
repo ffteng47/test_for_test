@@ -133,7 +133,7 @@ def test_beats_prompt_does_not_name_the_required_transition():
     from plot_engine.llm_writer import prompt_version
     contract = _contract(must_change=[], required_events=[])
     joined = "\n".join(m["content"] for m in scene_prompt(_scene(), contract, _state()))
-    assert prompt_version(False) == "v0-beats"
+    assert prompt_version("beats") == "v0-beats"
     assert "必须发生的跃迁" not in joined and "必须出现的事件类型" not in joined
 
 
@@ -151,9 +151,8 @@ def test_told_prompt_names_transitions_but_never_the_forbidden_fact():
                                      expected_value="believes")],
         required_events=[RequiredEvent(event_type="OBSERVES", description="张三看见印泥"),
                          RequiredEvent(event_type="INFERS", description="推出真凶")])
-    joined = "\n".join(m["content"] for m in scene_prompt(_scene(), contract, _state(),
-                                                         told=True))
-    assert prompt_version(True) == "v1-told"
+    joined = "\n".join(m["content"] for m in scene_prompt(_scene(), contract, _state(), arm="told"))
+    assert prompt_version("told") == "v1-told"
     assert "char_000001.knowledge update fact_000001 → known" in joined
     assert "INFERS、OBSERVES" in joined
     # 禁条目标：条目不渲染，且 description 里的 id 也被兜底抹掉

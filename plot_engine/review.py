@@ -10,6 +10,7 @@ from __future__ import annotations
 from typing import Dict, List, Optional
 
 from plot_engine.experiment import evaluate_exit_conditions
+from plot_engine.llm_writer import ARMS
 from plot_engine.models.experiment import ExperimentReport
 
 # 08 §6 结论类
@@ -236,15 +237,16 @@ def _write_chapter_dump(dump_dir, ch: int, rounds, out, trace) -> None:
 
 
 def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
-              told: bool = False):
+              arm: str = "beats"):
     """真实模型实验：Writer/抽取换成本地端点，其余管道与离线演练完全一致。
 
     返回 `(report|None, 端点说明, 抽取诊断)`：端点不可达时不烧预算，实验中途端点失效时
     报告作废并给出一句原因——两种情况都是 `report=None`，绝不半成品出数。
     `client` 可注入，供测试保持零网络。
-    `told` 选 Writer 提示词配置（`v1-told` 告知型 / `v0-beats` 基线；基线**不叫盲写**，
-    `节拍意图` 会带出事件类型与 fact ID），版本随端点说明落进 run.log
-    ——提示词是产品配置不是协议，读数的血缘靠这个标签（`docs/phase0-writer-prompt-ab.md` §2）。
+    `arm` 选 Writer 提示词配置（`docs/phase0-final-report-and-v3-config-ab.md` §10.2）：
+    `stripped`=臂 A（节拍行抹掉类型名与 ID，第一次真盲写）、`told`=臂 B（裸 ID 汇总两行，
+    渲染与 t1–t3 逐字节一致）、`persona`=臂 C（臂 B + 角色一致性规则）；基线 `beats` 留作金丝雀。
+    提示词是产品配置不是协议，只有臂 A/B/C 的渲染过滤器不动尺，版本随端点说明落进 run.log。
     """
     import dataclasses
     import tempfile
@@ -273,7 +275,7 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
     log = EventLog(str(tmp / "event.db"))
     store.init_genesis(cfg.story_id, cfg.initial_state)
 
-    writer = make_scene_writer(client, told=told)
+    writer = make_scene_writer(client, arm=arm)
 
     def rewrite(ctx):
         asm = compose_chapter_draft(ctx.scene_plan, ctx.contract,
@@ -303,7 +305,7 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
         # 就是这样）不能把 traceback 撒在半小时输出后面，也不能假装还有报告。
         where = f"已落盘的逐章快照：{dump_dir}" if dump_dir else "（未传 --dump-dir，逐章快照没落盘）"
         return None, f"模型在实验中途不可用，本报告作废。{where}\n原因：{e}", None
-    return report, f"{msg}｜prompt={prompt_version(told)}", extraction_diagnostics(source.channels)
+    return report, f"{msg}｜prompt={prompt_version(arm)}", extraction_diagnostics(source.channels)
 
 
 def main(argv: Optional[List[str]] = None) -> int:
@@ -321,10 +323,11 @@ def main(argv: Optional[List[str]] = None) -> int:
                     help='模型路由 JSON 或 @文件路径，例：{"writer":{"base_url":"http://<host>:8000/v1","model":"qwen2.5-14b"}}')
     ap.add_argument("--dump-dir", metavar="DIR", default=None,
                     help="逐章落盘 正文/抽取产物/判定，供失败归因（08 §10 I3）；仅 --live 生效")
-    ap.add_argument("--prompt", choices=("beats", "told"), default="beats",
-                    help="Writer 提示词配置：beats=v0-beats 基线（无汇总行，但 节拍意图 仍带类型与 fact ID），"
-                         "told=v1-told 追加本章 must_change 目标与必需事件类型（不给禁条，"
-                         "docs/phase0-writer-prompt-ab.md §3）；仅 --live 生效")
+    ap.add_argument("--prompt", choices=ARMS, default="beats",
+                    help="Writer 提示词臂（docs/phase0-final-report-and-v3-config-ab.md §10.2）："
+                         "beats=v0-beats 基线金丝雀；stripped=臂 A 节拍行抹掉类型名与 ID；"
+                         "told=臂 B 追加 must_change 目标与必需事件类型（裸 ID，不给禁条）；"
+                         "persona=臂 C = 臂 B + 角色一致性规则；仅 --live 生效")
     args = ap.parse_args(argv)
 
     import sys
@@ -343,7 +346,7 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     if args.live:
         report, msg, diag = _live_run(args.chapters, _read_model_config(args.model_config),
-                                      dump_dir=args.dump_dir, told=args.prompt == "told")
+                                      dump_dir=args.dump_dir, arm=args.prompt)
         print(msg)
         if report is None:
             return 2
