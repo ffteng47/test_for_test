@@ -307,6 +307,7 @@ def test_routed_chapter_carries_a_human_fix_guide(tmp_path):
     assert "## 修稿指引" in routed
     assert "INFERS=由已知证据推出结论" in routed
     assert "死人不能行动" in routed
-    assert "hook: cliffhanger" in routed           # 首次救援实跑踩到的坑：人不知道尾部有机器约定标注
+    assert "hook: 类型 strength" in routed           # 首次救援实跑踩的坑：人不知道尾部有机器约定标注
+    assert "H5.5｜章尾 hook 标注不合规（期望 ending.type=cliffhanger）" in routed   # 取值随判定原文给
     assert "那不是稿子的错" in routed
     assert "## 修稿指引" not in dump(8, "OK", [finding("H1.1", "x")])

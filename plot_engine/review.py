@@ -194,17 +194,22 @@ FIX_GUIDE: Dict[str, str] = {
 _EXTRACT_BLIND = ("INFERS", "BELIEVES")   # T8 铲 1 认定的跨模型漏抽类型
 
 
-def _fix_guide_lines(final_status: str, validation, hard_rules: List[str]) -> List[str]:
+def _fix_guide_lines(final_status: str, validation) -> List[str]:
     """路由给人的章要附「改哪里」，只给 rule_id 的那半程是人替机器读协议。
 
     抽取洞（T8 铲 1：`INFERS`/`BELIEVES` 跨模型漏抽）修好之前，照指引改完仍可能被打回，
     所以那条 caveat 一起给——否则人会把尺的毛病当自己稿子的问题。
+    每条都带上判定原文：`H5.5` 要的类型、`H5.1` 缺的事件都写在那行里，人不必回头翻协议。
     """
-    if final_status != "NEEDS_HUMAN" or validation is None or not hard_rules:
+    if final_status != "NEEDS_HUMAN" or validation is None or not validation.hard_violations:
         return []
+    hard = validation.hard_violations
     lines = ["", "## 修稿指引"]
-    lines += [f"- {r}｜{FIX_GUIDE[r]}" for r in hard_rules if r in FIX_GUIDE]
-    if any(t in f.message for f in validation.hard_violations for t in _EXTRACT_BLIND):
+    lines += [f"- {f.rule_id}｜{f.message} ⇒ {FIX_GUIDE[f.rule_id]}"
+              for f in hard if f.rule_id in FIX_GUIDE]
+    if len(lines) == 2:
+        return []
+    if any(t in f.message for f in hard for t in _EXTRACT_BLIND):
         lines.append("- 注意：本尺对 INFERS/BELIEVES 有已知漏抽（docs/phase1-t8-variant-r1-32b.md §6），"
                      "照上面改完仍可能判未满足，那不是稿子的错")
     return lines
@@ -265,9 +270,7 @@ def _write_chapter_dump(dump_dir, ch: int, rounds, out, trace) -> None:
         lines.append("## Consistency")
         for f in consistency:
             lines.append(f"- {f['severity'].upper()} {f['code']}: {f['detail']}")
-    lines += _fix_guide_lines(final_status, validation,
-                              [f.rule_id for f in validation.hard_violations]
-                              if validation is not None else [])
+    lines += _fix_guide_lines(final_status, validation)
     lines.append("")
     lines += ["## Draft", ctx.draft.strip(), "", "## Proposals"]
     lines += _proposal_lines(props)
