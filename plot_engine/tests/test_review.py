@@ -152,6 +152,12 @@ def test_cli_live_dumps_drafts_and_proposals_for_triage(tmp_path, monkeypatch):
     assert "contract_version=1" in text
 
 
+def test_cli_rescue_refuses_without_the_chain_on_disk():
+    """救援读的是盘上那条链：没有 --state-dir 就没有账可救，直接参数错，不开模型。"""
+    with pytest.raises(SystemExit):
+        review_main(["--rescue", "2:draft.md"])
+
+
 def test_model_config_accepts_inline_json_and_file(tmp_path):
     from plot_engine.review import _read_model_config
 
@@ -191,6 +197,25 @@ def test_dump_header_carries_the_trace_status_separately(tmp_path):
     head = (tmp_path / "ch03.md").read_text(encoding="utf-8").splitlines()
     assert head[0] == "# Chapter 3 — status=FAIL"
     assert head[1] == "trace_status=NEEDS_HUMAN"
+
+
+def test_dispositions_are_countable_from_the_dump_dir(tmp_path):
+    """人工处置率的口径只能从落盘快照读回来（08 §3 报告字段是逐字表，不许加）。
+    判死章一行 trace 都没有 ⇒ 单独计成 ARC_CONFLICT，不混进 NEEDS_HUMAN。"""
+    from plot_engine.review import _write_chapter_dump, count_dispositions
+    import types
+
+    from plot_engine.models.revision import RevisionTrace
+
+    _write_chapter_dump(tmp_path, 2, [], "第 2 章事实同时 allowed/forbidden：fact_000001", None)
+    ctx = types.SimpleNamespace(draft="d", contract=types.SimpleNamespace(version=1,
+                                                                          required_events=[]))
+    out = types.SimpleNamespace(status="FAIL", message="FAIL", validation=None, consistency=[])
+    for ch, status in ((3, "NEEDS_HUMAN"), (4, "OK")):
+        _write_chapter_dump(tmp_path, ch, [(ctx, [])], out,
+                            RevisionTrace(story_id="s1", chapter_no=ch, final_status=status))
+    (tmp_path / "notes.md").write_text("不是快照", encoding="utf-8")
+    assert count_dispositions(tmp_path) == {"ARC_CONFLICT": 1, "NEEDS_HUMAN": 1, "OK": 1}
 
 
 def test_render_lists_per_chapter_revision_rounds(tmp_path):

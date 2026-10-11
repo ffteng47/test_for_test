@@ -204,7 +204,9 @@ def _write_chapter_dump(dump_dir, ch: int, rounds, out, trace) -> None:
     lines = [f"# Chapter {ch} — status={status}",
              # 人工终态只存在于 trace 上：`status=` 是 outcome 的 07 §4.1 枚举（没有 NEEDS_HUMAN），
              # 从它数「要不要人接」会把已路由的章读成 0 次（Phase 0 的读错）。
-             f"trace_status={getattr(trace, 'final_status', '—')}",
+             # trace 缺席只有两种：中途判死的 Arc 章（没有终态可言，退回 status 本身）
+             # 和调用方没传 trace 的离线核对。
+             f"trace_status={getattr(trace, 'final_status', None) or status}",
              f"message={message}",
              f"contract_version={ctx.contract.version} rounds={len(rounds) - 1} "
              f"required_events={sorted(e.event_type for e in ctx.contract.required_events)}",
@@ -240,7 +242,8 @@ def _write_chapter_dump(dump_dir, ch: int, rounds, out, trace) -> None:
 
 
 def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
-              arm: str = "beats"):
+              arm: str = "beats", state_dir: Optional[str] = None,
+              rescue: Optional[List[str]] = None):
     """真实模型实验：Writer/抽取换成本地端点，其余管道与离线演练完全一致。
 
     返回 `(report|None, 端点说明, 抽取诊断)`：端点不可达时不烧预算，实验中途端点失效时
@@ -250,6 +253,10 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
     `stripped`=臂 A（节拍行抹掉类型名与 ID，第一次真盲写）、`told`=臂 B（裸 ID 汇总两行，
     渲染与 t1–t3 逐字节一致）、`persona`=臂 C（臂 B + 角色一致性规则）；基线 `beats` 留作金丝雀。
     提示词是产品配置不是协议，只有臂 A/B/C 的渲染过滤器不动尺，版本随端点说明落进 run.log。
+    `state_dir` 给定时 State/EventLog 落在那儿（默认临时目录、跑完即弃）——
+    **跨进程救援（`--rescue`）要求链还在盘上**，所以采样跑法恒带这个参数。
+    `rescue` = `["CH:改后正文文件", ...]`：跑完接着对链尾章做一次人工重入提交（T1b），
+    结果并进端点说明那一行，不另起输出通道。
     """
     import dataclasses
     import tempfile
@@ -273,7 +280,11 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
         return None, msg, None
 
     cfg = fx.make_config(chapters)
-    tmp = Path(tempfile.mkdtemp(prefix="phase0-live-"))
+    tmp = Path(state_dir) if state_dir else Path(tempfile.mkdtemp(prefix="phase0-live-"))
+    tmp.mkdir(parents=True, exist_ok=True)
+    if (tmp / "state.db").exists():
+        # 已有链上再跑一批 = 章号重复、CAS 从链尾起算，两份读数会混进同一条账。
+        return None, f"--state-dir {tmp} 里已经有一条链：换目录或先清掉，两批实验不并成一条账", None
     store = StateStore(str(tmp / "state.db"))
     log = EventLog(str(tmp / "event.db"))
     store.init_genesis(cfg.story_id, cfg.initial_state)
@@ -308,7 +319,84 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
         # 就是这样）不能把 traceback 撒在半小时输出后面，也不能假装还有报告。
         where = f"已落盘的逐章快照：{dump_dir}" if dump_dir else "（未传 --dump-dir，逐章快照没落盘）"
         return None, f"模型在实验中途不可用，本报告作废。{where}\n原因：{e}", None
-    return report, f"{msg}｜prompt={prompt_version(arm)}", extraction_diagnostics(source.channels)
+    note = f"{msg}｜prompt={prompt_version(arm)}"
+    if dump_dir is not None:
+        note += "｜终态 " + " ".join(f"{k}={v}" for k, v in sorted(count_dispositions(dump_dir).items()))
+    if rescue:
+        note += "\n" + "\n".join(_rescue_batch(store, log, cfg, client, rescue))
+    return report, note, extraction_diagnostics(source.channels)
+
+
+def count_dispositions(dump_dir) -> Dict[str, int]:
+    """从逐章快照数**终态分布**——人工处置率的唯一可数来源。
+    `status=` 是 outcome 的 CommitStatus（07 §4.1 没有 NEEDS_HUMAN 这个值），
+    只有第二行的 `trace_status=` 分得出「烧完预算判死」和「已路由给人」；
+    报告（08 §3 逐字表）不许加字段，所以这一列只能从落盘的快照读回来。
+    契约开工前就判死的章一步没跑 ⇒ 没有 trace，退回首行的 `status=ARC_CONFLICT`。"""
+    import re
+    from pathlib import Path
+
+    out: Dict[str, int] = {}
+    for p in sorted(Path(dump_dir).glob("ch*.md")):
+        lines = p.read_text(encoding="utf-8").splitlines()
+        value = next((ln.split("=", 1)[1] for ln in lines[:3]
+                      if ln.startswith("trace_status=")), None)
+        if value is None:
+            value = (re.search(r"status=(\w+)", lines[0]).group(1) if lines else "—")
+        out[value] = out.get(value, 0) + 1
+    return out
+
+
+def _rescue_batch(store, log, cfg, client, specs: List[str]) -> List[str]:
+    """逐章走 T1b 闭环（`rescue_chapter`）：一次提交、不跑修订、判据不重议。
+    抽取仍走真模型——人改的是正文，不是替模型抽事件。
+    链尾守卫在 `rescue_chapter` 里 raise，这里逐条兜住：一条坏 spec 不带走其余。
+    """
+    from pathlib import Path
+
+    from plot_engine.llm_extract import make_llm_channel
+    from plot_engine.rescue import rescue_chapter
+    from plot_engine.tests.fixtures import experiment_10ch as fx
+
+    lines = []
+    for spec in specs:
+        ch_s, _, path = spec.partition(":")
+        try:
+            ch = int(ch_s)
+            draft = Path(path).read_text(encoding="utf-8")
+        except (ValueError, OSError) as e:
+            lines.append(f"--rescue {spec!r} 读不进：{e}")
+            continue
+        cur = store.load_latest(cfg.story_id).state
+        try:
+            contract = fx.contract_for(cfg.arc_contract, ch, cur)
+            res = rescue_chapter(store, log, cfg.story_id, contract,
+                                 scene_plan=fx.plan_for(contract, cur), draft=draft,
+                                 llm_channel=make_llm_channel(client))
+        except ValueError as e:
+            lines.append(f"第 {ch} 章 rescue=SKIP｜{e}")
+            continue
+        lines.append(f"第 {ch} 章 rescue={res.status} version={res.new_version}"
+                     + ("" if res.status == "OK" else f"｜{res.message}"))
+    return lines
+
+
+def _rescue_run(state_dir: str, model_config: dict, specs: List[str], *, client=None) -> List[str]:
+    """`--rescue` 的独立入口：不跑实验，只对盘上那条链做人工重入（要求 --state-dir）。"""
+    from pathlib import Path
+
+    from plot_engine.eventlog import EventLog
+    from plot_engine.live import build_client, check_reachable
+    from plot_engine.store import StateStore
+    from plot_engine.tests.fixtures import experiment_10ch as fx
+
+    client = client or build_client(model_config)
+    ok, msg = check_reachable(client)
+    if not ok:
+        return [msg]
+    cfg = fx.make_config(10)
+    return _rescue_batch(StateStore(str(Path(state_dir) / "state.db")),
+                         EventLog(str(Path(state_dir) / "event.db")), cfg, client, specs)
 
 
 def main(argv: Optional[List[str]] = None) -> int:
@@ -326,6 +414,12 @@ def main(argv: Optional[List[str]] = None) -> int:
                     help='模型路由 JSON 或 @文件路径，例：{"writer":{"base_url":"http://<host>:8000/v1","model":"qwen2.5-14b"}}')
     ap.add_argument("--dump-dir", metavar="DIR", default=None,
                     help="逐章落盘 正文/抽取产物/判定，供失败归因（08 §10 I3）；仅 --live 生效")
+    ap.add_argument("--state-dir", metavar="DIR", default=None,
+                    help="State/EventLog 落盘目录（不给则临时目录、跑完即弃）；"
+                         "采样跑法恒给，否则事后没有可救援的链")
+    ap.add_argument("--rescue", action="append", default=[], metavar="CH:FILE",
+                    help="人工改后稿重入（Phase 1 T1b）：FILE 是改后正文，CH 必须是链尾章。"
+                         "只提交一次、不跑修订、不重议判据；要求 --state-dir")
     ap.add_argument("--prompt", choices=ARMS, default="beats",
                     help="Writer 提示词臂（docs/phase0-final-report-and-v3-config-ab.md §10.2）："
                          "beats=v0-beats 基线金丝雀；stripped=臂 A 节拍行抹掉类型名与 ID；"
@@ -347,9 +441,18 @@ def main(argv: Optional[List[str]] = None) -> int:
         except ValueError:
             ap.error(f"--defect {spec!r}: CH 必须是整数")
 
+    if args.rescue and not args.live:
+        if not args.state_dir:
+            ap.error("--rescue 要求 --state-dir：链不在盘上就没有可救援的账")
+        for line in _rescue_run(args.state_dir, _read_model_config(args.model_config),
+                                args.rescue):
+            print(line)
+        return 0
+
     if args.live:
         report, msg, diag = _live_run(args.chapters, _read_model_config(args.model_config),
-                                      dump_dir=args.dump_dir, arm=args.prompt)
+                                      dump_dir=args.dump_dir, arm=args.prompt,
+                                      state_dir=args.state_dir, rescue=args.rescue)
         print(msg)
         if report is None:
             return 2
