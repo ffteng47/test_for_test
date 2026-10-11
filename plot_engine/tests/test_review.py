@@ -275,3 +275,36 @@ def test_revision_round_rewrites_are_visible_in_the_dump(tmp_path):
     assert "contract_version=1 rounds=0" not in text         # 头部用的是最终一轮的 ctx
     assert "## Round 0（contract_version=1）" in text          # 第 0 轮另起一段留档
     assert "## Revision" not in (dumps / "ch01.md").read_text(encoding="utf-8")
+
+
+def test_routed_chapter_carries_a_human_fix_guide(tmp_path):
+    """闸口 #2 的前半程：交到人手上的 dump 不能只有 rule_id，得翻成「改哪里」。
+    残留里有 INFERS/BELIEVES 时那句 caveat 必须在——否则人会把尺的漏抽读成自己稿子的问题
+    （T8 铲 1：这两个类型在 14b 与 r1:32b 上都系统性抽不出来）。过关章不产这一段。
+    """
+    import types
+
+    from plot_engine.models.revision import RevisionTrace
+    from plot_engine.review import _write_chapter_dump
+
+    def finding(rule_id, message):
+        return types.SimpleNamespace(rule_id=rule_id, message=message)
+
+    def dump(ch, final_status, hard):
+        ctx = types.SimpleNamespace(draft="张三盯着印泥。", contract=types.SimpleNamespace(
+            version=4, required_events=[]))
+        val = types.SimpleNamespace(hard_violations=hard, soft_warnings=[], observations=[])
+        out = types.SimpleNamespace(status="FAIL", message="not committable",
+                                    validation=val, consistency=[])
+        _write_chapter_dump(tmp_path, ch, [(ctx, [])], out,
+                            RevisionTrace(story_id="s1", chapter_no=ch, final_status=final_status))
+        return (tmp_path / f"ch{ch:02d}.md").read_text(encoding="utf-8")
+
+    routed = dump(9, "NEEDS_HUMAN", [
+        finding("H5.1", "必需事件 INFERS 数量不足（0<1）"),
+        finding("H1.1", "dead 角色 char_000009 作为事件 evt_00000009_002 的 actor")])
+    assert "## 修稿指引" in routed
+    assert "INFERS=由已知证据推出结论" in routed
+    assert "死人不能行动" in routed
+    assert "那不是稿子的错" in routed
+    assert "## 修稿指引" not in dump(8, "OK", [finding("H1.1", "x")])

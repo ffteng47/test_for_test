@@ -175,6 +175,38 @@ def _proposal_lines(props) -> List[str]:
             f"payload={p.payload}" for p in props] or ["- （无）"]
 
 
+FIX_GUIDE: Dict[str, str] = {
+    "H1.1": "死人不能行动：把这条行动换成在场活人来做，或先写清楚他其实还没死",
+    "I7": "同 H1.1（可见性一致性）：已死角色不能是事件 actor",
+    "H2.2": "该角色本章没拿到这条知识：补一场他亲眼看到 / 读到 / 被告知该事实的戏",
+    "H5.1": "缺一个必需类型的事件，把它写成看得见的动作——INFERS=由已知证据推出结论；"
+            "READS=读到写着的文字；IS_TOLD=有人当面告知；OBSERVES=在场亲眼注意到；"
+            "BELIEVES=内心确认某事；DOUBTS=明确起疑",
+    "H5.3": "must_change 没实现：让那个字段真被对应动作改掉——"
+            "belief→Believes/Suspects/Doubts，knowledge→Observes/Reads/Is_told/Infers",
+    "H5.4": "must_not_change 被动了：本章别让那个字段发生任何变化",
+    "H5.6": "这条允许的知识还没建立：要让读者知道就补一个来源场景（不强制）",
+    "H5.7": "禁止知识被整批揭示：删掉这段揭示，或改成角色尚不知情",
+}
+_EXTRACT_BLIND = ("INFERS", "BELIEVES")   # T8 铲 1 认定的跨模型漏抽类型
+
+
+def _fix_guide_lines(final_status: str, validation, hard_rules: List[str]) -> List[str]:
+    """路由给人的章要附「改哪里」，只给 rule_id 的那半程是人替机器读协议。
+
+    抽取洞（T8 铲 1：`INFERS`/`BELIEVES` 跨模型漏抽）修好之前，照指引改完仍可能被打回，
+    所以那条 caveat 一起给——否则人会把尺的毛病当自己稿子的问题。
+    """
+    if final_status != "NEEDS_HUMAN" or validation is None or not hard_rules:
+        return []
+    lines = ["", "## 修稿指引"]
+    lines += [f"- {r}｜{FIX_GUIDE[r]}" for r in hard_rules if r in FIX_GUIDE]
+    if any(t in f.message for f in validation.hard_violations for t in _EXTRACT_BLIND):
+        lines.append("- 注意：本尺对 INFERS/BELIEVES 有已知漏抽（docs/phase1-t8-variant-r1-32b.md §6），"
+                     "照上面改完仍可能判未满足，那不是稿子的错")
+    return lines
+
+
 def _write_chapter_dump(dump_dir, ch: int, rounds, out, trace) -> None:
     """逐章落盘 正文 + 抽取产物 + 判定（08 §10 I3：所有 failure 必须记录）。
 
@@ -201,12 +233,13 @@ def _write_chapter_dump(dump_dir, ch: int, rounds, out, trace) -> None:
     else:
         status, message = out.status, out.message
         validation, consistency = out.validation, out.consistency
+    # 人工终态只存在于 trace 上：`status=` 是 outcome 的 07 §4.1 枚举（没有 NEEDS_HUMAN），
+    # 从它数「要不要人接」会把已路由的章读成 0 次（Phase 0 的读错）。
+    # trace 缺席只有两种：中途判死的 Arc 章（没有终态可言，退回 status 本身）
+    # 和调用方没传 trace 的离线核对。
+    final_status = getattr(trace, "final_status", None) or status
     lines = [f"# Chapter {ch} — status={status}",
-             # 人工终态只存在于 trace 上：`status=` 是 outcome 的 07 §4.1 枚举（没有 NEEDS_HUMAN），
-             # 从它数「要不要人接」会把已路由的章读成 0 次（Phase 0 的读错）。
-             # trace 缺席只有两种：中途判死的 Arc 章（没有终态可言，退回 status 本身）
-             # 和调用方没传 trace 的离线核对。
-             f"trace_status={getattr(trace, 'final_status', None) or status}",
+             f"trace_status={final_status}",
              f"message={message}",
              f"contract_version={ctx.contract.version} rounds={len(rounds) - 1} "
              f"required_events={sorted(e.event_type for e in ctx.contract.required_events)}",
@@ -229,6 +262,9 @@ def _write_chapter_dump(dump_dir, ch: int, rounds, out, trace) -> None:
         lines.append("## Consistency")
         for f in consistency:
             lines.append(f"- {f['severity'].upper()} {f['code']}: {f['detail']}")
+    lines += _fix_guide_lines(final_status, validation,
+                              [f.rule_id for f in validation.hard_violations]
+                              if validation is not None else [])
     lines.append("")
     lines += ["## Draft", ctx.draft.strip(), "", "## Proposals"]
     lines += _proposal_lines(props)
