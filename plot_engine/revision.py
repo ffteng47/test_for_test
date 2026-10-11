@@ -179,5 +179,8 @@ class RevisionLoop:
             if trace.rounds >= min(self.policy.max_rounds,
                                    self.policy.human_escalation_threshold):
                 trace.needs_human = True                       # §6 步 6：总轮数触顶 → 人工介入
-                trace.final_status = "FAIL"
+                # 终态写 NEEDS_HUMAN 而不是 FAIL：这条章**已经**被判定为要人接，
+                # 写成 FAIL 会让报告以为不存在人工路由（Phase 0 就是这么读错的）。
+                # outcome 侧的 CommitStatus 一个字没动（07 §4.1 枚举里没有 NEEDS_HUMAN）。
+                trace.final_status = "NEEDS_HUMAN"
                 return trace, outcome

@@ -94,7 +94,8 @@ def test_round_budget_stops_and_escalates_to_human():
     loop = RevisionLoop(actions={"rewrite_scene": rewrite_scene})
     trace, _ = loop.run_chapter("s1", 1, _ctx(), recommit)
     assert len(calls) == RevisionPolicy().max_rounds      # R3/R4：预算触顶即停
-    assert trace.needs_human is True and trace.final_status == "FAIL" and trace.rounds == 3
+    # 触顶 = 把人接进 loop，终态写 NEEDS_HUMAN；outcome 侧 CommitStatus 一字未动（07 §4.1 无此枚举）
+    assert trace.needs_human is True and trace.final_status == "NEEDS_HUMAN" and trace.rounds == 3
 
 
 def test_state_layer_halts_without_retry():

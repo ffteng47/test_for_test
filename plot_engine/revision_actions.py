@@ -38,6 +38,12 @@ def renegotiate_contract(arc: ArcContract, *, created_at: str) -> Action:
         fresh = derive_chapter_contract(arc, ch, ctx.state, created_at=created_at,
                                        version=ctx.contract.version + 1)
         kept = [e for e in fresh.required_events if e.event_type not in relaxable]
+        if ctx.contract.required_events and not kept:
+            # 06 §4.2 授权的是「重新派生」，不是「把判据删空」：required_events 一旦为空，
+            # H5.1 就永真，本章变成「靠删掉要求而通过」——Phase 0 九份读数里 7 章次是这一型
+            # （backlog #9）。这里**拒绝这次重议**并原样返回，连 version 都不加（不假装重议过）；
+            # 后续轮次由 RevisionLoop 的振荡升级走到 needs_human 出口，章被交出去而不是被洗白。
+            return ctx
         return dataclasses.replace(
             ctx, contract=fresh.model_copy(update={"required_events": kept}))
 

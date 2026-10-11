@@ -20,13 +20,15 @@ NOW = "2026-10-09T00:00:00Z"
 CAST = "char_000001"
 
 
-def _arc(authored=("INFERS",), tp_types=("OBSERVES",)) -> ArcContract:
+def _arc(authored=("INFERS",), tp_types=("OBSERVES",),
+         must_reveal: int | None = 2) -> ArcContract:
     return ArcContract(
         arc_id="arc_003", epoch=EPOCH, chapter_range=(1, 10), tension_curve=[600] * 10,
         turning_points=([{"chapter": 3, "type": "revelation", "description": "印泥是干的",
                           "required_event_types": list(tp_types)}] if tp_types else []),
         knowledge_gates=[{"fact_id": "fact_000001", "allowed_after_chapter": 1,
-                         "must_reveal_by_chapter": 2, "reveal_stage_target": "confirmed"}],
+                         "must_reveal_by_chapter": must_reveal,
+                         "reveal_stage_target": "confirmed"}],
         reader_beats=[{"chapter_no": 3, "story_goal": "张三查印章",
                        "story_goal_type": "revelation",
                        "ending": {"type": "cliffhanger", "strength": 800, "description": "d"},
@@ -102,6 +104,50 @@ def test_arc_conflict_is_not_swallowed_by_renegotiation():
         {"event_type": "REVEALS", "description": "别说破", "reason": "悬念"}]
     with pytest.raises(ArcConflict):
         renegotiate_contract(arc, created_at=NOW)(ctx)
+
+
+# --- 下限规则（backlog #9：「靠删掉要求而通过」）------------------------------
+def _self_imposed_arc(authored=("INFERS",)) -> ArcContract:
+    """本章要求**全部**是作者自订的（没有 D3 拐点、gate 也没逾期）⇒ 一次重议就能把
+    required_events 删空，而空契约让 H5.1 永真——「通过」变成删判据的奖品。"""
+    return _arc(authored=authored, tp_types=(), must_reveal=None)
+
+
+def test_renegotiation_refuses_to_empty_the_criteria():
+    arc = _self_imposed_arc()
+    ctx = _ctx(arc, ["INFERS"])
+    out = renegotiate_contract(arc, created_at=NOW)(ctx)
+    assert out is ctx                                   # 原样返回：不假装重议过
+    assert out.contract.version == 1
+    assert {e.event_type for e in out.contract.required_events} == {"INFERS"}
+
+
+def test_refusing_to_empty_still_allows_partial_relaxation():
+    """下限只管「删空」这一种，放宽一条留一条照旧生效——否则这条规则会把 06 §4.2
+    授权的动作整个废掉。"""
+    arc = _self_imposed_arc(authored=("INFERS", "OBSERVES"))
+    out = renegotiate_contract(arc, created_at=NOW)(_ctx(arc, ["INFERS"]))
+    assert out.contract.version == 2
+    assert {e.event_type for e in out.contract.required_events} == {"OBSERVES"}
+
+
+def test_refused_renegotiation_ends_as_needs_human_not_an_emptied_commit():
+    """被拒绝的重议必须把章交给人，而不是悄悄换出一份没要求的契约再提交一次。"""
+    arc = _self_imposed_arc()
+    bad = _outcome("FAIL", ValidationResult(hard_violations=[_finding("H5.1", "INFERS")]))
+    seen = []
+
+    def recommit(ctx):
+        seen.append(ctx.contract.version)
+        assert ctx.contract.required_events             # 每一轮进 commit 的判据都非空
+        return bad
+
+    loop = RevisionLoop(policy=RevisionPolicy(),
+                        actions={"renegotiate_contract": renegotiate_contract(arc, created_at=NOW)})
+    trace, out = loop.run_chapter("s1", 3, _ctx(arc, []), recommit)
+    assert seen == [1, 1]                               # 第二次重议没产出 version 2 的空契约
+    assert out.status == "FAIL" and trace.needs_human is True
+    assert trace.final_status == "NEEDS_HUMAN"
 
 
 # --- 调度：契约层失败现在真的会进第二轮 -------------------------------------

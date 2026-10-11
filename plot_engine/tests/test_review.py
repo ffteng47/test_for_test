@@ -173,6 +173,26 @@ def test_chapter_dump_records_arc_conflict_without_a_single_round(tmp_path):
     assert "status=ARC_CONFLICT" in text and "allowed/forbidden" in text
 
 
+def test_dump_header_carries_the_trace_status_separately(tmp_path):
+    """T1a：人工终态只存在于 trace 上。`status=` 是 07 §4.1 的 CommitStatus 枚举（没有
+    NEEDS_HUMAN），只从它数「要不要人接」会把已路由给人的章读成 0——Phase 0 把 9 章读成
+    0 章就是这么来的。所以头部必须两行并列，报告从 trace_status 数处置章。"""
+    import types
+
+    from plot_engine.models.revision import RevisionTrace
+    from plot_engine.review import _write_chapter_dump
+
+    ctx = types.SimpleNamespace(draft="张三凝视印章。",
+                                contract=types.SimpleNamespace(version=1, required_events=[]))
+    out = types.SimpleNamespace(status="FAIL", message="FAIL", validation=None, consistency=[])
+    _write_chapter_dump(tmp_path, 3, [(ctx, [])], out,
+                        RevisionTrace(story_id="s1", chapter_no=3, rounds=3, needs_human=True,
+                                      final_status="NEEDS_HUMAN"))
+    head = (tmp_path / "ch03.md").read_text(encoding="utf-8").splitlines()
+    assert head[0] == "# Chapter 3 — status=FAIL"
+    assert head[1] == "trace_status=NEEDS_HUMAN"
+
+
 def test_render_lists_per_chapter_revision_rounds(tmp_path):
     """聚合值（需修几章 / 最多几轮）盖住了「修订烧在哪一章」，Review 会要的是逐章那一行。"""
     rep = _report(tmp_path, {}).model_copy(

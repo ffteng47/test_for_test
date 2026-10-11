@@ -202,6 +202,9 @@ def _write_chapter_dump(dump_dir, ch: int, rounds, out, trace) -> None:
         status, message = out.status, out.message
         validation, consistency = out.validation, out.consistency
     lines = [f"# Chapter {ch} — status={status}",
+             # 人工终态只存在于 trace 上：`status=` 是 outcome 的 07 §4.1 枚举（没有 NEEDS_HUMAN），
+             # 从它数「要不要人接」会把已路由的章读成 0 次（Phase 0 的读错）。
+             f"trace_status={getattr(trace, 'final_status', '—')}",
              f"message={message}",
              f"contract_version={ctx.contract.version} rounds={len(rounds) - 1} "
              f"required_events={sorted(e.event_type for e in ctx.contract.required_events)}",
