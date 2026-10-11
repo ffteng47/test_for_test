@@ -71,7 +71,10 @@ python -m plot_engine.review --live --chapters 10 --prompt <beats|told|persona> 
 2. **臂纪律不变**：渲染过滤器只作用臂 A（`stripped`）；B（`told`）/C（`persona`）与 t1–t3
    逐字节一致，否则「同面可比」作废。
 3. **人工处置率从 `<dump_dir>` 的 `trace_status=` 数**，不从 `status=` 数（后者没有 `NEEDS_HUMAN`）。
-   判死章分母两种口径并列呈现的要求不变。
+   读数器住在仓库里：`python -m plot_engine.metrics <dump_dir>`（`plot_engine/metrics.py`），
+   它按 §7 的冻结定义出「干净口径 E2 / 人工处置率」两行，判死章分母两种口径并列；
+   Phase 0 那版同类脚本因为落在仓库外临时目录，机器一清就没了——这次不再重演。
+   `renegotiate-only` 章进分母不进分子，真 rewrite 救回进分子，靠 `## Revision` 的 `action=` 判。
 
 救援（被路由章）：`--rescue CH:改后正文文件 --state-dir <chain_dir> --model-config @router_local.json`，
 要求 CH 是链尾章。
