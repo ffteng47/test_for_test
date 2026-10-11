@@ -55,8 +55,17 @@
   revert（`store.revert_commit` 已有）→ stage0 → validate → commit，**禁自动修订**，Proposal 可人工预编辑后冻结；
   - **验收测试（闸口 #2 认这条，不认 T1a）**：路由 → 人工最小修改 → 重提交 → commit OK + replay parity True。
   - 规模按「中」估：机制在（revert/persist 齐全），新的是人工流程外壳。
+  - **落地修正（2026-10-11，`plot_engine/rescue.py` + `review --rescue`）**：链条上没有 revert 这一步——
+    失败章按 07 §5.3 R1 无副作用失败，压根没有提交残留可回滚；`rescue_chapter` 的守卫改成
+    **「只能救链尾章」**（非链尾 = 要重写链尾之后整段，那是整链重跑，不在救援范围内）。
+    外壳比预估还小一格，但补了一个原计划没写的前提：**采样必须带 `--state-dir`**，
+    默认临时目录跑完即弃 ⇒ 链不在盘上，`--rescue` 无账可救。
 - **T2 #9 下限规则**：按 A2 裁定落码 + 回归测试（ch06 场景 → NEEDS_HUMAN；合法部分重议保持绿）。
 - **T3 backlog #3（降级：只进报告列，不进任何闸口）**：H8.x 九桶归类（核对 08 §4 原文）+ 未映射 code CANON 兜底对齐。
+  - **08 §4 原文核对结论（2026-10-11 已落码）**：九项全是**故事状态**的账，没有一项量抽取可信度
+    ⇒ H8.1/H8.2 **只记 `by_rule`、不进九桶**（此前兜底进 CANON，会让 §8 E6 与 G4 因为一次漏抽
+    判成状态不一致——正是「不进任何闸口」这条要求禁止的事）。未知非 H8 的 rule 仍兜底 CANON，
+    可见性不丢。**对 v3 九份读数无影响**：那批读数里没有 H8.x 命中，改桶不改变任何已发布的数。
 - **T4 persona observation 检测器（降级：只进报告列，不进任何闸口、不作形态判据）**：
   draft 侧 persona 一致性 lint，SOFT/OBSERVATION 级进 ValidationResult（`_demote_l3` 已保证 L3 不产 HARD）。
   **先承认它没有判定基准**：`Character` 只有 `faction_id/status/realm`（`models/entity.py:9-31`），

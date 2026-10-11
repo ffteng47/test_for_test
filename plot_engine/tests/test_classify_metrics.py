@@ -47,6 +47,16 @@ def test_consistency_hard_findings_counted():
     assert "FACT_CONTRADICTED_UNKNOWN" not in mc.by_rule  # observation 不进硬桶
 
 
+def test_extraction_failures_are_visible_but_not_a_state_bucket():
+    """08 §4 九项量的是故事状态，没有一项量抽取可信度（backlog #3）：
+    H8.x 兜底进 CANON，等于让 §8 E6 / G4 因为一次漏抽就判成状态不一致。"""
+    mc = classify_outcome(_outcome("FAIL", hard=["H8.1", "H8.2", "H2.1"]))
+    assert mc.by_rule == {"H8.1": 1, "H8.2": 1, "H2.1": 1}   # 记得到，不是丢掉
+    assert mc.by_metric[HardMetric.CANON] == 0
+    assert mc.by_metric[HardMetric.FORBIDDEN_LEAK] == 1
+    assert to_report_fields(mc)["canon_contradictions"] == 0
+
+
 def test_replay_failure_hits_replay_bucket():
     mc = classify_outcome(_outcome("REPLAY_INCONSISTENT"), replay_ok=False)
     assert mc.by_metric[HardMetric.REPLAY] >= 1

@@ -25,7 +25,13 @@ def classify_outcome(outcome: CommitOutcome, *, consistency: Optional[List[dict]
 
     def add(rule_id: str) -> None:
         mc.by_rule[rule_id] = mc.by_rule.get(rule_id, 0) + 1
-        mc.by_metric[RULE_TO_METRIC.get(rule_id, HardMetric.CANON)] += 1
+        bucket = RULE_TO_METRIC.get(rule_id)
+        if bucket is None and rule_id.startswith("H8."):
+            # 08 §4 那九项是**故事状态**的账，没有一项量「抽取可信度」⇒ H8.x 只记 by_rule。
+            # 兜底进 CANON 会让 §8 E6 与 G4 因为一次漏抽而判成状态不一致（backlog #3）。
+            # 抽取失败照样在 06 §4.0 的 Extraction 类里可见，桶外不等于不可见。
+            return
+        mc.by_metric[bucket or HardMetric.CANON] += 1
 
     if outcome.validation is not None:
         for f in outcome.validation.hard_violations:
