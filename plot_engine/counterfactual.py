@@ -47,7 +47,11 @@ def improved_extract_prompt(draft: str, scene_plan, contract, state) -> List[dic
 
 
 def improved_channel(client: LlmClient, *, max_items: int = 24):
-    """与 `make_llm_channel` 同一条解析路径，只有提示词换了——差异才归得清。"""
+    """与 `make_llm_channel` 同一条解析路径，只有提示词换了——差异才归得清。
+
+    **故意不挂 `_promote_infers`**：§7.2 的价格标签是「prompt 单独修值多少」，
+    把 v3.2 的确定性提升混进来，洞价和规则价就分不开。别把它「顺手统一」掉。
+    """
     def channel(draft, scene_plan, contract, state) -> List[EventProposal]:
         text, usage = client.complete("extract", improved_extract_prompt(
             _strip_markup(draft), scene_plan, contract, state))

@@ -68,11 +68,13 @@ def build_live_source(client: LlmClient, *,
 
 
 def extraction_diagnostics(channels) -> Dict[str, object]:
-    """逐章通道的抽取汇总：产出数 + 坏料归因。跑完不丢，否则 §6 抽取桶无从解释。"""
+    """逐章通道的抽取汇总：产出数 + 规则提升数 + 坏料归因。跑完不丢，否则 §6 抽取桶无从解释。"""
     malformed: Dict[str, int] = {}
-    proposals = 0
+    proposals = promoted = 0
     for channel in channels:
         proposals += channel.produced
+        promoted += getattr(channel, "promoted", 0)
         for bad in channel.malformed:
             malformed[bad["reason"]] = malformed.get(bad["reason"], 0) + 1
-    return {"proposals": proposals, "malformed": malformed, "chapters": len(channels)}
+    return {"proposals": proposals, "promoted": promoted,
+            "malformed": malformed, "chapters": len(channels)}

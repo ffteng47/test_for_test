@@ -176,6 +176,23 @@
 4. 预算：3 份基线 + 2 份预留，判据公式与 20pp 间距一字不动；
 5. 救援不进测量：`--rescue` 在产品测量跑中禁用（修正案 a），闸口 #2 的实跑证据放在测量集之外单列。
 
+**落地记录（2026-10-11，尺号 `v3.2-infers-promotion`）**
+
+§7.2 的数（prompt 单独修 = +6.7pp）把第 1 件的主角从「提示词」换成了确定性规则，规则的实现约束因此要先写死：
+
+- **结论事实只从模型自己点名的派生事件里取**（`FACT_CONTRADICTED/HINTS/BELIEVES/SUSPECTS/DOUBTS/LIES/REVEALS`
+  的 payload id），证据事实只从 `OBSERVES/READS` 取。规则**不读 `Contract.required_events`**（那是通道独立性的
+  底线，07 §4.3），也**不做文本相似度匹配**（阈值一调，读数就成了阈值的函数）。⇒ 提升的是「类型补全」，不是「造事实」。
+- 上限一章一条；已有 `INFERS` 就不动；措辞表带否定排除（「无法确定」不算结论）；
+  `confidence` 沿用点名那条事件的原值，不虚报成 1000；`extraction_method="hybrid"`、
+  `source_ref="promote:<fact_id>"`，读数上单独记 `promoted` 计数（不可静默）。
+- **规则的价是 §7.2 的下界而非替代**：模型连结论事实都没点名的章，规则救不了——这是刻意的，
+  救得了就等于 validator 的答案键漏进了抽取器。
+- `plot_engine/counterfactual.py` 的 `improved_channel` **故意不挂这条规则**：§7.2 卖的是「prompt 单独修值多少」，
+  混进规则价就分不开。谁要把两个通道「顺手统一」，先重写这一节的归因论证。
+- golden test：`plot_engine/tests/test_extract_promotion.py`（6 例：正例逐字复现 + 已有 INFERS / 无措辞 /
+  否定措辞 / 无 actor / 结论=证据 四种不 fires）。
+
 ### 7.4 闸口 #2 的覆盖面（演练前必须先记的一条结构事实）
 
 链尾守卫（`rescue.py:36-38`）实测：**批量实验里失败章跳过续跑，链尾前移 ⇒ 中间章永不可救援**。

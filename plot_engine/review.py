@@ -300,6 +300,7 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
     """
     import dataclasses
     import tempfile
+
     from pathlib import Path
 
     from plot_engine.eventlog import EventLog
@@ -307,6 +308,7 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
     from plot_engine.live import (build_client, build_live_source, check_reachable,
                                   extraction_diagnostics)
     from plot_engine.llm import LlmUnavailable
+    from plot_engine.llm_extract import EXTRACTION_RULER
     from plot_engine.llm_writer import make_scene_writer, prompt_version
     from plot_engine.revision import RevisionLoop
     from plot_engine.revision_actions import renegotiate_contract
@@ -359,7 +361,7 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
         # 就是这样）不能把 traceback 撒在半小时输出后面，也不能假装还有报告。
         where = f"已落盘的逐章快照：{dump_dir}" if dump_dir else "（未传 --dump-dir，逐章快照没落盘）"
         return None, f"模型在实验中途不可用，本报告作废。{where}\n原因：{e}", None
-    note = f"{msg}｜prompt={prompt_version(arm)}"
+    note = f"{msg}｜prompt={prompt_version(arm)}｜抽取尺={EXTRACTION_RULER}"
     if dump_dir is not None:
         note += "｜终态 " + " ".join(f"{k}={v}" for k, v in sorted(count_dispositions(dump_dir).items()))
     return report, note, extraction_diagnostics(source.channels)
@@ -392,7 +394,7 @@ def _rescue_batch(store, log, cfg, client, specs: List[str]) -> List[str]:
     """
     from pathlib import Path
 
-    from plot_engine.llm_extract import make_llm_channel
+    from plot_engine.llm_extract import EXTRACTION_RULER, make_llm_channel
     from plot_engine.rescue import rescue_chapter
     from plot_engine.tests.fixtures import experiment_10ch as fx
 
@@ -501,7 +503,8 @@ def main(argv: Optional[List[str]] = None) -> int:
             return 2
         print(f"tokens={report.total_tokens} cost=${report.total_cost_usd:.4f} "
               f"用时={report.total_duration_ms / 1000:.0f}s｜"
-              f"抽取产出 {diag['proposals']} 条 / 坏料 {diag['malformed'] or '无'}")
+              f"抽取产出 {diag['proposals']} 条（规则提升 {diag['promoted']}）"
+              f" / 坏料 {diag['malformed'] or '无'}")
         print(render_review_text(architecture_review(report)))
         return 0
 

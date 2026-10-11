@@ -13,6 +13,10 @@ from typing import List
 
 from plot_engine.reading import STATUS_CN, paragraphs, read_run
 
+# 这些正文出自合成夹具（`tests/fixtures/traitor_arc.json`），用来校尺，不是著作成品。
+NOTE = "正文出自合成夹具《叛徒弧》：人名是占位符，story_goal 逐章喂给 Writer，故章首同质。" \
+       "这是量具的读数，不是可发表的书稿。"
+
 _TEMPLATE = r"""<!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -79,7 +83,8 @@ function render(){
   document.getElementById('body').innerHTML =
     `<div class="sum">${esc(r.label)}｜干净口径 E2 <b>${r.e2}</b>｜人工处置率 <b>${r.disp}</b>｜`
     + `共 ${chs.length} 章｜<span style="color:var(--ok)">绿=已提交</span> `
-    + `<span style="color:var(--nh)">橙=待人工</span> <span style="color:var(--arc)">红=判死</span></div>
+    + `<span style="color:var(--nh)">橙=待人工</span> <span style="color:var(--arc)">红=判死</span>`
+    + `<br>${esc(r.note)}</div>
      <h2>第 ${c.no} 章
        <span class="badge" style="background:${C[c.status]||'#888'}">${esc(c.status_cn||c.status)}</span>
        <span class="wc">修订 ${c.rounds} 轮 · ${(c.text||'').length} 字</span></h2>
@@ -106,9 +111,10 @@ render();
 
 
 def build_viewer(run_dirs: List[Path]) -> str:
-    payload = [{"label": r["label"], "e2": r["e2"], "disp": r["disp"],
+    payload = [{"label": r["label"], "e2": r["e2"], "disp": r["disp"], "note": NOTE,
                 "chapters": [dict(c, status_cn=STATUS_CN.get(c["status"], c["status"]))
-                             for c in r["chapters"]]} for r in map(read_run, run_dirs)]
+                             for c in r["chapters"]]}
+               for r in map(read_run, run_dirs)]
     return _TEMPLATE.replace("__DATA__", json.dumps(payload, ensure_ascii=False))
 
 

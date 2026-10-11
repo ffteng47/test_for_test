@@ -43,7 +43,7 @@ def read_run(run_dir: Path) -> dict:
             {"status": r.trace_status, "rounds": r.rounds, "bucket": r.bucket})
     return {"label": dump.parent.name, "e2": f"{m.clean_e2:.0%}",
             "disp": f"{m.disposition_rate:.0%}", "generated": m.generated,
-            "chapters": [chapters[k] for k in sorted(chapters)] if chapters else []}
+            "chapters": [dict(chapters[k], no=k) for k in sorted(chapters)]}
 
 
 def paragraphs(text: str) -> List[str]:

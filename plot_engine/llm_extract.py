@@ -23,6 +23,9 @@ from plot_engine.models.state import StoryState
 
 _VALID_TYPES = frozenset(get_args(EventType))
 _ID_RE = re.compile(r"^(?:char|fact|item|loc|faction|realm|ability|region|rel)_\d+$")
+# 尺的刻度号：写进 run.log，读数才能归到某一把尺上。v3.1 = 纯模型抽取；
+# v3.2 = 加上 `_promote_infers` 确定性提升（`docs/phase1-merged-plan-final.md` §7.3-1）。
+EXTRACTION_RULER = "v3.2-infers-promotion"
 
 # 本通道只承接 reducer 真能消费的 event_type，且键名逐一对齐 01 §4.1 的实际取用（reducer 里
 # 的 event.payload[...]）。缺键的产物放下去只会变成 MALFORMED_PROPOSAL 级联，归因反而更难。
@@ -248,8 +251,62 @@ def extract_prompt(draft, scene_plan, contract, state) -> List[dict]:
             {"role": "user", "content": f"正文（段落编号）：\n{_numbered(draft)[:6000]}"}]
 
 
-def make_llm_channel(client: LlmClient, *, max_items: int = 24,
-                     extract_role: str = "extract"):
+_EVIDENCE_TYPES = {"OBSERVES": "fact_id", "READS": "fact_id"}
+# 已经「指向结论」的产物：模型认出这些类型时它 payload 里的 fact 就是被推断/被质疑的那条，
+# 只是没给 INFERS。提升规则只从模型自己点名的 id 里取结论，绝不读 Contract 的 required_events
+# （07 §4.3：通道独立性），也绝不做文本相似度匹配。
+_DERIVED_ID_KEYS = {"FACT_CONTRADICTED": "fact_id", "HINTS": "fact_id", "BELIEVES": "fact_id",
+                    "SUSPECTS": "fact_id", "DOUBTS": "fact_id", "LIES": "stated_fact_id",
+                    "REVEALS": "fact_id"}
+# 结论措辞；命中后还要看它前面有没有否定词——「无法确定 / 不能推断」写的是**没有**结论。
+# 两份表都是**标定旋钮**：收窄就少提升，放宽就多提升，读数是它们的函数而不是正文的函数——改它等于改尺。
+_CONCLUSION_RE = re.compile(r"确定|断定|得出结论|推断|看来|想必|一定是|只有一个解释|意味着")
+_NEGATION_RE = re.compile(r"(?:不|没|未|无法|无从|难以|不能)\s*$")
+_NEGATION_RE = re.compile(r"(?:不|没|未|无法|无从|难以|不能)\s*$")
+
+
+def _states_conclusion(draft: str) -> bool:
+    """正文里有没有一句**未被否定**的结论措辞。"""
+    return any(not _NEGATION_RE.search(draft[max(0, m.start() - 4):m.start()])
+               for m in _CONCLUSION_RE.finditer(draft or ""))
+
+
+def _promote_infers(props: List[EventProposal], draft: str) -> List[EventProposal]:
+    """正文有结论措辞、模型抽到了证据事件却没抽到 INFERS ⇒ 补一条确定性 INFERS。
+
+    结论事实取自**模型自己点名的派生事件**（`_DERIVED_ID_KEYS`），证据事实取自 OBSERVES/READS：
+    两头都是模型已经给出的 id，规则只做「类型补全」，不凭空造 id、不看契约答案键。
+    上限一章一条（ponytail: 多结论章交给模型自己，补多了就是把尺读成正文读）。
+    """
+    if not props or any(p.proposed_event_type == "INFERS" for p in props) \
+            or not _states_conclusion(draft):
+        return []
+    evidence: List[str] = []
+    evidence_actor: Optional[str] = None
+    for p in props:
+        key = _EVIDENCE_TYPES.get(p.proposed_event_type)
+        fid = p.payload.get(key) if key else None
+        if isinstance(fid, str) and fid not in evidence:
+            evidence.append(fid)
+            evidence_actor = evidence_actor or p.actor
+    if not evidence:
+        return []
+    for p in props:
+        key = _DERIVED_ID_KEYS.get(p.proposed_event_type)
+        fid = p.payload.get(key) if key else None
+        actor = p.actor or evidence_actor
+        # INFERS 的账落在 actor 名下（03 §4.3 R2）：没有行为者就没有可提升的推断，别造无主条目
+        if isinstance(fid, str) and fid not in evidence and actor:
+            return [EventProposal(
+                proposed_event_type="INFERS", actor=actor, target=p.target,
+                chapter=p.chapter, scene=p.scene, seq=len(props),
+                payload={"conclusion_fact_id": fid, "evidence_fact_ids": list(evidence)},
+                confidence=p.confidence, source_ref=f"promote:{fid}",
+                extraction_method="hybrid", extraction_confidence=1000)]
+    return []
+
+
+def make_llm_channel(client: LlmClient, *, max_items: int = 24,                     extract_role: str = "extract"):
     """产出 `stage0_extract(..., llm_channel=)` 需要的通道：(draft, scene_plan, contract, state) -> Proposal。"""
     def channel(draft, scene_plan, contract, state) -> List[EventProposal]:
         text, usage = client.complete(extract_role, extract_prompt(_strip_markup(draft),
@@ -260,11 +317,14 @@ def make_llm_channel(client: LlmClient, *, max_items: int = 24,
         if len(props) > max_items:
             bad.append({"reason": "over_cap", "item": len(props)})
             props = props[:max_items]
+        promoted = _promote_infers(props, _strip_markup(draft))
         channel.malformed.extend(bad)
-        channel.produced += len(props)
-        return props
+        channel.produced += len(props) + len(promoted)
+        channel.promoted += len(promoted)
+        return props + promoted
 
     channel.total_tokens = 0
     channel.produced = 0
+    channel.promoted = 0
     channel.malformed: List[dict] = []
     return channel
