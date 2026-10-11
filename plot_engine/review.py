@@ -284,8 +284,7 @@ def _write_chapter_dump(dump_dir, ch: int, rounds, out, trace) -> None:
 
 
 def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
-              arm: str = "beats", state_dir: Optional[str] = None,
-              rescue: Optional[List[str]] = None):
+              arm: str = "beats", state_dir: Optional[str] = None):
     """真实模型实验：Writer/抽取换成本地端点，其余管道与离线演练完全一致。
 
     返回 `(report|None, 端点说明, 抽取诊断)`：端点不可达时不烧预算，实验中途端点失效时
@@ -297,8 +296,7 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
     提示词是产品配置不是协议，只有臂 A/B/C 的渲染过滤器不动尺，版本随端点说明落进 run.log。
     `state_dir` 给定时 State/EventLog 落在那儿（默认临时目录、跑完即弃）——
     **跨进程救援（`--rescue`）要求链还在盘上**，所以采样跑法恒带这个参数。
-    `rescue` = `["CH:改后正文文件", ...]`：跑完接着对链尾章做一次人工重入提交（T1b），
-    结果并进端点说明那一行，不另起输出通道。
+    救援本身不在这里跑：`main()` 拒绝 `--live --rescue` 同命令，人工重入是测量之后的独立一步。
     """
     import dataclasses
     import tempfile
@@ -364,8 +362,6 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
     note = f"{msg}｜prompt={prompt_version(arm)}"
     if dump_dir is not None:
         note += "｜终态 " + " ".join(f"{k}={v}" for k, v in sorted(count_dispositions(dump_dir).items()))
-    if rescue:
-        note += "\n" + "\n".join(_rescue_batch(store, log, cfg, client, rescue))
     return report, note, extraction_diagnostics(source.channels)
 
 
@@ -483,9 +479,14 @@ def main(argv: Optional[List[str]] = None) -> int:
         except ValueError:
             ap.error(f"--defect {spec!r}: CH 必须是整数")
 
-    if args.rescue and not args.live:
+    if args.rescue:
         if not args.state_dir:
             ap.error("--rescue 要求 --state-dir：链不在盘上就没有可救援的账")
+        if args.live:
+            # §7.3 修正案 (a) 由码来守，不靠约定：同一份命令里跑实验又提交人工稿，
+            # 这份读数的机器唯一性就没了——而 T9 的全部价值只在「机器可复现」这一件事上。
+            ap.error("--rescue 不与 --live 同一条命令：测量跑必须机器唯一。"
+                     "先跑测量，再单独用 --rescue 对盘上那条链做人工重入")
         for line in _rescue_run(args.state_dir, _read_model_config(args.model_config),
                                 args.rescue):
             print(line)
@@ -494,7 +495,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     if args.live:
         report, msg, diag = _live_run(args.chapters, _read_model_config(args.model_config),
                                       dump_dir=args.dump_dir, arm=args.prompt,
-                                      state_dir=args.state_dir, rescue=args.rescue)
+                                      state_dir=args.state_dir)
         print(msg)
         if report is None:
             return 2
