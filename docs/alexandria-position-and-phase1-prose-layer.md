@@ -27,7 +27,7 @@ Phase 1，且"这一阶段才是真正决定 Alexandria 有没有商业价值"�
 |---|---|---|
 | 长篇剧情不崩（设定/时间线/人物状态） | ✅ 核心能力 | 10 号协议全篇、Phase 0 硬指标 |
 | 知识边界与欺诈管理（谁知道什么、读者被误导到什么程度） | ✅ 核心能力 | 03 三本账、REVEALS/LIES/OMITS/HINTS、narrative_truth ≠ objective_truth |
-| 伏笔可追踪、必兑现 | ✅ | FORESHADOWING_SET/PAID 事件 + foreshadowing 表 |
+| 伏笔可追踪、必兑现 | ❌ **未实现**（原标 ✅，2026-10-12 勘误） | 类型名在（01 §3）、`foreshadowing: List[str]` 无 ID 无兑现条件、reducer 是显式 no-op（`reducers/plot.py:14`）、抽取通道拒收（`llm_extract.py:163`）。见 `docs/style-acceptance-v1.1.md` §7 |
 | 章节目标张力受控 | ⚠️ 仅记录 | tension_target/tension_curve v0.2 全降 SOFT（04 §3.2、CHANGELOG 修改 8），无兑现压力 |
 | 章尾钩子 | ⚠️ 仅结构检查 | `<!-- hook -->` 标注存在性 = HARD（05 H5.5），强度值自报无校验 |
 | 黄金三章 / 留存 | ❌ 空白 | 无任何读者侧信号回路 |
