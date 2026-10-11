@@ -76,28 +76,41 @@ python -m plot_engine.review --live --chapters 10 --prompt <beats|told|persona> 
 救援（被路由章）：`--rescue CH:改后正文文件 --state-dir <chain_dir> --model-config @router_local.json`，
 要求 CH 是链尾章。
 
-## 6. 采样前的阻塞项（一条，且是重启服务那么小的一条）
+## 6. 采样端点与 r1:32b 的接线事实（2026-10-11 实测，含两次作废的推断）
 
-**勘误（本文件此前一版写错了机制，按代码/配置实核推翻）**：上一版把 `127.0.0.1:11434`
-当成服务端隧道，据此断言「冻结模型已不在服务端 ⇒ T9 资格拿不到」。**两处都错**：
+**端点裁定：采样只用服务端 Ollama**（用户指示）。隧道 `ssh -fN -L 11500:localhost:11434 tff@192.168.31.213`
+由人建立；`ollama 0.40.2`，在架 `qwen2.5:14b / qwen3:{8b,14b,30b} / qwen3.5:27b / deepseek-r1:32b`。
+两次被实测推翻的推断都记在这儿，免得下轮重排查：
 
-- 端口约定：`11434` = **本机 Windows Ollama**；服务端 Ollama 只监听它自己的 `127.0.0.1:11434`，
-  经 `ssh -L 11500:localhost:11434` 映射为本地 **11500**（`phase0-batch6-model-plan.md:18,:23`）。
-  v3 九份读数跑在**本机**，`router_local.json` 的 `base_url` 就是 `http://127.0.0.1:11434/v1`。
-- 模型位置：上一版查的是默认目录 `C:\Users\tff\.ollama/models`（确实只剩 `llama3-zh-inst`），
-  但这台机器把 `OLLAMA_MODELS` 重定向到了 `E:\github\LLM\ollama`（HKCU\Environment）。
-  那个 store 里 **`qwen2.5:14b` 在架**：`manifests/registry.ollama.ai/library/qwen2.5/14b`
-  ＋ 对应 8.4G blob 实存。同一 store 还有 `deepseek-r1/{7b,14b,32b}`（32b blob 19G 实存）。
-  ⇒ 冻结模型**不需要重新下载**，服务端有没有它跟 T9 的资格无关。
+| 推断 | 实测 |
+|---|---|
+| 「冻结模型不在服务端 ⇒ T9 资格拿不到」（把 11434 当成服务端隧道） | 错。11434 是**本机** Ollama，v3 就跑在本机（`phase0-batch6-model-plan.md:23`）；服务端一直有 `qwen2.5:14b` |
+| 「换到服务端就能躲开 r1 的思考污染」 | 半对。0.40.2 的 `/v1` 把思考放进 `message.reasoning`，**`content` 干净** ⇒ 正文不被污染、`LlmClient` 不用加剥 think 的代码；但**思考 token 与正文共用 `max_tokens` 预算** |
 
-| 阻塞 | 状态 | 说明 |
+**r1 的思考预算（T8 的一处声明变量）**：抽取角色在冻结预算 `max_tokens=800` 下实测
+`finish_reason=length`、`completion_tokens=800`、`reasoning` 895 字 / `content` 774 字截在半截 JSON
+⇒ 解析 0 提案 + 1 坏料。关思考的两条路在服务端都试过、都无效：`{"reasoning_effort":"none"}` 与
+`{"think":false}` 均返回 `content=''`、思考照写（0.40.2 对本 GGUF 关不掉）。
+⇒ **T8 把 writer/extract 的 `max_tokens` 放大到 2000，思考保留**——关掉思考等于自断一臂，
+变体组要答的「14b 是不是绑定项」就不算数。代价写死在档：**T8 相对冻结轮有两个变量
+（模型 + 抽取/写作预算）**，温度（writer 0.8 默认 / extract 0.2）、`timeout_s=600`、章节数 10、
+提示词臂 `persona` 逐字相同；因此 T8 只作 pre-freeze 标注、不与 v3 跨比（A1 边界不变）。
+
+**配置钉死**（sha256 前 12 位；配置文件不入库的规则沿用批次 6）：
+
+| 用途 | 文件 | sha12 |
 |---|---|---|
-| 本机 Ollama 服务没起 | **唯一阻塞** | `netstat` 里 11434/11500 均无 LISTENING；`curl http://127.0.0.1:11434/v1/models` → exitcode 7。启动服务属 Auto Mode 权限外（起停服务不在授权内）⇒ **人起**：`ollama serve`（同一进程会读 `OLLAMA_MODELS`，起完 `curl /v1/models` 应能看到 `qwen2.5:14b`）。先例记录：`phase0-batch6-model-plan.md:137` 早把「本机 Ollama 服务当前没起（11434/11500 均无 LISTENING）」写成开跑前置 |
+| 冻结轮 / T9 产品形态轮 | `router_local.json` | `a820beb0d944`（未改一个字节） |
+| T8 变体组 | `router_r1_32b.json` | `d76ce5d6a2e4` |
+| fallback（解码对照，未跑） | `router_local_t03.json` | `20428c6384f1` |
 
-服务起来之后，T9 的「与 v3 同 router、同解码参数」直接由现成的 `router_local.json`
-（sha12 `a820beb0d944`）满足，不需要任何新配置。
+**T9 的残留面问题（要裁定，不阻塞 T8）**：v3 基线跑在**本机** 14b，T9 若按指示改跑**服务端** 14b，
+`base_url` 与推理后端版本都变了 ⇒ 「与 v3 同 router」严格说不成立。三个选法：
+① T9 走服务端 + 先在服务端重跑 14b 基线三次（吃掉额外预算）；② T9 回本机 14b（逐字同 router，
+慢：warm 15.3 tok/s、冷启动 239s）；③ 承认「同 router」只指 model/解码参数，把端点差异作一条
+声明写进判定节。①最干净、③最省，取哪个看你对预算的判。
 
-**顺带对 T5/T8 的影响（不改变排期，只改一手来源）**：`deepseek-r1:32b` 在本机 store 里就有，
-T8 变体组可以走本地（`base_url` 换 11434）而不必先建隧道；代价是 19G 权重在本机推理，
-v3 的 14b 已经把 `timeout_s` 放到 600，32b 更慢、可能更吃内存 ⇒ 本地跑 32b 前先用一章试一发，
-慢到不可接受再回到「隧道 → 服务端 r1:32b」那条原计划（隧道仍是基础设施动作，需显式授权）。
+**T8 开跑前的一发核实**（`--chapters 1`，`router_r1_32b.json`，321s）：抽取产出 7 条提案 /
+坏料 1（`missing_payload_keys`），写作 `content` 无思考残留 ⇒ 接线通。但该章终态
+`ARC_CONFLICT`，落空类型 `['INFERS']`（`OBSERVES` 已满足）；v3 臂 C 的 ch01 是首轮通过。
+**不临场修**：r1 在 ch01 不产/不抽 INFERS 正是变体组要测的东西之一，三轮照同一条命令跑完再读。

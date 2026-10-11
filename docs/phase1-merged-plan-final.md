@@ -76,6 +76,14 @@
 ### 第 2 周｜配置与准备层
 
 - **T5 变体准备**：服务端 Ollama 修复（human 动作，全程唯一外部依赖）→ 隧道 → `router_r1_32b.json` → 按批次 6 计划 §2 步骤 0 可达性核实；fallback 配置（14b @ temp 0.3）另备，保证对照轮永远有物可跑。
+  - **落地（2026-10-11）**：隧道由人建立（`ssh -fN -L 11500:localhost:11434`），服务端 `ollama 0.40.2`
+    在架 `qwen2.5:14b` + `deepseek-r1:32b` + qwen3 系 ⇒ **服务端修复这项外部依赖已消掉**。
+    两份配置已钉死：`router_r1_32b.json` `d76ce5d6a2e4`、`router_local_t03.json` `20428c6384f1`（未跑）。
+    **一处计划外偏差**：r1 的思考 token 与正文共用 `max_tokens`，冻结预算 800 会把抽取截成半截 JSON
+    （实测 `finish_reason=length` / 0 提案），而 `reasoning_effort:"none"` 与 `think:false` 在 0.40.2
+    上都关不掉思考 ⇒ T8 的 writer/extract 放大到 2000、**思考保留**。所以 T8 相对冻结轮是
+    **两个变量**（模型 + 生成预算），只作 pre-freeze 标注、不与 v3 跨比；凭据与逐字相同的参数
+    见 `phase1-v3.1-freeze.md` §6。
 - **T6 文体 rubric 草案**：反复述约束实验（scene_writer 系统提示加禁复述条款，抽 3 章对比，backlog #11 首个低成本实验）；rubric 定版（10 章盲读、≥7 过"愿意付费读的下限"，tff 定标）。
 - **T7 冻结 commit（v3.1）**：全量绿 + 逐条 equivalence 证明（§1 先例：对已完成读数无影响）+ alignment 记录（T2 下限规则、T1 状态机、T4 检测器各一条）。
 
