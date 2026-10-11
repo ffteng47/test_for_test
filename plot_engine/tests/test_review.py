@@ -152,6 +152,23 @@ def test_cli_live_dumps_drafts_and_proposals_for_triage(tmp_path, monkeypatch):
     assert "contract_version=1" in text
 
 
+def test_cli_live_persists_the_chain_and_prints_dispositions(tmp_path, monkeypatch, capsys):
+    """采样跑法必须带 --state-dir：链不在盘上，事后就没有可救援的账（T1b 跨进程的前提）。
+    端点说明那一行还要带终态分布——人工处置率唯一的可数来源。
+    同一目录再跑一批 = 两批读数并成一条账，必须拒掉。"""
+    import plot_engine.live as live
+
+    monkeypatch.setattr(live, "check_reachable", lambda c: (True, "ok"))
+    monkeypatch.setattr(live, "build_client", lambda cfg: _fake_live_client())
+    state, dumps = tmp_path / "chain", tmp_path / "d"
+    assert review_main(["--live", "--chapters", "2", "--state-dir", str(state),
+                        "--dump-dir", str(dumps)]) == 0
+    assert (state / "state.db").exists() and (state / "event.db").exists()
+    assert "终态 " in capsys.readouterr().out
+    assert review_main(["--live", "--chapters", "2", "--state-dir", str(state)]) == 2
+    assert "已经有一条链" in capsys.readouterr().out
+
+
 def test_cli_rescue_refuses_without_the_chain_on_disk():
     """救援读的是盘上那条链：没有 --state-dir 就没有账可救，直接参数错，不开模型。"""
     with pytest.raises(SystemExit):
