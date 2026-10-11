@@ -6,26 +6,18 @@
 """
 from __future__ import annotations
 
-import re
 from pathlib import Path
 from typing import List
 
-from plot_engine.metrics import _section_body, metrics_from_dump
-
-_MARKUP = re.compile(r"<!--.*?-->", re.S)
-
-
-def _final_draft(path: Path):
-    lines = path.read_text(encoding="utf-8").splitlines()
-    head = next((ln for ln in lines[:3] if ln.startswith("trace_status=")), lines[0])
-    body = "\n".join(_section_body(lines, "Draft")).strip()
-    return _MARKUP.sub("", body).strip(), head
+from plot_engine.metrics import metrics_from_dump
+from plot_engine.reading import chapter_texts
 
 
 def render_sample(dump_dir: Path) -> str:
     m = metrics_from_dump(dump_dir)
-    rows = [f"| {r.chapter_no} | {r.trace_status} | {r.rounds} | {'是' if r.bucket != 'disposition' else '否'} |"
-            for r in m.reads]
+    texts = chapter_texts(dump_dir)
+    rows = [f"| {r.chapter_no} | {r.trace_status} | {r.rounds} | "
+            f"{'是' if r.bucket != 'disposition' else '否'} |" for r in m.reads]
     out = [f"# 样章｜{dump_dir.parent.name}（{m.generated} 章，机器终稿）",
            "",
            f"干净口径 E2 = {m.clean_e2:.1%}｜人工处置率 = {m.disposition_rate:.1%}",
@@ -34,11 +26,13 @@ def render_sample(dump_dir: Path) -> str:
            "|---|---|---|---|",
            *rows,
            "",
-           "> 正文取自每章最后一轮的稿子；「已提交=否」的章照样能读，只是没过契约判据。",
+           "> 正文取自每章最后一轮的稿子，机器标注已剥除；「已提交=否」的章照样能读，"
+           "只是没过契约判据。",
            ""]
-    for path in sorted(dump_dir.glob("ch*.md")):
-        draft, head = _final_draft(path)
-        out += [f"## {path.stem.upper()} — {head}", "", draft or "（本轮没有产出正文）", ""]
+    for r in m.reads:
+        body = texts.get(r.chapter_no, {}).get("text", "")
+        out += [f"## 第 {r.chapter_no} 章 — {r.trace_status}（修订 {r.rounds} 轮）", "",
+                body or "（本轮没有产出正文）", ""]
     return "\n".join(out)
 
 
