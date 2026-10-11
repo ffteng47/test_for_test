@@ -81,7 +81,7 @@ function render(){
     : '';
   const paras = (c.text ? paragraphs(c.text) : ['（本轮没有产出正文）']).map(p=>`<p>${esc(p)}</p>`).join('');
   document.getElementById('body').innerHTML =
-    `<div class="sum">${esc(r.label)}｜干净口径 E2 <b>${r.e2}</b>｜人工处置率 <b>${r.disp}</b>｜`
+    `<div class="sum">${esc(r.label)}｜抽取尺 <b>${esc(r.ruler)}</b>｜干净口径 E2 <b>${r.e2}</b>｜人工处置率 <b>${r.disp}</b>｜`
     + `共 ${chs.length} 章｜<span style="color:var(--ok)">绿=已提交</span> `
     + `<span style="color:var(--nh)">橙=待人工</span> <span style="color:var(--arc)">红=判死</span>`
     + `<br>${esc(r.note)}</div>
@@ -112,6 +112,7 @@ render();
 
 def build_viewer(run_dirs: List[Path]) -> str:
     payload = [{"label": r["label"], "e2": r["e2"], "disp": r["disp"], "note": NOTE,
+                "ruler": r["ruler"],
                 "chapters": [dict(c, status_cn=STATUS_CN.get(c["status"], c["status"]))
                              for c in r["chapters"]]}
                for r in map(read_run, run_dirs)]

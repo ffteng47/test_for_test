@@ -33,6 +33,21 @@ def chapter_texts(dump_dir: Path) -> Dict[int, dict]:
     return out
 
 
+def ruler_of(run_dir: Path) -> str:
+    """run.log 首行的尺号；v3.2 之前没有这个标记 ⇒ 一律算「旧尺」。
+
+    必须显式带出：阅读器把六份旧尺读数和六份新尺读数放在同一个文件的两个 tab 里，
+    而「50% 对 50%」在两把尺下是两个不相干的事实，并列比较本身就是违规操作。
+    """
+    log = Path(run_dir) / "run.log"
+    if log.exists():
+        for line in log.read_text(encoding="utf-8", errors="ignore").splitlines()[:3]:
+            found = re.search(r"抽取尺=([^\s｜]+)", line)
+            if found:
+                return found.group(1)
+    return "旧尺（无尺号标记）"
+
+
 def read_run(run_dir: Path) -> dict:
     """一个采样目录（含 dump/）→ 逐章读数 + 正文，两个出口共用。"""
     dump = run_dir if run_dir.name == "dump" else run_dir / "dump"
@@ -43,6 +58,7 @@ def read_run(run_dir: Path) -> dict:
             {"status": r.trace_status, "rounds": r.rounds, "bucket": r.bucket})
     return {"label": dump.parent.name, "e2": f"{m.clean_e2:.0%}",
             "disp": f"{m.disposition_rate:.0%}", "generated": m.generated,
+            "ruler": ruler_of(dump.parent),
             "chapters": [dict(chapters[k], no=k) for k in sorted(chapters)]}
 
 
