@@ -284,7 +284,8 @@ def _write_chapter_dump(dump_dir, ch: int, rounds, out, trace) -> None:
 
 
 def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
-              arm: str = "beats", state_dir: Optional[str] = None):
+              arm: str = "beats", state_dir: Optional[str] = None,
+              fail_stop: bool = False):
     """真实模型实验：Writer/抽取换成本地端点，其余管道与离线演练完全一致。
 
     返回 `(report|None, 端点说明, 抽取诊断)`：端点不可达时不烧预算，实验中途端点失效时
@@ -355,13 +356,15 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
     try:
         report = run_experiment(cfg, store=store, log=log, chapter_source=source,
                                 scene_writer=writer, revision_loop=loop, llm_client=client,
-                                on_chapter=on_chapter)
+                                on_chapter=on_chapter, stop_on_unresolved=fail_stop)
     except LlmUnavailable as e:
         # `check_reachable` 只保证开工那一刻通；跑一半挂了（服务器端 llama-server 缺失
         # 就是这样）不能把 traceback 撒在半小时输出后面，也不能假装还有报告。
         where = f"已落盘的逐章快照：{dump_dir}" if dump_dir else "（未传 --dump-dir，逐章快照没落盘）"
         return None, f"模型在实验中途不可用，本报告作废。{where}\n原因：{e}", None
     note = f"{msg}｜prompt={prompt_version(arm)}｜抽取尺={EXTRACTION_RULER}"
+    if fail_stop and report.unresolved_chapters:
+        note += f"｜停在第 {report.unresolved_chapters[-1]} 章（P2 语义，分母 = 停前生成章数）"
     if dump_dir is not None:
         note += "｜终态 " + " ".join(f"{k}={v}" for k, v in sorted(count_dispositions(dump_dir).items()))
     return report, note, extraction_diagnostics(source.channels)
@@ -460,6 +463,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--rescue", action="append", default=[], metavar="CH:FILE",
                     help="人工改后稿重入（Phase 1 T1b）：FILE 是改后正文，CH 必须是链尾章。"
                          "只提交一次、不跑修订、不重议判据；要求 --state-dir")
+    ap.add_argument("--fail-stop", action="store_true",
+                    help="产品语义（裁定 P2）：任一章判死/待人工就停整条链，后面的章不再生成。"
+                         "默认关＝测量语义（十章分布）。两者 E2 分母不同，不可同表并列")
     ap.add_argument("--prompt", choices=ARMS, default="beats",
                     help="Writer 提示词臂（docs/phase0-final-report-and-v3-config-ab.md §10.2）："
                          "beats=v0-beats 基线金丝雀；stripped=臂 A 节拍行抹掉类型名与 ID；"
@@ -497,7 +503,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     if args.live:
         report, msg, diag = _live_run(args.chapters, _read_model_config(args.model_config),
                                       dump_dir=args.dump_dir, arm=args.prompt,
-                                      state_dir=args.state_dir)
+                                      state_dir=args.state_dir, fail_stop=args.fail_stop)
         print(msg)
         if report is None:
             return 2

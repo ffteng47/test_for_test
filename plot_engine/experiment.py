@@ -42,9 +42,17 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
                    on_chapter: Optional[Callable[
                        [int, List[Tuple[ChapterContext, List[EventProposal]]],
                        "CommitOutcome | str", Optional[RevisionTrace]], None]] = None,
+                   stop_on_unresolved: bool = False,
                    ) -> ExperimentReport:
     """`on_chapter(ch, rounds, out, trace)`：rounds 是**每一轮进 recommit 时的 (ctx, 抽取产物)**，
-    下标 0 就是第 0 轮；修订之后最终产物在最后一项，不在 `art` 里（08 §10 I3 取证）。"""
+    下标 0 就是第 0 轮；修订之后最终产物在最后一项，不在 `art` 里（08 §10 I3 取证）。
+
+    `stop_on_unresolved`（产品裁定 P2，2026-10-12）：任一章判死/待人工就停整条链。
+    默认 False 是**测量语义**——基线要的是十章的分布；True 是**产品语义**——读者不会跳过第 8 章。
+    两种语义的 E2 分母不同（停跑后 `chapters_generated` 就是停前章数），**不可同表并列**，
+    切换必须另立基线。停在哪一章不必另存：`unresolved_chapters` 的最后一个就是，
+    后面的章压根没生成 ⇒ 「报告章数 < 配置章数」本身就说明它停了。
+    """
     reducer = reducer or Reducer()
     validator = validator or Validator()
     orch = CommitOrchestrator(store, log, reducer, validator)
@@ -63,17 +71,21 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
     generated = 0
 
     def quarantine(ch: int, exc: BaseException, rounds: List[Tuple] = (),
-                   trace: Optional[RevisionTrace] = None) -> None:
+                   trace: Optional[RevisionTrace] = None) -> bool:
         """Arc 层输入缺陷只作废本章：留痕进 §6 的 Contract/Arc 桶（08 §10 I3），实验继续。
         让整场实验换成 traceback，等于把一份报告换成一个错误。
 
         `rounds` 为空 = 本章开工前就判死（管道一步没跑）；非空 = 中途判死，各轮正文与抽取
         产物照样交给快照——「Arc 要的事件模型没写」正是最需要区分 Writer 与抽取的那一类。
+
+        返回 True = 该停了（P2 语义下 Arc 缺陷也是「这章交不出去」，交不出去就停链；
+        「Arc 是输入错误不是模型失败所以可以继续」在产品路径上不成立：读者拿不到第 N 章）。
         """
         unresolved.append(ch)
         total.by_rule["ARC_CONFLICT"] = total.by_rule.get("ARC_CONFLICT", 0) + 1
         if on_chapter is not None:
             on_chapter(ch, list(rounds), str(exc), trace)
+        return stop_on_unresolved
 
     for ch in range(1, config.chapters + 1):
         env = store.load_latest(story)
@@ -83,7 +95,8 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
         except (ArcConflict, NoChapterIntent) as exc:
             # 契约在本章开工前就判死（04 §4.3 / 06 §4.3 Arc Error）：管道一步没跑，
             # 不算 generated、不花 token。
-            quarantine(ch, exc)
+            if quarantine(ch, exc):
+                break
             continue
         draft = art.draft or compose_chapter_draft(art.scene_plan, art.contract, cur, scene_writer).draft
         captured: List[Tuple[ChapterContext, List[EventProposal]]] = []
@@ -112,7 +125,8 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
                 # 轮数照样入账（致命那一轮不落账 ⇒ len(captured)-1，与逐章快照头部同口径）。
                 # 漏了这一笔，`len(rounds)==generated` 就不成立，E3 与「修订跑没跑」一起被假降级。
                 rounds_by_chapter[ch] = max(len(captured) - 1, 0)
-                quarantine(ch, exc, captured)
+                if quarantine(ch, exc, captured):
+                    break
                 continue
             rounds_by_chapter[ch] = trace.rounds
             if trace.rounds:
@@ -139,6 +153,8 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
             committed.append(ch)
         else:
             unresolved.append(ch)
+            if stop_on_unresolved:
+                break
         if out.status == "REPLAY_INCONSISTENT":
             mismatch.append(ch)
 
