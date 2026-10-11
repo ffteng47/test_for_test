@@ -76,11 +76,28 @@ python -m plot_engine.review --live --chapters 10 --prompt <beats|told|persona> 
 救援（被路由章）：`--rescue CH:改后正文文件 --state-dir <chain_dir> --model-config @router_local.json`，
 要求 CH 是链尾章。
 
-## 6. 采样前的阻塞项（两条，都要人）
+## 6. 采样前的阻塞项（一条，且是重启服务那么小的一条）
+
+**勘误（本文件此前一版写错了机制，按代码/配置实核推翻）**：上一版把 `127.0.0.1:11434`
+当成服务端隧道，据此断言「冻结模型已不在服务端 ⇒ T9 资格拿不到」。**两处都错**：
+
+- 端口约定：`11434` = **本机 Windows Ollama**；服务端 Ollama 只监听它自己的 `127.0.0.1:11434`，
+  经 `ssh -L 11500:localhost:11434` 映射为本地 **11500**（`phase0-batch6-model-plan.md:18,:23`）。
+  v3 九份读数跑在**本机**，`router_local.json` 的 `base_url` 就是 `http://127.0.0.1:11434/v1`。
+- 模型位置：上一版查的是默认目录 `C:\Users\tff\.ollama/models`（确实只剩 `llama3-zh-inst`），
+  但这台机器把 `OLLAMA_MODELS` 重定向到了 `E:\github\LLM\ollama`（HKCU\Environment）。
+  那个 store 里 **`qwen2.5:14b` 在架**：`manifests/registry.ollama.ai/library/qwen2.5/14b`
+  ＋ 对应 8.4G blob 实存。同一 store 还有 `deepseek-r1/{7b,14b,32b}`（32b blob 19G 实存）。
+  ⇒ 冻结模型**不需要重新下载**，服务端有没有它跟 T9 的资格无关。
 
 | 阻塞 | 状态 | 说明 |
 |---|---|---|
-| 本地隧道 | **未建立** | `127.0.0.1:11434` 拒连；`ssh -L` 隧道属基础设施动作，Auto Mode 分类器拦下，需显式授权后由人建立（或授权我建）。服务端 `ollama serve` 在跑、监听 `*:11434`（只读核实） |
-| **冻结模型已不在服务端** | **新发现，需裁定** | v3 九份读数的冻结模型是 **`qwen2.5:14b`**（`router_local.json` sha12 `a820beb0d944`）。服务端现有模型只有：`deepseek-r1:32b`、`qwen3:14b`、`qwen3:30b`、`qwen3.5:27b`、`qwen3:8b`——**qwen2.5:14b 不见了** ⇒ T9 的「与 v3 同 router、同解码参数」这条资格现在拿不到。可选：① 把 `qwen2.5:14b` 拉回服务端（人的动作，涉及下载）；② 换 `qwen3:14b` 跑三次——三次内部可比（Q4 的「同模型」要求仍满足），但与 v3 基线**不同面**，只能另立新基线，不能拿来比 §7 (ii) 的数；③ 先跑 T8 变体组（`deepseek-r1:32b` 在架），把「14b 是不是绑定项」这个问题先答掉 |
+| 本机 Ollama 服务没起 | **唯一阻塞** | `netstat` 里 11434/11500 均无 LISTENING；`curl http://127.0.0.1:11434/v1/models` → exitcode 7。启动服务属 Auto Mode 权限外（起停服务不在授权内）⇒ **人起**：`ollama serve`（同一进程会读 `OLLAMA_MODELS`，起完 `curl /v1/models` 应能看到 `qwen2.5:14b`）。先例记录：`phase0-batch6-model-plan.md:137` 早把「本机 Ollama 服务当前没起（11434/11500 均无 LISTENING）」写成开跑前置 |
 
-**这一条不解决，T9/T10 没有合法的数可出。** 在裁定之前，采样保持停止状态。
+服务起来之后，T9 的「与 v3 同 router、同解码参数」直接由现成的 `router_local.json`
+（sha12 `a820beb0d944`）满足，不需要任何新配置。
+
+**顺带对 T5/T8 的影响（不改变排期，只改一手来源）**：`deepseek-r1:32b` 在本机 store 里就有，
+T8 变体组可以走本地（`base_url` 换 11434）而不必先建隧道；代价是 19G 权重在本机推理，
+v3 的 14b 已经把 `timeout_s` 放到 600，32b 更慢、可能更吃内存 ⇒ 本地跑 32b 前先用一章试一发，
+慢到不可接受再回到「隧道 → 服务端 r1:32b」那条原计划（隧道仍是基础设施动作，需显式授权）。
