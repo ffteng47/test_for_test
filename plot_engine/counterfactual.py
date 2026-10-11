@@ -105,18 +105,23 @@ _BLIND = ("INFERS", "BELIEVES", "DOUBTS", "SUSPECTS")   # §7.1 认定的洞涉�
 
 
 def attribute_flip(row: dict, req_types: List[str], before: List[str]) -> str:
-    """翻绿 ≠ 洞补上了：新通道可能只是**抽得少了**。
+    """翻绿 ≠ 洞补上了：新通道可能只是**抽得少了**。判定顺序必须先原残差、后退 required。
 
-    实测两种非洞翻绿：① 原残差是 dead actor（H1.1/I7），新通道不再给死人派事件 ⇒ 章自然绿；
-    ② ARC 章原判死时 `## Findings` 是空的，翻绿原因只能从 required_events 读。
-    分不清就把两种数并列给，别把「少抽」的价格写成「洞」的价格。
+    - 原残差里点名了 INFERS/BELIEVES/DOUBTS/SUSPECTS 的不足（H5.1/H5.3）⇒ 才算「洞」。
+    - 原残差只有 dead actor（H1.1/I7）⇒ 新通道不再给死人派事件，章自然绿 ⇒ 「非洞:少抽」。
+      这条必须在 required 之前判：t8r1 ch03 的 required 是 BELIEVES，但它的死因是 H1.1/I7，
+      先看 required 会把「少抽」误记成「洞补上了」。
+    - ARC 章原判死时 `## Findings` 是空的 ⇒ 只能退回 required_events。
     """
     if row["verdict"] != "FLIP":
         return ""
-    if any(t in _BLIND for t in req_types):
+    residual = " ".join(before)
+    if any(t in residual for t in _BLIND):
         return "洞"
     if any(code in line for line in before for code in ("H1.1", "I7")):
         return "非洞:少抽"
+    if not before:
+        return "洞" if any(t in _BLIND for t in req_types) else "非洞:未知"
     return "非洞:未知"
 
 
