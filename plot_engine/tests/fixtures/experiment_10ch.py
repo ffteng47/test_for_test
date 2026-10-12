@@ -33,6 +33,10 @@ from plot_engine.models.state import StoryState
 
 EPOCH = "epoch_0"
 NOW = "2026-10-09T00:00:00Z"
+# 阶梯版本进 run.log 第 1 行（与抽取尺戳同处）：**改 `_STEPS` 任意一项必须同时 bump 这里**。
+# 没有这一行，新旧基线并列时「这一跑跑在哪版夹具上」只能靠 commit 时间倒推（docs/measurement-errata.md §四）。
+# 戳进日志之前（含 v32r1–3、bo_* 、q3_14b_r* 、q25_11500_r*）的所有跑法一律是 ladder-v1。
+LADDER_VERSION = "ladder-v2-f1-belief-arc"
 _ACTOR = "char_000001"
 _DEAD_ACTOR = "char_000009"
 _F1, _F2, _F3, _F4 = "fact_000001", "fact_000002", "fact_000003", "fact_000004"
@@ -90,8 +94,12 @@ _STEPS: List[Dict[str, Any]] = [
     {"events": [_belief("DOUBTS", _F1, 500)], "must_change": [_holds("update", _F1, "doubts")]},
     {"events": [_infers(_F4, [_F1])], "must_change": [_knows("add", _F4, "suspected")]},
     {"events": [_reads(_F4)], "must_change": [_knows("update", _F4, "known")]},
-    {"events": [_belief("SUSPECTS", _F4, 500)],
-     "must_change": [_holds("add", _F4, "suspects")]},
+    # ch07：信念阶梯续在 F1 上（believes ch03 → doubts ch04 → suspects ch07）。
+    # 原先钉在 F4（E14）：ch06 刚用 READS 把 F4 升到 known，「怀疑一个自己刚读实的事实」
+    # 在戏剧上不成立 ⇒ 七个同端点跑法全在这里不通过（ch07 无一首轮），每臂白吃一章处置税。
+    # rank doubts(0) < suspects(1)，SUSPECTS 是升级不是降级（`reducers/belief.py:15,54-57`）。
+    {"events": [_belief("SUSPECTS", _F1, 500)],
+     "must_change": [_holds("update", _F1, "suspects")]},
     {"events": [_obs(_F3)], "must_change": []},          # 本章不推进：合法形态
     {"events": [_obs(_F3), _infers(_F1, [_F3]), _belief("BELIEVES", _F3, 600)],
      "must_change": [_holds("add", _F3, "believes")]},

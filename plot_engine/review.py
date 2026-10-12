@@ -362,7 +362,7 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
         # 就是这样）不能把 traceback 撒在半小时输出后面，也不能假装还有报告。
         where = f"已落盘的逐章快照：{dump_dir}" if dump_dir else "（未传 --dump-dir，逐章快照没落盘）"
         return None, f"模型在实验中途不可用，本报告作废。{where}\n原因：{e}", None
-    note = f"{msg}｜prompt={prompt_version(arm)}｜抽取尺={EXTRACTION_RULER}"
+    note = f"{msg}｜prompt={prompt_version(arm)}｜抽取尺={EXTRACTION_RULER}｜夹具={fx.LADDER_VERSION}"
     if fail_stop and report.unresolved_chapters:
         note += f"｜停在第 {report.unresolved_chapters[-1]} 章（P2 语义，分母 = 停前生成章数）"
     if dump_dir is not None:
