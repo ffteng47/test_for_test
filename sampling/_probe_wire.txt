@@ -1,0 +1,15 @@
+端点 http://127.0.0.1:11500/v1｜预算 800
+qwen3:8b         不开关: tok=800 思考=1156 length「（空）」✗ ｜ reasoning_effort=none: tok=13 思考=0 stop「鸡有23只，兔有12只。」✓ ｜ think:false: tok=773 思考=1071 stop「鸡有23只，兔有12只。」搬
+                 → 真关思考：reasoning_effort=none
+qwen3:14b        不开关: tok=800 思考=1149 length「（空）」✗ ｜ reasoning_effort=none: tok=15 思考=0 stop「鸡 21 只，兔 14 只。」✓ ｜ think:false: tok=488 思考=640 stop「鸡23只，兔12只。」搬
+                 → 真关思考：reasoning_effort=none
+qwen3.5:27b      不开关: tok=800 思考=1961 length「（空）」✗ ｜ reasoning_effort=none: tok=15 思考=0 stop「鸡 23 只，兔 12 只。」✓ ｜ think:false: tok=611 思考=1446 stop「鸡 23 只，兔 12 只。」搬
+                 → 真关思考：reasoning_effort=none
+qwen3:30b        不开关: tok=409 思考=508 stop「鸡23只，兔12只。」搬 ｜ reasoning_effort=none: tok=471 思考=0 stop「我现在要解决的问题是一个笼子」✗ ｜ think:false: tok=468 思考=583 stop「鸡23只，兔12只」搬
+                 → 真关思考：不开关
+deepseek-r1:32b  不开关: tok=354 思考=104 stop「设鸡的数量为 \( x \)」✗ ｜ reasoning_effort=none: tok=424 思考=122 stop「**题目：**  
+一个笼子」✗ ｜ think:false: tok=421 思考=299 stop「设鸡的数量为 \( x \)」✗
+                 → 无真开关
+qwen2.5:14b      不开关: tok=17 思考=0 stop「鸡有 23 只，兔有 12 」✓ ｜ reasoning_effort=none: tok=17 思考=0 stop「鸡有 23 只，兔有 12 」✓ ｜ think:false: tok=17 思考=0 stop「鸡有 23 只，兔子有 12」✓
+                 → 真关思考：不开关
+图例：✓=content 干净且 reasoning 为空（真关掉）｜搬=content 干净但 reasoning 有货（只是搬家，仍占 max_tokens，Writer 预算小＝空正文）｜✗=散文仍进 content
