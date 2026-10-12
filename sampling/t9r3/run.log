@@ -1,0 +1,25 @@
+http://127.0.0.1:11434/v1/models 可用模型: qwen2.5:14b, deepseek-r1:14b, deepseek-r1:32b, deepseek-r1:7b｜prompt=v1-told+persona｜终态 ARC_CONFLICT=1 NEEDS_HUMAN=4 OK=5
+tokens=40006 cost=$0.0000 用时=831s｜抽取产出 65 条 / 坏料 {'stripped_payload_key': 2, 'id_value_not_id': 2}
+# Architecture Review — exp-s1-42
+生成 10 / 提交 5 / 未决 [1, 6, 7, 9, 10] / replay一致 True
+Revision：需修 5 章 / 最多 1 轮 / 修复率 0.00
+逐章轮数：1:1 2:0 3:0 4:0 5:0 6:1 7:1 8:0 9:1 10:1
+
+## §6 失败分类
+- Writer / Validator 问题: 5  (H1.1, H2.2, H5.7, I7)
+- Contract / Arc 问题: 7  (ARC_CONFLICT, H5.1, H5.3, H5.6)
+
+## §7 架构冻结闸
+- G1_same_class_ge_3: True
+- G2_architecture_blocker: False
+- G3_ge_2_chapters_uncommitted: True
+- G4_state_inconsistent: False
+- 可讨论改架构: True
+
+## §8 退出条件（Phase 0 → Phase 1）
+- E1: True
+- E2: False
+- E3: False
+- E4: True
+- E5: True
+- E6: True

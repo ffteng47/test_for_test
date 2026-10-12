@@ -6,8 +6,6 @@ __pycache__/
 *.db-wal
 *.db-shm
 
-sampling/
-
 # ---- 媒体音频（仅本地，不进远程）----
 凯叔讲故事/
 口袋神探/
@@ -33,3 +31,7 @@ dist/
 pt_probe*.txt
 links_mp3.txt
 info.txt
+
+# ---- 实验产物：sampling 全量同步（覆盖上面的 *.db / *.log）----
+!sampling/
+!sampling/**

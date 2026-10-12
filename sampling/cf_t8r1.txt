@@ -1,0 +1,6 @@
+处置 5 章回放：翻绿 1｜干净 E2 40.0% → 反事实 50.0%
+ch01 STILL｜原判据 —｜反事实 H2.2 char_000001 未取得知识 fact_000001（期望 suspected）; H5.3 must_change char_000001.knowledge 无实现事件（W1）; H5.6 允许知识 fact_000001 未建立（W6）
+ch03 FLIP｜原判据 H1.1: dead 角色 char_000009 作为事件 evt_00000003_002 的 actor; H1.1: dead 角色 char_000009 作为事件 evt_00000003_003 的 actor; I7: dead 角色 char_000009 作为事件 evt_00000003_002 的 actor; I7: dead 角色 char_000009 作为事件 evt_00000003_003 的 actor｜反事实 全绿
+ch04 STILL｜原判据 H5.1: 必需事件 DOUBTS 数量不足（0<1）｜反事实 H5.1 必需事件 DOUBTS 数量不足（0<1）
+ch05 STILL｜原判据 —｜反事实 H5.7 整批建立禁止知识 fact_000002（evt_00000005_005，W5）
+ch09 PASS_ALREADY｜原判据 —｜反事实 全绿

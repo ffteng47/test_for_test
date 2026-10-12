@@ -1,0 +1,1 @@
+qwen3:8b       finish=stop     content=  750 reasoning=    0 completion=512
