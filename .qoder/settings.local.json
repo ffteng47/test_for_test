@@ -34,7 +34,8 @@
       "Bash(ls -d experiments/*variant* experiments/*t8* 2>/dev/null; ls experiments | tail -20; git log --oneline -3)",
       "Bash(git log --oneline -8; echo ---; ls; echo ---; find . -maxdepth 3 -type d -name \"*t8*\" -o -maxdepth 3 -type d -name \"*variant*\" 2>/dev/null | grep -v node_modules | head)",
       "Bash(grep -rn \"not committable\" plot_engine --include=*.py | head; echo ===; grep -rn \"NEEDS_HUMAN\" plot_engine/revision_actions.py plot_engine/revision.py plot_engine/rescue.py 2>/dev/null | head -20)",
-      "Bash(ls \"E:/github/semecTeachGroup/novel-audiobook\" | head -40; echo ---; find \"E:/github/semecTeachGroup/novel-audiobook\" -maxdepth 2 -iname \"*第一册*\" -o -maxdepth 2 -iname \"*册*\" 2>/dev/null | head)"
+      "Bash(ls \"E:/github/semecTeachGroup/novel-audiobook\" | head -40; echo ---; find \"E:/github/semecTeachGroup/novel-audiobook\" -maxdepth 2 -iname \"*第一册*\" -o -maxdepth 2 -iname \"*册*\" 2>/dev/null | head)",
+      "Bash(ls -R \"E:/github/semecTeachGroup/novel-audiobook/E-books\" 2>/dev/null | head -30; echo ====; ls \"E:/github/semecTeachGroup/novel-audiobook/第1册/output/第1册\" | head)"
     ]
   }
 }

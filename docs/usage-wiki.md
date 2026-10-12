@@ -206,6 +206,8 @@ voice_config 里的 `mode` 字段只有两个值：`zero_shot`（纯克隆）/ `
 
 `＋ 新书` / 下拉切换 → `/api/projects/add`、`/api/projects/switch?slug=`。**会重启后端**（symlink 切工作区），前端轮询 `/api/system/stats` 最长 180s；失败提示通常是显存不足，查 `logs/switch.log`。
 
+**本地书稿的标准存放与导入**（2026-10-12 裁决）：所有电子书放 `E-books/<书名>/<册名>/`，格式规范 = `docs/ebooks-standard.md`；一册一条命令导入 = `python deploy/ebook_import.py E-books/测试书/第1册`（meta.json 给 slug，校验后直投 `annotated_script.json`、备份旧脚本、删 chunks.json 触发重建、对照 voice_config 打印未绑音色、缺 rights.json 自动出模板）。**已人工标注的剧本（`【说话人·标记】台词` 转换而来）禁止走 `/import` 的 LLM 整本标注**——那是给无标注小说的，对剧本是破坏性重猜。第 1 册 10 集 864 段已按此升级进 `shuxue`（旧 5 集 259 段成品备份为 `annotated_script.json.bak_261012_054551`，voicelines 未动）；6 个新角色 CAPTAIN/KEEPER/LANDLADY/LUJIU/PIKE/VENDOR 未绑音色，绑前不生成其段落——提示词见 `E-books/测试书/第1册/docs/新角色音色提示词_v2_中英双语.md`。
+
 ---
 
 ## 3. seed 工作流（怎么把满意的声音留住）
