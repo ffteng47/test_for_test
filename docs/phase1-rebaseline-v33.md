@@ -89,3 +89,30 @@ required_events，类型交给 H5.3 按 field 判）。§3.2 的验收标准据�
 契约属性由 `test_experiment_e2e.py` 直接读 required_events 确定性钉死，不经采样；freeze 后三跑只报
 「H5.1等价税」**观测值**，「税是否消除」的结论挂重基线全量读数判（旧税率下 0/3 的先验概率仍有约 20%，
 三跑不构成宣判）。
+
+## 7. ladder-v3 三采样（冻结面 `a7e8cb1`，qwen2.5:14b @11500，2026-10-12）
+
+命令：`python -m plot_engine.review --live --chapters 10 --model-config @router_q25_14b.json --prompt persona
+--dump-dir sampling/lv3rN --state-dir sampling/lv3rN/state`（N=1,2,3）。**r1 串行、r2‖r3 并行**——
+并行跑的 tokens/用时按 E21 不作读数（r2/r3 用时 759/767s 是 GPU 争用值，非管道增量，与 r1 的 344s 不可比）。
+读表：`python -m plot_engine.readout sampling/lv3r1 sampling/lv3r2 sampling/lv3r3`（flat 布局已修，见 §末）。
+
+| 跑法 | E2 | H5.1等价税 | 首轮 | 判死(ARC) | 待人工 | ch09 |
+|---|---|---|---|---|---|---|
+| lv3r1 | 20% | 1（上界30%） | 2 | 2 | 6 | ARC（落空 ['BELIEVES']） |
+| lv3r2 | 30% | 2（上界50%） | 3 | 2 | 5 | ARC（落空 ['BELIEVES']） |
+| lv3r3 | 30% | 1（上界40%） | 3 | 1 | 6 | 重议1轮→NEEDS_HUMAN（H5.3 belief 无实现事件） |
+
+**静态验收（裁定①的正解，已达成）**：三跑的 ch09 `required_events=['BELIEVES']`——单钉、不再三元组，
+契约戳 `夹具=ladder-v3-ch09-single-nail` 全三跑首行可见。`test_experiment_e2e` 直接读 required_events 确定性钉死。
+
+**观测（不宣判）**：① 类型钉死病相消除——三跑 ch09 落空原因都是**单类型 BELIEVES**，不再出现
+`['BELIEVES','INFERS','OBSERVES']` 三选一必挂其一的乘积式判死；② ch09 三跑观测仍 0/3 首轮（2 ARC + 1 重议待人工），
+说明单钉后 BELIEVES 本身仍是这章的硬骨头——**这是模型侧问题，归重基线全量读数，不归本轮裁定**；
+③ 税列观测 1/2/1 未归零，符合「单钉只是拆掉放大器、不是拆掉彩票」的预期。
+接线：r1 49 调用可疑 2（extract finish=length 正文 2027/2010、上限 800，进 E21 观察列），r2/r3 接线正常。
+
+**跨臂对照**：lv3 三跑 E2 极差 = 10pp（20/30/30），恰在一致性铁律阈值**上不**越（>10 才不可判），可并列读；
+相对 v33 三跑（30/10/10，极差 20pp=不可判、报方差）输入面只多动了夹具一处（ch09 三元组→单钉），
+尺/指引/persona 未变 ⇒ 这组数读作「单钉消除机械三元组」的**机制验证**，不读作「通过率提升」。
+`readout` 布局修正（flat run 曾把跑法列读成 "sampling"、tokens/正文丢空）为报告工具 alignment，判据语义未动。
