@@ -154,6 +154,26 @@ def test_d9_reader_signal_follows_gate_stage_and_expiry():
     assert "fact_000002" not in {s.fact_id for s in early.reader_signals}
 
 
+# --- D9 补：目标态已到达的 fact 不再要信号（E25 reader 类机械重锚的源头）------
+def test_d9_signal_dropped_once_reader_reached_target():
+    from plot_engine.models.ledger import ReaderKnowledgeEntry
+    arc = _arc(gates=[{"fact_id": "fact_000001", "allowed_after_chapter": 1,
+                       "reveal_stage_target": "hinted"},
+                      {"fact_id": "fact_000002", "allowed_after_chapter": 1,
+                       "reveal_stage_target": "confirmed"}])
+    st = _state()
+    st.reader_ledger = [
+        ReaderKnowledgeEntry(fact_id="fact_000001", reader_state="hinted", reader_strength=300,
+                             established_at_chapter=2, last_updated_chapter=2,
+                             source_event_id="e1", epoch=EPOCH),
+        ReaderKnowledgeEntry(fact_id="fact_000002", reader_state="deceived", reader_strength=300,
+                             established_at_chapter=2, last_updated_chapter=2,
+                             source_event_id="e2", epoch=EPOCH)]
+    signals = {s.fact_id: s.target_state
+               for s in derive_chapter_contract(arc, 3, st, created_at=NOW).reader_signals}
+    assert signals == {"fact_000002": "knows"}   # hinted 已到达 ⇒ 不再逼重锚；deceived 不算到达
+
+
 # --- D2'：tension_target 取自曲线本章值 -------------------------------------
 def test_d2_tension_target_is_this_chapters_curve_value():
     arc = _arc(curve=[100, 200, 300, 400, 500, 600, 700, 800, 900, 1000])

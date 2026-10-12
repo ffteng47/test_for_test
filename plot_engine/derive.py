@@ -54,6 +54,8 @@ class ChapterIntent(BaseModel):
 # 04 §4.3 D9：gate 的揭示档位 → 读者信号目标状态。hidden 不产生信号
 # （「让读者仍然不知道」不是一条要建立的信号），deceived 无 gate 来源，只能由作者显式声明。
 _STAGE_TO_READER = {"hinted": "hinted", "partial": "hinted", "confirmed": "knows"}
+# 读者认知推进序（03 §6.1）：deceived 是旁支错误态，不计入「到达」，故只排真实认知三档。
+_READER_RANK = {"unaware": 0, "hinted": 1, "knows": 2}
 
 
 def intents_by_chapter(arc: ArcContract) -> Dict[int, ChapterIntent]:
@@ -178,13 +180,17 @@ def derive_chapter_contract(arc: ArcContract, chapter_no: int, state: StoryState
         raise ArcConflict(f"{arc.arc_id} 第 {chapter_no} 章的 must_change 没有可实现它的"
                           f"事件类型（现有 {sorted(implementable)}）：{unmet}")
 
-    # D9：只有到期 gate 才能产生读者信号，未到期的 fact 绝不标 knows
+    # D9：只有到期 gate 才能产生读者信号，未到期的 fact 绝不标 knows。
+    # v4.0（E25）：已到目标态的 fact 不再产出信号——否则 gate 一旦成熟就每章逼读者重锚同一事实。
+    reached: Dict[str, int] = {}
+    for e in state.reader_ledger:
+        reached[e.fact_id] = max(reached.get(e.fact_id, 0), _READER_RANK.get(e.reader_state, 0))
     signals: Dict[str, str] = {}
     for gate in arc.knowledge_gates:
         if gate.fact_id in forbidden or gate.fact_id not in allowed:
             continue
         target = _STAGE_TO_READER.get(gate.reveal_stage_target)
-        if target:
+        if target and reached.get(gate.fact_id, 0) < _READER_RANK[target]:
             signals.setdefault(gate.fact_id, target)
 
     return ChapterContract(
