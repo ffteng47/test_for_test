@@ -62,7 +62,7 @@ function toc(){
   document.getElementById("prog").textContent="已完成 "+k+" / "+N;
   document.getElementById("toc").innerHTML=CH.map(function(c,i){
     return '<a data-i="'+i+'" class="'+(i===idx?"on":"")+'"><i class="'
-      +(done(S[c.i])?"ok":"")+'"></i>'+(GRP?("第 "+c.g+" 章 · 变体 "+c.v):("第 "+c.i+" 章"))+'</a>';}).join("");}
+      +(done(S[c.i])?"ok":"")+'"></i>'+(GRP?("第 "+c.g+" 段 · 变体 "+c.v):("第 "+c.i+" 章"))+'</a>';}).join("");}
 function field(name,opts){
   var w=document.createElement("span");w.className="opt";
   opts.forEach(function(o){
@@ -74,7 +74,7 @@ function body(){
   var c=CH[idx], o=S[c.i]||{}, m=document.getElementById("body");
   m.innerHTML="";
   var h=document.createElement("h2");
-  h.textContent=GRP?("第 "+c.g+" 章 · 变体 "+c.v+"（本组共 "+NG[c.g]+" 个写法）"):("第 "+c.i+" 章");
+  h.textContent=GRP?("第 "+c.g+" 段剧情 · 变体 "+c.v+"（本组共 "+NG[c.g]+" 个写法）"):("第 "+c.i+" 章");
   m.appendChild(h);
   var p=document.createElement("div");p.className="hint";
   p.textContent=GRP
@@ -158,10 +158,10 @@ function table(){
       var got=rs.filter(function(v){return v!=="";});
       var dup=got.filter(function(v,i){return got.indexOf(v)!==i;});
       var miss=NG[g]-got.length;
-      if(miss||dup.length)bad.push("第 "+g+" 组：缺 "+miss+" 个名次"+
+      if(miss||dup.length)bad.push("第 "+g+" 段：缺 "+miss+" 个名次"+
         (dup.length?"、重号 "+Array.from(new Set(dup)).join("/"):""));});
     tail.push(bad.length?("组内名次未收齐 ⇒ 该组的配对读数不能算：" + bad.join("；"))
-                       :"十组名次全部收齐、无重号 ⇒ 配对读数可用");}
+                       :"各组名次全部收齐、无重号 ⇒ 配对读数可用");}
   return ["| "+H.join(" | ")+" |","|"+H.map(function(){return "---";}).join("|")+"|"].concat(rows)
     .concat(tail).join("\n");}
 function fill(){var a=document.getElementById("out");if(a)a.value=table();}
