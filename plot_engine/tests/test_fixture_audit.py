@@ -5,22 +5,24 @@ from plot_engine.models.contract import FIELD_EVENT_TYPES
 
 
 def test_ladder_pairs_every_must_change_with_a_same_fact_event():
-    """H5.3 的兑现前提：本章必须要求一个**指向同一对象**的实现事件。
+    """H5.3 的兑现前提：本章必须要求一个**同 field、同对象**的实现事件。
 
-    这条抓不到 E14（ch07 当时 `SUSPECTS _F4` 与 `must_change _F4` 是自洽的，错在对象选得不合戏剧逻辑，
-    只有跨臂同章失败才暴露它），抓的是更坏的下一档：目标 id 写串 ⇒ 模型无论怎么写都过不了。
+    取事件集必须**按 field 查**，与 `validator._change_implemented` 同源（`:500` 用的就是
+    `FIELD_EVENT_TYPES[ch.field]`）：knowledge 要 OBSERVES/READS/IS_TOLD/INFERS，belief 要
+    BELIEVES/SUSPECTS/DOUBTS，两族不互通。用并集的话，「`field=knowledge` 却本章只有 BELIEVES」
+    这种写串能过审计、但模型怎么写都过不了 H5.3。
+
+    这条抓不到 E14（ch07 当时 `SUSPECTS _F4` 与 `must_change _F4` 是同 field 同对象的自洽对，
+    错在对象选得不合戏剧逻辑，只有跨臂同章失败才暴露它），抓的是更坏的下一档：id 或 field 写串。
     """
     from plot_engine.tests.fixtures import experiment_10ch as fx
 
     for step in fx._STEPS:
-        implementers = set(FIELD_EVENT_TYPES.get("knowledge", set())) | \
-            set(FIELD_EVENT_TYPES.get("belief", set()))
         for ch in step["must_change"]:
-            if ch["field"] not in ("knowledge", "belief"):
-                continue
-            assert any(e["event_type"] in implementers and e["fact"] == ch["target"]
+            implementers = FIELD_EVENT_TYPES.get(ch["field"], set())
+            assert any(e["event_type"] in implementers and e.get("fact") == ch["target"]
                        for e in step["events"]), \
-                f"{ch['field']}→{ch['target']} 在本步没有同对象实现事件：{step['events']}"
+                f"{ch['field']}→{ch['target']} 在本步没有同 field 同对象实现事件：{step['events']}"
 
 
 def test_fixture_has_no_unreachable_chapter_by_construction():

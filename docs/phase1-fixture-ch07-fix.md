@@ -39,15 +39,17 @@
 ```diff
 --- a/plot_engine/tests/test_fixture_audit.py
 +def test_ladder_pairs_every_must_change_with_a_same_fact_event():
-+    """H5.3 的兑现前提：本章必须要求一个**指向同一对象**的实现事件。…"""
++    """H5.3 的兑现前提：本章必须要求一个**同 field、同对象**的实现事件。…"""
 +    for step in fx._STEPS:
-+        implementers = set(FIELD_EVENT_TYPES["knowledge"]) | set(FIELD_EVENT_TYPES["belief"])
 +        for ch in step["must_change"]:
-+            if ch["field"] not in ("knowledge", "belief"):
-+                continue
-+            assert any(e["event_type"] in implementers and e["fact"] == ch["target"]
++            implementers = FIELD_EVENT_TYPES.get(ch["field"], set())   # 与 validator:500 同源，不用并集
++            assert any(e["event_type"] in implementers and e.get("fact") == ch["target"]
 +                       for e in step["events"])
 ```
+
+审查助手的第一轮里这条用的是 `knowledge ∪ belief` 并集，于是「`field=knowledge` 而本章只有
+`BELIEVES` 事件」这种 **field 写串**能过审计、模型却怎么写都过不了 H5.3 ⇒ 已收紧为按 field 查表，
+与 `validator._change_implemented` 同源。变异复核：field 写串现在**被抓到**，当前夹具 10 步全部通过。
 
 ## 2. 为什么 F1 是合法目标（不是把缺陷挪个位置）
 
@@ -120,12 +122,16 @@
 这张表里 ch07 是**唯一跨模型、跨臂、7/7 都不首轮**的一列，而 ch04 有 7/7 首轮 ——
 两者形式同类（都是「对已 `known` 的事实动信念」），差别只在 ch07 的对象刚被**本章主角自己读实**。
 这既立起 E14 的纪律，也说明为什么不能把它做成机检谓词。
-（ch09 的 7/7 无一首轮里只有 5 次是 `ARC_CONFLICT`，机制不同，见 §7。）
+（ch09 的 7/7 无一首轮里只有 5 次是 `ARC_CONFLICT`，且轮数不是常数：`bo_ctrl` 那跑重议过一次
+   （`contract_version=2 rounds=1`）仍判死 —— 见 `docs/measurement-errata.md` E15；机制与 ch05 同族，见 §5 预测 2。）
 
 跑完重基线拿这三条对答案：
 
 1. **ch07 不再在每条臂上都不是首轮通过。** v1 是 7/7 非首轮，v2 若还是 7/7 ⇒ **诊断错，本次改动应当回退**。
-2. 主力臂的 E2 天花板从 ~80% 抬到 **~90%**（ch09 仍被 Arc 单一事件类型预算压住，那一章没修）。
+2. 主力臂的 E2 **理论**天花板从 ~80% 抬到 ~90%，但这一格隐含「ch05 必过」，而压住它的机制没裁：
+   ch05 的 `required_events` 恰也只剩 `['INFERS']`，v1 里 **2/7 判死**（`q25_11500_r2`、`r3`，
+   `version=1 rounds=0`）——与 ch09 同族。所以读法应当是「未裁机制压 **ch05 + ch09** 两章，
+   90% 是 ch05 走运、ch09 仍死的上界；80% 是两章都死的下界」。
 3. `修订环归属` 列里 ch07 应当消失（v1 的 `bo_ctrl`、`q25_11500_r1`、`q3_14b_r1/r2/r3` 都点了它）。
    注意这一条不能读成「占比必然下降」：`q25_11500_r2` 的 ch07 也是处、但那一列是空的，
    说明同一章的失败在 v1 里就有 H5.3 主导与非 H5.3 两种形状 ⇒ **`E2` 才是主指标，那一列只是归因辅助。**
@@ -146,8 +152,9 @@
 
 ## 7. 明确未做
 
-- **ch09 没碰**：它的失败机制是 Arc 强制 `INFERS` 单一事件类型预算（`required_event_types` 等值类
-  INFERS ∪ SUSPECTS 能不能换，是判据输入面的改动），需要你单独裁定，不夹在这次修复里。
+- **ch09 没碰，ch05 也没碰**：两章的失败机制同为 Arc 强制 `INFERS` 单一事件类型预算
+  （ch09 五判死于七跑、ch05 两判死），`required_event_types` 等值类 INFERS ∪ SUSPECTS 能不能换是
+  判据输入面的改动，需要单独裁定，不夹在这次修复里。等这条裁定，不等本文件。
 - **没有跑 ×3**，`--rescue` 那条线也没动。等你和审查助手放行后，重基线只跑
   `qwen2.5:14b` @11500 ×3（串行，约 18 分钟），标 `ladder-v2`，与 round-2 的表**并列不替代**。
 - **derive 期 id 检查**已撤回（反例：ch04 对 `known` 的 F1 要 `DOUBTS`，形式同类却七跑全首轮通过
