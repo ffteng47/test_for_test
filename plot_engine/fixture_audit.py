@@ -39,9 +39,9 @@ def unreachable_by_construction(chapters: int = 10) -> Dict[int, List[str]]:
             if table is None:                      # CHANGES/RELATIONSHIP/ITEM 等字段不在这张表里，不判
                 continue
             if c["expected_value"] not in {table.get(t) for t in types}:
+                reach = sorted({table[t] for t in types if t in table}) or ["无同类事件"]
                 bad.append(f"{c['character_id']}.{c['field']}→{c['expected_value']}"
-                           f"（本章事件类型 {sorted(types) or '无'} 最高只到 "
-                           f"{sorted({v for v in (table.get(t) for t in types) if v}) or '没有'}）")
+                           f"（本章 {sorted(types)} 最高只到 {'/'.join(reach)}）")
         if bad:
             out[beat["chapter_no"]] = bad
     return out
