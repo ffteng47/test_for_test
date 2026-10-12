@@ -64,7 +64,8 @@ def audit(texts: Dict[int, str]) -> List[str]:
 def chapter_texts_from(run_dir: Path) -> Dict[int, str]:
     from plot_engine.reading import chapter_texts
 
-    dump = run_dir if run_dir.name == "dump" else run_dir / "dump"
+    # 两种跑目录布局都认：dump/ 子目录（v32/v33 旧约定）或 chNN.md 直接落在跑目录（lv3 起）
+    dump = run_dir if (run_dir.name == "dump" or list(run_dir.glob("ch*.md"))) else run_dir / "dump"
     return {k: v["text"] for k, v in chapter_texts(dump).items()}
 
 

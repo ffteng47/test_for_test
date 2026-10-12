@@ -79,15 +79,15 @@ def _tax(d: Path, m) -> int:
 
 
 def row(run_dir) -> Dict[str, str]:
-    d = Path(run_dir)
-    d = d / "dump" if (d / "dump").exists() else d
+    run = Path(run_dir)                       # 跑目录是标签/正文/用量的锚；dump 目录只喂 metrics
+    d = run / "dump" if (run / "dump").exists() else run
     m = metrics_from_dump(d)
     rev = revision_loop_chapters(d)
-    prose = audit(chapter_texts_from(d.parent))
+    prose = audit(chapter_texts_from(run))
     arc = sum(1 for r in m.reads if r.trace_status == "ARC_CONFLICT")
     n = m.generated or 1
     tax = _tax(d, m)
-    return {"跑法": d.parent.name, "生成": str(m.generated), "E2": f"{m.clean_e2:.0%}",
+    return {"跑法": run.name, "生成": str(m.generated), "E2": f"{m.clean_e2:.0%}",
             "H5.1等价税": f"{tax}（上界{(m.clean_e2 + tax / n):.0%}）",
             "处置率": f"{m.disposition_rate:.0%}", "首轮": str(m.count("first_pass")),
             "救回": str(m.count("rewrite_rescued")), "继": str(m.count("renegotiate_only")),
@@ -96,19 +96,19 @@ def row(run_dir) -> Dict[str, str]:
             "穿帮章": str(sum(1 for x in prose if "穿帮" in x)),
             "章首同主语": _prose(prose, "章首同主语"),
             "跨章重复": _prose(prose, "跨章重复"),
-            "tokens": _cost(d.parent)[0], "用时": _cost(d.parent)[1]}
+            "tokens": _cost(run)[0], "用时": _cost(run)[1]}
 
 
 def matrix(run_dirs: List[str]) -> List[Dict[str, str]]:
     """逐章终态横排：看方差落在哪一章，比看均值有用。"""
     out = []
     for run_dir in run_dirs:
-        d = Path(run_dir)
-        d = d / "dump" if (d / "dump").exists() else d
+        run = Path(run_dir)
+        d = run / "dump" if (run / "dump").exists() else run
         m = metrics_from_dump(d)
         cells = {str(r.chapter_no): _SYMBOL[r.bucket] + ("✗" if r.trace_status == "ARC_CONFLICT" else "")
                  for r in m.reads}
-        out.append({"跑法": d.parent.name, **{str(i): cells.get(str(i), "-") for i in range(1, 11)}})
+        out.append({"跑法": run.name, **{str(i): cells.get(str(i), "-") for i in range(1, 11)}})
     return out
 
 

@@ -51,6 +51,18 @@ def test_row_reads_cost_from_the_sibling_log(tmp_path: Path):
     assert (r["tokens"], r["用时"], r["E2"]) == ("12345", "456s", "100%")
 
 
+def test_row_labels_flat_layout_runs_by_their_own_dir(tmp_path: Path):
+    """lv3 起 `--dump-dir <run>` 把 chNN.md 直接落在跑目录——标签/用量/正文都锚在跑目录，
+    不许再借 dump 的 parent 反推（那会把三行都读成 "sampling"）。"""
+    run = tmp_path / "lv3r1"
+    run.mkdir()
+    _dump(run, 1, "OK", 0)
+    (tmp_path / "lv3r1.log").write_text("tokens=999 用时=7s\n", encoding="utf-8")
+    r = row(run)
+    assert (r["跑法"], r["tokens"], r["用时"]) == ("lv3r1", "999", "7s")
+    assert matrix([run])[0]["跑法"] == "lv3r1"
+
+
 def test_prose_column_extracts_the_two_numbers_in_order():
     assert _prose(["章首同主语：10 章里 8 次由同一个名字起笔"], "章首同主语") == "8/10"
     assert _prose([], "章首同主语") == "0"
