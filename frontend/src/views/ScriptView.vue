@@ -11,7 +11,8 @@
         </div>
         <button class="btn" :disabled="busy.script" @click="act('script', actions.generateScript)">{{ busy.script ? '标注中…' : '⟳ 重新标注' }}</button>
         <button class="btn" :disabled="busy.review" @click="act('review', actions.reviewScript)">{{ busy.review ? '复查中…' : '✓ 校验归属' }}</button>
-        <button class="btn btn-primary" :disabled="busy.audio" @click="act('audio', actions.generatePending)">{{ busy.audio ? '生成中…' : '▶ 批量生成' }}</button>
+        <button v-if="busy.audio" class="btn btn-stop" @click="stopGenerate">⏹ 停止生成</button>
+        <button v-else class="btn btn-primary" @click="askGenerate">▶ 批量生成</button>
       </div>
     </div>
 
@@ -89,6 +90,18 @@
         </div>
       </aside>
     </div>
+
+    <div v-if="genDlg" class="gmask" @click.self="genDlg = false">
+      <div class="gdlg">
+        <div class="gdlg-title">批量生成 · 确认</div>
+        <div class="gdlg-sub">将对 <b>{{ toGen }}</b> 个未完成段（待生成 + 失败）启动 TTS 合成（已生成的段不动）。生成中可再点顶部「⏹ 停止生成」中止。</div>
+        <label class="gdlg-chk"><input type="checkbox" v-model="skipChk" /> 以后不再弹出此确认</label>
+        <div class="gdlg-acts">
+          <button class="btn btn-ghost" @click="genDlg = false">取消</button>
+          <button class="btn btn-primary" @click="runGenerate">开始生成</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -100,6 +113,7 @@ import { toggleUrl } from '../audio/player.js'
 export default {
   data: () => ({
     store, actions, selected: 4, expanded: 0, draft: { text: '', instruct: '' },
+    genDlg: false, skipChk: false,
     VERDICT, VERDICT_ICON
   }),
   computed: {
@@ -111,6 +125,7 @@ export default {
     done() { return this.segments.filter((s) => s.status === 'done').length },
     errors() { return this.segments.filter((s) => s.status === 'error').length },
     pending() { return this.segments.filter((s) => s.status === 'pending').length },
+    toGen() { return this.segments.filter((s) => s.status !== 'done').length },
     fallbacks() { return this.segments.filter((s) => s.status === 'done' && s.fallback).length },
     qcText() {
       const s = this.curSeg
@@ -139,6 +154,17 @@ export default {
     stClass(st) { return { done: 's-done', error: 's-err', pending: 's-pend', generating: 's-run' }[st] },
     fmt: fmtTime,
     act(task, fn) { fn() },
+    askGenerate() {
+      if (localStorage.getItem('novel.skipGenConfirm') === '1') { actions.generatePending(); return }
+      this.skipChk = false
+      this.genDlg = true
+    },
+    runGenerate() {
+      if (this.skipChk) localStorage.setItem('novel.skipGenConfirm', '1')
+      this.genDlg = false
+      actions.generatePending()
+    },
+    stopGenerate() { actions.cancelAudio() },
     pick(id) { this.selected = id; this.store.transport.segId = id },
     async saveDraft() {
       const ok = await actions.editChunk(this.curSeg.id - 1, { text: this.draft.text, instruct: this.draft.instruct })
@@ -152,6 +178,19 @@ export default {
 
 <style scoped>
 .wrap { min-width: 900px; }
+.btn-stop { background: var(--red); border-color: var(--red); color: #fff; }
+.gmask {
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55); z-index: 60;
+  display: flex; align-items: center; justify-content: center;
+}
+.gdlg {
+  width: 380px; background: var(--bg2); border: 1px solid var(--line2);
+  border-radius: 12px; padding: 18px;
+}
+.gdlg-title { font-weight: 700; font-size: 15px; }
+.gdlg-sub { font-size: 12.5px; color: var(--t2); line-height: 1.6; margin-top: 8px; }
+.gdlg-chk { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--t3); margin-top: 12px; }
+.gdlg-acts { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
 .chapter-tag { font-size: 12px; color: var(--teal); background: rgba(52, 214, 198, 0.1); padding: 3px 10px; border-radius: 999px; vertical-align: middle; margin-left: 6px; }
 .seg-switch { display: flex; gap: 2px; margin-right: 6px; }
 .seg-switch .cur { background: var(--accent-dim); color: #fff; }

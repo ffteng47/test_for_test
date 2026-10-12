@@ -1,0 +1,6496 @@
+[
+ {
+  "run": "bo_ctrl",
+  "family": "q25_11500_v1",
+  "chapter_no": 1,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 935,
+  "vis_chars": 859,
+  "n_paras": 6,
+  "max_para_chars": 200,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "bo_ctrl",
+  "family": "q25_11500_v1",
+  "chapter_no": 2,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1074,
+  "vis_chars": 982,
+  "n_paras": 6,
+  "max_para_chars": 237,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 3
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_ctrl",
+  "family": "q25_11500_v1",
+  "chapter_no": 3,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 896,
+  "vis_chars": 815,
+  "n_paras": 6,
+  "max_para_chars": 216,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 1,
+   "em-dash": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "bo_ctrl",
+  "family": "q25_11500_v1",
+  "chapter_no": 4,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 997,
+  "vis_chars": 908,
+  "n_paras": 6,
+  "max_para_chars": 173,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "bo_ctrl",
+  "family": "q25_11500_v1",
+  "chapter_no": 5,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1028,
+  "vis_chars": 944,
+  "n_paras": 6,
+  "max_para_chars": 243,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 1,
+   "em-dash": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "bo_ctrl",
+  "family": "q25_11500_v1",
+  "chapter_no": 6,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 958,
+  "vis_chars": 865,
+  "n_paras": 6,
+  "max_para_chars": 230,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 1,
+   "em-dash": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_ctrl",
+  "family": "q25_11500_v1",
+  "chapter_no": 7,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1009,
+  "vis_chars": 925,
+  "n_paras": 6,
+  "max_para_chars": 191,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_ctrl",
+  "family": "q25_11500_v1",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 965,
+  "vis_chars": 875,
+  "n_paras": 6,
+  "max_para_chars": 202,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "bo_ctrl",
+  "family": "q25_11500_v1",
+  "chapter_no": 9,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1052,
+  "vis_chars": 962,
+  "n_paras": 6,
+  "max_para_chars": 209,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 2
+  },
+  "n_findings": 2,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_ctrl",
+  "family": "q25_11500_v1",
+  "chapter_no": 10,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 914,
+  "vis_chars": 832,
+  "n_paras": 6,
+  "max_para_chars": 214,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 2,
+   "em-dash": 1
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q35_27b",
+  "family": "q35_27b_11500",
+  "chapter_no": 1,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 2610,
+  "vis_chars": 2395,
+  "n_paras": 9,
+  "max_para_chars": 318,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "30%",
+  "types": {
+   "long-paragraph": 9,
+   "quote-emphasis-tic": 1,
+   "stock-reaction-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 3,
+   "not-is-comparison": 1,
+   "trailer-ending": 1
+  },
+  "n_findings": 17,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "bo_q35_27b",
+  "family": "q35_27b_11500",
+  "chapter_no": 2,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 2488,
+  "vis_chars": 2290,
+  "n_paras": 9,
+  "max_para_chars": 305,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "30%",
+  "types": {
+   "long-paragraph": 9,
+   "quote-emphasis-tic": 1,
+   "em-dash": 1
+  },
+  "n_findings": 11,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q35_27b",
+  "family": "q35_27b_11500",
+  "chapter_no": 3,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 2264,
+  "vis_chars": 2072,
+  "n_paras": 9,
+  "max_para_chars": 293,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "30%",
+  "types": {
+   "long-paragraph": 8,
+   "quote-emphasis-tic": 1,
+   "em-dash": 3,
+   "metaphor-density-tic": 1,
+   "not-is-comparison": 1
+  },
+  "n_findings": 14,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "bo_q35_27b",
+  "family": "q35_27b_11500",
+  "chapter_no": 4,
+  "status": "OK",
+  "bucket": "renegotiate_only",
+  "chars": 2866,
+  "vis_chars": 2631,
+  "n_paras": 11,
+  "max_para_chars": 310,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "30%",
+  "types": {
+   "long-paragraph": 11,
+   "quote-emphasis-tic": 1,
+   "stock-reaction-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 1
+  },
+  "n_findings": 15,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q35_27b",
+  "family": "q35_27b_11500",
+  "chapter_no": 5,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 2788,
+  "vis_chars": 2543,
+  "n_paras": 10,
+  "max_para_chars": 339,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "30%",
+  "types": {
+   "long-paragraph": 10,
+   "quote-emphasis-tic": 1,
+   "stock-reaction-tic": 1,
+   "em-dash": 4,
+   "not-is-comparison": 3
+  },
+  "n_findings": 19,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q35_27b",
+  "family": "q35_27b_11500",
+  "chapter_no": 6,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 2987,
+  "vis_chars": 2726,
+  "n_paras": 12,
+  "max_para_chars": 288,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "30%",
+  "types": {
+   "long-paragraph": 12,
+   "quote-emphasis-tic": 1,
+   "em-dash": 3,
+   "metaphor-density-tic": 1
+  },
+  "n_findings": 17,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q35_27b",
+  "family": "q35_27b_11500",
+  "chapter_no": 7,
+  "status": "OK",
+  "bucket": "renegotiate_only",
+  "chars": 2685,
+  "vis_chars": 2471,
+  "n_paras": 10,
+  "max_para_chars": 307,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "30%",
+  "types": {
+   "long-paragraph": 10,
+   "quote-emphasis-tic": 1,
+   "em-dash": 2
+  },
+  "n_findings": 13,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q35_27b",
+  "family": "q35_27b_11500",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 2905,
+  "vis_chars": 2668,
+  "n_paras": 10,
+  "max_para_chars": 362,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "30%",
+  "types": {
+   "long-paragraph": 10,
+   "stock-reaction-tic": 1,
+   "not-is-comparison": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 1
+  },
+  "n_findings": 14,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "bo_q35_27b",
+  "family": "q35_27b_11500",
+  "chapter_no": 9,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 2357,
+  "vis_chars": 2147,
+  "n_paras": 9,
+  "max_para_chars": 297,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "30%",
+  "types": {
+   "long-paragraph": 9,
+   "quote-emphasis-tic": 1,
+   "not-is-comparison": 1,
+   "stock-reaction-tic": 1,
+   "em-dash": 5
+  },
+  "n_findings": 17,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q35_27b",
+  "family": "q35_27b_11500",
+  "chapter_no": 10,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 2681,
+  "vis_chars": 2445,
+  "n_paras": 11,
+  "max_para_chars": 290,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "30%",
+  "types": {
+   "long-paragraph": 11,
+   "stock-reaction-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 5,
+   "not-is-comparison": 1
+  },
+  "n_findings": 19,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_14b",
+  "family": "q3_14b_11500",
+  "chapter_no": 1,
+  "status": "OK",
+  "bucket": "rewrite_rescued",
+  "chars": 1390,
+  "vis_chars": 1242,
+  "n_paras": 9,
+  "max_para_chars": 197,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "cliche-density-tic": 1,
+   "em-dash": 4,
+   "not-is-comparison": 1
+  },
+  "n_findings": 7,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_14b",
+  "family": "q3_14b_11500",
+  "chapter_no": 2,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1300,
+  "vis_chars": 1148,
+  "n_paras": 9,
+  "max_para_chars": 191,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 1,
+  "run_e2": "60%",
+  "types": {
+   "quote-emphasis-tic": 1,
+   "cliche-density-tic": 1,
+   "em-dash": 3,
+   "trailer-ending": 1
+  },
+  "n_findings": 6,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_14b",
+  "family": "q3_14b_11500",
+  "chapter_no": 3,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1316,
+  "vis_chars": 1182,
+  "n_paras": 9,
+  "max_para_chars": 188,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_14b",
+  "family": "q3_14b_11500",
+  "chapter_no": 4,
+  "status": "OK",
+  "bucket": "rewrite_rescued",
+  "chars": 1309,
+  "vis_chars": 1168,
+  "n_paras": 9,
+  "max_para_chars": 173,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "em-dash": 2
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_14b",
+  "family": "q3_14b_11500",
+  "chapter_no": 5,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1292,
+  "vis_chars": 1149,
+  "n_paras": 9,
+  "max_para_chars": 172,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 3
+  },
+  "n_findings": 3,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_14b",
+  "family": "q3_14b_11500",
+  "chapter_no": 6,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1298,
+  "vis_chars": 1154,
+  "n_paras": 9,
+  "max_para_chars": 171,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 4,
+   "trailer-ending": 1
+  },
+  "n_findings": 7,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_14b",
+  "family": "q3_14b_11500",
+  "chapter_no": 7,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1264,
+  "vis_chars": 1139,
+  "n_paras": 9,
+  "max_para_chars": 184,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 1,
+  "run_e2": "60%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "cliche-density-tic": 1,
+   "em-dash": 3
+  },
+  "n_findings": 5,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_14b",
+  "family": "q3_14b_11500",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1341,
+  "vis_chars": 1194,
+  "n_paras": 9,
+  "max_para_chars": 176,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "cliche-density-tic": 1,
+   "metaphor-density-tic": 1,
+   "stock-reaction-tic": 1,
+   "em-dash": 2,
+   "voice-contrast": 1
+  },
+  "n_findings": 6,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_14b",
+  "family": "q3_14b_11500",
+  "chapter_no": 9,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1495,
+  "vis_chars": 1346,
+  "n_paras": 9,
+  "max_para_chars": 237,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "long-paragraph": 2,
+   "stock-reaction-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 4,
+   "not-is-comparison": 1
+  },
+  "n_findings": 9,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_14b",
+  "family": "q3_14b_11500",
+  "chapter_no": 10,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1230,
+  "vis_chars": 1102,
+  "n_paras": 9,
+  "max_para_chars": 154,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "cliche-density-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 4,
+   "not-is-comparison": 1
+  },
+  "n_findings": 7,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_30b",
+  "family": "EXCLUDED",
+  "chapter_no": 1,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 0,
+  "vis_chars": 0,
+  "n_paras": 0,
+  "max_para_chars": 0,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "0%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": true
+ },
+ {
+  "run": "bo_q3_30b",
+  "family": "EXCLUDED",
+  "chapter_no": 2,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 0,
+  "vis_chars": 0,
+  "n_paras": 0,
+  "max_para_chars": 0,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "0%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": true
+ },
+ {
+  "run": "bo_q3_30b",
+  "family": "EXCLUDED",
+  "chapter_no": 3,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 0,
+  "vis_chars": 0,
+  "n_paras": 0,
+  "max_para_chars": 0,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "0%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": true
+ },
+ {
+  "run": "bo_q3_30b",
+  "family": "EXCLUDED",
+  "chapter_no": 4,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 0,
+  "vis_chars": 0,
+  "n_paras": 0,
+  "max_para_chars": 0,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "0%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": true
+ },
+ {
+  "run": "bo_q3_30b",
+  "family": "EXCLUDED",
+  "chapter_no": 5,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 0,
+  "vis_chars": 0,
+  "n_paras": 0,
+  "max_para_chars": 0,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "0%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": true
+ },
+ {
+  "run": "bo_q3_30b",
+  "family": "EXCLUDED",
+  "chapter_no": 6,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 0,
+  "vis_chars": 0,
+  "n_paras": 0,
+  "max_para_chars": 0,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "0%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": true
+ },
+ {
+  "run": "bo_q3_30b",
+  "family": "EXCLUDED",
+  "chapter_no": 7,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 0,
+  "vis_chars": 0,
+  "n_paras": 0,
+  "max_para_chars": 0,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "0%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": true
+ },
+ {
+  "run": "bo_q3_30b",
+  "family": "EXCLUDED",
+  "chapter_no": 8,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 0,
+  "vis_chars": 0,
+  "n_paras": 0,
+  "max_para_chars": 0,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "0%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": true
+ },
+ {
+  "run": "bo_q3_30b",
+  "family": "EXCLUDED",
+  "chapter_no": 9,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 0,
+  "vis_chars": 0,
+  "n_paras": 0,
+  "max_para_chars": 0,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "0%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": true
+ },
+ {
+  "run": "bo_q3_30b",
+  "family": "EXCLUDED",
+  "chapter_no": 10,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 0,
+  "vis_chars": 0,
+  "n_paras": 0,
+  "max_para_chars": 0,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "0%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": true
+ },
+ {
+  "run": "bo_q3_30b_a4000",
+  "family": "q3_30b_a4000",
+  "chapter_no": 1,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 2112,
+  "vis_chars": 1873,
+  "n_paras": 11,
+  "max_para_chars": 231,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "0%",
+  "types": {
+   "long-paragraph": 4,
+   "quote-emphasis-tic": 1,
+   "stock-reaction-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 10,
+   "not-is-comparison": 1
+  },
+  "n_findings": 18,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_30b_a4000",
+  "family": "q3_30b_a4000",
+  "chapter_no": 2,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1958,
+  "vis_chars": 1744,
+  "n_paras": 11,
+  "max_para_chars": 222,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 1,
+  "run_e2": "0%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 7,
+   "long-paragraph": 1,
+   "trailer-ending": 1
+  },
+  "n_findings": 11,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_30b_a4000",
+  "family": "q3_30b_a4000",
+  "chapter_no": 3,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1937,
+  "vis_chars": 1680,
+  "n_paras": 10,
+  "max_para_chars": 217,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "0%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 9,
+   "quote-emphasis-tic": 1,
+   "long-paragraph": 1,
+   "not-is-comparison": 1
+  },
+  "n_findings": 14,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_30b_a4000",
+  "family": "q3_30b_a4000",
+  "chapter_no": 4,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 2000,
+  "vis_chars": 1756,
+  "n_paras": 10,
+  "max_para_chars": 272,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "0%",
+  "types": {
+   "quote-emphasis-tic": 1,
+   "stock-reaction-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 8,
+   "not-is-comparison": 1,
+   "long-paragraph": 3
+  },
+  "n_findings": 15,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_30b_a4000",
+  "family": "q3_30b_a4000",
+  "chapter_no": 5,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1835,
+  "vis_chars": 1614,
+  "n_paras": 10,
+  "max_para_chars": 203,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "0%",
+  "types": {
+   "long-paragraph": 3,
+   "em-dash": 8,
+   "metaphor-density-tic": 1,
+   "quote-emphasis-tic": 1,
+   "stock-reaction-tic": 1,
+   "not-is-comparison": 1
+  },
+  "n_findings": 15,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_30b_a4000",
+  "family": "q3_30b_a4000",
+  "chapter_no": 6,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1778,
+  "vis_chars": 1560,
+  "n_paras": 9,
+  "max_para_chars": 233,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 1,
+  "run_e2": "0%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "em-dash": 9,
+   "metaphor-density-tic": 1,
+   "long-paragraph": 6,
+   "quote-emphasis-tic": 1,
+   "not-is-comparison": 3
+  },
+  "n_findings": 21,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_30b_a4000",
+  "family": "q3_30b_a4000",
+  "chapter_no": 7,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1821,
+  "vis_chars": 1617,
+  "n_paras": 10,
+  "max_para_chars": 259,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "0%",
+  "types": {
+   "long-paragraph": 3,
+   "stock-reaction-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 8
+  },
+  "n_findings": 13,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_30b_a4000",
+  "family": "q3_30b_a4000",
+  "chapter_no": 8,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1757,
+  "vis_chars": 1535,
+  "n_paras": 10,
+  "max_para_chars": 219,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "0%",
+  "types": {
+   "metaphor-density-tic": 1,
+   "em-dash": 5,
+   "stock-reaction-tic": 1,
+   "negation-parade": 1,
+   "not-is-comparison": 1,
+   "long-paragraph": 1
+  },
+  "n_findings": 10,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_30b_a4000",
+  "family": "q3_30b_a4000",
+  "chapter_no": 9,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1863,
+  "vis_chars": 1659,
+  "n_paras": 9,
+  "max_para_chars": 221,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "0%",
+  "types": {
+   "long-paragraph": 6,
+   "metaphor-density-tic": 1,
+   "em-dash": 9,
+   "stock-reaction-tic": 1,
+   "quote-emphasis-tic": 1
+  },
+  "n_findings": 18,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_30b_a4000",
+  "family": "q3_30b_a4000",
+  "chapter_no": 10,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1685,
+  "vis_chars": 1496,
+  "n_paras": 9,
+  "max_para_chars": 227,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "0%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 9,
+   "quote-emphasis-tic": 1,
+   "long-paragraph": 3
+  },
+  "n_findings": 15,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_8b",
+  "family": "q3_8b_11500",
+  "chapter_no": 1,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1604,
+  "vis_chars": 1430,
+  "n_paras": 12,
+  "max_para_chars": 172,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "cliche-density-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 2,
+   "not-is-comparison": 1
+  },
+  "n_findings": 6,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_8b",
+  "family": "q3_8b_11500",
+  "chapter_no": 2,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1584,
+  "vis_chars": 1416,
+  "n_paras": 11,
+  "max_para_chars": 184,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {
+   "cliche-density-tic": 1,
+   "em-dash": 1,
+   "trailer-ending": 1
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_8b",
+  "family": "q3_8b_11500",
+  "chapter_no": 3,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1506,
+  "vis_chars": 1329,
+  "n_paras": 12,
+  "max_para_chars": 165,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "em-dash": 3
+  },
+  "n_findings": 4,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_8b",
+  "family": "q3_8b_11500",
+  "chapter_no": 4,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1768,
+  "vis_chars": 1593,
+  "n_paras": 11,
+  "max_para_chars": 196,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {
+   "metaphor-density-tic": 1,
+   "em-dash": 2,
+   "not-is-comparison": 1
+  },
+  "n_findings": 4,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_8b",
+  "family": "q3_8b_11500",
+  "chapter_no": 5,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1514,
+  "vis_chars": 1326,
+  "n_paras": 12,
+  "max_para_chars": 164,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {
+   "cliche-density-tic": 1,
+   "em-dash": 2
+  },
+  "n_findings": 3,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_8b",
+  "family": "q3_8b_11500",
+  "chapter_no": 6,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1563,
+  "vis_chars": 1393,
+  "n_paras": 11,
+  "max_para_chars": 167,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "cliche-density-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 4,
+   "not-is-comparison": 1
+  },
+  "n_findings": 8,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_8b",
+  "family": "q3_8b_11500",
+  "chapter_no": 7,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1599,
+  "vis_chars": 1442,
+  "n_paras": 11,
+  "max_para_chars": 171,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {
+   "trailer-ending": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_8b",
+  "family": "q3_8b_11500",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1616,
+  "vis_chars": 1436,
+  "n_paras": 11,
+  "max_para_chars": 172,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 1,
+   "trailer-ending": 1
+  },
+  "n_findings": 4,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_8b",
+  "family": "q3_8b_11500",
+  "chapter_no": 9,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1688,
+  "vis_chars": 1519,
+  "n_paras": 10,
+  "max_para_chars": 197,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {
+   "em-dash": 4,
+   "stock-reaction-tic": 1
+  },
+  "n_findings": 5,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "bo_q3_8b",
+  "family": "q3_8b_11500",
+  "chapter_no": 10,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1746,
+  "vis_chars": 1550,
+  "n_paras": 12,
+  "max_para_chars": 176,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 4
+  },
+  "n_findings": 6,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r1",
+  "family": "q25_11500_v2",
+  "chapter_no": 1,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1016,
+  "vis_chars": 933,
+  "n_paras": 6,
+  "max_para_chars": 201,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 1,
+   "long-paragraph": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r1",
+  "family": "q25_11500_v2",
+  "chapter_no": 2,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1077,
+  "vis_chars": 986,
+  "n_paras": 6,
+  "max_para_chars": 201,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r1",
+  "family": "q25_11500_v2",
+  "chapter_no": 3,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 887,
+  "vis_chars": 802,
+  "n_paras": 6,
+  "max_para_chars": 204,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r1",
+  "family": "q25_11500_v2",
+  "chapter_no": 4,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 881,
+  "vis_chars": 805,
+  "n_paras": 5,
+  "max_para_chars": 219,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r1",
+  "family": "q25_11500_v2",
+  "chapter_no": 5,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 853,
+  "vis_chars": 778,
+  "n_paras": 6,
+  "max_para_chars": 205,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r1",
+  "family": "q25_11500_v2",
+  "chapter_no": 6,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1146,
+  "vis_chars": 1039,
+  "n_paras": 7,
+  "max_para_chars": 208,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r1",
+  "family": "q25_11500_v2",
+  "chapter_no": 7,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 941,
+  "vis_chars": 860,
+  "n_paras": 6,
+  "max_para_chars": 201,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 1,
+   "em-dash": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r1",
+  "family": "q25_11500_v2",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 934,
+  "vis_chars": 848,
+  "n_paras": 6,
+  "max_para_chars": 174,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r1",
+  "family": "q25_11500_v2",
+  "chapter_no": 9,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 875,
+  "vis_chars": 801,
+  "n_paras": 6,
+  "max_para_chars": 186,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r1",
+  "family": "q25_11500_v2",
+  "chapter_no": 10,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 995,
+  "vis_chars": 893,
+  "n_paras": 6,
+  "max_para_chars": 234,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "cliche-density-tic": 1,
+   "long-paragraph": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r2",
+  "family": "q25_11500_v2",
+  "chapter_no": 1,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1021,
+  "vis_chars": 940,
+  "n_paras": 6,
+  "max_para_chars": 214,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 2
+  },
+  "n_findings": 2,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r2",
+  "family": "q25_11500_v2",
+  "chapter_no": 2,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 877,
+  "vis_chars": 794,
+  "n_paras": 6,
+  "max_para_chars": 165,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "quote-emphasis-tic": 1,
+   "em-dash": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r2",
+  "family": "q25_11500_v2",
+  "chapter_no": 3,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 959,
+  "vis_chars": 877,
+  "n_paras": 6,
+  "max_para_chars": 211,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r2",
+  "family": "q25_11500_v2",
+  "chapter_no": 4,
+  "status": "OK",
+  "bucket": "renegotiate_only",
+  "chars": 1010,
+  "vis_chars": 921,
+  "n_paras": 6,
+  "max_para_chars": 211,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r2",
+  "family": "q25_11500_v2",
+  "chapter_no": 5,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 837,
+  "vis_chars": 750,
+  "n_paras": 6,
+  "max_para_chars": 176,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 1,
+  "run_e2": "50%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r2",
+  "family": "q25_11500_v2",
+  "chapter_no": 6,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 959,
+  "vis_chars": 869,
+  "n_paras": 6,
+  "max_para_chars": 196,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r2",
+  "family": "q25_11500_v2",
+  "chapter_no": 7,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1068,
+  "vis_chars": 975,
+  "n_paras": 6,
+  "max_para_chars": 240,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r2",
+  "family": "q25_11500_v2",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 978,
+  "vis_chars": 887,
+  "n_paras": 6,
+  "max_para_chars": 233,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 1,
+   "trailer-ending": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r2",
+  "family": "q25_11500_v2",
+  "chapter_no": 9,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1064,
+  "vis_chars": 964,
+  "n_paras": 6,
+  "max_para_chars": 242,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 1,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 3
+  },
+  "n_findings": 3,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r2",
+  "family": "q25_11500_v2",
+  "chapter_no": 10,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 953,
+  "vis_chars": 862,
+  "n_paras": 6,
+  "max_para_chars": 216,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r3",
+  "family": "q25_11500_v2",
+  "chapter_no": 1,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 911,
+  "vis_chars": 833,
+  "n_paras": 6,
+  "max_para_chars": 223,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "long-paragraph": 1,
+   "not-is-comparison": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r3",
+  "family": "q25_11500_v2",
+  "chapter_no": 2,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 852,
+  "vis_chars": 779,
+  "n_paras": 6,
+  "max_para_chars": 179,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r3",
+  "family": "q25_11500_v2",
+  "chapter_no": 3,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1067,
+  "vis_chars": 965,
+  "n_paras": 7,
+  "max_para_chars": 177,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "not-is-comparison": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r3",
+  "family": "q25_11500_v2",
+  "chapter_no": 4,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1164,
+  "vis_chars": 1070,
+  "n_paras": 7,
+  "max_para_chars": 230,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r3",
+  "family": "q25_11500_v2",
+  "chapter_no": 5,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 995,
+  "vis_chars": 910,
+  "n_paras": 6,
+  "max_para_chars": 231,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r3",
+  "family": "q25_11500_v2",
+  "chapter_no": 6,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 903,
+  "vis_chars": 822,
+  "n_paras": 6,
+  "max_para_chars": 196,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r3",
+  "family": "q25_11500_v2",
+  "chapter_no": 7,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 773,
+  "vis_chars": 689,
+  "n_paras": 7,
+  "max_para_chars": 171,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r3",
+  "family": "q25_11500_v2",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 962,
+  "vis_chars": 874,
+  "n_paras": 6,
+  "max_para_chars": 185,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "action-list-tic": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r3",
+  "family": "q25_11500_v2",
+  "chapter_no": 9,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1020,
+  "vis_chars": 929,
+  "n_paras": 6,
+  "max_para_chars": 213,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "ladder2_r3",
+  "family": "q25_11500_v2",
+  "chapter_no": 10,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1022,
+  "vis_chars": 925,
+  "n_paras": 6,
+  "max_para_chars": 208,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "long-paragraph": 1,
+   "em-dash": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r1",
+  "family": "q25_11500_v1",
+  "chapter_no": 1,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1037,
+  "vis_chars": 951,
+  "n_paras": 6,
+  "max_para_chars": 241,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "long-paragraph": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r1",
+  "family": "q25_11500_v1",
+  "chapter_no": 2,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 931,
+  "vis_chars": 845,
+  "n_paras": 7,
+  "max_para_chars": 172,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r1",
+  "family": "q25_11500_v1",
+  "chapter_no": 3,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 813,
+  "vis_chars": 736,
+  "n_paras": 5,
+  "max_para_chars": 238,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r1",
+  "family": "q25_11500_v1",
+  "chapter_no": 4,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 917,
+  "vis_chars": 828,
+  "n_paras": 6,
+  "max_para_chars": 173,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r1",
+  "family": "q25_11500_v1",
+  "chapter_no": 5,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 875,
+  "vis_chars": 793,
+  "n_paras": 6,
+  "max_para_chars": 166,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "em-dash": 2
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r1",
+  "family": "q25_11500_v1",
+  "chapter_no": 6,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 992,
+  "vis_chars": 894,
+  "n_paras": 6,
+  "max_para_chars": 210,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r1",
+  "family": "q25_11500_v1",
+  "chapter_no": 7,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 970,
+  "vis_chars": 877,
+  "n_paras": 6,
+  "max_para_chars": 231,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r1",
+  "family": "q25_11500_v1",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 932,
+  "vis_chars": 840,
+  "n_paras": 6,
+  "max_para_chars": 196,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r1",
+  "family": "q25_11500_v1",
+  "chapter_no": 9,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1060,
+  "vis_chars": 972,
+  "n_paras": 6,
+  "max_para_chars": 248,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 2,
+   "long-paragraph": 1
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r1",
+  "family": "q25_11500_v1",
+  "chapter_no": 10,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1034,
+  "vis_chars": 924,
+  "n_paras": 7,
+  "max_para_chars": 167,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r2",
+  "family": "q25_11500_v1",
+  "chapter_no": 1,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 694,
+  "vis_chars": 630,
+  "n_paras": 6,
+  "max_para_chars": 153,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "em-dash": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r2",
+  "family": "q25_11500_v1",
+  "chapter_no": 2,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 983,
+  "vis_chars": 894,
+  "n_paras": 6,
+  "max_para_chars": 216,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 1,
+  "run_e2": "70%",
+  "types": {
+   "long-paragraph": 1,
+   "em-dash": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r2",
+  "family": "q25_11500_v1",
+  "chapter_no": 3,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1079,
+  "vis_chars": 970,
+  "n_paras": 6,
+  "max_para_chars": 240,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "long-paragraph": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r2",
+  "family": "q25_11500_v1",
+  "chapter_no": 4,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 755,
+  "vis_chars": 695,
+  "n_paras": 5,
+  "max_para_chars": 205,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r2",
+  "family": "q25_11500_v1",
+  "chapter_no": 5,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 974,
+  "vis_chars": 887,
+  "n_paras": 6,
+  "max_para_chars": 204,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "long-paragraph": 2
+  },
+  "n_findings": 2,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r2",
+  "family": "q25_11500_v1",
+  "chapter_no": 6,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1028,
+  "vis_chars": 935,
+  "n_paras": 6,
+  "max_para_chars": 190,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r2",
+  "family": "q25_11500_v1",
+  "chapter_no": 7,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 942,
+  "vis_chars": 865,
+  "n_paras": 6,
+  "max_para_chars": 199,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "em-dash": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r2",
+  "family": "q25_11500_v1",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 976,
+  "vis_chars": 893,
+  "n_paras": 6,
+  "max_para_chars": 208,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r2",
+  "family": "q25_11500_v1",
+  "chapter_no": 9,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1264,
+  "vis_chars": 1146,
+  "n_paras": 6,
+  "max_para_chars": 235,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "long-paragraph": 4
+  },
+  "n_findings": 4,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r2",
+  "family": "q25_11500_v1",
+  "chapter_no": 10,
+  "status": "OK",
+  "bucket": "rewrite_rescued",
+  "chars": 927,
+  "vis_chars": 838,
+  "n_paras": 6,
+  "max_para_chars": 182,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "trailer-ending": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r3",
+  "family": "q25_11500_v1",
+  "chapter_no": 1,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 935,
+  "vis_chars": 857,
+  "n_paras": 6,
+  "max_para_chars": 208,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r3",
+  "family": "q25_11500_v1",
+  "chapter_no": 2,
+  "status": "OK",
+  "bucket": "rewrite_rescued",
+  "chars": 1092,
+  "vis_chars": 988,
+  "n_paras": 6,
+  "max_para_chars": 221,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 4,
+   "em-dash": 1
+  },
+  "n_findings": 5,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r3",
+  "family": "q25_11500_v1",
+  "chapter_no": 3,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 913,
+  "vis_chars": 827,
+  "n_paras": 6,
+  "max_para_chars": 169,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r3",
+  "family": "q25_11500_v1",
+  "chapter_no": 4,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1006,
+  "vis_chars": 915,
+  "n_paras": 6,
+  "max_para_chars": 215,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r3",
+  "family": "q25_11500_v1",
+  "chapter_no": 5,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 997,
+  "vis_chars": 906,
+  "n_paras": 6,
+  "max_para_chars": 180,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r3",
+  "family": "q25_11500_v1",
+  "chapter_no": 6,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1025,
+  "vis_chars": 939,
+  "n_paras": 6,
+  "max_para_chars": 203,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r3",
+  "family": "q25_11500_v1",
+  "chapter_no": 7,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1152,
+  "vis_chars": 1036,
+  "n_paras": 10,
+  "max_para_chars": 181,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 1,
+  "run_e2": "50%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r3",
+  "family": "q25_11500_v1",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1035,
+  "vis_chars": 950,
+  "n_paras": 7,
+  "max_para_chars": 173,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "reverse-not-is": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r3",
+  "family": "q25_11500_v1",
+  "chapter_no": 9,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1000,
+  "vis_chars": 918,
+  "n_paras": 6,
+  "max_para_chars": 200,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q25_11500_r3",
+  "family": "q25_11500_v1",
+  "chapter_no": 10,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1020,
+  "vis_chars": 925,
+  "n_paras": 6,
+  "max_para_chars": 195,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r1",
+  "family": "q3_14b_11500",
+  "chapter_no": 1,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1240,
+  "vis_chars": 1107,
+  "n_paras": 9,
+  "max_para_chars": 158,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "cliche-density-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 3
+  },
+  "n_findings": 6,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r1",
+  "family": "q3_14b_11500",
+  "chapter_no": 2,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1429,
+  "vis_chars": 1282,
+  "n_paras": 9,
+  "max_para_chars": 171,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "cliche-density-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 2
+  },
+  "n_findings": 4,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r1",
+  "family": "q3_14b_11500",
+  "chapter_no": 3,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1189,
+  "vis_chars": 1066,
+  "n_paras": 9,
+  "max_para_chars": 149,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 3
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r1",
+  "family": "q3_14b_11500",
+  "chapter_no": 4,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1338,
+  "vis_chars": 1206,
+  "n_paras": 9,
+  "max_para_chars": 195,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "metaphor-density-tic": 1,
+   "em-dash": 2
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r1",
+  "family": "q3_14b_11500",
+  "chapter_no": 5,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1281,
+  "vis_chars": 1151,
+  "n_paras": 9,
+  "max_para_chars": 196,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "cliche-density-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 3
+  },
+  "n_findings": 5,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r1",
+  "family": "q3_14b_11500",
+  "chapter_no": 6,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1320,
+  "vis_chars": 1179,
+  "n_paras": 9,
+  "max_para_chars": 182,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "metaphor-density-tic": 1,
+   "em-dash": 5
+  },
+  "n_findings": 6,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r1",
+  "family": "q3_14b_11500",
+  "chapter_no": 7,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1312,
+  "vis_chars": 1184,
+  "n_paras": 9,
+  "max_para_chars": 171,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r1",
+  "family": "q3_14b_11500",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1189,
+  "vis_chars": 1053,
+  "n_paras": 9,
+  "max_para_chars": 174,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "quote-emphasis-tic": 1,
+   "cliche-density-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 4
+  },
+  "n_findings": 7,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r1",
+  "family": "q3_14b_11500",
+  "chapter_no": 9,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1363,
+  "vis_chars": 1228,
+  "n_paras": 9,
+  "max_para_chars": 195,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "em-dash": 4
+  },
+  "n_findings": 5,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r1",
+  "family": "q3_14b_11500",
+  "chapter_no": 10,
+  "status": "OK",
+  "bucket": "rewrite_rescued",
+  "chars": 1384,
+  "vis_chars": 1234,
+  "n_paras": 9,
+  "max_para_chars": 181,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "cliche-density-tic": 1,
+   "em-dash": 1
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r2",
+  "family": "q3_14b_11500",
+  "chapter_no": 1,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1192,
+  "vis_chars": 1061,
+  "n_paras": 9,
+  "max_para_chars": 165,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "quote-emphasis-tic": 1,
+   "stock-reaction-tic": 1,
+   "cliche-density-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 3,
+   "trailer-ending": 1
+  },
+  "n_findings": 8,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r2",
+  "family": "q3_14b_11500",
+  "chapter_no": 2,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1243,
+  "vis_chars": 1110,
+  "n_paras": 9,
+  "max_para_chars": 169,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "quote-emphasis-tic": 1,
+   "cliche-density-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 4
+  },
+  "n_findings": 7,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r2",
+  "family": "q3_14b_11500",
+  "chapter_no": 3,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1151,
+  "vis_chars": 1030,
+  "n_paras": 9,
+  "max_para_chars": 153,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "cliche-density-tic": 1,
+   "em-dash": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r2",
+  "family": "q3_14b_11500",
+  "chapter_no": 4,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1294,
+  "vis_chars": 1157,
+  "n_paras": 9,
+  "max_para_chars": 171,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "quote-emphasis-tic": 1,
+   "cliche-density-tic": 1,
+   "stock-reaction-tic": 1,
+   "em-dash": 1,
+   "not-is-comparison": 1
+  },
+  "n_findings": 5,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r2",
+  "family": "q3_14b_11500",
+  "chapter_no": 5,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1396,
+  "vis_chars": 1252,
+  "n_paras": 9,
+  "max_para_chars": 188,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "quote-emphasis-tic": 1,
+   "stock-reaction-tic": 1,
+   "cliche-density-tic": 1,
+   "em-dash": 4
+  },
+  "n_findings": 7,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r2",
+  "family": "q3_14b_11500",
+  "chapter_no": 6,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1188,
+  "vis_chars": 1062,
+  "n_paras": 9,
+  "max_para_chars": 154,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "cliche-density-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 1
+  },
+  "n_findings": 4,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r2",
+  "family": "q3_14b_11500",
+  "chapter_no": 7,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1231,
+  "vis_chars": 1097,
+  "n_paras": 9,
+  "max_para_chars": 199,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r2",
+  "family": "q3_14b_11500",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1268,
+  "vis_chars": 1129,
+  "n_paras": 9,
+  "max_para_chars": 161,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "cliche-density-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 1
+  },
+  "n_findings": 4,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r2",
+  "family": "q3_14b_11500",
+  "chapter_no": 9,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1335,
+  "vis_chars": 1199,
+  "n_paras": 9,
+  "max_para_chars": 178,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "cliche-density-tic": 1,
+   "em-dash": 4,
+   "metaphor-density-tic": 1
+  },
+  "n_findings": 7,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r2",
+  "family": "q3_14b_11500",
+  "chapter_no": 10,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1278,
+  "vis_chars": 1140,
+  "n_paras": 9,
+  "max_para_chars": 197,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "cliche-density-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 5
+  },
+  "n_findings": 7,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r3",
+  "family": "q3_14b_11500",
+  "chapter_no": 1,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1314,
+  "vis_chars": 1184,
+  "n_paras": 9,
+  "max_para_chars": 174,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "80%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "cliche-density-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 2
+  },
+  "n_findings": 5,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r3",
+  "family": "q3_14b_11500",
+  "chapter_no": 2,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1296,
+  "vis_chars": 1156,
+  "n_paras": 9,
+  "max_para_chars": 158,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "80%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "cliche-density-tic": 1,
+   "em-dash": 3,
+   "quote-emphasis-tic": 1
+  },
+  "n_findings": 6,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r3",
+  "family": "q3_14b_11500",
+  "chapter_no": 3,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1208,
+  "vis_chars": 1081,
+  "n_paras": 9,
+  "max_para_chars": 171,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "80%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "em-dash": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r3",
+  "family": "q3_14b_11500",
+  "chapter_no": 4,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1258,
+  "vis_chars": 1128,
+  "n_paras": 9,
+  "max_para_chars": 163,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "80%",
+  "types": {
+   "metaphor-density-tic": 1,
+   "quote-emphasis-tic": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r3",
+  "family": "q3_14b_11500",
+  "chapter_no": 5,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1218,
+  "vis_chars": 1096,
+  "n_paras": 9,
+  "max_para_chars": 176,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "80%",
+  "types": {
+   "em-dash": 3,
+   "stock-reaction-tic": 1
+  },
+  "n_findings": 4,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r3",
+  "family": "q3_14b_11500",
+  "chapter_no": 6,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1301,
+  "vis_chars": 1164,
+  "n_paras": 9,
+  "max_para_chars": 187,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "80%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 4
+  },
+  "n_findings": 6,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r3",
+  "family": "q3_14b_11500",
+  "chapter_no": 7,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1165,
+  "vis_chars": 1052,
+  "n_paras": 9,
+  "max_para_chars": 163,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "80%",
+  "types": {
+   "em-dash": 3
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r3",
+  "family": "q3_14b_11500",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1383,
+  "vis_chars": 1242,
+  "n_paras": 9,
+  "max_para_chars": 182,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "80%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "em-dash": 4,
+   "action-list-tic": 1
+  },
+  "n_findings": 6,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r3",
+  "family": "q3_14b_11500",
+  "chapter_no": 9,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1282,
+  "vis_chars": 1150,
+  "n_paras": 9,
+  "max_para_chars": 158,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "80%",
+  "types": {
+   "em-dash": 5
+  },
+  "n_findings": 5,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "q3_14b_r3",
+  "family": "q3_14b_11500",
+  "chapter_no": 10,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1303,
+  "vis_chars": 1165,
+  "n_paras": 9,
+  "max_para_chars": 190,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 1,
+  "run_e2": "80%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "cliche-density-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 3
+  },
+  "n_findings": 6,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t8r1",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 1,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1642,
+  "vis_chars": 1462,
+  "n_paras": 14,
+  "max_para_chars": 141,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "40%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "cliche-density-tic": 1,
+   "em-dash": 5
+  },
+  "n_findings": 7,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r1",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 2,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1807,
+  "vis_chars": 1606,
+  "n_paras": 16,
+  "max_para_chars": 191,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "40%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "em-dash": 4
+  },
+  "n_findings": 5,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t8r1",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 3,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1579,
+  "vis_chars": 1374,
+  "n_paras": 15,
+  "max_para_chars": 164,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "40%",
+  "types": {
+   "em-dash": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r1",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 4,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1648,
+  "vis_chars": 1436,
+  "n_paras": 14,
+  "max_para_chars": 193,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "40%",
+  "types": {
+   "em-dash": 3,
+   "quote-emphasis-tic": 1
+  },
+  "n_findings": 4,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r1",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 5,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1322,
+  "vis_chars": 1157,
+  "n_paras": 11,
+  "max_para_chars": 156,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "40%",
+  "types": {
+   "em-dash": 4,
+   "quote-emphasis-tic": 1
+  },
+  "n_findings": 5,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r1",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 6,
+  "status": "OK",
+  "bucket": "renegotiate_only",
+  "chars": 1827,
+  "vis_chars": 1627,
+  "n_paras": 12,
+  "max_para_chars": 206,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "40%",
+  "types": {
+   "long-paragraph": 1,
+   "quote-emphasis-tic": 1,
+   "stock-reaction-tic": 1,
+   "action-list-tic": 1,
+   "em-dash": 2
+  },
+  "n_findings": 6,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r1",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 7,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1520,
+  "vis_chars": 1364,
+  "n_paras": 12,
+  "max_para_chars": 162,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "40%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "cliche-density-tic": 1,
+   "em-dash": 1
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t8r1",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1277,
+  "vis_chars": 1122,
+  "n_paras": 12,
+  "max_para_chars": 138,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "40%",
+  "types": {
+   "cliche-density-tic": 1,
+   "metaphor-density-tic": 1,
+   "em-dash": 6
+  },
+  "n_findings": 8,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t8r1",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 9,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1504,
+  "vis_chars": 1332,
+  "n_paras": 11,
+  "max_para_chars": 200,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 2,
+  "run_e2": "40%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r1",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 10,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1670,
+  "vis_chars": 1472,
+  "n_paras": 17,
+  "max_para_chars": 128,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "40%",
+  "types": {
+   "em-dash": 6
+  },
+  "n_findings": 6,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t8r2",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 1,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1386,
+  "vis_chars": 1244,
+  "n_paras": 12,
+  "max_para_chars": 141,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "40%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "cliche-density-tic": 1
+  },
+  "n_findings": 2,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r2",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 2,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1360,
+  "vis_chars": 1207,
+  "n_paras": 12,
+  "max_para_chars": 159,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "40%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "em-dash": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t8r2",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 3,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1763,
+  "vis_chars": 1562,
+  "n_paras": 15,
+  "max_para_chars": 153,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "40%",
+  "types": {
+   "metaphor-density-tic": 1,
+   "em-dash": 3
+  },
+  "n_findings": 4,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t8r2",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 4,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1674,
+  "vis_chars": 1467,
+  "n_paras": 15,
+  "max_para_chars": 180,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "40%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "em-dash": 3,
+   "quote-emphasis-tic": 1
+  },
+  "n_findings": 5,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r2",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 5,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1387,
+  "vis_chars": 1210,
+  "n_paras": 13,
+  "max_para_chars": 172,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 1,
+  "run_e2": "40%",
+  "types": {
+   "em-dash": 3
+  },
+  "n_findings": 3,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r2",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 6,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1286,
+  "vis_chars": 1147,
+  "n_paras": 12,
+  "max_para_chars": 159,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "40%",
+  "types": {
+   "em-dash": 1,
+   "stock-reaction-tic": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t8r2",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 7,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1896,
+  "vis_chars": 1673,
+  "n_paras": 18,
+  "max_para_chars": 133,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "40%",
+  "types": {
+   "cliche-density-tic": 1,
+   "em-dash": 4,
+   "stock-reaction-tic": 1
+  },
+  "n_findings": 6,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r2",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1496,
+  "vis_chars": 1320,
+  "n_paras": 15,
+  "max_para_chars": 120,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "40%",
+  "types": {
+   "cliche-density-tic": 1,
+   "em-dash": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t8r2",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 9,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1251,
+  "vis_chars": 1115,
+  "n_paras": 10,
+  "max_para_chars": 175,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "40%",
+  "types": {
+   "em-dash": 5
+  },
+  "n_findings": 5,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r2",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 10,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1638,
+  "vis_chars": 1466,
+  "n_paras": 12,
+  "max_para_chars": 175,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "40%",
+  "types": {
+   "cliche-density-tic": 1,
+   "em-dash": 3,
+   "action-list-tic": 1
+  },
+  "n_findings": 5,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r3",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 1,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1790,
+  "vis_chars": 1595,
+  "n_paras": 15,
+  "max_para_chars": 140,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "cliche-density-tic": 1,
+   "em-dash": 1
+  },
+  "n_findings": 3,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r3",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 2,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1388,
+  "vis_chars": 1235,
+  "n_paras": 15,
+  "max_para_chars": 127,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r3",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 3,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1633,
+  "vis_chars": 1424,
+  "n_paras": 18,
+  "max_para_chars": 142,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {
+   "em-dash": 3
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r3",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 4,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1964,
+  "vis_chars": 1746,
+  "n_paras": 13,
+  "max_para_chars": 224,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {
+   "em-dash": 3,
+   "stock-reaction-tic": 1,
+   "long-paragraph": 2
+  },
+  "n_findings": 6,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r3",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 5,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1207,
+  "vis_chars": 1052,
+  "n_paras": 12,
+  "max_para_chars": 132,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {
+   "em-dash": 3
+  },
+  "n_findings": 3,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r3",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 6,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1605,
+  "vis_chars": 1439,
+  "n_paras": 13,
+  "max_para_chars": 153,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {
+   "em-dash": 3
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r3",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 7,
+  "status": "OK",
+  "bucket": "renegotiate_only",
+  "chars": 1533,
+  "vis_chars": 1361,
+  "n_paras": 13,
+  "max_para_chars": 137,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {
+   "cliche-density-tic": 1,
+   "stock-reaction-tic": 1,
+   "em-dash": 1
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r3",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1697,
+  "vis_chars": 1518,
+  "n_paras": 13,
+  "max_para_chars": 176,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t8r3",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 9,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1534,
+  "vis_chars": 1362,
+  "n_paras": 12,
+  "max_para_chars": 166,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {
+   "stock-reaction-tic": 1,
+   "em-dash": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t8r3",
+  "family": "r1_32b_11500_t8",
+  "chapter_no": 10,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1321,
+  "vis_chars": 1172,
+  "n_paras": 12,
+  "max_para_chars": 138,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "10%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t9r1",
+  "family": "q25_1434_t9",
+  "chapter_no": 1,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1136,
+  "vis_chars": 1028,
+  "n_paras": 8,
+  "max_para_chars": 194,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 3
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t9r1",
+  "family": "q25_1434_t9",
+  "chapter_no": 2,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 841,
+  "vis_chars": 771,
+  "n_paras": 6,
+  "max_para_chars": 179,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t9r1",
+  "family": "q25_1434_t9",
+  "chapter_no": 3,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 956,
+  "vis_chars": 872,
+  "n_paras": 7,
+  "max_para_chars": 172,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 3
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t9r1",
+  "family": "q25_1434_t9",
+  "chapter_no": 4,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1093,
+  "vis_chars": 1004,
+  "n_paras": 8,
+  "max_para_chars": 197,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t9r1",
+  "family": "q25_1434_t9",
+  "chapter_no": 5,
+  "status": "OK",
+  "bucket": "rewrite_rescued",
+  "chars": 1195,
+  "vis_chars": 1085,
+  "n_paras": 9,
+  "max_para_chars": 193,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 4
+  },
+  "n_findings": 4,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t9r1",
+  "family": "q25_1434_t9",
+  "chapter_no": 6,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1047,
+  "vis_chars": 954,
+  "n_paras": 8,
+  "max_para_chars": 189,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 5
+  },
+  "n_findings": 5,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t9r1",
+  "family": "q25_1434_t9",
+  "chapter_no": 7,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 771,
+  "vis_chars": 710,
+  "n_paras": 7,
+  "max_para_chars": 143,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t9r1",
+  "family": "q25_1434_t9",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 940,
+  "vis_chars": 858,
+  "n_paras": 7,
+  "max_para_chars": 208,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 1,
+   "long-paragraph": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t9r1",
+  "family": "q25_1434_t9",
+  "chapter_no": 9,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1306,
+  "vis_chars": 1189,
+  "n_paras": 10,
+  "max_para_chars": 175,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 1,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t9r1",
+  "family": "q25_1434_t9",
+  "chapter_no": 10,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 884,
+  "vis_chars": 803,
+  "n_paras": 7,
+  "max_para_chars": 170,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t9r2",
+  "family": "q25_1434_t9",
+  "chapter_no": 1,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 988,
+  "vis_chars": 890,
+  "n_paras": 9,
+  "max_para_chars": 184,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t9r2",
+  "family": "q25_1434_t9",
+  "chapter_no": 2,
+  "status": "OK",
+  "bucket": "rewrite_rescued",
+  "chars": 741,
+  "vis_chars": 679,
+  "n_paras": 6,
+  "max_para_chars": 168,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t9r2",
+  "family": "q25_1434_t9",
+  "chapter_no": 3,
+  "status": "OK",
+  "bucket": "rewrite_rescued",
+  "chars": 877,
+  "vis_chars": 800,
+  "n_paras": 7,
+  "max_para_chars": 151,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 3
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t9r2",
+  "family": "q25_1434_t9",
+  "chapter_no": 4,
+  "status": "OK",
+  "bucket": "rewrite_rescued",
+  "chars": 927,
+  "vis_chars": 844,
+  "n_paras": 8,
+  "max_para_chars": 164,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t9r2",
+  "family": "q25_1434_t9",
+  "chapter_no": 5,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1055,
+  "vis_chars": 959,
+  "n_paras": 8,
+  "max_para_chars": 168,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 3,
+   "not-is-comparison": 1
+  },
+  "n_findings": 4,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t9r2",
+  "family": "q25_1434_t9",
+  "chapter_no": 6,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1008,
+  "vis_chars": 919,
+  "n_paras": 7,
+  "max_para_chars": 182,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 3,
+   "trailer-ending": 1
+  },
+  "n_findings": 4,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t9r2",
+  "family": "q25_1434_t9",
+  "chapter_no": 7,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1045,
+  "vis_chars": 934,
+  "n_paras": 9,
+  "max_para_chars": 170,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 3
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t9r2",
+  "family": "q25_1434_t9",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "rewrite_rescued",
+  "chars": 952,
+  "vis_chars": 867,
+  "n_paras": 6,
+  "max_para_chars": 256,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "long-paragraph": 2,
+   "em-dash": 2
+  },
+  "n_findings": 4,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t9r2",
+  "family": "q25_1434_t9",
+  "chapter_no": 9,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 859,
+  "vis_chars": 788,
+  "n_paras": 8,
+  "max_para_chars": 151,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 2
+  },
+  "n_findings": 2,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t9r2",
+  "family": "q25_1434_t9",
+  "chapter_no": 10,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 831,
+  "vis_chars": 759,
+  "n_paras": 6,
+  "max_para_chars": 167,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t9r3",
+  "family": "q25_1434_t9",
+  "chapter_no": 1,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1076,
+  "vis_chars": 978,
+  "n_paras": 8,
+  "max_para_chars": 165,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {},
+  "n_findings": 0,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t9r3",
+  "family": "q25_1434_t9",
+  "chapter_no": 2,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 840,
+  "vis_chars": 771,
+  "n_paras": 7,
+  "max_para_chars": 167,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 3
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t9r3",
+  "family": "q25_1434_t9",
+  "chapter_no": 3,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 938,
+  "vis_chars": 857,
+  "n_paras": 7,
+  "max_para_chars": 207,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "long-paragraph": 1,
+   "em-dash": 2
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t9r3",
+  "family": "q25_1434_t9",
+  "chapter_no": 4,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 810,
+  "vis_chars": 741,
+  "n_paras": 6,
+  "max_para_chars": 158,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t9r3",
+  "family": "q25_1434_t9",
+  "chapter_no": 5,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1177,
+  "vis_chars": 1070,
+  "n_paras": 10,
+  "max_para_chars": 149,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 5
+  },
+  "n_findings": 5,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t9r3",
+  "family": "q25_1434_t9",
+  "chapter_no": 6,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1113,
+  "vis_chars": 1013,
+  "n_paras": 9,
+  "max_para_chars": 170,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 3,
+   "stock-reaction-tic": 1
+  },
+  "n_findings": 4,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t9r3",
+  "family": "q25_1434_t9",
+  "chapter_no": 7,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 959,
+  "vis_chars": 878,
+  "n_paras": 7,
+  "max_para_chars": 165,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t9r3",
+  "family": "q25_1434_t9",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1073,
+  "vis_chars": 974,
+  "n_paras": 8,
+  "max_para_chars": 172,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 4
+  },
+  "n_findings": 4,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "t9r3",
+  "family": "q25_1434_t9",
+  "chapter_no": 9,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1188,
+  "vis_chars": 1068,
+  "n_paras": 9,
+  "max_para_chars": 174,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "quote-emphasis-tic": 1,
+   "em-dash": 4
+  },
+  "n_findings": 5,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "t9r3",
+  "family": "q25_1434_t9",
+  "chapter_no": 10,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 919,
+  "vis_chars": 806,
+  "n_paras": 12,
+  "max_para_chars": 151,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 1,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "v32r1",
+  "family": "q25_1434_v32",
+  "chapter_no": 1,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1028,
+  "vis_chars": 935,
+  "n_paras": 9,
+  "max_para_chars": 141,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 4
+  },
+  "n_findings": 4,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "v32r1",
+  "family": "q25_1434_v32",
+  "chapter_no": 2,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 816,
+  "vis_chars": 743,
+  "n_paras": 7,
+  "max_para_chars": 154,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "v32r1",
+  "family": "q25_1434_v32",
+  "chapter_no": 3,
+  "status": "OK",
+  "bucket": "renegotiate_only",
+  "chars": 1014,
+  "vis_chars": 906,
+  "n_paras": 10,
+  "max_para_chars": 175,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 3
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "v32r1",
+  "family": "q25_1434_v32",
+  "chapter_no": 4,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 984,
+  "vis_chars": 902,
+  "n_paras": 8,
+  "max_para_chars": 170,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "v32r1",
+  "family": "q25_1434_v32",
+  "chapter_no": 5,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1058,
+  "vis_chars": 961,
+  "n_paras": 9,
+  "max_para_chars": 175,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 1
+  },
+  "n_findings": 1,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "v32r1",
+  "family": "q25_1434_v32",
+  "chapter_no": 6,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 986,
+  "vis_chars": 901,
+  "n_paras": 8,
+  "max_para_chars": 173,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 1,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 3
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "v32r1",
+  "family": "q25_1434_v32",
+  "chapter_no": 7,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1198,
+  "vis_chars": 1090,
+  "n_paras": 9,
+  "max_para_chars": 206,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 2,
+   "long-paragraph": 1
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "v32r1",
+  "family": "q25_1434_v32",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1042,
+  "vis_chars": 957,
+  "n_paras": 7,
+  "max_para_chars": 182,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "v32r1",
+  "family": "q25_1434_v32",
+  "chapter_no": 9,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1104,
+  "vis_chars": 1014,
+  "n_paras": 7,
+  "max_para_chars": 221,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "em-dash": 2,
+   "long-paragraph": 1
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "v32r1",
+  "family": "q25_1434_v32",
+  "chapter_no": 10,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 820,
+  "vis_chars": 752,
+  "n_paras": 6,
+  "max_para_chars": 174,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "50%",
+  "types": {
+   "not-is-comparison": 1,
+   "em-dash": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "v32r2",
+  "family": "q25_1434_v32",
+  "chapter_no": 1,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1133,
+  "vis_chars": 1033,
+  "n_paras": 9,
+  "max_para_chars": 156,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 4
+  },
+  "n_findings": 4,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "v32r2",
+  "family": "q25_1434_v32",
+  "chapter_no": 2,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 880,
+  "vis_chars": 808,
+  "n_paras": 7,
+  "max_para_chars": 150,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "v32r2",
+  "family": "q25_1434_v32",
+  "chapter_no": 3,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 903,
+  "vis_chars": 826,
+  "n_paras": 7,
+  "max_para_chars": 141,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "v32r2",
+  "family": "q25_1434_v32",
+  "chapter_no": 4,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 833,
+  "vis_chars": 767,
+  "n_paras": 7,
+  "max_para_chars": 187,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "v32r2",
+  "family": "q25_1434_v32",
+  "chapter_no": 5,
+  "status": "OK",
+  "bucket": "rewrite_rescued",
+  "chars": 743,
+  "vis_chars": 675,
+  "n_paras": 6,
+  "max_para_chars": 146,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 3
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "v32r2",
+  "family": "q25_1434_v32",
+  "chapter_no": 6,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1280,
+  "vis_chars": 1156,
+  "n_paras": 9,
+  "max_para_chars": 174,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 5
+  },
+  "n_findings": 5,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "v32r2",
+  "family": "q25_1434_v32",
+  "chapter_no": 7,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 851,
+  "vis_chars": 781,
+  "n_paras": 6,
+  "max_para_chars": 172,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 1,
+   "not-is-comparison": 1
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "v32r2",
+  "family": "q25_1434_v32",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1224,
+  "vis_chars": 1107,
+  "n_paras": 9,
+  "max_para_chars": 168,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "v32r2",
+  "family": "q25_1434_v32",
+  "chapter_no": 9,
+  "status": "ARC_CONFLICT",
+  "bucket": "disposition",
+  "chars": 1101,
+  "vis_chars": 990,
+  "n_paras": 9,
+  "max_para_chars": 162,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 1,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 4
+  },
+  "n_findings": 4,
+  "is_dead": true,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "v32r2",
+  "family": "q25_1434_v32",
+  "chapter_no": 10,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 748,
+  "vis_chars": 683,
+  "n_paras": 6,
+  "max_para_chars": 161,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "60%",
+  "types": {
+   "em-dash": 1
+  },
+  "n_findings": 1,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "v32r3",
+  "family": "q25_1434_v32",
+  "chapter_no": 1,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 1046,
+  "vis_chars": 958,
+  "n_paras": 8,
+  "max_para_chars": 163,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "em-dash": 3
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "v32r3",
+  "family": "q25_1434_v32",
+  "chapter_no": 2,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 879,
+  "vis_chars": 803,
+  "n_paras": 7,
+  "max_para_chars": 143,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "em-dash": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "v32r3",
+  "family": "q25_1434_v32",
+  "chapter_no": 3,
+  "status": "OK",
+  "bucket": "rewrite_rescued",
+  "chars": 726,
+  "vis_chars": 663,
+  "n_paras": 6,
+  "max_para_chars": 156,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "em-dash": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "v32r3",
+  "family": "q25_1434_v32",
+  "chapter_no": 4,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 890,
+  "vis_chars": 815,
+  "n_paras": 7,
+  "max_para_chars": 163,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "DOUBTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "em-dash": 3
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "v32r3",
+  "family": "q25_1434_v32",
+  "chapter_no": 5,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 814,
+  "vis_chars": 749,
+  "n_paras": 7,
+  "max_para_chars": 158,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "INFERS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "em-dash": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "v32r3",
+  "family": "q25_1434_v32",
+  "chapter_no": 6,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 989,
+  "vis_chars": 898,
+  "n_paras": 8,
+  "max_para_chars": 189,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "READS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "em-dash": 2
+  },
+  "n_findings": 2,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "v32r3",
+  "family": "q25_1434_v32",
+  "chapter_no": 7,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 1079,
+  "vis_chars": 982,
+  "n_paras": 9,
+  "max_para_chars": 182,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "SUSPECTS"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "em-dash": 4,
+   "quote-emphasis-tic": 1
+  },
+  "n_findings": 5,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "v32r3",
+  "family": "q25_1434_v32",
+  "chapter_no": 8,
+  "status": "OK",
+  "bucket": "first_pass",
+  "chars": 871,
+  "vis_chars": 789,
+  "n_paras": 7,
+  "max_para_chars": 154,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "em-dash": 3
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": true,
+  "is_pass": true,
+  "empty": false
+ },
+ {
+  "run": "v32r3",
+  "family": "q25_1434_v32",
+  "chapter_no": 9,
+  "status": "NEEDS_HUMAN",
+  "bucket": "disposition",
+  "chars": 948,
+  "vis_chars": 871,
+  "n_paras": 6,
+  "max_para_chars": 272,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "BELIEVES",
+   "INFERS",
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "em-dash": 2,
+   "long-paragraph": 1
+  },
+  "n_findings": 3,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": false,
+  "empty": false
+ },
+ {
+  "run": "v32r3",
+  "family": "q25_1434_v32",
+  "chapter_no": 10,
+  "status": "OK",
+  "bucket": "rewrite_rescued",
+  "chars": 942,
+  "vis_chars": 844,
+  "n_paras": 8,
+  "max_para_chars": 139,
+  "notice_lines": 0,
+  "struct_lines": 0,
+  "required_events": [
+   "OBSERVES"
+  ],
+  "stutter_max_run": 0,
+  "run_e2": "70%",
+  "types": {
+   "em-dash": 5
+  },
+  "n_findings": 5,
+  "is_dead": false,
+  "is_first": false,
+  "is_pass": true,
+  "empty": false
+ }
+]

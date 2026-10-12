@@ -7,7 +7,7 @@
       </div>
       <div class="head-actions">
         <button class="btn btn-ghost" :disabled="importing" @click="importVoice">{{ importing ? '上传中…' : '导入参考音频' }}</button>
-        <button class="btn btn-primary" :disabled="store.busy.persona" @click="designVoice">
+        <button class="btn btn-primary" :disabled="store.busy.persona" @click="personaDlg = true">
           {{ store.busy.persona ? '设计中…（见任务队列）' : '⚡ 批量自动设计' }}
         </button>
         <input ref="refInput" type="file" accept=".wav,.mp3,.flac,.ogg" style="display:none" @change="onRefFile" />
@@ -154,6 +154,16 @@
         </div>
       </div>
     </div>
+
+    <div v-if="personaDlg" class="pmask" @click.self="personaDlg = false">
+      <div class="pdlg">
+        <div class="pdlg-title">批量自动设计 · 选范围</div>
+        <div class="pdlg-sub">LLM 逐角色猜描述 → VoiceDesign 抽预览 → 直接写入 voice_config（会先卸载 TTS 引擎腾显存）。</div>
+        <button class="btn pdlg-btn" @click="runPersonas(true)">仅设计未绑定角色（安全，不动已绑定）</button>
+        <button class="btn pdlg-btn pdlg-danger" @click="runPersonas(false)">全部人物重新设计 —— 覆盖所有已绑定音色</button>
+        <button class="btn btn-ghost pdlg-btn" @click="personaDlg = false">取消</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -166,7 +176,7 @@ import { playUrl } from '../audio/player.js'
 export default {
   name: 'CastView',
   data() {
-    return { store, selected: null, binding: null, engine: '', channel: 'zero_shot', refText: '', importing: false }
+    return { store, selected: null, binding: null, engine: '', channel: 'zero_shot', refText: '', importing: false, personaDlg: false }
   },
   computed: {
     current() {
@@ -258,7 +268,10 @@ export default {
       this.selected = first ? first.id : null
     },
     addAlias() { toast('别名库在 SQLite 阶段落地', 'warn') },
-    designVoice() { actions.generatePersonas({ advanced: false, batch_size: 40 }) },
+    runPersonas(newOnly) {
+      this.personaDlg = false
+      actions.generatePersonas({ advanced: false, batch_size: 40, new_only: newOnly })
+    },
     importVoice() {
       if (store.mode !== 'live') { toast('演示模式：后端未连接', 'warn'); return }
       this.$refs.refInput.click()
@@ -327,6 +340,12 @@ export default {
 </script>
 
 <style scoped>
+.pmask { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55); display: flex; align-items: center; justify-content: center; z-index: 50; }
+.pdlg { background: var(--bg2); border: 1px solid var(--line2); border-radius: 10px; padding: 18px; width: 400px; display: flex; flex-direction: column; gap: 10px; }
+.pdlg-title { font-weight: 700; }
+.pdlg-sub { font-size: 12px; color: var(--t2); line-height: 1.5; }
+.pdlg-btn { justify-content: center; }
+.pdlg-danger { background: rgba(240, 102, 95, 0.14); border-color: var(--red); color: var(--red); }
 .layout {
   display: grid;
   grid-template-columns: 1.1fr 1fr 1fr;

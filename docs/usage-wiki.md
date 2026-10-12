@@ -78,7 +78,7 @@ voice_config 里的 `mode` 字段只有两个值：`zero_shot`（纯克隆）/ `
   - `⌾ 保存修改` → `/api/chunks/{index}`
   - `▷ 试听本句`：只播**已生成的文件**，没有音频时按钮禁用
   - `↻ 重生成` → `/api/chunks/{index}/generate`
-  - `▶ 批量生成` → `/api/generate_batch`
+  - `▶ 批量生成` → `/api/generate_batch`（2026-10-12 改）：点击**先弹确认**（列出未完成段数 = pending+error），勾「以后不再弹出此确认」记在 localStorage `novel.skipGenConfirm`，此后直接启动。**运行中按钮变「⏹ 停止生成」** → `POST /api/cancel_audio`：任务在跑就置 cancel 标志（当前段出完才停，已生成音频保留，再点批量只补未做的）；空闲时该端点把卡在 `generating` 的段复位成 `pending`。
 - 章节切换按钮当前是装饰（无 handler）。
 - QC 框：`音频回听一致 CER x%`（ASR 回听 vs 台词）、`原文无损`（字级）、`转录一致/疑似漏字`。
 
@@ -87,7 +87,9 @@ voice_config 里的 `mode` 字段只有两个值：`zero_shot`（纯克隆）/ `
 左列人物表 → 中列绑定 → 右列 Voice Profile 库。
 
 - `导入参考音频`：上传 → **SenseVoice ASR 自动转写**出 ref_text 并弹出确认框（可改），情感建议一并带出。取消则只入库不绑定。
-- `⚡ 批量自动设计` → `/api/generate_personas`：跑 `generate_personas.py` 子进程（会先卸载 TTS 引擎腾显存），逐个人物 LLM 写描述 → VoiceDesign 抽预览 → 固化成 `clone` 参考并写进 voice_config。进度在生成车间的「音色」任务里看。
+- `⚡ 批量自动设计` → `/api/generate_personas`：跑 `generate_personas.py` 子进程（会先卸载 TTS 引擎腾显存），逐个人物 LLM 写描述 → VoiceDesign 抽预览 → 固化成 `clone` 参考并写进 voice_config。进度在生成车间的「音色」任务里看（任务队列里的「音色设计」就是这个按钮，同一个 persona 任务，不是两个功能）。
+  - **点击先弹二层窗口选范围**（2026-10-12）：`仅设计未绑定角色（安全）` = 后端 `new_only:true` → 脚本 `--new-only`，只补 voice_config 里没有的角色；`全部人物重新设计` = 全量，**会覆盖所有已绑定音色**；或取消。有定稿音色的书（如第1册）只走「仅未绑定」或干脆别点——补新角色一律走实验室造声 + `选用`，或造完重跑 `ebook_import.py --templates-only` 自动绑。
+  - **⚠ 模糊别名归并（实测代码）**：`_resolve_to_canonical` 先做归一化全等，再做**子串包含**（`xiaoman` 是 `xiaoman2` 的子串 → 必被 alias），最后才是 Jaccard≥阈值。刻意拉开的两个近似名（如 `XIAOMAN`/`XIAOMAN2`）**会被合并成同一个声音**，0.8 阈值拦不住子串这步。全量模式风险最大，仅未绑定模式同样会归并新角色。
 - **声音绑定**：下拉选音色行，下方彩色提示（本次新增）说明「保存后每句实际会发出什么声音」：
   - 🟢 绿 = 与试听一致（clone/custom，说明音色锁在哪、情绪从哪来）
   - 🔴 红 = 会跑偏（design 逐句重抽 / Kokoro 兜底 / clone 缺参考音频 / 未知类型）
@@ -106,15 +108,17 @@ voice_config 里的 `mode` 字段只有两个值：`zero_shot`（纯克隆）/ `
 
 | 方法 | 需要什么 | 产出 |
 |---|---|---|
-| **描述造声 design** | 一段音色描述（有 8 个模板，如「老者 · 沙哑」） | 一次性抽嗓子。**性别/年龄不由描述保证**：同描述换 seed 实测基频 115Hz（老年男）↔ 214Hz（近女/童声） |
+| **描述造声 design** | 一段音色描述（预置 7 模板 + 服务器模板库，如「老者 · 沙哑」） | 一次性抽嗓子。**性别/年龄不由描述保证**：同描述换 seed 实测基频 115Hz（老年男）↔ 214Hz（近女/童声） |
 | **参考克隆 clone** | 参考音频（可上传，自动 ASR 转写 ref_text） | 音色**完全**由录音决定。想要老人声就得有老人录音，写指令改不了年龄。**Qwen3-TTS 也能克隆**：`Qwen3-TTS Base 1.7B/0.6B 克隆`（`base17`/`base06`，零样本），生产 8 个声线走的就是「VoiceDesign 造嗓 → preview 当 ref_audio → Base 克隆」两段式 |
 | **固定音色 custom** | 模型自带说话人 + instruct | 稳定但不可扮角 |
 
 - 多模型连刷：勾选多个模型，一次请求逐个生成，左侧进度 `doneCount/总数`，冷加载最坏约 3 分钟（超时按 300s 设）。
 - **引擎下拉框里没有 Qwen 不是不能克隆**：`/api/engines` 只列 sidecar（cosy/index/kokoro 三个常驻服务），Qwen3-TTS 是主进程内加载，只出现在「模型」列表里。早期模型名只写「Base 1.7B 克隆」看不出归属，2026-10-11 统一改名带 `Qwen3-TTS` 前缀（安装器 `deploy/patches/relabel_qwen_models.py`，幂等，改 `app/voice_lab.py` 的 label，需重启生效）。
 - **情绪指令 / instruct 字段只在对应载体生效**：CosyVoice2 的「情感指令」模型才会读，且改成「改语气，不改年龄音色」。
+- **音色/情绪模板库**（2026-10-12）：描述与指令都可 `＋ 存为模板`（POST /api/voice_templates，落服务器 `alexandria/voice_templates/*.json`，跨书共享）；下拉里「📚」组即库内条目，电子书导入时 `voices/` 里的角色音色说明会自动入库。当前描述可直接改了再生成，库文件改名/直删要上服务器动。
 - 结果行显示：模型、生成耗时/音频时长、**seed**（随机也会显示真实数字，见 §3）、目标角色、试听音频、`选用`。
 - `选用`：把这条结果写成**当前下拉框选中角色**的 voice_config —— 早期版本会优先用记录上那个「生成时」的角色标签，导致点完 `选用` 别的角色被改、看着的角色没动（已修，按钮文案 `选用 → X` 现在就是实际写入对象）。注意它会**固化成 `type: clone`**（描述造声则把预览音频当 ref_audio），并带上服务端回传的实际引擎与通道。绑定后旧音频仍需去「角色与声音」重生成。
+  - **已占用红锁（2026-10-12）**：某条试听结果一旦被某角色选用，它的按钮变**红底**并回显「已选用 → 角色名」；此后切换目标角色不会改变该显示，红色期间点它只会**解除占用标记**（红→白，弹提示，原角色绑定不动），不会被悄悄选给别的角色；解除后再点才按当前目标角色写入，绑定成功立即重新变红。判定依据是 voice_config 的 `ref_audio` 路径与该条结果一致（design 看预览文件、clone 看参考样本、custom 看说话人名）。
 - 历史区：倒序分页（每页 20，可翻页 + 按角色筛），清单在 `designed_voices/voice_lab_manifest.json`。每条可直接：
   - `标注`：按音频仓库的词表打标（情绪/强度/感情/情节/音色质感/语速/音高/评级/备注，见 §2◆），写进记录的 `tags`；
   - 改文本：直接编辑那段试听文本（`record/update`）；
@@ -356,6 +360,7 @@ sudo apt-mark unhold $NV $KER
 | 克隆出来不像参考音频（例如要老人声却是少年） | 克隆音色 100% 来自 ref_audio；年龄描述写在 `character_style` 里，sidecar 根本不读 | 「角色与声音」重传/重选参考音频；要老人就录老人。段级 instruct 只改语气不改年龄 |
 | 同一角色每句音色都在飘 | voice_config 里 `type: design`（描述造声）被拿去量产 | 绑定处现在会给🔴红字警告；去声音实验室 `选用` 一条固化成 clone 参考 |
 | 批量生成直接报错不发声 | cosy/index + `zero_shot` + **空 ref_text** | 补 ref_text（ASR 可自动转写），或把通道切到「情感指令」 |
+| 批量生成**全量秒失败**（进度 0 done, N failed） | CUDA OOM：24G 卡被 **ollama llama-server（实测 14.4GiB，keep_alive 常驻）+ mineru VLLM（~6.7GiB）+ app.py 自身 2.5GiB** 挤满（2026-10-12 实录） | 生成前卸载 ollama 模型（`ollama stop <model>` 或配 `OLLAMA_KEEP_ALIVE=0`）、或停 mineru；确认法：`nvidia-smi` 看占用 PID，`ps -p <pid> -o args` 认进程 |
 | 每段 instruct 没效果 | 引擎是 Kokoro（`emo: none`），或 CosyVoice2 走纯克隆通道 | 看绑定区的情感载体说明；换引擎或换通道 |
 | 试听不到参考音频 | 全站原先没有 `<audio>` 元素 | 声音实验室已加参考音频试听条；「角色与声音」有 `试听当前绑定` |
 | 结果行显示 `seed -1`，复现不了 | 随机 seed 没落地 | 安装器 `LAB_SEED` 组已修：随机也抽真数并回显 |

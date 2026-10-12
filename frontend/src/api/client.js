@@ -74,8 +74,10 @@ export const api = {
   engines: () => request('/api/engines', { timeoutMs: 5000 }),
   emotions: () => request('/api/emotions', { timeoutMs: 5000 }),
   voiceLabModels: () => request('/api/voice_lab/models', { timeoutMs: 8000 }),
+  voiceTemplates: () => request('/api/voice_templates', { timeoutMs: 6000 }),
   voiceLabHistory: (params) => request(`/api/voice_lab/history?${qs(params)}`, { timeoutMs: 8000 }),
   voiceLabRecordUpdate: (body) => request('/api/voice_lab/record/update', { method: 'POST', body, timeoutMs: 15000 }),
+  voiceTemplateSave: (body) => request('/api/voice_templates', { method: 'POST', body, timeoutMs: 8000 }),
   voiceLabRecordDelete: (body) => request('/api/voice_lab/record/delete', { method: 'POST', body, timeoutMs: 15000 }),
   // 同步生成：含模型冷加载最坏 ~3 分钟
   voiceLabGenerate: (body) => request('/api/voice_lab/generate', { method: 'POST', body, timeoutMs: 300000 }),

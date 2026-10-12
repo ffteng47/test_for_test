@@ -11,6 +11,8 @@ E-books/
     <册名>/                    # 如 第1册 —— 一册 = 管线里一个「书目」（slug）
       meta.json                # 必需，见 §二
       docs/                    # 需求确认文档、音色提示词等（管线不读，人读）
+      voices/                  # 可选：每角色一个 <KEY>.json {"key","name","description"}（音色说明）
+        ...                    # 有则导入时进跨书音色模板库并尝试自动绑音，见 §四.1
       output/                  # 该书的转换脚本与中间产物（converter 按书定制，允许不同）
         annotated_script.json  # 必需：转换产出的标注剧本（可嵌在 output 的任意子目录）
         script_map.json        # 强烈建议：chunk→集映射（审听/交付账本，后端不读）
@@ -44,9 +46,11 @@ python deploy/ebook_import.py --check E-books/测试书/第1册  # 只校验（�
 
 **执行前提**：确认无生成任务在跑（处理器会探测后端，活着且有任务时直接拒绝）。导入只动文件、不重启后端。
 
+**音色模板与自动绑音（2026-10-12 加）**：册目录若有 `voices/`，导入时逐角色上传为跨书模板 `alexandria/voice_templates/<slug>__<KEY>.json`（格式 `{"kind":"voice","name","text"}`，text=音色说明），造声/克隆两条路都从这库取（实验室下拉 = 预置 7 + 模板库）。随后自动调 `deploy_patches/voice_bind.py`：拿每角色模板描述在 `designed_voices/*_meta.json` 与全部 `projects/*/voice_config.json` 里做**规范化全等**匹配，命中即写 clone 绑定（`--apply`）；已绑的不动，未造的列 pending。补传/改描述用 `python deploy/ebook_import.py --templates-only <册目录>`（不动书稿）。匹配键是描述文本本身，所以导入用的描述必须与当初造声送出去的一字不差（空白折叠后）。
+
 ## 五、导入之后仍要人做的事（标准管不了的部分）
 
-1. 未绑角色去声音实验室按提示词造声 `选用`（绑定即 `type: clone`）；未绑角色的段落生成会失败，保持 pending 无害。
+1. 未绑角色去声音实验室按提示词造声 `选用`（绑定即 `type: clone`）；未绑角色的段落生成会失败，保持 pending 无害。造完声后重跑 `python deploy/ebook_import.py --templates-only <册目录>` 即可自动绑音（描述全等命中），不必手动 `选用`。
 2. `rights.json` 必须人工填实（三判据 + 合同凭证），`check_rights.py` 不过关 → 不接单不生成母带。
 3. 集边界信息在 `script_map.json`，审听/交付按它对号，后端 chunk 里没有集号。
 

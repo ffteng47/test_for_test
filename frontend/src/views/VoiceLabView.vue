@@ -38,10 +38,11 @@
         <div class="field" v-if="method === 'design'">
           <div class="label">音色描述（自然语言，越具体越好）</div>
           <select class="tpl" v-model="voiceTpl" @change="applyVoiceTpl">
-            <option value="">📋 从预置模板填充…</option>
-            <option v-for="(t, i) in VOICE_TEMPLATES" :key="i" :value="i">{{ t.name }}</option>
+            <option value="">📋 从模板填充…（预置 {{ VOICE_TEMPLATES.length }} · 模板库 {{ libVoices.length }}）</option>
+            <option v-for="(t, i) in allVoiceTpls" :key="i" :value="i">{{ t.name }}</option>
           </select>
           <textarea v-model="description" rows="4" placeholder="如：少年男声，明亮俏皮，带一点顽劣的尾音，语速中等"></textarea>
+          <button class="btn btn-ghost btn-sm" @click="saveAsTpl('voice', description)">＋ 当前描述存为音色模板</button>
         </div>
 
         <template v-if="method === 'clone'">
@@ -69,8 +70,12 @@
             <select class="tpl" value="" @change="fillStyle('description', $event.target.value)">
               <option value="">📋 从规范情感词表填充…（{{ styleOptions.length }} 项）</option>
               <option v-for="o in styleOptions" :key="o.emotion" :value="o.instruct">{{ o.instruct }}</option>
+              <optgroup v-if="libEmotions.length" label="📚 模板库情绪指令">
+                <option v-for="o in libEmotions" :key="o.id" :value="o.text">{{ o.name }}</option>
+              </optgroup>
             </select>
             <input v-model="description" placeholder="如：用愤怒压抑的语气，语速偏慢" />
+            <button class="btn btn-ghost btn-sm" @click="saveAsTpl('emotion', description)">＋ 当前指令存为模板</button>
             <div class="hint">「CosyVoice2 克隆」是纯 zero-shot，音色完全来自上面的参考音频；想要老人声就录一段老人参考音频，写指令是没用的。</div>
           </div>
         </template>
@@ -85,8 +90,12 @@
             <select class="tpl" value="" @change="fillStyle('instruct', $event.target.value)">
               <option value="">📋 从规范情感词表填充…（{{ styleOptions.length }} 项）</option>
               <option v-for="o in styleOptions" :key="o.emotion" :value="o.instruct">{{ o.instruct }}</option>
+              <optgroup v-if="libEmotions.length" label="📚 模板库情绪指令">
+                <option v-for="o in libEmotions" :key="o.id" :value="o.text">{{ o.name }}</option>
+              </optgroup>
             </select>
             <input v-model="instruct" placeholder="如：calm, gentle, elderly male" />
+            <button class="btn btn-ghost btn-sm" @click="saveAsTpl('emotion', instruct)">＋ 当前指令存为模板</button>
           </div>
         </template>
 
@@ -137,8 +146,8 @@
           </div>
           <div class="r-acts">
             <audio :src="r.audio_url" controls preload="none"></audio>
-            <button class="btn btn-sm" :disabled="!!applying" @click="apply(r)">
-              {{ applying === r.id ? '绑定中…' : `选用 → ${currentCharName}` }}
+            <button class="btn btn-sm" :class="{ 'btn-used': isUsed(r) }" :disabled="!!applying" @click="useOrUnlock(r)">
+              {{ applying === r.id ? '绑定中…' : isUsed(r) ? `已选用 → ${boundCharOf(r).name}` : `选用 → ${currentCharName}` }}
             </button>
           </div>
         </div>
@@ -179,8 +188,8 @@
               {{ saving === r.id ? '保存中…' : '保存标注' }}
             </button>
             <button v-if="editing === r.id" class="btn btn-sm btn-ghost" @click="editing = ''">取消</button>
-            <button class="btn btn-sm" :disabled="applying === r.id" @click="apply(r)">
-              {{ applying === r.id ? '绑定中…' : `选用 → ${currentCharName}` }}
+            <button class="btn btn-sm" :class="{ 'btn-used': isUsed(r) }" :disabled="applying === r.id" @click="useOrUnlock(r)">
+              {{ applying === r.id ? '绑定中…' : isUsed(r) ? `已选用 → ${boundCharOf(r).name}` : `选用 → ${currentCharName}` }}
             </button>
             <button class="btn btn-sm" :disabled="saving === r.id" @click="toVault(r)">
               {{ saving === r.id ? '入库中…' : '存仓库' }}
@@ -232,6 +241,8 @@ export default {
       METHOD_HINT,
       VOICE_TEMPLATES,
       voiceTpl: '',
+      libVoices: [],
+      libEmotions: [],
       methods: [
         { key: 'design', name: '描述造声' },
         { key: 'clone', name: '参考克隆' },
@@ -242,6 +253,7 @@ export default {
       cloneList: [],
       styleOptions: [],
       applying: '',
+      unlocked: [],
       picked: ['vd17'],
       speakerLabel: null,
       description: '',
@@ -289,6 +301,10 @@ export default {
     firstLineOfSpeaker() {
       const seg = this.store.segments.find((s) => this.currentChar && s.speaker === this.currentChar.id)
       return seg ? seg.text : ''
+    },
+    allVoiceTpls() {
+      const seen = new Set(VOICE_TEMPLATES.map((t) => t.text))
+      return VOICE_TEMPLATES.concat(this.libVoices.filter((t) => !seen.has(t.text)))
     }
   },
   async created() {
@@ -299,6 +315,7 @@ export default {
     try { await this.loadHistory(0) } catch { /* 历史非关键路径 */ }
     try { this.facets = (await api.vaultSchema()).facets } catch { toast('标签词表加载失败，标注不可用', 'warn') }
     try { this.cloneList = await api.cloneVoices() } catch { this.cloneList = [] }
+    this.fetchTpls()
   },
   watch: {
     speakerLabel() { this.fillSample() },
@@ -373,7 +390,25 @@ export default {
       }
     },
     applyVoiceTpl() {
-      if (this.voiceTpl !== '') { this.description = VOICE_TEMPLATES[this.voiceTpl].text; this.voiceTpl = '' }
+      if (this.voiceTpl !== '') { this.description = this.allVoiceTpls[this.voiceTpl].text; this.voiceTpl = '' }
+    },
+    async fetchTpls() {
+      try {
+        const t = await api.voiceTemplates()
+        this.libVoices = t.filter((x) => x.kind === 'voice')
+        this.libEmotions = t.filter((x) => x.kind === 'emotion')
+      } catch { /* 模板库接口未部署时只留预置，不拦人 */ }
+    },
+    async saveAsTpl(kind, text) {
+      const t = (text || '').trim()
+      if (!t) { toast('先把描述/指令写好，再存为模板', 'warn'); return }
+      const name = window.prompt('模板名', t.slice(0, 18))
+      if (!name) return
+      try {
+        await api.voiceTemplateSave({ kind, name, text: t })
+        await this.fetchTpls()
+        toast(`✓ 已存为${kind === 'voice' ? '音色' : '情绪'}模板「${name}」`, 'ok')
+      } catch (e) { toast(`存模板失败：${e.message}`, 'err') }
     },
     fillStyle(field, text) { if (text) this[field] = text },
     fillSample() {
@@ -441,6 +476,26 @@ export default {
       try { this.history = (await api.voiceLabHistory()).records.slice(0, 20) } catch { /* ignore */ }
       if (!this.genError && this.results.length) toast(`${this.results.length} 条试听已生成`, 'ok')
     },
+    boundCharOf(r) {
+      const path = r.method === 'design' ? String(r.audio_url || '').replace(/^\//, '')
+        : r.method === 'clone' ? `clone_voices/${r.ref_audio}` : ''
+      return this.store.characters.find((c) => {
+        const cfg = c.config
+        if (!cfg) return false
+        if (r.method === 'custom') return cfg.type === 'custom' && cfg.voice === r.voice
+        return !!path && cfg.type === 'clone' && cfg.ref_audio === path
+      })
+    },
+    isUsed(r) { return !!this.boundCharOf(r) && !this.unlocked.includes(r.id) },
+    useOrUnlock(r) {
+      if (this.isUsed(r)) {
+        const name = this.boundCharOf(r).name
+        this.unlocked.push(r.id)
+        toast(`已解除「${name}」的占用标记，现在可选给其他角色（${name} 的原绑定本身未改动）`, 'warn')
+        return
+      }
+      this.apply(r)
+    },
     async apply(r) {
       if (!this.speakerLabel) { toast('先选择目标角色', 'warn'); return }
       const eng = r.engine || 'qwen'   // 服务端回传实际出声引擎，批量生成据此分发
@@ -472,8 +527,10 @@ export default {
       try {
         // 只认当前选中的目标角色：r.speaker 是「生成时」的标签，拿它当绑定对象会把声音写进别的角色
         const ok = await actions.saveVoiceConfig({ [this.speakerLabel]: cfg })
-        if (ok) toast(`✓ 已绑定「${this.currentCharName}」← ${r.model_label}（引擎 ${eng}）。旧音频不会自动变，去「角色与声音」点「重生成该角色台词」`, 'ok')
-        else toast('绑定失败：后端未保存，见右上角错误', 'err')
+        if (ok) {
+          this.unlocked = this.unlocked.filter((x) => x !== r.id)
+          toast(`✓ 已绑定「${this.currentCharName}」← ${r.model_label}（引擎 ${eng}）。旧音频不会自动变，去「角色与声音」点「重生成该角色台词」`, 'ok')
+        } else toast('绑定失败：后端未保存，见右上角错误', 'err')
       } finally {
         this.applying = ''
       }
@@ -498,6 +555,7 @@ export default {
 .chip-dim { background: var(--bg3); color: var(--t2); }
 .field { padding: 12px 16px 0; }
 .tpl { width: 100%; margin-bottom: 6px; }
+.btn-used { background: var(--red); border-color: var(--red); color: #fff; }
 .tabs { display: flex; gap: 6px; margin-top: 6px; }
 .tab {
   padding: 6px 14px; border: 1px solid var(--line2); background: var(--bg2);

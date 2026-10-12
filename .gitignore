@@ -40,3 +40,6 @@ info.txt
 # ---- SQLite 临时文件（即使 sampling 全量同步也排除）----
 sampling/**/*.db-shm
 sampling/**/*.db-wal
+
+# ---- 编辑器/Agent worktree（独立检出，不入库）----
+.qoder/worktrees/

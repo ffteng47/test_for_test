@@ -60,10 +60,42 @@ def validate(path):
     return data, sorted({e["speaker"] for e in data})
 
 
+def upload_templates(voldir, slug):
+    """voices/<KEY>.json {key,name,description} → 服务器 voice_templates/<slug>__<KEY>.json（模板库格式）。
+    返回上传数；voices/ 目录不存在返回 0（旧册无描述，跳过）。"""
+    vdir = os.path.join(voldir, "voices")
+    n = 0
+    if not os.path.isdir(vdir):
+        return 0
+    ssh(f"mkdir -p {ALEX}/voice_templates {ALEX}/deploy_patches")
+    for p in glob.glob(os.path.join(vdir, "*.json")):
+        key = os.path.basename(p)[:-5]
+        d = json.load(open(p, encoding="utf-8"))
+        rec = {"kind": "voice", "name": d.get("name") or f"{slug}·{key}", "text": d["description"]}
+        tmp = os.path.join(os.environ.get("TEMP", "/tmp"), f"tpl_{slug}_{key}.json")
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(rec, f, ensure_ascii=False, indent=1)
+        scp(tmp, f"{ALEX}/voice_templates/{slug}__{key}.json")
+        n += 1
+    return n
+
+
+def run_bind(slug):
+    """调服务器端 voice_bind 自动绑音；脚本没部署就只提示，不算失败。"""
+    has = ssh(f"test -f {ALEX}/deploy_patches/voice_bind.py && echo Y || echo N", capture=True)
+    if has != "Y":
+        print("voice_bind.py 未部署（scp deploy/voice_bind.py 到 deploy_patches/），本次跳过自动绑音")
+        return
+    out = ssh(f"cd {ALEX} && venv/bin/python deploy_patches/voice_bind.py --slug {slug} --apply", capture=True)
+    print("自动绑音:", out.replace("\n", " ")[:600])
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("voldir")
     ap.add_argument("--check", action="store_true", help="只校验不导入")
+    ap.add_argument("--templates-only", action="store_true",
+                    help="只上传 voices/ 音色模板并尝试自动绑音，不动书稿（补绑/改描述用）")
     a = ap.parse_args()
 
     meta = json.load(open(os.path.join(a.voldir, "meta.json"), encoding="utf-8"))
@@ -73,6 +105,11 @@ def main():
     script = find_script(a.voldir)
     entries, speakers = validate(script)
     print(f"校验通过: {script}\n  entries={len(entries)} speakers={len(speakers)} {speakers}")
+
+    if a.templates_only:
+        print(f"音色模板上传: {upload_templates(a.voldir, slug)} 个 → {ALEX}/voice_templates/{slug}__*")
+        run_bind(slug)
+        return
 
     other = os.path.join(os.path.dirname(script), "script_map.json")
     book = f"{ALEX}/projects/{slug}"
@@ -114,6 +151,11 @@ def main():
     scp(script, f"{book}/annotated_script.json")
     if os.path.exists(other):
         scp(other, f"{book}/script_map.json")
+
+    n_tpl = upload_templates(a.voldir, slug)
+    if n_tpl:
+        print(f"音色模板上传: {n_tpl} 个 → {ALEX}/voice_templates/{slug}__*")
+    run_bind(slug)
 
     vc_raw = ssh(f"cat {book}/voice_config.json 2>/dev/null", capture=True)
     bound = set(json.loads(vc_raw)) if vc_raw else set()

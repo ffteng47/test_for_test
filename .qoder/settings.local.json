@@ -35,7 +35,9 @@
       "Bash(git log --oneline -8; echo ---; ls; echo ---; find . -maxdepth 3 -type d -name \"*t8*\" -o -maxdepth 3 -type d -name \"*variant*\" 2>/dev/null | grep -v node_modules | head)",
       "Bash(grep -rn \"not committable\" plot_engine --include=*.py | head; echo ===; grep -rn \"NEEDS_HUMAN\" plot_engine/revision_actions.py plot_engine/revision.py plot_engine/rescue.py 2>/dev/null | head -20)",
       "Bash(ls \"E:/github/semecTeachGroup/novel-audiobook\" | head -40; echo ---; find \"E:/github/semecTeachGroup/novel-audiobook\" -maxdepth 2 -iname \"*第一册*\" -o -maxdepth 2 -iname \"*册*\" 2>/dev/null | head)",
-      "Bash(ls -R \"E:/github/semecTeachGroup/novel-audiobook/E-books\" 2>/dev/null | head -30; echo ====; ls \"E:/github/semecTeachGroup/novel-audiobook/第1册/output/第1册\" | head)"
+      "Bash(ls -R \"E:/github/semecTeachGroup/novel-audiobook/E-books\" 2>/dev/null | head -30; echo ====; ls \"E:/github/semecTeachGroup/novel-audiobook/第1册/output/第1册\" | head)",
+      "Bash(cd /e/github/semecTeachGroup/novel-audiobook; PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe -m pytest plot_engine/tests/test_derive_contract.py -q 2>&1 | tail -6)",
+      "Bash(cd /e/github/semecTeachGroup/novel-audiobook; git add plot_engine/derive.py plot_engine/tests/test_derive_contract.py && git commit -m \"fix\\(derive\\): reader_signals 按目标态到达过滤（v4.0 §3.4 / E25 机制修）——gate 成熟后读者已达 hinted/knows 的 fact 不再每章进契约，deceived 属旁支错误态不算到达；+1 测，471 绿\" -q && git add docs/samples/blind-v2paired-scores-agent.md && git commit -q -m \"docs\\(samples\\): 配对盲评第一棒（agent 首评）10 组全序——低置信组（组1 六变体全三重锚定）与近并列位已标注；key 未读\" && git log --oneline -2)"
     ]
   }
 }
