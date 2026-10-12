@@ -63,142 +63,168 @@ _RUBRIC = [("R1", "不复述", "同一批信息没有被近似重写 2–3 遍")
            ("R6", "单章可读", "不了解 State/契约也能说出谁在查什么、这章新发生了什么")]
 
 _HTML = r"""<!DOCTYPE html>
-<html lang="zh"><meta charset="utf-8"><title>盲评打分表 __N__ 章</title>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>盲评打分表 · __N__ 章</title>
 <style>
- body{font-family:system-ui,"Microsoft YaHei",sans-serif;margin:0 auto;max-width:52em;padding:1em 1.5em 6em;
-      line-height:1.8;color:#20252b;background:#fbfbf9}
- header{position:sticky;top:0;background:#fbfbf9;border-bottom:2px solid #444;padding:.5em 0;margin-bottom:1em;z-index:9}
- #bar{display:flex;gap:1em;align-items:center;flex-wrap:wrap;font-size:.95rem}
- progress{width:12em;height:.8em}
- button{padding:.35em .9em;font-size:.95rem;cursor:pointer}
- .ch{border-top:1px solid #ccc;padding:1.2em 0 1.6em}
- .ch h2{font-size:1rem;margin:0 0 .4em;color:#666}
- .txt{background:#fff;border:1px solid #e2e2dc;padding:1em 1.2em;white-space:pre-wrap;margin:.4em 0 .9em}
- label{margin-right:.9em;font-size:.93rem}
- .rrow{display:grid;grid-template-columns:max-content 1fr auto auto;gap:.15em .8em;
-       align-items:baseline;margin-bottom:.35em}
- .rrow b{font-weight:600} .rrow small{color:#777;font-weight:400}
- textarea{width:100%;box-sizing:border-box;min-height:2.4em;font:inherit;font-size:.9rem}
- .done h2::after{content:" ✓";color:#1a7f37}
- #out{width:100%;height:16em;box-sizing:border-box;font:12px/1.5 monospace;white-space:pre}
- .warn{color:#b3261e;font-size:.85rem;margin-left:1em}
-</style>
-<header><div id="bar">
- <b>盲评打分表</b>
- <span>已完成 <span id="n">0</span>/__N__</span><progress id="p" max="__N__" value="0"></progress>
- <button onclick="dump()">导出评分</button><button onclick="copy()">复制</button>
- <span class="warn">这里没有出处、没有判定状态——评分收齐前不要打开答案键</span>
+:root{--bg:#fbf9f5;--fg:#22221f;--mut:#8a8578;--line:#e4dfd3;--ok:#2f7d4f;--todo:#c9b98a}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.95 "Source Han Serif SC","Songti SC","Noto Serif CJK SC",serif;
+  background:var(--bg);color:var(--fg)}
+#app{display:flex;min-height:100vh}
+aside{width:236px;flex:none;border-right:1px solid var(--line);padding:16px 0;
+  position:sticky;top:0;height:100vh;overflow:auto;background:#f4f0e6}
+aside h1{font:400 13px/1 system-ui;margin:0 16px 6px;color:var(--mut);letter-spacing:.14em}
+#prog{font:12px system-ui;color:var(--mut);margin:0 16px 12px}
+#toc a{display:flex;align-items:center;gap:8px;padding:8px 16px;font:14px system-ui;
+  color:inherit;text-decoration:none;border-left:3px solid transparent}
+#toc a:hover{background:#ece5d5}
+#toc a.on{border-left-color:var(--fg);background:#ece5d5;font-weight:700}
+#toc i{width:8px;height:8px;border-radius:99px;flex:none;background:var(--todo)}
+#toc i.ok{background:var(--ok)}
+main{flex:1;max-width:880px;padding:30px 48px 120px}
+h2{font-size:23px;margin:0 0 2px}
+.hint{font:12px/1.8 system-ui;color:var(--mut);margin:0 0 20px}
+p{margin:0 0 1.05em;text-indent:2em}
+form{margin:26px 0 0;border-top:1px solid var(--line);padding-top:16px;
+  font:14px/1.7 system-ui;background:#f1ece0;border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.rrow{display:flex;align-items:baseline;gap:10px;padding:7px 0;border-bottom:1px dotted #ddd6c6}
+.rrow:last-of-type{border-bottom:0}
+.rrow b{font:600 14px system-ui;min-width:132px}
+.rrow small{color:var(--mut);font:12px system-ui;flex:1}
+.rrow .opt{display:flex;gap:6px}
+.rrow label{font:13px system-ui;border:1px solid var(--line);background:#fff;border-radius:99px;
+  padding:3px 12px;cursor:pointer;white-space:nowrap}
+.rrow label:has(input:checked){background:var(--fg);color:#fff;border-color:var(--fg)}
+textarea{width:100%;box-sizing:border-box;min-height:3em;margin-top:10px;
+  font:14px/1.6 system-ui;border:1px solid var(--line);border-radius:6px;padding:8px 10px;background:#fff}
+.btn{font:13px system-ui;padding:6px 14px;border:1px solid var(--line);background:#fff;
+  border-radius:99px;cursor:pointer;margin:12px 6px 0 0}
+#out{width:100%;height:18em;font:12px/1.5 ui-monospace,Consolas,monospace;white-space:pre;
+  border:1px solid var(--line);border-radius:6px;padding:10px;background:#fff;margin-top:10px}
+details{margin-top:14px;font:13px/1.7 system-ui}
+.keys{font:12px system-ui;color:var(--mut);margin:26px 0 0}
+@media(max-width:760px){
+  aside{position:sticky;width:100%;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:10px 0}
+  #toc{display:flex;overflow:auto;padding:0 8px}#toc a{border-left:0;flex:none;padding:6px 9px}
+  main{padding:18px 20px 90px}}
+</style></head><body><div id="app">
+<aside><h1>盲评（无出处）</h1><div id="prog"></div><nav id="toc"></nav></aside>
+<main id="body"></main>
 </div>
-<div style="font-size:.85rem;color:#666;margin-top:.3em">
- 每章：六条逐条判<b>过/不过</b>（<b>全过才算这章过</b>），再打「愿意付费读」，最后补一句为什么。
- 读完再判，别回头改；判不出就留空（留空计入「证据缺失」，不算过）。</div></header>
-<main id="m"></main>
-<section style="border-top:2px solid #444;padding-top:1em">
- <h2>评分导出（先复制，再粘回仓库落盘；页面不联网，分数只存在这台机器的浏览器里）</h2>
- <textarea id="out" readonly></textarea></section>
 <script>
 const CH=__DATA__, R=__R__, K="blind-__SEED__", N=__N__;
 let S={}; try{S=JSON.parse(localStorage.getItem(K)||"{}")}catch(e){S={}}
-const V={1:"过",0:"不过"};
-R.forEach(function(r){
-  var row=document.createElement("div");row.className="rrow";
-  var lab=document.createElement("b");lab.textContent=r[0]+" "+r[1];
-  var hint=document.createElement("small");hint.textContent=r[2];
-  row.appendChild(lab);row.appendChild(hint);
-  [1,0].forEach(function(v){
-    var l=document.createElement("label");
-    var i=document.createElement("input");
-    i.type="radio";i.name=r[0];i.value=v;l.appendChild(i);
-    l.appendChild(document.createTextNode(v?"过":"不过"));row.appendChild(l);});
-  window["mk_"+r[0]]=row;});
-function payRow(c){
-  var row=document.createElement("div");row.className="rrow";
-  var lab=document.createElement("b");lab.textContent="愿意付费读";row.appendChild(lab);
-  [[1,"是"],[0,"否"]].forEach(function(o){
-    var l=document.createElement("label");var i=document.createElement("input");
-    i.type="radio";i.name="pay_"+c;i.value=o[0];l.appendChild(i);
-    l.appendChild(document.createTextNode(o[1]));row.appendChild(l);});
-  return row;}
-function lenRow(c){
-  var row=document.createElement("div");row.className="rrow";
-  var lab=document.createElement("b");lab.textContent="长度是否影响你的判断";row.appendChild(lab);
-  [[1,"是"],[0,"否"],["n","没注意"]].forEach(function(o){
-    var l=document.createElement("label");var i=document.createElement("input");
-    i.type="radio";i.name="len_"+c;i.value=o[0];l.appendChild(i);
-    l.appendChild(document.createTextNode(o[1]));row.appendChild(l);});
-  return row;}
-var m=document.getElementById("m");
-CH.forEach(function(c){
-  var sec=document.createElement("section");sec.className="ch";sec.id="c"+c.i;
-  var h=document.createElement("h2");h.textContent="第 "+c.i+" 章";sec.appendChild(h);
-  var p=document.createElement("div");p.className="txt";p.textContent=c.t;sec.appendChild(p);
-  R.forEach(function(r){var n=window["mk_"+r[0]].cloneNode(true);
-    n.querySelectorAll("input").forEach(function(i){i.name=r[0]+"_"+c.i;});sec.appendChild(n);});
-  sec.appendChild(payRow(c.i));sec.appendChild(lenRow(c.i));
-  var w=document.createElement("div");w.innerHTML="<small>一句为什么</small>";
-  var t=document.createElement("textarea");t.id="why_"+c.i;w.appendChild(t);sec.appendChild(w);
-  m.appendChild(sec);});
-function get(n){var e=document.querySelector('[name="'+n+'"]:checked');return e?e.value:"";}
-function set(n,v){if(v===""||v==null)return;
-  var e=document.querySelector('[name="'+n+'"][value="'+v+'"]');if(e)e.checked=true;}
-function rec(c){var o={};R.forEach(function(r){o[r[0]]=get(r[0]+"_"+c);});
-  o.pay=get("pay_"+c);o.len=get("len_"+c);
-  o.why=(document.getElementById("why_"+c).value||"").trim();return o;}
-function done(o){return !!o && o.pay!=="" && R.every(function(r){return o[r[0]]!=="";});}
-function refresh(){
-  var s={},k=0;
-  CH.forEach(function(c){var o=rec(c.i);s[c.i]=o;if(done(o))k++;});
-  localStorage.setItem(K,JSON.stringify(s));
-  document.getElementById("n").textContent=k;
-  document.getElementById("p").value=k;
-  document.querySelectorAll(".ch").forEach(function(e){
-    e.classList.toggle("done",done(s[e.id.slice(1)]));});
-  dump(s);}
-function table(s){
+let idx=0;
+const V={"1":"过","0":"不过"};
+function done(o){return !!o && o.pay!=="" && R.every(function(r){return o[r[0]]!==""});}
+function toc(){
+  var k=CH.filter(function(c){return done(S[c.i]);}).length;
+  document.getElementById("prog").textContent="已完成 "+k+" / "+N;
+  document.getElementById("toc").innerHTML=CH.map(function(c,i){
+    return '<a data-i="'+i+'" class="'+(i===idx?"on":"")+'"><i class="'
+      +(done(S[c.i])?"ok":"")+'"></i>第 '+c.i+' 章</a>';}).join("");}
+function field(name,opts){
+  var w=document.createElement("span");w.className="opt";
+  opts.forEach(function(o){
+    var l=document.createElement("label"),i=document.createElement("input");
+    i.type="radio";i.name=name;i.value=o[0];l.appendChild(i);
+    l.appendChild(document.createTextNode(o[1]));w.appendChild(l);});
+  return w;}
+function body(){
+  var c=CH[idx], o=S[c.i]||{}, m=document.getElementById("body");
+  m.innerHTML="";
+  var h=document.createElement("h2");h.textContent="第 "+c.i+" 章";m.appendChild(h);
+  var p=document.createElement("div");p.className="hint";
+  p.textContent="读完再判，别回头改；六条全过才算这章过；判不出就留空（留空算证据缺失，不算过）。";
+  m.appendChild(p);
+  (c.t||"（本轮没有产出正文）").split(/\n\s*\n/).forEach(function(s){
+    var q=document.createElement("p");q.textContent=s.trim();m.appendChild(q);});
+  var f=document.createElement("form");
+  R.forEach(function(r){
+    var row=document.createElement("div");row.className="rrow";
+    var b=document.createElement("b");b.textContent=r[0]+" "+r[1];
+    var sm=document.createElement("small");sm.textContent=r[2];
+    row.appendChild(b);row.appendChild(sm);row.appendChild(field(r[0]+"_"+c.i,[[1,"过"],[0,"不过"]]));
+    f.appendChild(row);});
+  [["pay","愿意付费读",[[1,"是"],[0,"否"]]],
+   ["len","长度影响判断",[[1,"是"],[0,"否"],["n","没注意"]]]].forEach(function(x){
+    var row=document.createElement("div");row.className="rrow";
+    var b=document.createElement("b");b.textContent=x[1];row.appendChild(b);
+    row.appendChild(document.createElement("small"));
+    row.appendChild(field(x[0]+"_"+c.i,x[2]));f.appendChild(row);});
+  var t=document.createElement("textarea");t.id="why_"+c.i;t.placeholder="一句为什么";
+  t.value=o.why||"";f.appendChild(t);
+  var be=document.createElement("button");be.type="button";be.className="btn";be.textContent="导出评分";
+  var bc=document.createElement("button");bc.type="button";bc.className="btn";bc.textContent="复制到剪贴板";
+  be.onclick=fill; bc.onclick=function(){fill();var a=document.getElementById("out");
+    a.select();try{document.execCommand("copy")}catch(e){}};
+  f.appendChild(be);f.appendChild(bc);
+  var d=document.createElement("details");d.innerHTML="<summary>导出预览（粘回仓库落盘；页面不联网，分数只在这台机器上）</summary>";
+  var a=document.createElement("textarea");a.id="out";a.readOnly=true;d.appendChild(a);f.appendChild(d);
+  m.appendChild(f);
+  R.forEach(function(r){if(o[r[0]]!==undefined&&o[r[0]]!=="")
+    set(r[0]+"_"+c.i,o[r[0]]);});
+  if(o.pay)set("pay_"+c.i,o.pay); if(o.len)set("len_"+c.i,o.len);
+  var kp=document.createElement("p");kp.className="keys";
+  kp.textContent="快捷键：↑↓ 或 j/k 翻章｜1–6 给 R1–R6 打「过」，按 Shift+1–6 打「不过」｜Ctrl+S 导出";
+  m.appendChild(kp);}
+function set(n,v){var e=document.querySelector('[name="'+n+'"][value="'+v+'"]');if(e)e.checked=true;}
+function rec(){
+  var c=CH[idx], o={};
+  R.forEach(function(r){var e=document.querySelector('[name="'+r[0]+"_"+c.i+'"]:checked');o[r[0]]=e?e.value:"";});
+  var pe=document.querySelector('[name="pay_'+c.i+'"]:checked');o.pay=pe?pe.value:"";
+  var le=document.querySelector('[name="len_'+c.i+'"]:checked');o.len=le?le.value:"";
+  o.why=(document.getElementById("why_"+c.i).value||"").trim();
+  if(o.pay===""&&o.len===""&&o.why===""&&R.every(function(r){return o[r[0]]==="";}))delete S[c.i];
+  else S[c.i]=o;
+  localStorage.setItem(K,JSON.stringify(S));}
+function table(){
   var H=["章","R1","R2","R3","R4","R5","R6","六条全过","愿意付费读","长度影响","理由"];
   var rows=CH.map(function(c){
-    var o=s[c.i]||{};
-    var vs=R.map(function(r){return o[r[0]]===""?"":V[o[r[0]]];});
-    while(vs.length<6)vs.push("");
-    var pass=vs.every(function(v){return v==="过";});
-    var pay=o.pay===""?"":(o.pay==="1"?"是":"否");
-    var len=o.len===""?"":(o.len==="n"?"没注意":(o.len==="1"?"是":"否"));
-    return "| "+[c.i].concat(vs).concat([pass?"过":"不过",pay,len,
+    var o=S[c.i]||{};
+    var vs=R.map(function(r){return o[r[0]]?V[o[r[0]]]:"";});
+    var all=vs.length===6&&vs.every(function(v){return v==="过";});
+    return "| "+[c.i].concat(vs).concat([all?"过":"不过",
+      o.pay?((o.pay==="1")?"是":"否"):"",
+      o.len?((o.len==="n")?"没注意":((o.len==="1")?"是":"否")):"",
       (o.why||"").replace(/[|\r\n]/g," ")]).join(" | ")+" |";});
-  var doneN=CH.filter(function(c){return done(s[c.i]);}).length;
-  var np=CH.filter(function(c){var o=s[c.i]||{};
+  var dn=CH.filter(function(c){return done(S[c.i]);}).length;
+  var np=CH.filter(function(c){var o=S[c.i]||{};
     return R.every(function(r){return o[r[0]]==="1";});}).length;
-  var py=CH.filter(function(c){return (s[c.i]||{}).pay==="1";}).length;
-  return ["| "+H.join(" | ")+" |","|"+H.map(function(){return "---";}).join("|")+"|"]
-    .concat(rows).concat(["",
-      "完成 "+doneN+"/"+N+"｜六条全过 "+np+" 章（"+(N?Math.round(np/N*100):0)+"%）"+
-      "｜愿意付费读 "+py+" 章（"+(N?Math.round(py/N*100):0)+"%）",
-      "留空 "+(N-doneN)+" 章（计入证据缺失，不算过）｜种子 __SEED__"]).join("\n");}
-function dump(s){s=s||JSON.parse(localStorage.getItem(K)||"{}");
-  document.getElementById("out").value=table(s);}
-function copy(){var t=document.getElementById("out");t.select();
-  try{document.execCommand("copy")}catch(e){}}
-document.addEventListener("change",refresh);
-document.addEventListener("input",refresh);
-CH.forEach(function(c){var o=S[c.i]||{};
-  R.forEach(function(r){set(r[0]+"_"+c.i,o[r[0]]);});
-  set("pay_"+c.i,o.pay);set("len_"+c.i,o.len);
-  if(o.why)document.getElementById("why_"+c.i).value=o.why;});
-refresh();
-</script>
+  var py=CH.filter(function(c){return (S[c.i]||{}).pay==="1";}).length;
+  return ["| "+H.join(" | ")+" |","|"+H.map(function(){return "---";}).join("|")+"|"].concat(rows)
+    .concat(["","完成 "+dn+"/"+N+"｜六条全过 "+np+" 章（"+(N?Math.round(np/N*100):0)+"%）"+
+             "｜愿意付费读 "+py+" 章（"+(N?Math.round(py/N*100):0)+"%）",
+             "留空 "+(N-dn)+" 章（证据缺失，不算过）｜种子 __SEED__"]).join("\n");}
+function fill(){var a=document.getElementById("out");if(a)a.value=table();}
+function go(i){rec();idx=Math.max(0,Math.min(N-1,i));toc();body();window.scrollTo(0,0);}
+document.addEventListener("click",function(e){
+  var a=e.target.closest("#toc a");if(a){go(+a.dataset.i);e.preventDefault();}});
+document.addEventListener("change",function(e){
+  if(e.target.closest("form")){rec();toc();}});
+document.addEventListener("input",function(e){
+  if(e.target.tagName==="TEXTAREA"&&e.target.id!=="out")rec();});
+document.addEventListener("keydown",function(e){
+  var typing=e.target.tagName==="TEXTAREA";
+  if(!typing&&(e.key==="ArrowDown"||e.key==="j")){go(idx+1);e.preventDefault();}
+  if(!typing&&(e.key==="ArrowUp"||e.key==="k")){go(idx-1);e.preventDefault();}
+  if(e.ctrlKey&&e.key.toLowerCase()==="s"){fill();e.preventDefault();return;}
+  if(!typing&&e.key>="1"&&e.key<="6"){set(R[+e.key-1][0]+"_"+CH[idx].i,e.shiftKey?"0":"1");rec();toc();}
+  });
+toc();body();
+</script></body></html>
 """
 
 
 def render_html(items: List[dict], seed: int) -> str:
-    """离线打分页：六条 rubric + 愿意付费读 + 长度影响，localStorage 暂存、纯前端导出。
+    """逐章翻阅的打分页：复用 `viewer.py` 的左章节右正文壳，判定收在正文下方。
 
     刻意**不含出处、不含判定状态、不联网**——页面上任何字节都不该让人反推出是哪一臂，
-    否则盲评就退化成带答案键的复核（模块 docstring 立的就是这条解耦）。
+    否则盲评退化成带答案键的复核（模块 docstring 立的就是这条解耦）。90 章排成一张长墙
+    等于没出题：评分人翻不动就会开始跳章，跳章的表不能再当普查读。
     """
-    import html
-    import json
-
-    data = [{"i": x["blind_id"], "t": html.escape((x["text"] or "").strip())} for x in items]
+    data = [{"i": x["blind_id"], "t": (x["text"] or "").strip()} for x in items]
     out = _HTML.replace("__DATA__", _js(data)).replace("__R__", _js(_RUBRIC))
     out = out.replace("__N__", str(len(items))).replace("__SEED__", str(seed))
     return out
