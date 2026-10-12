@@ -58,7 +58,8 @@ def probe(base_url: str, models) -> list:
             except Exception as e:                      # 端点离线/模型不在盘上，都要显式记
                 got[label] = (None, f"报错 {type(e).__name__}: {e}", False, 0, "")
         rows.append({"model": m, "读数": got,
-                     "生效开关": next((k for k, v in got.items() if v[2]), None)})
+                     # 生效＝正文干净**且** reasoning 归零；只把思考搬进 reasoning 字段不算关
+                     "生效开关": next((k for k, v in got.items() if v[2] and v[3] == 0), None)})
     return rows
 
 
