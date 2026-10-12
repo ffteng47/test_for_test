@@ -25,7 +25,9 @@ _VALID_TYPES = frozenset(get_args(EventType))
 _ID_RE = re.compile(r"^(?:char|fact|item|loc|faction|realm|ability|region|rel)_\d+$")
 # 尺的刻度号：写进 run.log，读数才能归到某一把尺上。v3.1 = 纯模型抽取；
 # v3.2 = 加上 `_promote_infers` 确定性提升（`docs/phase1-merged-plan-final.md` §7.3-1）。
-EXTRACTION_RULER = "v3.2-infers-promotion"
+# v3.3 = 抽取提示词加「类型怎么选」判据（E18：belief 三兄弟与 knowledge 四兄弟无可区分口径）
+#        ⇒ 抽取读数与 v3.2 不可并列，历史读数靠尺戳分开。
+EXTRACTION_RULER = "v3.3-belief-type-criteria"
 
 # 本通道只承接 reducer 真能消费的 event_type，且键名逐一对齐 01 §4.1 的实际取用（reducer 里
 # 的 event.payload[...]）。缺键的产物放下去只会变成 MALFORMED_PROPOSAL 级联，归因反而更难。
@@ -235,6 +237,9 @@ def extract_prompt(draft, scene_plan, contract, state) -> List[dict]:
         '"payload": object, "paragraph": 整数段号}。',
         "event_type 只能取（本阶段只承接这些，其余写了也没用）:",
         f"  {taxonomy}。",
+        "类型按「该事实如何进入人物内心」选：OBSERVES=在场亲眼注意到；READS=读到写着的文字；"
+        "IS_TOLD=被人当面告知；INFERS=由已知证据推出；BELIEVES=内心确认某事为真；"
+        "SUSPECTS=起疑并把嫌疑指向某人/某事；DOUBTS=明确怀疑或否定该事。",
         f"payload 必须给全这些键: {_SCHEMA_HINT}。",
         "payload 的键名只能是上面列出的键名本身，绝不要把事件类型名（如 OBSERVES）写成键。",
         "fact_id / conclusion_fact_id / stated_fact_id / audience 这些键的值必须是下面词表里"

@@ -175,13 +175,18 @@ def _proposal_lines(props) -> List[str]:
             f"payload={p.payload}" for p in props] or ["- （无）"]
 
 
+# 指引文本的刻度号（与 `EXTRACTION_RULER` 同族）：FIX_GUIDE 也是尺面文本——它喂给修订环/写手，
+# 改任何一条措辞都可能改变读数。g2 = 补上 SUSPECTS 写法判据（E18：漏讲导致 ch07 按指引改不出）。
+# 历史 run.log 没有这一栏 ⇒ 无指引戳的跑法一律算 g1（H5.1 缺 SUSPECTS 的那版）。
+GUIDE_VERSION = "g2-suspects-added"
 FIX_GUIDE: Dict[str, str] = {
     "H1.1": "死人不能行动：把这条行动换成在场活人来做，或先写清楚他其实还没死",
     "I7": "同 H1.1（可见性一致性）：已死角色不能是事件 actor",
     "H2.2": "该角色本章没拿到这条知识：补一场他亲眼看到 / 读到 / 被告知该事实的戏",
     "H5.1": "缺一个必需类型的事件，把它写成看得见的动作——INFERS=由已知证据推出结论；"
             "READS=读到写着的文字；IS_TOLD=有人当面告知；OBSERVES=在场亲眼注意到；"
-            "BELIEVES=内心确认某事；DOUBTS=明确起疑",
+            "BELIEVES=内心确认某事；SUSPECTS=起疑并把嫌疑指向某人/某事（介于怀疑与确认之间的中间态）；"
+            "DOUBTS=明确起疑",
     "H5.3": "must_change 没实现：让那个字段真被对应动作改掉——"
             "belief→Believes/Suspects/Doubts，knowledge→Observes/Reads/Is_told/Infers",
     "H5.4": "must_not_change 被动了：本章别让那个字段发生任何变化",
@@ -362,7 +367,8 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
         # 就是这样）不能把 traceback 撒在半小时输出后面，也不能假装还有报告。
         where = f"已落盘的逐章快照：{dump_dir}" if dump_dir else "（未传 --dump-dir，逐章快照没落盘）"
         return None, f"模型在实验中途不可用，本报告作废。{where}\n原因：{e}", None
-    note = f"{msg}｜prompt={prompt_version(arm)}｜抽取尺={EXTRACTION_RULER}｜夹具={fx.LADDER_VERSION}"
+    note = (f"{msg}｜prompt={prompt_version(arm)}｜抽取尺={EXTRACTION_RULER}"
+            f"｜指引={GUIDE_VERSION}｜夹具={fx.LADDER_VERSION}")
     if fail_stop and report.unresolved_chapters:
         note += f"｜停在第 {report.unresolved_chapters[-1]} 章（P2 语义，分母 = 停前生成章数）"
     if dump_dir is not None:

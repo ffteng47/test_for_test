@@ -4,6 +4,25 @@ from plot_engine.fixture_audit import revision_loop_chapters, unreachable_by_con
 from plot_engine.models.contract import FIELD_EVENT_TYPES
 
 
+def test_fix_guide_h51_covers_every_fixture_event_type():
+    """修稿指引 H5.1 必须**逐个**解释夹具用得到的事件类型怎么写得看得见。
+
+    E18（docs/measurement-errata.md）：`FIX_GUIDE["H5.1"]` 漏讲 SUSPECTS，而 ch07 是全库
+    唯一必需 SUSPECTS 的章——写手拿到的指引里没有那条的写法，同字典 H5.3 反倒列了它，
+    一轮内两条指引对同一类型口径打架。这条静态审计钉住「夹具会用的类型 ⊆ 指引文本」，
+    漏一个就红，不必等一次真跑烧掉采样预算才发现指引少了一半信息。
+    """
+    import re
+
+    from plot_engine.review import FIX_GUIDE
+    from plot_engine.tests.fixtures import experiment_10ch as fx
+
+    used = {e["event_type"] for step in fx._STEPS for e in step["events"]}
+    guide = FIX_GUIDE["H5.1"]
+    missing = [t for t in sorted(used) if not re.search(rf"\b{t}\b", guide)]
+    assert not missing, f"H5.1 指引没解释这些夹具事件类型怎么写：{missing}"
+
+
 def test_ladder_pairs_every_must_change_with_a_same_fact_event():
     """H5.3 的兑现前提：本章必须要求一个**同 field、同对象**的实现事件。
 
