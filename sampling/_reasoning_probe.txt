@@ -1,1 +1,4 @@
 qwen3:8b       finish=stop     content=  750 reasoning=    0 completion=512
+qwen3:14b      finish=stop     content=  772 reasoning=    0 completion=521
+qwen3.5:27b    finish=stop     content=  771 reasoning=    0 completion=479
+qwen2.5:14b    finish=stop     content=  935 reasoning=    0 completion=601
