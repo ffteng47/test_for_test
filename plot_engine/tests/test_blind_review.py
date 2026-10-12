@@ -82,6 +82,7 @@ def test_paired_sheet_and_key_no_leak(paired_monkey):
     sheet = br.render_worksheet(items)
     assert "run0" not in sheet and "NEEDS_HUMAN" not in sheet
     assert "变体 A" in sheet
+    assert "2–4 段" in sheet                      # R5 的常量半边由机器代劳（E24）
     key = br.render_key(items)
     assert "run0" in key and "变体" in key
 
@@ -89,6 +90,7 @@ def test_paired_sheet_and_key_no_leak(paired_monkey):
 def test_paired_html_switches_the_instrument(paired_monkey):
     page = br.render_html(paired_monkey(_multi(6, 8)), seed=7)
     assert '"g": 1' in page and "blind-paired-7" in page
+    assert "2–4 段" in page                       # 打分页同样带上这条机器常量，省掉人数段落
     flat = [{"blind_id": 1, "status": "OK", "text": "一段正文", "run": "run0", "chapter": 1}]
     census = br.render_html(flat, seed=7)
     assert '"g": null' in census and "blind-census-7" in census

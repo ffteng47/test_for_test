@@ -77,9 +77,10 @@ function body(){
   h.textContent=GRP?("第 "+c.g+" 段剧情 · 变体 "+c.v+"（本组共 "+NG[c.g]+" 个写法）"):("第 "+c.i+" 章");
   m.appendChild(h);
   var p=document.createElement("div");p.className="hint";
-  p.textContent=GRP
+  p.textContent=(GRP
     ?"同组是**同一段剧情的不同写法**（内容配平了，读起来像重复是题设不是缺陷）：先把一组读完再给组内名次，名次不许重号。"
-    :"读完再判，别回头改；六条全过才算这章过；判不出就留空（留空算证据缺失，不算过）。";
+    :"读完再判，别回头改；六条全过才算这章过；判不出就留空（留空算证据缺失，不算过）。")
+    + "R5 的段数半边机器已量过：全库 230 章**无一**落在 2–4 段（中位 9 段），那条只按「成文/有没有被截断」判，别去数段落。";
   m.appendChild(p);
   (c.t||"（本轮没有产出正文）").split(/\n\s*\n/).forEach(function(s){
     var q=document.createElement("p");q.textContent=s.trim();m.appendChild(q);});

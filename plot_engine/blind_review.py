@@ -74,13 +74,13 @@ def build_paired(run_dirs: List[Path], seed: int = 0) -> List[dict]:
 
 def render_worksheet(items: List[dict]) -> str:
     paired = "group" in items[0] if items else False
-    head = ("# 盲评工作表\n\n"
-            + ("读法：同一组是同一段剧情的不同写法，**先把一组读完再排名**（组内 1–N 不重号），"
-               "六条 rubric 逐条打，最后补一句为什么。\n"
-               "**这里没有出处、没有判定状态**——那是答案键里的事，评分收齐前不要打开它。\n\n"
-               if paired else
-               "读法：每章只读不查，读完立刻打「愿意付费读」这一列（是/否），再补一句为什么。\n"
-               "**这里没有出处、没有判定状态**——那是答案键里的事，评分收齐前不要打开它。\n\n"))
+    howto = ("读法：同一组是同一段剧情的不同写法，**先把一组读完再排名**（组内 1–N 不重号），"
+             "六条 rubric 逐条打，最后补一句为什么。\n" if paired else
+             "读法：每章只读不查，读完立刻打「愿意付费读」这一列（是/否），再补一句为什么。\n")
+    head = ("# 盲评工作表\n\n" + howto +
+            "**R5 的段数半边机器已量过**：全库 230 个有正文章次无一落在 2–4 段（中位 9 段），"
+            "所以 R5 只按「成文/有没有被截断」判，不必数段落。\n"
+            "**这里没有出处、没有判定状态**——那是答案键里的事，评分收齐前不要打开它。\n\n")
     def title(x):
         return (f"## {x['blind_id']:02d}｜第 {x['group']} 段 · 变体 {x['variant']}\n"
                 if paired else f"## {x['blind_id']:02d}\n")
@@ -186,9 +186,10 @@ function body(){
   h.textContent=GRP?("第 "+c.g+" 段剧情 · 变体 "+c.v+"（本组共 "+NG[c.g]+" 个写法）"):("第 "+c.i+" 章");
   m.appendChild(h);
   var p=document.createElement("div");p.className="hint";
-  p.textContent=GRP
+  p.textContent=(GRP
     ?"同组是**同一段剧情的不同写法**（内容配平了，读起来像重复是题设不是缺陷）：先把一组读完再给组内名次，名次不许重号。"
-    :"读完再判，别回头改；六条全过才算这章过；判不出就留空（留空算证据缺失，不算过）。";
+    :"读完再判，别回头改；六条全过才算这章过；判不出就留空（留空算证据缺失，不算过）。")
+    + "R5 的段数半边机器已量过：全库 230 章**无一**落在 2–4 段（中位 9 段），那条只按「成文/有没有被截断」判，别去数段落。";
   m.appendChild(p);
   (c.t||"（本轮没有产出正文）").split(/\n\s*\n/).forEach(function(s){
     var q=document.createElement("p");q.textContent=s.trim();m.appendChild(q);});
