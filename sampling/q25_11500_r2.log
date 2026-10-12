@@ -1,0 +1,25 @@
+http://127.0.0.1:11500/v1/models 可用模型: qwen2.5:14b, qwen3:30b, qwen3.5:27b, qwen3:14b, deepseek-r1:32b, qwen3:8b｜prompt=v1-told+persona｜抽取尺=v3.2-infers-promotion｜终态 ARC_CONFLICT=2 NEEDS_HUMAN=1 OK=7
+tokens=44683 cost=$0.0000 用时=349s｜抽取产出 83 条（规则提升 0） / 坏料 {'missing_payload_keys': 1, 'stripped_payload_key': 8, 'malformed_reply': 1}
+接线：调用 51 次｜可疑 1 次：[extract qwen2.5:14b finish=length 正文=1996 思考=0 上限=800]
+# Architecture Review — exp-s1-42
+生成 10 / 提交 7 / 未决 [5, 7, 9] / replay一致 True
+Revision：需修 2 章 / 最多 3 轮 / 修复率 0.50
+逐章轮数：1:0 2:0 3:0 4:0 5:0 6:0 7:3 8:0 9:0 10:2
+
+## §6 失败分类
+- Contract / Arc 问题: 4  (ARC_CONFLICT, H5.1, H5.3)
+
+## §7 架构冻结闸
+- G1_same_class_ge_3: True
+- G2_architecture_blocker: False
+- G3_ge_2_chapters_uncommitted: True
+- G4_state_inconsistent: False
+- 可讨论改架构: True
+
+## §8 退出条件（Phase 0 → Phase 1）
+- E1: True
+- E2: True
+- E3: False
+- E4: False
+- E5: True
+- E6: True

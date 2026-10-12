@@ -89,11 +89,12 @@ def md(rows: List[Dict[str, str]], columns: List[str]) -> str:
 def main(argv: List[str]) -> int:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
-    flags = [a for a in argv if a.startswith("--")]
+    matrix_mode = "--matrix" in argv
     runs = [a for a in argv if not a.startswith("--")]
-    cols = ([str(i) for i in range(1, 11)] + ["跑法"] if "--matrix" in flags else _COLUMNS)
-    rows = matrix(runs) if "--matrix" in flags else [row(r) for r in runs]
-    print(md(rows, ["跑法"] + cols[1:]) if "--matrix" in flags else md(rows, cols))
+    if matrix_mode:
+        print(md(matrix(runs), ["跑法"] + [str(i) for i in range(1, 11)]))
+    else:
+        print(md([row(r) for r in runs], _COLUMNS))
     bad = unreachable_by_construction()
     print(f"\n夹具不可达章（构造级，与模型无关）：{bad or '无'}")
     return 0

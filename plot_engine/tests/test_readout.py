@@ -34,3 +34,11 @@ def test_row_reads_cost_from_the_sibling_log(tmp_path: Path):
 def test_prose_column_extracts_the_two_numbers_in_order():
     assert _prose(["章首同主语：10 章里 8 次由同一个名字起笔"], "章首同主语") == "8/10"
     assert _prose([], "章首同主语") == "0"
+
+
+def test_matrix_table_has_every_chapter_exactly_once():
+    # 曾经把 ch01 整列丢了、跑法名重复两次——表头与每一行的格数必须一致且含 1..10。
+    from plot_engine.readout import md
+    lines = md(matrix(["sampling/bo_ctrl"]), ["跑法"] + [str(i) for i in range(1, 11)]).splitlines()
+    assert lines[0].count("|") == 12 and sorted(int(x) for x in lines[0].split("|")[2:-1]) == list(range(1, 11))
+    assert lines[2].split("|")[1].strip() == "bo_ctrl"
