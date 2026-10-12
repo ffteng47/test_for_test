@@ -6,7 +6,8 @@
 这里只输出**判据已经定义过的那几个数**，一跑一行，`--md` 直接出可粘贴的表——文档引用它，不再复述。
 
 不动任何读数：E2/处置率走 `metrics`，归因列走 `fixture_audit`，文笔列走 `prose_audit`，
-全是既有口径的并列呈现。
+全是既有口径的并列呈现。「H5.1等价税」是 E22 裁定一的上界报告列——只从 dump 重读，
+不改 E2、不进判据（口径与从宽处见 `_flippable` docstring）。
 """
 from __future__ import annotations
 
@@ -17,11 +18,12 @@ from typing import Dict, List
 
 from plot_engine.fixture_audit import revision_loop_chapters, unreachable_by_construction
 from plot_engine.metrics import metrics_from_dump
+from plot_engine.models.contract import FIELD_EVENT_TYPES
 from plot_engine.prose_audit import audit, chapter_texts_from
 
 _SYMBOL = {"first_pass": "首", "rewrite_rescued": "救",
            "renegotiate_only": "继", "disposition": "处"}
-_COLUMNS = ["跑法", "生成", "E2", "处置率", "首轮", "救回", "继", "判死",
+_COLUMNS = ["跑法", "生成", "E2", "H5.1等价税", "处置率", "首轮", "救回", "继", "判死",
             "待人工", "修订环章", "穿帮章", "章首同主语", "跨章重复", "tokens", "用时"]
 
 
@@ -48,6 +50,34 @@ def _cost(run_dir: Path) -> tuple:
     return ("?", "?")
 
 
+_TYPE_OF_FIELD = {t: f for f, ts in FIELD_EVENT_TYPES.items() for t in ts}
+_SHORT_RE = re.compile(r"HARD H5\.1: 必需事件 (\w+) 数量不足")
+_HARD_RE = re.compile(r"HARD ([\w.]+):")
+
+
+def _flippable(path: Path) -> bool:
+    """这章若把 H5.1 改按 field 等价类判定，会不会整章翻绿——**上界读法**，三条从宽：
+    只看「HARD 里除 H5.1 别无他条」（软判据与待复核一概不管）、
+    等价类型只要出现过就算补足（不核 minimum_count）、
+    读的是当轮 Findings 与 Proposals（首轮过审的章本来就没有 H5.1 可翻）。"""
+    text = path.read_text(encoding="utf-8", errors="replace")
+    hard = _HARD_RE.findall(text)
+    if hard and set(hard) != {"H5.1"}:
+        return False
+    short = _SHORT_RE.findall(text)
+    if not short:
+        return False
+    got = {ln[2:].split(" actor=")[0] for ln in text.splitlines()
+           if ln.startswith("- ") and " actor=" in ln.split(" payload=")[0]}
+    return all(any(t in got for t in FIELD_EVENT_TYPES[_TYPE_OF_FIELD[x]]) for x in short)
+
+
+def _tax(d: Path, m) -> int:
+    """不在 E2 分子里的章（继/处）中，H5.1 单类型判定的彩票税能吃掉几章。"""
+    return sum(1 for r in m.reads if r.bucket != "first_pass"
+               and _flippable(d / f"ch{r.chapter_no:02d}.md"))
+
+
 def row(run_dir) -> Dict[str, str]:
     d = Path(run_dir)
     d = d / "dump" if (d / "dump").exists() else d
@@ -56,7 +86,9 @@ def row(run_dir) -> Dict[str, str]:
     prose = audit(chapter_texts_from(d.parent))
     arc = sum(1 for r in m.reads if r.trace_status == "ARC_CONFLICT")
     n = m.generated or 1
+    tax = _tax(d, m)
     return {"跑法": d.parent.name, "生成": str(m.generated), "E2": f"{m.clean_e2:.0%}",
+            "H5.1等价税": f"{tax}（上界{(m.clean_e2 + tax / n):.0%}）",
             "处置率": f"{m.disposition_rate:.0%}", "首轮": str(m.count("first_pass")),
             "救回": str(m.count("rewrite_rescued")), "继": str(m.count("renegotiate_only")),
             "判死": str(arc), "待人工": str(m.count("disposition") - arc),

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from plot_engine.readout import _prose, matrix, row
+from plot_engine.readout import _prose, _flippable, matrix, row
 
 
 def _dump(tmp_path: Path, no: int, status: str, rounds: int, action: str = "") -> None:
@@ -8,6 +8,26 @@ def _dump(tmp_path: Path, no: int, status: str, rounds: int, action: str = "") -
     (tmp_path / f"ch{no:02d}.md").write_text(
         f"# Chapter {no} — status={status}\ntrace_status={status}\nrounds={rounds}\n\n"
         f"## Revision\n{rev}", encoding="utf-8")
+
+
+def test_tax_flips_only_pure_h51_failure_with_a_field_equivalent(tmp_path: Path):
+    def write(no: int, findings: str, proposals: str) -> Path:
+        p = tmp_path / f"ch{no:02d}.md"
+        p.write_text(f"## Findings\n{findings}\n## Proposals\n{proposals}", encoding="utf-8")
+        return p
+    a = write(1, "- HARD H5.1: 必需事件 OBSERVES 数量不足（0<1）\n",
+              "- READS actor=char_000001 target=None payload={}\n")
+    assert _flippable(a)                       # 缺 OBSERVES，但同 knowledge 族的 READS 在场
+    b = write(2, "- HARD H5.1: 必需事件 OBSERVES 数量不足（0<1）\n"
+                 "- HARD H2.2: char_000001 未取得知识 fact_000001（期望 known）\n",
+               "- READS actor=char_000001 target=None payload={}\n")
+    assert not _flippable(b)                   # 还压着别的 HARD，放宽 H5.1 也翻不绿
+    c = write(3, "- HARD H5.1: 必需事件 BELIEVES 数量不足（0<1）\n",
+               "- OBSERVES actor=char_000001 target=None payload={}\n")
+    assert not _flippable(c)                   # OBSERVES 是 knowledge 族，补不了 belief 族的 BELIEVES
+    d = write(4, "\n", "- OBSERVES actor=char_000001 target=None payload={}\n")
+    assert not _flippable(d)                   # 没有 H5.1 欠账可翻
+
 
 
 def test_matrix_uses_the_four_bucket_symbols_and_marks_arc(tmp_path: Path):

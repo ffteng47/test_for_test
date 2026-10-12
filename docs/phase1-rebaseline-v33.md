@@ -38,7 +38,26 @@ v3.3 三跑 = 30 / 10 / 10，均值 16.7%，**互差 20pp > 10pp ⇒ 按 §7 铁
 
 ## 4. 彩票税（E22 裁定一的落地列）
 
-裁定：H5.1 认单类型，E2 定义不动；+10.4pp 只作上界报告列。**v3.3 语料上的实测税率重算还没做**（脚本要新增一个「按 field 等价类重算 H5.1」的离线读数，`readout.py` 现在只有严格口径）。这一步排在配对打分表之后，出表不出的结论都只进报告列。
+裁定：H5.1 认单类型，E2 定义不动；本列只进报告。**实测已落地**：`readout.py` 新增「H5.1等价税」列
+（`_flippable`：当轮 Findings 里 HARD 只剩 H5.1、且每个欠账类型在同 field 等价类里有已抽取的替代 ⇒ 该章可翻；
+上界读法，软判据与 minimum_count 一概从宽）。命令：
+
+```
+python -m plot_engine.readout sampling/ladder2_r1 sampling/ladder2_r2 sampling/ladder2_r3 \
+    sampling/v33r1 sampling/v33r2 sampling/v33r3 sampling/bo_ctrl
+python -m plot_engine.readout sampling/v32r1 sampling/v32r2 sampling/v32r3
+```
+
+读数（税/生成章，括号为翻税后的 E2 上界）：ladder2 三跑各 **1/10**（上界 60/60/80%），
+v33r1 1/10（40%）、v33r2 0（10%）、v33r3 1/10（20%）、bo_ctrl 0；v32 三跑 0/0/1。
+这与 E22 当初全库离线重算的 +10.4pp（25 章/240 ≈ 1 章/跑）**同量级互证**：税真实存在，
+但每跑只吃一章——被 H5.1 卡死的章多数同时压着 H2.2/H5.3/H5.6（抽取洞整链塌方），
+单剩 H5.1 一门的属少数。
+
+翻税章是夹具性的：**ladder2 三跑全翻 ch06**（要 READS，模型给了 IS_TOLD+6×OBSERVES——内容到了、类型没 roll 中），
+**v33 翻 ch08**（要 OBSERVES，模型给 4×INFERS）。⇒ 税不是随机噪声，是**夹具在特定章押了模型不常 roll 的类型**；
+v4.0 夹具应把 must_change 的类型改押等价类（或直接由服务端按 field 判），这一列届时应趋零。
+本列不改变任何 E2 读数。
 
 ## 5. 下一步（按 tff 裁定序）
 
