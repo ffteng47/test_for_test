@@ -43,3 +43,52 @@ def test_key_maps_blind_id_back(patched):
     items = patched(20, 20)
     key = br.render_key(items)
     assert "v32r1" in key and "NEEDS_HUMAN" in key and "评分收齐前勿开" in key
+
+
+# ---- 配对出题（E23：语料只有一个局面时，绝对分测的是夹具的单调）----
+
+def _multi(n_run, n_chapter):
+    return [{"run": f"run{j}", "chapter": c, "status": "OK" if c % 3 else "NEEDS_HUMAN",
+             "text": f"第 {c} 段剧情的第 {j} 个写法。"}
+            for j in range(n_run) for c in range(n_chapter)]
+
+
+@pytest.fixture
+def paired_monkey(monkeypatch):
+    def go(items):
+        monkeypatch.setattr(br, "pool", lambda dirs: items)
+        return br.build_paired(["ignored"], seed=7)
+    return go
+
+
+def test_paired_groups_hold_one_beat(paired_monkey):
+    items = paired_monkey(_multi(6, 8))
+    assert len(items) == 48
+    for g in {x["group"] for x in items}:
+        grp = [x for x in items if x["group"] == g]
+        assert {x["chapter"] for x in grp} == {g}          # 一组 = 一段剧情
+        assert len({x["variant"] for x in grp}) == len(grp)  # 变体号不重
+        assert {x["run"] for x in grp} == {f"run{j}" for j in range(6)}
+
+
+def test_paired_refuses_unpairable_beat(paired_monkey):
+    only_one = _multi(3, 15) + [{"run": "extra", "chapter": 42, "status": "OK", "text": "独苗"}]
+    with pytest.raises(ValueError, match="配不成对"):
+        paired_monkey(only_one)
+
+
+def test_paired_sheet_and_key_no_leak(paired_monkey):
+    items = paired_monkey(_multi(6, 8))
+    sheet = br.render_worksheet(items)
+    assert "run0" not in sheet and "NEEDS_HUMAN" not in sheet
+    assert "变体 A" in sheet
+    key = br.render_key(items)
+    assert "run0" in key and "变体" in key
+
+
+def test_paired_html_switches_the_instrument(paired_monkey):
+    page = br.render_html(paired_monkey(_multi(6, 8)), seed=7)
+    assert '"g": 1' in page and "blind-paired-7" in page
+    flat = [{"blind_id": 1, "status": "OK", "text": "一段正文", "run": "run0", "chapter": 1}]
+    census = br.render_html(flat, seed=7)
+    assert '"g": null' in census and "blind-census-7" in census

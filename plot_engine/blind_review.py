@@ -41,18 +41,63 @@ def build(run_dirs: List[Path], seed: int = 0) -> List[dict]:
     return [dict(x, blind_id=i + 1) for i, x in enumerate(items)]
 
 
+def build_paired(run_dirs: List[Path], seed: int = 0) -> List[dict]:
+    """配对出题：把**同一段剧情的多次渲染**收进同一组，组内比优劣，不跨组比。
+
+    为什么换出题法（E23）：这个语料只有一个局面，绝对分（「愿意付费读」）测的是夹具的单调；
+    而同一原章的 N 次渲染内容逐字配平，组内名次是**配对**读数——同样的人时，信息量比 90 份
+    绝对分高，且「读起来像重复」从折磨变成了题设。组内变体顺序独立洗牌，所以「变体 A」
+    在不同组里不是同一个臂，反推不出谁是谁。
+    """
+    items = pool(run_dirs)
+    failures = sum(1 for x in items if x["status"] != "OK")
+    if len(items) < MIN_CHAPTERS:
+        raise ValueError(f"只有 {len(items)} 章可评，下限 {MIN_CHAPTERS} 章：给的跑法不够")
+    if failures < MIN_FAILURES:
+        raise ValueError(f"失败类只有 {failures} 章，下限 {MIN_FAILURES}：这张表全是过线的章，"
+                         f"量不出「判死的章是不是真难看」那一格")
+    groups: dict = {}
+    for x in items:
+        groups.setdefault(x["chapter"], []).append(x)
+    too_few = [k for k, v in groups.items() if len(v) < 2]
+    if too_few:
+        raise ValueError(f"第 {too_few} 段剧情只有 1 个渲染，配不成对：这些章出不了配对题")
+    rng = random.Random(seed)
+    out: List[dict] = []
+    for chapter in sorted(groups):
+        g = groups[chapter]
+        rng.shuffle(g)
+        out += [dict(x, group=chapter, variant=chr(ord("A") + j))
+                for j, x in enumerate(g)]
+    return [dict(x, blind_id=i + 1) for i, x in enumerate(out)]
+
+
 def render_worksheet(items: List[dict]) -> str:
+    paired = "group" in items[0] if items else False
     head = ("# 盲评工作表\n\n"
-            "读法：每章只读不查，读完立刻打「愿意付费读」这一列（是/否），再补一句为什么。\n"
-            "**这里没有出处、没有判定状态**——那是答案键里的事，评分收齐前不要打开它。\n\n")
-    return head + "\n".join(f"## {x['blind_id']:02d}\n\n{x['text']}\n" for x in items)
+            + ("读法：同一组是同一段剧情的不同写法，**先把一组读完再排名**（组内 1–N 不重号），"
+               "六条 rubric 逐条打，最后补一句为什么。\n"
+               "**这里没有出处、没有判定状态**——那是答案键里的事，评分收齐前不要打开它。\n\n"
+               if paired else
+               "读法：每章只读不查，读完立刻打「愿意付费读」这一列（是/否），再补一句为什么。\n"
+               "**这里没有出处、没有判定状态**——那是答案键里的事，评分收齐前不要打开它。\n\n"))
+    def title(x):
+        return (f"## {x['blind_id']:02d}｜第 {x['group']} 段 · 变体 {x['variant']}\n"
+                if paired else f"## {x['blind_id']:02d}\n")
+    return head + "\n".join(title(x) + "\n" + x["text"] + "\n" for x in items)
 
 
 def render_key(items: List[dict]) -> str:
-    rows = "\n".join(f"| {x['blind_id']:02d} | {x['run']} | {x['chapter']} | {x['status']} |"
-                     for x in items)
-    return ("# 答案键（评分收齐前勿开）\n\n| 盲评号 | 跑法 | 原章号 | 判定终态 |\n"
-            "|---|---|---|---|\n" + rows + "\n")
+    paired = "group" in items[0] if items else False
+    rows = "\n".join(
+        (f"| {x['blind_id']:02d} | {x['group']} | {x['variant']} | {x['run']} | {x['chapter']} | {x['status']} |"
+         if paired else
+         f"| {x['blind_id']:02d} | {x['run']} | {x['chapter']} | {x['status']} |")
+        for x in items)
+    table = ("| 盲评号 | 组 | 变体 | 跑法 | 原章号 | 判定终态 |\n|---|---|---|---|---|---|"
+             if paired else
+             "| 盲评号 | 跑法 | 原章号 | 判定终态 |\n|---|---|---|---|")
+    return "# 答案键（评分收齐前勿开）\n\n" + table + "\n" + rows + "\n"
 
 
 _RUBRIC = [("R1", "不复述", "同一批信息没有被近似重写 2–3 遍"),
@@ -113,17 +158,20 @@ details{margin-top:14px;font:13px/1.7 system-ui}
 <main id="body"></main>
 </div>
 <script>
-const CH=__DATA__, R=__R__, K="blind-__SEED__", N=__N__;
+const CH=__DATA__, R=__R__, K="blind-__MODE__-__SEED__", N=__N__;
 let S={}; try{S=JSON.parse(localStorage.getItem(K)||"{}")}catch(e){S={}}
 let idx=0;
 const V={"1":"过","0":"不过"};
-function done(o){return !!o && o.pay!=="" && R.every(function(r){return o[r[0]]!==""});}
+const GRP=!!CH[0].g;
+var NG={}; CH.forEach(function(c){if(c.g)NG[c.g]=(NG[c.g]||0)+1;});
+function done(o){return !!o && o.pay!=="" && (!GRP||o.rank!=="")
+  && R.every(function(r){return o[r[0]]!==""});}
 function toc(){
   var k=CH.filter(function(c){return done(S[c.i]);}).length;
   document.getElementById("prog").textContent="已完成 "+k+" / "+N;
   document.getElementById("toc").innerHTML=CH.map(function(c,i){
     return '<a data-i="'+i+'" class="'+(i===idx?"on":"")+'"><i class="'
-      +(done(S[c.i])?"ok":"")+'"></i>第 '+c.i+' 章</a>';}).join("");}
+      +(done(S[c.i])?"ok":"")+'"></i>'+(GRP?("第 "+c.g+" 章 · 变体 "+c.v):("第 "+c.i+" 章"))+'</a>';}).join("");}
 function field(name,opts){
   var w=document.createElement("span");w.className="opt";
   opts.forEach(function(o){
@@ -134,9 +182,13 @@ function field(name,opts){
 function body(){
   var c=CH[idx], o=S[c.i]||{}, m=document.getElementById("body");
   m.innerHTML="";
-  var h=document.createElement("h2");h.textContent="第 "+c.i+" 章";m.appendChild(h);
+  var h=document.createElement("h2");
+  h.textContent=GRP?("第 "+c.g+" 章 · 变体 "+c.v+"（本组共 "+NG[c.g]+" 个写法）"):("第 "+c.i+" 章");
+  m.appendChild(h);
   var p=document.createElement("div");p.className="hint";
-  p.textContent="读完再判，别回头改；六条全过才算这章过；判不出就留空（留空算证据缺失，不算过）。";
+  p.textContent=GRP
+    ?"同组是**同一段剧情的不同写法**（内容配平了，读起来像重复是题设不是缺陷）：先把一组读完再给组内名次，名次不许重号。"
+    :"读完再判，别回头改；六条全过才算这章过；判不出就留空（留空算证据缺失，不算过）。";
   m.appendChild(p);
   (c.t||"（本轮没有产出正文）").split(/\n\s*\n/).forEach(function(s){
     var q=document.createElement("p");q.textContent=s.trim();m.appendChild(q);});
@@ -147,6 +199,15 @@ function body(){
     var sm=document.createElement("small");sm.textContent=r[2];
     row.appendChild(b);row.appendChild(sm);row.appendChild(field(r[0]+"_"+c.i,[[1,"过"],[0,"不过"]]));
     f.appendChild(row);});
+  if(GRP){
+    var rr=document.createElement("div");rr.className="rrow";
+    var rb=document.createElement("b");rb.textContent="组内名次";rr.appendChild(rb);
+    var rs=document.createElement("small");rs.textContent="1 = 这组里最好读；只在本组内比较";rr.appendChild(rs);
+    var sel=document.createElement("select");sel.id="rank_"+c.i;sel.className="btn";
+    var zero=document.createElement("option");zero.value="";zero.textContent="未评";sel.appendChild(zero);
+    for(var z=1;z<=NG[c.g];z++){var op=document.createElement("option");
+      op.value=z;op.textContent=z;sel.appendChild(op);}
+    sel.value=o.rank||"";rr.appendChild(sel);f.appendChild(rr);}
   [["pay","愿意付费读",[[1,"是"],[0,"否"]]],
    ["len","长度影响判断",[[1,"是"],[0,"否"],["n","没注意"]]]].forEach(function(x){
     var row=document.createElement("div");row.className="rrow";
@@ -175,17 +236,20 @@ function rec(){
   R.forEach(function(r){var e=document.querySelector('[name="'+r[0]+"_"+c.i+'"]:checked');o[r[0]]=e?e.value:"";});
   var pe=document.querySelector('[name="pay_'+c.i+'"]:checked');o.pay=pe?pe.value:"";
   var le=document.querySelector('[name="len_'+c.i+'"]:checked');o.len=le?le.value:"";
+  var rk=document.getElementById("rank_"+c.i);o.rank=rk?rk.value:"";
   o.why=(document.getElementById("why_"+c.i).value||"").trim();
-  if(o.pay===""&&o.len===""&&o.why===""&&R.every(function(r){return o[r[0]]==="";}))delete S[c.i];
+  if(o.pay===""&&o.len===""&&o.why===""&&(!GRP||o.rank==="")
+     &&R.every(function(r){return o[r[0]]==="";}))delete S[c.i];
   else S[c.i]=o;
   localStorage.setItem(K,JSON.stringify(S));}
 function table(){
-  var H=["章","R1","R2","R3","R4","R5","R6","六条全过","愿意付费读","长度影响","理由"];
+  var H=(GRP?["组","变体","名次"]:["章"]).concat(
+    ["R1","R2","R3","R4","R5","R6","六条全过","愿意付费读","长度影响","理由"]);
   var rows=CH.map(function(c){
     var o=S[c.i]||{};
     var vs=R.map(function(r){return o[r[0]]?V[o[r[0]]]:"";});
     var all=vs.length===6&&vs.every(function(v){return v==="过";});
-    return "| "+[c.i].concat(vs).concat([all?"过":"不过",
+    return "| "+(GRP?[c.g,c.v,o.rank||""]:[c.i]).concat(vs).concat([all?"过":"不过",
       o.pay?((o.pay==="1")?"是":"否"):"",
       o.len?((o.len==="n")?"没注意":((o.len==="1")?"是":"否")):"",
       (o.why||"").replace(/[|\r\n]/g," ")]).join(" | ")+" |";});
@@ -193,10 +257,22 @@ function table(){
   var np=CH.filter(function(c){var o=S[c.i]||{};
     return R.every(function(r){return o[r[0]]==="1";});}).length;
   var py=CH.filter(function(c){return (S[c.i]||{}).pay==="1";}).length;
+  var tail=["","完成 "+dn+"/"+N+"｜六条全过 "+np+" 章（"+(N?Math.round(np/N*100):0)+"%）"+
+            "｜愿意付费读 "+py+" 章（"+(N?Math.round(py/N*100):0)+"%）",
+            "留空 "+(N-dn)+" 章（证据缺失，不算过）｜种子 __SEED__"];
+  if(GRP){
+    var bad=[];
+    Object.keys(NG).forEach(function(g){
+      var rs=CH.filter(function(c){return c.g==g;}).map(function(c){return (S[c.i]||{}).rank||"";});
+      var got=rs.filter(function(v){return v!=="";});
+      var dup=got.filter(function(v,i){return got.indexOf(v)!==i;});
+      var miss=NG[g]-got.length;
+      if(miss||dup.length)bad.push("第 "+g+" 组：缺 "+miss+" 个名次"+
+        (dup.length?"、重号 "+Array.from(new Set(dup)).join("/"):""));});
+    tail.push(bad.length?("组内名次未收齐 ⇒ 该组的配对读数不能算：" + bad.join("；"))
+                       :"十组名次全部收齐、无重号 ⇒ 配对读数可用");}
   return ["| "+H.join(" | ")+" |","|"+H.map(function(){return "---";}).join("|")+"|"].concat(rows)
-    .concat(["","完成 "+dn+"/"+N+"｜六条全过 "+np+" 章（"+(N?Math.round(np/N*100):0)+"%）"+
-             "｜愿意付费读 "+py+" 章（"+(N?Math.round(py/N*100):0)+"%）",
-             "留空 "+(N-dn)+" 章（证据缺失，不算过）｜种子 __SEED__"]).join("\n");}
+    .concat(tail).join("\n");}
 function fill(){var a=document.getElementById("out");if(a)a.value=table();}
 function go(i){rec();idx=Math.max(0,Math.min(N-1,i));toc();body();window.scrollTo(0,0);}
 document.addEventListener("click",function(e){
@@ -224,10 +300,12 @@ def render_html(items: List[dict], seed: int) -> str:
     否则盲评退化成带答案键的复核（模块 docstring 立的就是这条解耦）。90 章排成一张长墙
     等于没出题：评分人翻不动就会开始跳章，跳章的表不能再当普查读。
     """
-    data = [{"i": x["blind_id"], "t": (x["text"] or "").strip()} for x in items]
+    paired = "group" in items[0] if items else False
+    data = [{"i": x["blind_id"], "t": (x["text"] or "").strip(),
+             "g": x.get("group"), "v": x.get("variant")} for x in items]
     out = _HTML.replace("__DATA__", _js(data)).replace("__R__", _js(_RUBRIC))
     out = out.replace("__N__", str(len(items))).replace("__SEED__", str(seed))
-    return out
+    return out.replace("__MODE__", "paired" if paired else "census")
 
 
 def _js(obj) -> str:
@@ -247,11 +325,14 @@ def main(argv: None | List[str] = None) -> int:
     ap.add_argument("-o", "--out", default="docs/samples/blind-worksheet.md")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--html", action="store_true", help="同时产出一份离线可打开的打分页（同名 .html）")
+    ap.add_argument("--paired", action="store_true",
+                    help="配对出题：同一段剧情的多次渲染收进一组、组内排名次（语料只有一个局面时用，E23）")
     ns = ap.parse_args(argv)
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
 
-    items = build([Path(r) for r in ns.runs], ns.seed)
+    build_fn = build_paired if ns.paired else build
+    items = build_fn([Path(r) for r in ns.runs], ns.seed)
     out = Path(ns.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     key = out.with_name(out.stem + "-key.md")
