@@ -62,3 +62,25 @@ v4.0 夹具应把 must_change 的类型改押等价类（或直接由服务端�
 ## 5. 下一步（按 tff 裁定序）
 
 配对打分表（同段剧情的多次渲染排优劣）→ 我打第一棒、tff 第二棒、算 Kendall's W → v4.0 设计稿（多场面夹具 + `_STEPS` 周期 ≥50 + 章长 2000–3000 字 + Writer 段数死规格改 6–12 段或删 + E25 已渲染台账与重锚计数同批）。
+
+## 6. ch05/ch09 全库首轮率重读（E14/E17 欠项，2026-10-12 已清）
+
+命令（27 臂全库，bucket 走 `metrics_from_dump`，逐臂非反推，守 E15 纪律）：
+
+```python
+from pathlib import Path
+from plot_engine.metrics import metrics_from_dump
+c5=[0,0]; c9=[0,0]
+for d in sorted(Path("sampling").glob("*/dump")):
+    r = {x.chapter_no: x.bucket for x in metrics_from_dump(d).reads}
+    for ch,c in ((5,c5),(9,c9)):
+        if ch in r: c[1]+=1; c[0]+= (r[ch]=="first_pass")
+print(c5, c9)
+```
+
+**ch05 首轮 11/27、ch09 首轮 3/27**（旧记 ch05 13/24、ch09 2/24 为 ladder-v1 的 24 臂口径，不可直接比）。
+新夹具 ladder-v2 三臂：ch05 三跑全首轮（v32/v33 各 0–1 首轮）；**ch09 仅 ladder2_r3、v33r1 首轮，其余 disposition/ARC**。
+机制变了：ch09 现钉 `required_events=['BELIEVES','INFERS','OBSERVES']` 三个单类型，
+落空任一即 ARC_CONFLICT（`arc_003 第 9 章落空的事件类型是 Arc 强制项`）——**不再是 E14 的信念探针钉错对象，
+而是 required_events 三元组类型钉死**，正是 v4.0 §3.2「场级断言」要吃掉的东西（must_change 兑现事件移出
+required_events，类型交给 H5.3 按 field 判）。§3.2 的验收标准据此收紧：v4 夹具的 ch09 必须不再同时钉三个类型。
