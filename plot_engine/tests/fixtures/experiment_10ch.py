@@ -36,7 +36,10 @@ NOW = "2026-10-09T00:00:00Z"
 # 阶梯版本进 run.log 第 1 行（与抽取尺戳同处）：**改 `_STEPS` 任意一项必须同时 bump 这里**。
 # 没有这一行，新旧基线并列时「这一跑跑在哪版夹具上」只能靠 commit 时间倒推（docs/measurement-errata.md §四）。
 # 戳进日志之前（含 v32r1–3、bo_* 、q3_14b_r* 、q25_11500_r*）的所有跑法一律是 ladder-v1。
-LADDER_VERSION = "ladder-v2-f1-belief-arc"
+# ladder-v3：唯一一处改动＝ch09 的类型钉（v2 把整步事件流都钉成 Arc 强制 ⇒ 三类型同钉，
+# 任一落空即 ARC_CONFLICT，全库首轮仅 3/27，见 docs/phase1-rebaseline-v33.md §6）。§3.2 定标：
+# required_events 只钉「本章 must_change 的模态」，重复锚定（OBSERVES F3 / INFERS F1 早已建立）移出强制集。
+LADDER_VERSION = "ladder-v3-ch09-single-nail"
 _ACTOR = "char_000001"
 _DEAD_ACTOR = "char_000009"
 _F1, _F2, _F3, _F4 = "fact_000001", "fact_000002", "fact_000003", "fact_000004"
@@ -102,6 +105,10 @@ _STEPS: List[Dict[str, Any]] = [
      "must_change": [_holds("update", _F1, "suspects")]},
     {"events": [_obs(_F3)], "must_change": []},          # 本章不推进：合法形态
     {"events": [_obs(_F3), _infers(_F1, [_F3]), _belief("BELIEVES", _F3, 600)],
+     # §3.2（ladder-v3）：强制集只钉本章 Δ 的模态 BELIEVES（must_change belief→F3，
+     # derive 的 04 §4.2 守卫也要求 belief 族类型在强制集内）；OBSERVES/INFERS 是对
+     # 已建立事实的再确认——照旧进事件流与离线抽取道，但不再钉成 Arc 强制项。
+     "mandatory": [_belief("BELIEVES", _F3, 600)],
      "must_change": [_holds("add", _F3, "believes")]},
     {"events": [_obs(_F2)], "must_change": [_knows("add", _F2, "known")],
      "must_not_change": []},                             # 第 10 步解禁 fact_000002
@@ -115,6 +122,13 @@ _GATE_F4, _GATE_F2 = 5, 10
 
 def _step(ch: int) -> Dict[str, Any]:
     return _STEPS[(ch - 1) % len(_STEPS)]
+
+
+def _mandatory(ch: int) -> List[Dict[str, Any]]:
+    """本章钉成 Arc 强制项的事件：默认＝整步事件流；步可带 `mandatory` 覆盖（§3.2）。
+    `events` 仍整条进离线抽取道与正文，只是不钉 required_events ⇒ 重复锚定不再吃类型彩票。"""
+    step = _step(ch)
+    return step.get("mandatory", step["events"])
 
 
 def build_arc(chapters: int = 10) -> ArcContract:
@@ -131,13 +145,13 @@ def build_arc(chapters: int = 10) -> ArcContract:
                 "required_events": [{"event_type": e["event_type"],
                                      "description": f"{e['event_type']} {e['fact']}",
                                      "actors_involved": [_ACTOR]}
-                                    for e in _step(ch)["events"]]}
+                                    for e in _mandatory(ch)]}
                for ch in range(1, chapters + 1)]
     return ArcContract(
         arc_id="arc_003", epoch=EPOCH, chapter_range=(1, chapters),
         tension_curve=[min(1000, 300 + 60 * ch) for ch in range(1, chapters + 1)],
         turning_points=[{"chapter": c, "type": t, "description": d,
-                         "required_event_types": sorted({e["event_type"] for e in _step(c)["events"]})}
+                         "required_event_types": sorted({e["event_type"] for e in _mandatory(c)})}
                         for c, (t, d) in _TURNS.items() if c <= chapters],
         # hidden = 本章不给读者建立该事实 → 不产生 reader_signal（04 §4.3 D9）
         knowledge_gates=[

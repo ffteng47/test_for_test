@@ -4,6 +4,7 @@ from pathlib import Path
 
 from plot_engine.eventlog import EventLog
 from plot_engine.experiment import evaluate_exit_conditions, run_experiment
+from plot_engine.models.contract import FIELD_EVENT_TYPES
 from plot_engine.store import StateStore
 
 sys.path.insert(0, str(Path(__file__).parent / "fixtures"))
@@ -38,8 +39,19 @@ def test_ten_chapters_do_not_share_one_constraint_set(tmp_path):
     arts = [src(ch, cfg.initial_state) for ch in range(1, 11)]
     required = [frozenset(e.event_type for e in a.contract.required_events) for a in arts]
     assert len(set(required)) > 1
-    assert required[0] == {"OBSERVES", "INFERS"} and required[4] == {"INFERS"}   # 第 1/5/9 章拐点
-    assert required[-2] == {"OBSERVES", "INFERS", "BELIEVES"}
+    assert required[0] == {"OBSERVES", "INFERS"} and required[4] == {"INFERS"}   # 第 1/5 章拐点
+    # §3.2 / ladder-v3：第 9 章只钉本章 Δ 的模态 BELIEVES——OBSERVES/INFERS 是对已建立
+    # 事实的再确认，照旧进事件流与离线抽取道，但不再钉成 Arc 强制项（三元组＝三张彩票）。
+    assert required[-2] == {"BELIEVES"}
+    tp9 = [tp for tp in fixture.build_arc().turning_points if tp.chapter == 9]
+    assert [tp.required_event_types for tp in tp9] == [["BELIEVES"]]
+    # 强制集必须是事件流的子集，且 must_change 的实现类型仍在强制集内（derive 04 §4.2 守卫）
+    for ch in range(1, 11):
+        step = fixture._step(ch)
+        nail = {e["event_type"] for e in fixture._mandatory(ch)}
+        assert nail <= {e["event_type"] for e in step["events"]}
+        for change in step["must_change"]:
+            assert nail & FIELD_EVENT_TYPES.get(change["field"], set())
     # 逐章 Δ（backlog #1 / A）：每章只声明本章真的发生的那一次跃迁，第 8 章故意不推进。
     changes = [tuple((c.field, c.operation, c.target, c.expected_value)
                      for c in a.contract.must_change) for a in arts]

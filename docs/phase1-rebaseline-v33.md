@@ -84,3 +84,8 @@ print(c5, c9)
 落空任一即 ARC_CONFLICT（`arc_003 第 9 章落空的事件类型是 Arc 强制项`）——**不再是 E14 的信念探针钉错对象，
 而是 required_events 三元组类型钉死**，正是 v4.0 §3.2「场级断言」要吃掉的东西（must_change 兑现事件移出
 required_events，类型交给 H5.3 按 field 判）。§3.2 的验收标准据此收紧：v4 夹具的 ch09 必须不再同时钉三个类型。
+**落地（2026-10-11，ladder-v3-ch09-single-nail）**：§3.2 首笔只动 ch09 一处，强制集 = `['BELIEVES']`
+（本章 Δ 的模态；derive 04 §4.2 守卫要求 belief 族类型留在强制集内）。验收按 tff 裁定①走静态口径——
+契约属性由 `test_experiment_e2e.py` 直接读 required_events 确定性钉死，不经采样；freeze 后三跑只报
+「H5.1等价税」**观测值**，「税是否消除」的结论挂重基线全量读数判（旧税率下 0/3 的先验概率仍有约 20%，
+三跑不构成宣判）。

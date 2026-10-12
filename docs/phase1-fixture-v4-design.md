@@ -49,6 +49,9 @@ print(len(L), st.median(L), round(st.mean(L),1), sum(1 for x in L if x>=2000), s
 
 - **≥4 有名人物**（char_000001 之外至少 3 个有名字、有 belief 线的角色），**≥12 fact**，
   3 locations、≥2 items、≥2 relationships、≥1 faction——多局面 = 每章 2–3 条并行线在不同人物对上展开。
+  定标（tff 2026-10-11）：每章**有效出场人物 ≥1**，主要互动场景通常 **2–4 人**，不设全章统一的两人硬门槛。
+  「有效出场」取可机检定义：**本章内有台词、行动、或改变了至少一条事件状态**；仅被提及名字不算——
+  写进夹具规格，H 系列按此判定。双池门槛只进 v4.1，§3.2 批次不许顺手加人物。
 - `_STEPS` 周期 **≥50 或在 10 章内不回环**：10 章实验里每章的 (人物对, fact, field) 组合唯一。
 - 每章 must_change 只声明本章真实发生的跃迁（沿用 v2 的规则），但因为规模上来了，
   **允许多数章 must_change ≥2 条**，逼近 08 对真实契约的假设。
@@ -58,8 +61,17 @@ print(len(L), st.median(L), round(st.mean(L),1), sum(1 for x in L if x>=2000), s
 - 规则：required_event 只在**叙事模态本身是剧情**时押单类型（例：「他读到密信」这一拍非 READS 不可）；
   纯粹为兑现 must_change 而生的事件**不再写进 required_events**——H5.3 已按 `FIELD_EVENT_TYPES`
   做 field 级实现检查，类型由抽取器自由 roll。
-- 验收：v4 夹具离线 dry-run 全 10 章可提交且 readout 的「H5.1等价税」列 = 0；
-  若仍有税，税章不得固定在同一章号（固定 ⇒ 夹具病，散开 ⇒ 模型病，进观察列）。
+- **首笔落地（ladder-v3，2026-10-11）**：夹具 `_STEPS` 的步可带 `"mandatory"` 覆盖，`build_arc`
+  的 intent.required_events 与 turning-point `required_event_types` 只取强制集，`events` 整条照旧进
+  离线抽取道与正文。本批**只改 ch09 一处**（三元组 → 单钉 BELIEVES，即本章 must_change belief→F3
+  的模态；derive 04 §4.2 守卫要求 belief 族类型留在强制集内），LADDER_VERSION 一次 bump 一个因。
+- 验收（tff 裁定①：静态属性静态验，不拿 3 次采样宣判）：
+  - 「ch09 不再被三类型同钉」是**契约静态属性**——直接读 required_events 确定性验证，
+    已钉死在 `test_experiment_e2e.py::test_ten_chapters_do_not_share_one_constraint_set`
+    （ch09 == {BELIEVES}、tp9 == ["BELIEVES"]、强制集 ⊆ 事件流、每条 must_change 的实现类型仍在强制集内）；
+  - 三跑**只报观测值**（H5.1等价税列），「税是否消除」的结论挂在重基线**全量读数**上判——
+    旧税率 ~42% 章次下三跑全 0 的先验概率仍有约 20%，0/3 不构成宣判；
+  - 若仍有税，税章不得固定在同一章号（固定 ⇒ 夹具病，散开 ⇒ 模型病，进观察列）。
 
 ### 3.3 Writer 规格（`llm_writer.py:99-105`）
 
@@ -90,13 +102,14 @@ print(len(L), st.median(L), round(st.mean(L),1), sum(1 for x in L if x>=2000), s
 - `rewrite_scene`≡`rewrite_chapter` 名义阶梯（backlog）；
 - 配对打分表的「愿意付费读」维度（E23 裁定：单局面语料下无效，v4 多局面语料出来前不重开）。
 
-## 5. 实施序与门禁
+## 5. 实施序与门禁（tff 2026-10-11 裁定：一次一个因，先钉死修复再按读数扩规格）
 
-1. 3.4（derive 过滤 + 台账注入，改的是引擎）→ 单测 + 离线 10 章 dry-run；
-2. 3.1/3.2（夹具 v4）→ dry-run 全绿 + 税=0 验收；
-3. 3.3（Writer 规格 + 尺戳）→ 离线 dry-run 验接线断言；
-4. 3.5 取证 → 全量测试绿 → **显式 freeze commit**；
-5. 新尺三采样（同模型、各自 `--state-dir`、并行许可沿用 E21 纪律）→ 一致性铁律裁定 →
-   更新配对打分表语料（重开「愿意付费读」维度需另裁）。
+1. **§3.2 单批**（ladder-v3）：只动 ch09 契约一处 + LADDER_VERSION bump → 单测静态钉死（见 §3.2 验收）；
+   人物池、章长、尺面改动一律不混入本批。
+2. **freeze commit → 同模型三次采样**：E21 纪律（各自 `--state-dir`、各自 log、并行后接线断言），
+   只报 E1–E6/§6/§7/税列观测值 → 一致性铁律裁定（>10pp 差异 ⇒ 不可判、报方差）。
+3. **依据读数决定 v4.1**：3.1（人物/Fact 双池）、3.3（Writer 章长 2000–3000 + 尺戳）、
+   3.4b（已渲染事实台账进 prompt）、3.5（junk `item` 明细进 dump）——若 §3.2 单独已把关键读数
+   拉出病区间，扩规格批次可缓行；「税是否消除」在 v4.1 重基线全量读数上判。
 
-每步一次提交；2000–3000 字与 ≥4 人物两个数是本稿向 tff 要的**唯一定标项**，其余按已冻结判据执行。
+每步一次提交；2000–3000 字与 ≥4 人物两个数已定标（§3.1/§3.3），其余按已冻结判据执行。
