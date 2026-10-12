@@ -33,7 +33,8 @@
       "Bash(ssh -o BatchMode=yes -o ConnectTimeout=10 tff@192.168.31.213 'ollama -v; echo \"=== tags ===\"; curl -s localhost:11434/v1/models; echo; echo \"=== ps ===\"; curl -s localhost:11434/api/ps | head -c 300' 2>&1 | head -30)",
       "Bash(ls -d experiments/*variant* experiments/*t8* 2>/dev/null; ls experiments | tail -20; git log --oneline -3)",
       "Bash(git log --oneline -8; echo ---; ls; echo ---; find . -maxdepth 3 -type d -name \"*t8*\" -o -maxdepth 3 -type d -name \"*variant*\" 2>/dev/null | grep -v node_modules | head)",
-      "Bash(grep -rn \"not committable\" plot_engine --include=*.py | head; echo ===; grep -rn \"NEEDS_HUMAN\" plot_engine/revision_actions.py plot_engine/revision.py plot_engine/rescue.py 2>/dev/null | head -20)"
+      "Bash(grep -rn \"not committable\" plot_engine --include=*.py | head; echo ===; grep -rn \"NEEDS_HUMAN\" plot_engine/revision_actions.py plot_engine/revision.py plot_engine/rescue.py 2>/dev/null | head -20)",
+      "Bash(ls \"E:/github/semecTeachGroup/novel-audiobook\" | head -40; echo ---; find \"E:/github/semecTeachGroup/novel-audiobook\" -maxdepth 2 -iname \"*第一册*\" -o -maxdepth 2 -iname \"*册*\" 2>/dev/null | head)"
     ]
   }
 }

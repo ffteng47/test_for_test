@@ -22,11 +22,11 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 MODELS = {
-    "vd17":   {"model_id": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign", "label": "VoiceDesign 1.7B", "method": "design"},
-    "base17": {"model_id": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",        "label": "Base 1.7B \\u514b\\u9686",     "method": "clone"},
-    "base06": {"model_id": "Qwen/Qwen3-TTS-12Hz-0.6B-Base",        "label": "Base 0.6B \\u514b\\u9686",     "method": "clone"},
-    "cv17":   {"model_id": "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice", "label": "CustomVoice 1.7B", "method": "custom"},
-    "cv06":   {"model_id": "Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice", "label": "CustomVoice 0.6B", "method": "custom"},
+    "vd17":   {"model_id": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign", "label": "Qwen3-TTS VoiceDesign 1.7B", "method": "design"},
+    "base17": {"model_id": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",        "label": "Qwen3-TTS Base 1.7B 克隆",     "method": "clone"},
+    "base06": {"model_id": "Qwen/Qwen3-TTS-12Hz-0.6B-Base",        "label": "Qwen3-TTS Base 0.6B 克隆",     "method": "clone"},
+    "cv17":   {"model_id": "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice", "label": "Qwen3-TTS CustomVoice 1.7B", "method": "custom"},
+    "cv06":   {"model_id": "Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice", "label": "Qwen3-TTS CustomVoice 0.6B", "method": "custom"},
 }
 
 router = APIRouter()

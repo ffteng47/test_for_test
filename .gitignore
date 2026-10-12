@@ -13,6 +13,7 @@ __pycache__/
 我的老千生涯/
 鬼吹灯/
 voice_extract/
+第1册/
 
 # ---- 第三方大二进制 ----
 deploy/ollama-linux-amd64.tar.zst
@@ -35,3 +36,7 @@ info.txt
 # ---- 实验产物：sampling 全量同步（覆盖上面的 *.db / *.log）----
 !sampling/
 !sampling/**
+
+# ---- SQLite 临时文件（即使 sampling 全量同步也排除）----
+sampling/**/*.db-shm
+sampling/**/*.db-wal
