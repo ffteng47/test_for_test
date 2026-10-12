@@ -1,0 +1,842 @@
+这份审查**总体方向是对的，但我不会完全接受它的优先级排序**。最大的问题是：它把“商用小说生成系统”和“商用 SaaS 平台”两个问题混在一起，而且把一些**成熟阶段才需要的能力提前成了 P0**。
+
+如果你的目标是把 Alexandria 做成一个真正能持续生成**长篇网文/有声小说**的生产系统，我会给这份审查一个：
+
+> **8/10：判断准确，但优先级需要重排。**
+
+## 1. 最大的正确点：Plot Engine ≠ 小说生产引擎
+
+这点审查说得非常准确。
+
+现在如果架构是：
+
+```text
+StoryBible
+   ↓
+Plot / Arc
+   ↓
+Conflict / Twist
+   ↓
+PlotBeat
+   ↓
+Writer
+   ↓
+Chapter
+```
+
+它解决的是：
+
+> **“故事怎么不崩？”**
+
+但商用小说真正需要解决的是：
+
+```text
+题材定位
+   ↓
+读者预期
+   ↓
+故事规划
+   ↓
+章节目标
+   ↓
+Scene
+   ↓
+Beat
+   ↓
+Line / Dialogue
+   ↓
+生成
+   ↓
+多维审稿
+   ↓
+重写
+   ↓
+发布
+   ↓
+读者反馈
+   └──────────────┐
+                  ↓
+             下一轮规划
+```
+
+也就是说，真正应该做的不是单纯的 **Plot Engine**，而是：
+
+> **Story Production Engine / Novel OS**
+
+Plot Engine 只是其中一个核心子系统。
+
+---
+
+# 2. 但我不同意把 Reader Model 放到 P0 第一位
+
+这是这份审查里我认为最值得修正的地方。
+
+它说：
+
+> Reader Model → Scene/Dialogue → Style → Multi-tenancy
+
+我会改成：
+
+```text
+P0-A  Story State / Plot Engine
+P0-B  Scene Engine
+P0-C  Writer Engine
+P0-D  QA / Critic Engine
+P0-E  Memory / Continuity
+P0-F  Reader Model
+```
+
+原因很简单：
+
+### 你现在首先要证明一件事
+
+> **Alexandria 能不能连续生成 50～100 章质量稳定、人物不崩、剧情不断升级的小说？**
+
+如果这个问题还没有证明，Reader Model 没有太大意义。
+
+因为：
+
+```text
+Reader Model
+      ↓
+告诉你“读者可能喜欢什么”
+      ↓
+但 Writer 写出来很差
+      ↓
+仍然失败
+```
+
+所以第一阶段应该先形成：
+
+> **规划 → 生成 → 审查 → 修订 → 状态更新**
+
+这个闭环。
+
+---
+
+# 3. 真正应该补的是一个“Scene Engine”
+
+这一点我完全赞同原审查，而且我认为它甚至比 Reader Model 更重要。
+
+现在：
+
+```text
+Chapter
+   ↓
+Beat
+   ↓
+Writer
+```
+
+实际上缺失了非常重要的一层：
+
+```text
+Chapter
+   ↓
+Scene
+   ↓
+Beat
+   ↓
+Line
+```
+
+例如：
+
+### Chapter 127
+
+主题：
+
+> 韩立第一次进入血色禁地核心区
+
+应该先规划：
+
+```text
+Scene 1
+进入核心区
+目的：制造未知感
+
+Scene 2
+发现异常尸体
+目的：悬疑升级
+
+Scene 3
+遇到另一势力
+目的：人物冲突
+
+Scene 4
+第一次交锋
+目的：战力展示
+
+Scene 5
+发现真正危险
+目的：重新定义威胁
+
+Scene 6
+逃亡
+目的：章节高潮
+
+Scene 7
+发现线索
+目的：Hook 下一章
+```
+
+然后每个 Scene：
+
+```text
+Scene Goal
+Conflict
+Character Intent
+Information Reveal
+Emotional State
+Tension Curve
+Exit Condition
+```
+
+再下面：
+
+```text
+Beat 1
+Beat 2
+Beat 3
+...
+```
+
+这才是真正可以让 Writer 稳定工作的结构。
+
+---
+
+# 4. 但是这份审查低估了一个更重要的东西：Critic / Revision Loop
+
+它强调：
+
+> Style Scorer
+
+但我认为**评分器本身没有那么重要**。
+
+真正重要的是：
+
+```text
+Writer
+  ↓
+Critic
+  ↓
+发现问题
+  ↓
+Revision Planner
+  ↓
+Writer
+  ↓
+Critic
+  ↓
+通过
+```
+
+例如：
+
+```text
+Chapter 87
+```
+
+生成之后：
+
+### Plot Critic
+
+```text
+✓ 主线推进
+✓ 伏笔一致
+✗ 冲突强度不足
+✗ Chapter Hook 弱
+```
+
+### Character Critic
+
+```text
+✓ 主角目标一致
+✗ 女主行为偏离人物动机
+```
+
+### Style Critic
+
+```text
+✗ 对话过于解释性
+✗ 连续 4 段使用视觉描写
+✗ 句式重复
+```
+
+### Pacing Critic
+
+```text
+Scene 2: 低张力 1800 字
+Scene 3: 低张力 2200 字
+→ 中段注水风险
+```
+
+然后：
+
+```text
+Revision Planner
+       ↓
+只修改 Scene 2 + Scene 3
+       ↓
+重新生成
+```
+
+这比单纯：
+
+> Style Score = 82
+
+有价值十倍。
+
+---
+
+# 5. 所以我会把 Alexandria 的核心架构重新定义成 6 个 Engine
+
+我认为这是现在最重要的架构调整。
+
+```text
+                    Alexandria
+                        │
+          ┌─────────────┴─────────────┐
+          │                           │
+     STORY SYSTEM                PRODUCTION
+          │                           │
+ ┌────────┴────────┐          ┌───────┴────────┐
+ │                 │          │                │
+Plot Engine    Character     Scene Engine    Writer Engine
+ │              Engine          │                │
+ │                 │             │                │
+ └────────────┬────┴─────────────┴────────────────┘
+              │
+         Critic Engine
+              │
+       Revision Engine
+              │
+         State Update
+              │
+          Next Chapter
+```
+
+再加一个横向基础设施：
+
+```text
+Memory / Continuity
+Observability
+Model Router
+Cost Controller
+```
+
+---
+
+# 6. 其中最关键的是“状态机”不要砍
+
+审查最后说：
+
+> 尽快商用可以砍掉 Twist Engine、多状态机联动。
+
+**这一点我反而不同意。**
+
+如果 Alexandria 的目标只是：
+
+> AI 小说编辑器
+
+可以砍。
+
+但是你的目标显然不是这个。
+
+你前面讨论的方向是：
+
+> 长篇小说 + 多线剧情 + 持续冲突 + 转折 + 长期伏笔 + 有声小说生产
+
+那么：
+
+```text
+Plot State
+Character State
+Relationship State
+Knowledge State
+Conflict State
+Foreshadowing State
+World State
+Reader State
+```
+
+最终应该形成：
+
+```text
+Story World State
+```
+
+这是 Alexandria 真正的护城河。
+
+---
+
+# 7. 但是“多状态机”不能无限复杂
+
+这里需要一个原则：
+
+> **状态机负责事实，LLM负责推理。**
+
+这是整个系统能不能长期稳定的关键。
+
+例如：
+
+```text
+CharacterState
+{
+  hp,
+  realm,
+  location,
+  relationship,
+  known_facts,
+  goals,
+  secrets
+}
+```
+
+这些应该是确定性的。
+
+而：
+
+```text
+“张三现在为什么怀疑李四？”
+“张三下一步可能做什么？”
+```
+
+交给 LLM。
+
+千万不要让：
+
+```text
+LLM
+ ↓
+随便修改 State
+```
+
+否则 100 章之后一定崩。
+
+---
+
+# 8. 我认为这份审查还漏了一个真正的 P0：Canon / Continuity Engine
+
+它提到了：
+
+> 一致性工具箱
+
+但我认为严重程度应该提高。
+
+长篇小说最容易死在：
+
+```text
+第17章：
+主角不知道 X
+
+第84章：
+主角突然知道 X
+
+第31章：
+女主怕水
+
+第91章：
+女主跳河
+
+第112章：
+作者又说她从小喜欢游泳
+```
+
+这类问题。
+
+所以必须有：
+
+```text
+Canon
+Fact
+Character Knowledge
+World Rule
+Timeline
+Relationship
+Location
+Inventory
+Ability
+Secret
+```
+
+并且区分：
+
+### 世界知道
+
+```text
+Secret X exists
+```
+
+### 角色知道
+
+```text
+Character A knows X
+Character B doesn't know X
+```
+
+### 读者知道
+
+```text
+Reader knows X
+```
+
+这是非常重要的：
+
+> **Knowledge State ≠ World State**
+
+甚至可以成为 Alexandria 的核心能力之一。
+
+---
+
+# 9. “Reader Model”我建议晚一点做，但最终一定要做
+
+成熟以后可以形成：
+
+```text
+Reader Model
+    │
+    ├── Suspense
+    ├── Curiosity
+    ├── Satisfaction
+    ├── Emotional Investment
+    ├── Power Progression
+    ├── Romance Progression
+    └── Mystery Density
+```
+
+然后：
+
+```text
+Chapter 100
+   ↓
+Predicted Reader Experience
+   ↓
+Chapter 101 Plan
+```
+
+甚至最终：
+
+```text
+历史读者数据
+      ↓
+Reader Model
+      ↓
+章节节拍优化
+      ↓
+生成
+      ↓
+实际阅读数据
+      ↓
+模型更新
+```
+
+这才是真正的商业闭环。
+
+---
+
+# 10. SaaS 部分：这份审查明显“过早工程化”
+
+如果你现在只有：
+
+> Alexandria 内部生产工具
+
+那么：
+
+```text
+OAuth
+Multi-region
+Blue/Green
+PagerDuty
+Kubernetes
+跨 AZ
+SLA
+GDPR
+```
+
+全部不是 P0。
+
+甚至不是 P1。
+
+第一阶段只需要：
+
+```text
+User
+Project
+Story
+Role
+Quota
+Usage
+Audit
+```
+
+以及：
+
+```text
+Postgres
+Redis
+Object Storage
+Queue
+Worker
+```
+
+就够了。
+
+---
+
+# 11. SQLite → PostgreSQL：这条意见是对的
+
+这个必须提前设计。
+
+不是因为 SQLite 不能用，而是因为：
+
+> **Domain State 与 Persistence 必须解耦。**
+
+应该：
+
+```text
+Domain
+   │
+StateStore interface
+   │
+ ┌─┴──────────────┐
+ │                │
+SQLite          PostgreSQL
+```
+
+而不是：
+
+```text
+Domain
+ ↓
+SQLite API
+ ↓
+以后再改
+```
+
+同时 `StateEnvelope` 应该立即有：
+
+```json
+{
+  "schema_version": 3,
+  "story_id": "...",
+  "revision": 182,
+  "created_at": "...",
+  "state": {}
+}
+```
+
+这个建议我认为是**必须接受的**。
+
+---
+
+# 12. 成本控制也比这份审查描述得更重要
+
+不能只有：
+
+```text
+token_budget
+```
+
+应该形成：
+
+```text
+Job
+ ├── model
+ ├── input_tokens
+ ├── output_tokens
+ ├── latency
+ ├── gpu_seconds
+ ├── estimated_cost
+ └── actual_cost
+```
+
+然后：
+
+```text
+Story Budget
+Chapter Budget
+User Budget
+Provider Budget
+```
+
+最终：
+
+```text
+Budget Controller
+       ↓
+Model Router
+       ↓
+Qwen / DeepSeek / OpenAI / Anthropic
+```
+
+这样以后才能真正商业化。
+
+---
+
+# 13. 我会重新划分开发路线
+
+比原审查给出的 P0/P1 更合理的是：
+
+## Phase 0：证明“能写”
+
+**目标：50～100 章连续生成实验**
+
+```text
+StoryBible
+↓
+Plot Engine
+↓
+Character State
+↓
+Scene Engine
+↓
+Writer
+↓
+Critic
+↓
+Revision
+↓
+State Update
+```
+
+必须解决：
+
+* 长期剧情不崩
+* 人物不崩
+* 伏笔可追踪
+* Scene 级规划
+* 自动修订
+
+---
+
+## Phase 1：证明“好看”
+
+加入：
+
+```text
+Reader Model
+Emotion Model
+Pacing Model
+Style Model
+Hook Model
+```
+
+形成：
+
+```text
+Plan
+ ↓
+Write
+ ↓
+Critic × N
+ ↓
+Revision
+ ↓
+Quality Gate
+ ↓
+Publish
+```
+
+这一阶段才是真正决定 Alexandria 有没有商业价值。
+
+---
+
+## Phase 2：证明“能生产”
+
+加入：
+
+```text
+Job Queue
+Worker
+GPU Scheduler
+Model Router
+Redis
+Postgres
+Object Storage
+Usage Metering
+Cost Controller
+```
+
+实现：
+
+```text
+10部小说
+100部小说
+1000部小说
+```
+
+同时运行。
+
+---
+
+## Phase 3：证明“能卖”
+
+才开始：
+
+```text
+Multi-tenant
+RBAC
+Billing
+Quota
+Audit
+API
+Content Moderation
+Backup
+Monitoring
+SLA
+```
+
+---
+
+# 14. 最终我对这份审查的修正版评价
+
+我会把它总结成一句话：
+
+> **这份审查正确识别出了 Alexandria 当前从“剧情编排器”走向“商业小说生产系统”的缺口，但把 SaaS 基础设施和 Reader Model 的优先级提得过高，同时低估了 Scene Engine、Critic/Revision Loop、Canon/Knowledge State 这三个真正决定长篇生成质量的核心层。**
+
+真正应该形成的是：
+
+```text
+                 Alexandria
+                     │
+        ┌────────────┴────────────┐
+        │                         │
+   STORY INTELLIGENCE        PRODUCTION
+        │                         │
+  ┌─────┴─────┐            ┌──────┴──────┐
+  │           │            │             │
+ Plot     Character      Scene         Writer
+ Engine     Engine       Engine        Engine
+  │           │            │             │
+  └───────────┴────────────┴─────────────┘
+                       │
+                 Critic Engine
+                       │
+                Revision Engine
+                       │
+                Canon / Memory
+                       │
+                  State Update
+                       │
+                 Reader Model
+                       │
+                  Next Chapter
+```
+
+而基础设施是另一条线：
+
+```text
+Postgres
+Redis
+Queue
+Worker
+Model Router
+Cost Controller
+Observability
+Multi-tenant
+```
+
+**不要让 SaaS 工程把核心小说引擎的发展带偏。**
+
+如果你现在准备真正进入 Alexandria 的代码落地，我认为下一步最值得做的不是继续讨论“商用 SaaS 缺什么”，而是把现有 Plot Engine **直接升级成 `Plot → Scene → Beat → Write → Critic → Revision → State` 的完整流水线**。这才是从“优秀架构文档”迈向“真正能生产长篇小说的系统”的关键一步。

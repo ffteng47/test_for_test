@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"E:/github/semecTeachGroup/novel-audiobook\" && echo \"=== backend ===\" && find backend -maxdepth 3 -type f | head -60 && echo \"=== prompts ===\" && find prompts -maxdepth 2 -type f | head -40 && echo \"=== upstream ===\" && find upstream -maxdepth 2 -type f | head -40)",
+      "WebFetch(*)",
+      "Bash(find alexandria-spec-v0.1 -type f | head -50)",
+      "Bash(cd /e/github/semecTeachGroup/novel-audiobook && source .venv/Scripts/activate && python -m pytest plot_engine/tests/test_validator_l2.py -q 2>&1 | tail -20)",
+      "Bash(cd /e/github/semecTeachGroup/novel-audiobook && source .venv/Scripts/activate && python -m pytest plot_engine/tests/test_validator_contract.py -q 2>&1 | tail -20)",
+      "Bash(cd /e/github/semecTeachGroup/novel-audiobook && source .venv/Scripts/activate && python -m pytest plot_engine/tests/test_validator_contract.py -q 2>&1 | tail -8)",
+      "Bash(cd /e/github/semecTeachGroup/novel-audiobook && source .venv/Scripts/activate && python -m pytest plot_engine/tests -q 2>&1 | tail -4 && git add plot_engine/validator.py plot_engine/tests/test_validator_contract.py && git commit -m \"feat\\(plot-engine\\): validate_contract H7 rules + compat matrix \\(04 §5.1\\)\" -q && git log --oneline -1)",
+      "Bash(cd /e/github/semecTeachGroup/novel-audiobook && grep -n \"附录 B\\\\|附录B\\\\|ScenePlan\\\\|Scene\\\\b\\\\|SP1\\\\|SP2\\\\|SP3\\\\|SP4\\\\|SP5\\\\|SP6\\\\|SP7\\\\|scene_plan\\\\|前置\\\\|前置条件\\\\|precondition\" alexandria-spec-v0.2/04_contract_protocol.md | head -60)",
+      "Bash(cd /e/github/semecTeachGroup/novel-audiobook && sed -n '318,410p' alexandria-spec-v0.2/04_contract_protocol.md)",
+      "Bash(cd /e/github/semecTeachGroup/novel-audiobook && grep -rn \"class Beat\\\\|class Scene\\\\|class ScenePlan\\\\|Scene\\\\|Beat\" plot_engine/models/*.py | head; echo \"---sceneplan files---\"; ls plot_engine/ | grep -i scene; echo \"---Location fields---\"; grep -n \"connected_to\\\\|unlocked\\\\|class Location\" plot_engine/models/entity.py)",
+      "Bash(cd /e/github/semecTeachGroup/novel-audiobook && source .venv/Scripts/activate && grep -rn \"experiment_10ch\" plot_engine/tests | sed 's/:.*import/: import/' && echo \"--- fixture ---\" && cat plot_engine/tests/fixtures/experiment_10ch.py)",
+      "Bash(cd /e/github/semecTeachGroup/novel-audiobook && source .venv/Scripts/activate && grep -rln \"traitor_arc\" plot_engine --include=*.py && echo \"--- size ---\" && wc -c plot_engine/tests/fixtures/traitor_arc.json && echo \"--- review.py ---\" && cat plot_engine/review.py)",
+      "Bash(cd /e/github/semecTeachGroup/novel-audiobook && sed -n '25,90p' plot_engine/eventlog.py)",
+      "Bash(cd /e/github/semecTeachGroup/novel-audiobook && grep -n \"_LADDER\\\\|escalate_to_arc\\\\|actions\\\\b\" plot_engine/revision.py > /tmp/r.log 2>&1; sed -n '1,40p' /tmp/r.log)",
+      "Bash(cd /e/github/semecTeachGroup/novel-audiobook && grep -n \"H7\\\\.\\\\|validate_contract\" plot_engine/validator.py > /tmp/h7.log 2>&1; sed -n '1,40p' /tmp/h7.log)",
+      "Bash(cd /e/github/semecTeachGroup/novel-audiobook && grep -n \"H5.3\" -B 8 -A 6 plot_engine/validator.py > /tmp/h53.log 2>&1; sed -n '1,40p' /tmp/h53.log; echo \"=== ladder ===\"; sed -n '50,70p' plot_engine/revision.py)",
+      "Bash(cd /e/github/semecTeachGroup/novel-audiobook && sed -n '25,52p' plot_engine/revision.py > /tmp/lvl.log 2>&1; cat /tmp/lvl.log)",
+      "Bash(ls -1 \"E:/github/semecTeachGroup/novel-audiobook\" 2>/dev/null | head -50)",
+      "Bash(find \"E:/github/semecTeachGroup/novel-audiobook\" -maxdepth 3 -name \"*.md\" -not -path \"*/node_modules/*\" | head -60)",
+      "Bash(cd /c/Users/tff/AppData/Local/Temp/phase0-v3c3 && sed -n '1,6p' ch03.md && sed -n '/^## Draft$/,+3p' ch03.md | cut -c1-140)",
+      "Bash(cd /e/github/semecTeachGroup/novel-audiobook && git add docs/phase0-v3-three-arm-results.md && git commit -q -F - <<'EOF'\ndocs\\(plot-engine\\): v3c3 读数 + 三臂分层抽检——persona 漂移由人工抽检抓到、尺全绿\n\n臂 C 三份 40/40/50%（内部一致）低于臂 B 均值 ⇒ C ≥ B 逐对不成立。\n`b2 ch02` 首轮通过但把张三写成伪造者本人：H5.x 全绿，角色/立场漂移不在覆盖面内（backlog #10 实证）。\n臂 C 抽检三章保持调查者立场 ⇒ persona 局部有效、无指标增益。\n关键词扫描口径太松（把「查验伪印」算进去），明写作废、只留人工阅读结论。\nEOF\ngit log --oneline -1; tail -1 /c/Users/tff/AppData/Local/Temp/v3-driver.log)",
+      "Bash(cat E:/github/semecTeachGroup/novel-audiobook/info.txt E:/github/semecTeachGroup/novel-audiobook/router_local.json E:/github/semecTeachGroup/novel-audiobook/router_qwen3.json 2>/dev/null | head -100)",
+      "Bash(find E:/github/semecTeachGroup/novel-audiobook/frontend/src -type f | head -60 && cat E:/github/semecTeachGroup/novel-audiobook/frontend/package.json)",
+      "Bash(ls E:/github/semecTeachGroup/novel-audiobook/docs E:/github/semecTeachGroup/novel-audiobook/deploy/ttslab E:/github/semecTeachGroup/novel-audiobook/voice_extract/鬼吹灯 2>/dev/null | head -60; find E:/github/semecTeachGroup/novel-audiobook -maxdepth 2 -name \"*.qoder.site\" -o -maxdepth 2 -name \"*.site\" 2>/dev/null)",
+      "Bash(ls E:/github/semecTeachGroup/novel-audiobook/upstream; echo ---; head -30 E:/github/semecTeachGroup/novel-audiobook/backend/projects.py; echo ---; grep -l \"FastAPI\\\\|Flask\\\\|app.run\\\\|uvicorn\" E:/github/semecTeachGroup/novel-audiobook/backend/*.py E:/github/semecTeachGroup/novel-audiobook/deploy/*.py 2>/dev/null)",
+      "Bash(cd \"E:/github/semecTeachGroup/novel-audiobook\" && sed -n '1,40p;60,110p' deploy/master.py)",
+      "Bash(cd /c/Users/tff/AppData/Local/Temp && PYTHONIOENCODING=utf-8 \"E:/github/semecTeachGroup/novel-audiobook/.venv/Scripts/python.exe\" - <<'EOF'\nimport re,pathlib\nRUNS={\"A\":[\"phase0-v3a2\",\"phase0-v3a3\",\"phase0-v3a4\"],\n      \"B\":[\"phase0-v3b2\",\"phase0-v3b3\",\"phase0-v3b4\"],\n      \"C\":[\"phase0-v3c1\",\"phase0-v3c2\",\"phase0-v3c3\"]}\ndef kind\\(d,ch\\):\n    t=\\(pathlib.Path\\(d\\)/f\"ch{ch:02d}.md\"\\).read_text\\(encoding=\"utf-8\"\\)\n    st=re.search\\(r\"status=\\(\\\\w+\\)\",t\\).group\\(1\\)\n    if st!=\"OK\": return {\"ARC_CONFLICT\":\"判死\",\"FAIL\":\"FAIL\"}.get\\(st,st\\)\n    parts=re.split\\(r\"^## \\(.+\\)$\",t,flags=re.M\\); sec={}\n    for h,b in zip\\(parts[1::2],parts[2::2]\\): sec.setdefault\\(h.split\\(\"（\"\\)[0].strip\\(\\),b.strip\\(\\)\\)\n    r=int\\(re.search\\(r\"rounds=\\(\\\\d+\\)\",t\\).group\\(1\\)\\)\n    return \"首轮\" if r==0 else \\(\"删要求\" if sec[\"Draft\"]==sec.get\\(\"Round 0\"\\) else \"修好\"\\)\nfor ch in \\(1,5,9\\):\n    for arm,ds in RUNS.items\\(\\):\n        ks=[kind\\(d,ch\\) for d in ds]\n        n=lambda k: sum\\(1 for x in ks if x==k\\)\n        print\\(f\"ch{ch:02d} {arm}: {' '.join\\(ks\\)} | 判死{n\\('判死'\\)}/3 首轮{n\\('首轮'\\)}/3 可提交{n\\('首轮'\\)+n\\('修好'\\)+n\\('删要求'\\)}/3\"\\)\n    print\\(\\)\nEOF)",
+      "Bash(ssh:*)",
+      "Bash(ssh tff@192.168.31.213 'cd /home/tff/software/novel-audiobook/alexandria/projects/shuxue && rm -f prooflisten.jsonl' && curl -s -m 15 http://192.168.31.213:4200/api/prooflisten)",
+      "Bash(ssh -o BatchMode=yes -o ConnectTimeout=10 tff@192.168.31.213 'ollama -v; echo \"=== tags ===\"; curl -s localhost:11434/v1/models; echo; echo \"=== ps ===\"; curl -s localhost:11434/api/ps | head -c 300' 2>&1 | head -30)",
+      "Bash(ls -d experiments/*variant* experiments/*t8* 2>/dev/null; ls experiments | tail -20; git log --oneline -3)",
+      "Bash(git log --oneline -8; echo ---; ls; echo ---; find . -maxdepth 3 -type d -name \"*t8*\" -o -maxdepth 3 -type d -name \"*variant*\" 2>/dev/null | grep -v node_modules | head)",
+      "Bash(grep -rn \"not committable\" plot_engine --include=*.py | head; echo ===; grep -rn \"NEEDS_HUMAN\" plot_engine/revision_actions.py plot_engine/revision.py plot_engine/rescue.py 2>/dev/null | head -20)"
+    ]
+  }
+}

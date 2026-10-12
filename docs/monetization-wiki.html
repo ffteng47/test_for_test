@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>有声书商业变现 Wiki · novel-audiobook</title>
+<style>
+:root{
+  --bg:#0f1115; --panel:#161a21; --line:#242b36; --txt:#dfe4ec; --dim:#8b96a8;
+  --acc:#4fa3ff; --ok:#3fb27f; --warn:#e0a33c; --no:#e05c5c; --code:#1c222c;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);
+  font:15px/1.75 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif;}
+a{color:var(--acc);text-decoration:none} a:hover{text-decoration:underline}
+.layout{display:flex;align-items:flex-start;max-width:1280px;margin:0 auto}
+nav{position:sticky;top:0;width:246px;flex:0 0 246px;padding:28px 14px 60px;
+  border-right:1px solid var(--line);font-size:13px;max-height:100vh;overflow:auto}
+nav h4{margin:18px 0 6px;color:var(--dim);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+nav a{display:block;padding:3px 8px;border-radius:5px;color:#aab4c4}
+nav a:hover{background:var(--panel);text-decoration:none;color:var(--txt)}
+main{flex:1;min-width:0;padding:34px 44px 120px}
+h1{font-size:27px;margin:0 0 4px}
+h2{font-size:20px;margin:52px 0 12px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+h3{font-size:16px;margin:30px 0 8px;color:#cdd6e4}
+.sub{color:var(--dim);font-size:13px;margin-bottom:26px}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:13.5px}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--panel);font-weight:600;color:#c9d3e2}
+td code,p code,li code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:12.5px;
+  font-family:Consolas,Menlo,monospace}
+.y{color:var(--ok);font-weight:600} .n{color:var(--no);font-weight:600} .m{color:var(--warn);font-weight:600}
+.card{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--acc);
+  border-radius:7px;padding:14px 18px;margin:18px 0}
+.card.red{border-left-color:var(--no)} .card.amber{border-left-color:var(--warn)}
+.card.green{border-left-color:var(--ok)}
+.card h3{margin:0 0 8px;font-size:15px}
+ul,ol{padding-left:22px;margin:10px 0} li{margin:5px 0}
+.tag{display:inline-block;background:var(--code);border:1px solid var(--line);border-radius:20px;
+  padding:1px 10px;font-size:11.5px;color:var(--dim);margin-right:5px}
+.pill{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.p-y{background:var(--ok)} .p-n{background:var(--no)} .p-m{background:var(--warn)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:14px;margin:16px 0}
+.grid>div{background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:13px 15px}
+.grid b{display:block;font-size:13px;color:#cfd8e6;margin-bottom:6px}
+.grid span{font-size:12.5px;color:var(--dim)}
+.chk{list-style:none;padding-left:0}
+.chk li{padding-left:26px;position:relative}
+.chk li:before{content:"\2610";position:absolute;left:2px;color:var(--dim)}
+.chk li.done:before{content:"\2611";color:var(--ok)}
+footer{margin-top:70px;padding-top:16px;border-top:1px solid var(--line);color:var(--dim);font-size:12.5px}
+@media(max-width:900px){nav{display:none}main{padding:24px 18px 80px}}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav>
+  <h4>结论</h4>
+  <a href="#tldr">0 · 一页结论</a>
+  <a href="#gate">1 · 三道准入闸门</a>
+  <h4>渠道地图</h4>
+  <a href="#retail">2 · 零售端 C 端</a>
+  <a href="#agg">3 · 聚合分发商</a>
+  <a href="#lib">4 · 图书馆 / B2B</a>
+  <a href="#cn">5 · 中文区</a>
+  <a href="#d2c">6 · 直连变现</a>
+  <h4>决策</h4>
+  <a href="#matrix">7 · 分成与独家矩阵</a>
+  <a href="#path">8 · 三档落地路径</a>
+  <a href="#law">9 · 合规与披露</a>
+  <h4>推进</h4>
+  <a href="#open">10 · 待验证清单</a>
+  <a href="#log">11 · 探索日志</a>
+  <a href="#service">12 · 变现模式修正</a>
+  <a href="#gaps">13 · 补充环节缺口清单</a>
+  <a href="#open2">14 · 环境阻塞</a>
+  <h4>交付规格</h4>
+  <a href="#ar">15 · 渠道母带规格对照</a>
+  <a href="#pro">16 · 顶级机构工艺对标</a>
+  <a href="#src">17 · 来源</a>
+</nav>
+
+<main>
+
+<h1>有声书商业变现 Wiki</h1>
+<div class="sub">
+  <span class="tag">建页 2026-10-10</span>
+  <span class="tag">对象：AI TTS 有声书管线</span>
+  <span class="tag">状态：渠道调研已完成；产能已实测；交付级后期已接入导出链路<b>并在真导出链路上验收（2026-10-11：MP3 + M4B 均 −16.0 LUFS / −2.48 dBTP / 259 章 / 时长零漂移）</b>；<b>M1 机检闸门已上线——判定落在真成品上，<code>通过=false</code> 时前端红字并禁用下载</b>；渠道口径的 RMS 判定已按我方母带实测改写；配音之外工序已排期（<code>docs/post-production-plan.md</code>）；客户与文本来源未落实</span><br>
+  本页回答两个问题：<b>这套流水线产出的音频，能接到哪些真实存在的付费渠道上，拦路的是什么；以及钱应该从哪个模式进来。</b>
+  制作流程本身见 <code>docs/usage-wiki.md</code>，产能数字见 <code>docs/cost-model.md</code>，对外报价见 <code>docs/price-list.md</code>。
+</div>
+
+<div class="card red" id="tldr">
+<h3>0 · 一页结论</h3>
+<ol>
+  <li><b>钱应该从「卖产出」进，不是「卖分成」。详见 §12。</b>渠道版税（本 Wiki 的 §2–§3）现金回正需 60–90 天、单本量级极小、且要先自解流量；而<b>闸门 A 缺的版权，恰好是客户手里最不值钱又最没法自己变现的东西</b>。代工把版权责任转给委托方、收入前置、不受任何平台的 AI 朗读政策约束。本 Wiki 的渠道结论仍然成立，但它是<b>客户的目标渠道</b>，不是我们的收入来源。</li>
+  <li><b>最大的渠道直接出局。</b>Audible / ACX 要求真人朗读，第三方 AI 朗读违反条款。这条不是"暂时难进"，是政策排除，且 Audible 自留了 AI 授权名额给自家项目。</li>
+  <li><b>版权先于渠道。</b>仓库当前样本（<code>鬼吹灯</code> / <code>我的老千生涯</code> / <code>神探迈克狐</code>）均为第三方作品，源是网盘链接。任何正规渠道上架都要做权利声明，这类内容属于"上架即下架 + 封号"。<b>且注意性质升级：拿这些文本做样音去接单，侵权从「个人学习使用」变成「营利性侵权」，责任落到制作方，量级完全不同。样音必须用公版或自有文本重做。</b></li>
+  <li><b>可行主通道是聚合分发，而不是逐家谈。</b>一次接入 <b>Voices by INaudio</b>（原 Findaway Voices）或 <b>Author's Republic</b> 就覆盖 Spotify / Apple / Google / Kobo / Everand / 图书馆网络十余个终端，两者都接受 AI 朗读并要求标注。</li>
+  <li><b>中文区是另一套完全独立的体系</b>（喜马拉雅、番茄畅听、微信听书、懒人畅听等），对 AI 朗读宽松得多，但变现吃平台分账与广告，且同样要求信息网络传播权。</li>
+  <li><b>2026-08 起欧盟对 AI 生成音频有强制披露义务</b>，罚则上限 1500 万欧元。面向 EU 发行时，标注不是可选项。</li>
+  <li><b>最小可行实验：</b>自有版权文本 ×1 → Author's Republic（非独家、零门槛）→ 观测 Spotify + Kobo 的自然流量。</li>
+</ol>
+</div>
+
+<h2 id="gate">1 · 三道准入闸门</h2>
+<p>任何渠道在谈分成之前，先过这三关。过不了任何一关，后面全部无意义。</p>
+<div class="grid">
+  <div><b>闸门 A：文本版权</b><span>是否持有原文的「改编权 + 信息网络传播权 + 声音表演」授权。网文翻译/搬运、网盘来源文本一律不合格。</span></div>
+  <div><b>闸门 B：朗读形态</b><span>渠道是否接受 TTS/合成语音。这一关砍掉 Audible 生态，也是最大的市场。</span></div>
+  <div><b>闸门 C：披露义务</b><span>是否要求在元数据/上架信息中标注 AI 生成。合规成本极低，但不标注是封号级风险。</span></div>
+</div>
+
+<table>
+<tr><th>渠道</th><th>A 版权</th><th>B AI 朗读</th><th>C 披露</th><th>净判定</th></tr>
+<tr><td>Audible / ACX</td><td>严格</td><td class="n">排除</td><td>—</td><td class="n">出局</td></tr>
+<tr><td>Spotify Audiobooks</td><td>严格</td><td class="y">接受</td><td class="m">需标注</td><td class="y">可进</td></tr>
+<tr><td>Apple / Google Play</td><td>严格</td><td class="y">无禁令</td><td class="m">平台政策趋严</td><td class="y">经聚合商可进</td></tr>
+<tr><td>Kobo Writing Life</td><td>严格</td><td class="y">接受</td><td class="m">需标注</td><td class="y">可进</td></tr>
+<tr><td>Voices by INaudio</td><td>严格</td><td class="y">接受</td><td class="y">内置标注字段</td><td class="y">主通道</td></tr>
+<tr><td>Author's Republic</td><td>严格</td><td class="y">接受</td><td class="y">要求声明</td><td class="y">主通道（门槛最低）</td></tr>
+<tr><td>图书馆（Libby/Hoopla）</td><td>极严</td><td class="m">接受但退货率高</td><td class="y">是</td><td class="m">谨慎</td></tr>
+<tr><td>中文区平台</td><td>严格</td><td class="y">宽松</td><td class="m">部分要求</td><td class="y">可进</td></tr>
+<tr><td>自有站 / 播客 / YouTube</td><td>自担</td><td class="y">不受限</td><td class="y">自定</td><td class="y">唯一不受 B 约束的路</td></tr>
+</table>
+
+<div class="card amber">
+<h3>闸门 A 是本项目的实际瓶颈</h3>
+<p>当前 <code>info.txt</code> 记录的是夸克网盘分享链接，样本目录均为有主体的第三方作品。这意味着<b>渠道侧的全部结论，目前都处在地基悬空的状态</b>。推进变现前必须先决定内容来源走哪条：① 自研/签约原创文本；② 公版书（作者逝世纪满 50–70 年，各国不同）；③ 取得网文平台的有声改编授权。其中 <b>② 公版书是被低估的入口</b>：无版权障碍、渠道接受、且正是 AI 朗读最能摊薄成本的场景。</p>
+</div>
+
+<h2 id="retail">2 · 零售端（C 端订阅 / 单本购买）</h2>
+
+<h3>Audible / ACX —— 出局</h3>
+<ul>
+  <li>ACX 2026-04-15 的投稿要求写明：音频须由真人叙述，<b>除非另行授权</b>；该"另行授权"通道是 Audible 自有的 AI 朗读项目，不对第三方开放。</li>
+  <li>分成：Royalty Share 50%，或新版 Member Value 模型约 40%，二选一均需 12 个月独家。</li>
+  <li>独家是这里的隐形杀手：一旦进 ACX 独家，同一本书无法再进任何聚合商，等于把全部下游渠道锁死一年。</li>
+</ul>
+
+<h3>Spotify Audiobooks —— 对 AI 最友好的主流零售端</h3>
+<ul>
+  <li>与 <b>ElevenLabs</b> 打通：作者可在 ElevenLabs 生成有声书，导出成品包后上传 <b>Voices by INaudio</b> 分发到 Spotify。</li>
+  <li>另有 <b>Spotify for Authors</b> 自助通道。计费为按收听时长的池分（非单本销售），因此<b>长文本、高完读率</b>的内容受益，这与网文长篇的形态天然契合。</li>
+  <li>风险：Spotify 对 AI 生成音频整体持宽松态度，同样意味着竞争门槛低、内容供给膨胀，单本被发现的概率下降。</li>
+</ul>
+
+<h3>Apple Books / Google Play Books</h3>
+<ul>
+  <li>均无明确 AI 朗读禁令；两者都不面向个人作者开放自助有声后台，<b>实际只能经聚合商上架</b>（出版商有直连通道）。</li>
+  <li>分成量级：Apple ≈ 70%，Google Play ≈ 52%。</li>
+</ul>
+
+<h3>Kobo Writing Life（audiobooks）</h3>
+<ul>
+  <li>少数仍开放<b>作者自助</b>的零售端，非独家，可全区域，分成约 70%。</li>
+  <li>价值在于：不经聚合商也能落地，且与电子书账户体系同源，适合做渠道冗余。</li>
+</ul>
+
+<h3>Everand（原 Scribd）/ BookBeat / Books2Door / Audioteka</h3>
+<ul>
+  <li>订阅制时长库。Everand 按页/按完读计费，BookBeat 主导北欧，Audioteka 主导中东欧。</li>
+  <li>都通过聚合商的 wholesale 目录勾选进入，不单独谈。</li>
+</ul>
+
+<h2 id="agg">3 · 聚合分发商（一次接入覆盖十余终端）</h2>
+<table>
+<tr><th>聚合商</th><th>背景</th><th>门槛</th><th>独家</th><th>备注</th></tr>
+<tr><td><b>Voices by INaudio</b></td><td>原 Findaway Voices，世界最大有声分发网络；2025-08-01 被 Spotify 剥离、独立运营并更名</td><td>自助，无年费</td><td>可选</td><td>覆盖最广，含图书馆网络；原自营制作服务暂时停摆，团队在恢复中</td></tr>
+<tr><td><b>Author's Republic</b></td><td>面向独立作者与小出版社</td><td>最低，自助即时</td><td>非独家</td><td><b>首选试验场</b>：零门槛 + 接受 AI + 不锁渠道</td></tr>
+<tr><td>PublishDrive / StreetLib / Dzyne</td><td>电子书为主、有声为辅</td><td>有 API</td><td>非独家</td><td>适合需要程序化上架时，与本项目流水线可打通</td></tr>
+</table>
+<div class="card green">
+<h3>选型建议</h3>
+<p>用 <b>Author's Republic</b> 起步，保留全部渠道自由度；等验证某一本书有自然流量后，再上 <b>Voices by INaudio</b> 拿它独占的图书馆与更宽的零售覆盖。<b>不要同时把同一本交给两家做独家。</b></p>
+</div>
+
+<h2 id="lib">4 · 图书馆 / B2B</h2>
+<ul>
+  <li>渠道：<b>OverDrive·Libby</b>、<b>Hoopla</b>、Bibdate 等，全部通过 INaudio / Author's Republic 的 library 选项勾选，不单独谈判。</li>
+  <li>特点：采购方是图书馆员，按副本/按时间计费，单本收入天花板高于零售但转化慢。</li>
+  <li><b>对本项目的判断：先别进。</b>图书馆是对 AI 标题接受度最低、退货与差评风险最高的场景，会污染作品在分发网络里的表现数据。留到有真人叙述版本或明确市场验证之后再勾选。</li>
+</ul>
+
+<h2 id="cn">5 · 中文区（独立体系，与上述渠道无重叠）</h2>
+<table>
+<tr><th>平台</th><th>归属/格局</th><th>内容形态</th><th>变现方式</th></tr>
+<tr><td>喜马拉雅</td><td>2025 年传出腾讯音乐（TME）约 24 亿美元收购案</td><td>有声书 + 知识付费 + 播客</td><td>付费专辑 / 分账 / 广告 / 直播</td></tr>
+<tr><td>番茄畅听</td><td>字节，独立听书 App，背靠番茄小说</td><td>网文听书为主，<b>免费 + 广告</b></td><td>广告分账；平台自身在批量产 AI 听书</td></tr>
+<tr><td>微信听书</td><td>腾讯</td><td>有声出版物 + 知识类</td><td>单本付费 / 会员</td></tr>
+<tr><td>懒人畅听</td><td>TME（27 亿收购懒人听书），与 QQ 音乐 + 酷我畅听成合围矩阵</td><td><b>有声网文</b></td><td>分账</td></tr>
+<tr><td>七猫 / 起点读书 / 番茄小说 内置听书</td><td>网文平台自营听书位</td><td>与原文 IP 绑定</td><td>平台内部分账，通常需内容授权在同一纸合同里</td></tr>
+<tr><td>蜻蜓FM / 小宇宙</td><td>—</td><td>播客向，非有声书主战场</td><td>广告 / 付费节目</td></tr>
+</table>
+<ul>
+  <li>这一侧对 AI 朗读<b>明显宽松</b>，字节与七猫本身就在规模化生产 AI 听书，因此不存在闸门 B 的问题。</li>
+  <li>但闸门 A 更硬：网文平台的听书位通常要求把「有声改编权」并入内容授权合同，个人无法绕过平台拿第三方网文变现。</li>
+  <li>变现天花板低于全球零售端，优势是<b>与本项目现有的中文网文语料形态完全对口</b>，以及中文 TTS 质量已足以过线。</li>
+</ul>
+
+<h2 id="d2c">6 · 直连变现（不受任何平台 AI 政策约束）</h2>
+<ul>
+  <li><b>自有站 + Stripe/Paddle 订阅</b>：完全自控定价与元数据，唯一代价是要自己解决流量。</li>
+  <li><b>Payhip / Gumroad / BookFunnel</b>：直接卖 mp3 包或成书下载，适合做首批付费验证，成本近乎为零。</li>
+  <li><b>Podcast RSS（Apple Podcasts / Spotify 播客位）+ 广告</b>：播客通道<b>不审核 AI 朗读</b>，是 AI 有声内容目前唯一能以长形式免费获得大规模分发的正规入口。风险是它不产生"有声书"销售数据，无法反哺零售端表现。</li>
+  <li><b>YouTube</b>：同上，广告分成 + 引流，注意内容 ID 与原创性申诉。</li>
+</ul>
+<div class="card">
+<h3>直连的独特价值</h3>
+<p>它是唯一一条<b>现在就能跑通</b>的路——不需要任何平台批准，也不受闸门 B 约束。适合在版权问题解决之前，用公版书先把「音频质量 → 用户留存 → 付费意愿」这条链路的市场信号拿到手。</p>
+</div>
+
+<h2 id="matrix">7 · 分成与独家矩阵</h2>
+<table>
+<tr><th>渠道</th><th>名义分成</th><th>独家</th><th>年费/入门费</th><th>自助</th><th>AI 友好</th></tr>
+<tr><td>ACX / Audible</td><td>50% 或 ~40%（Member Value）</td><td class="n">强制 12 个月</td><td>无（或自费制作）</td><td>是</td><td class="n">否</td></tr>
+<tr><td>Kobo Writing Life</td><td>~70%</td><td>否</td><td>无</td><td>是</td><td>是</td></tr>
+<tr><td>Apple（经聚合）</td><td>~70%（扣聚合层）</td><td>否</td><td>无</td><td class="m">需聚合商</td><td>是</td></tr>
+<tr><td>Google Play（经聚合）</td><td>~52%（扣聚合层）</td><td>否</td><td>无</td><td class="m">需聚合商</td><td>是</td></tr>
+<tr><td>Spotify</td><td>时长池分（无固定比例）</td><td>否</td><td>无</td><td>是</td><td class="y">最友好</td></tr>
+<tr><td>Voices by INaudio</td><td>下游分成，自身抽成</td><td>可选</td><td>无</td><td>是</td><td class="y">是，内置标注</td></tr>
+<tr><td>Author's Republic</td><td>下游分成，抽成较低</td><td>否</td><td>无</td><td>是</td><td class="y">是</td></tr>
+<tr><td>中文区</td><td>分账比例按平台，普遍偏低</td><td class="m">常要求独家</td><td>无</td><td>是</td><td class="y">宽松</td></tr>
+<tr><td>直连</td><td>~97%（扣支付通道）</td><td>—</td><td>自建成本</td><td>—</td><td class="y">不受限</td></tr>
+</table>
+<p class="sub">分成数字为公开条款的量级参考，各平台会随政策调整；签约前以当时后台条款为准。真正决定收益的不是名义比例，而是<b>独家与否</b>（决定可触达的渠道数量）和<b>计费模型</b>（单本销售 vs 时长池分——后者对长篇网文有利）。</p>
+
+<h2 id="path">8 · 三档落地路径</h2>
+<div class="grid">
+  <div><b>档 0 · 当前状态：无自有文本</b><span>不碰任何正规渠道。只做两件事：① 用公版书验证音频质量与市场信号，走播客 / YouTube / Gumroad；② 并行确定内容来源（原创签约 vs 公版 vs 网文授权）。此档不产生可规模化收入，目的是拿到决策依据。<b>本轮修正：档 0 的首要动作改为向 B 端询价（见 §12），C 端自分发降级为样音载体。</b></span></div>
+  <div><b>档 1 · 一部自有书：最小验证</b><span>Author's Republic 上架（非独家、零门槛）→ 覆盖 Spotify / Kobo / Apple / Google → 观测 60–90 天的自然流量与完读率。投入几乎为零，不锁任何渠道，可逆。</span></div>
+  <div><b>档 2 · 规模化：多书组合</b><span>在档 1 有正信号的书上 <b>Voices by INaudio</b> 取更宽覆盖，暂不勾图书馆；同时开中文区（番茄畅听 / 懒人畅听分账）与自有站订阅。此档开始谈独家与授权合同，需要程序化上架能力，可对接 PublishDrive / StreetLib API。</span></div>
+</div>
+<p><b>升级判据：</b>档 0 → 档 1 的条件是「手上有一份权利清晰的文本」；档 1 → 档 2 的条件是「某本书的单本边际收益 > 继续产下一本的工时成本」。在这条判据满足之前，多书并行只是把成本摊得更薄。</p>
+
+<h2 id="law">9 · 合规与披露</h2>
+<ul>
+  <li><b>EU AI Act</b>：2026-08 起对 AI 生成音频施加强制披露义务，罚则上限 1500 万欧元。面向欧盟发行时，AI 朗读标注不是可选项，需在元数据与作品说明双处体现。</li>
+  <li><b>ACX / Audible</b>：明文要求真人叙述，第三方 AI 投稿属违规。</li>
+  <li><b>Voices by INaudio / Author's Republic</b>：接受 AI 朗读，要求在上架流程中如实声明；两家的表单都有对应字段。</li>
+  <li><b>声纹风险</b>：使用克隆真人声线需单独取得声音使用权授权——这与文本版权是两个独立权利，常被漏掉。本流水线若含 <code>voice_extract</code> 类造声环节，应固定记录每个声线的来源与授权凭证。</li>
+</ul>
+
+<h2 id="open">10 · 待验证清单</h2>
+<ul class="chk">
+  <li>公版书判定表：目标市场各国版权年限（作者逝后 50 / 70 年），以及「原著公版但现成译本有版权」的坑</li>
+  <li class="done">Author's Republic 上架字段与音频规格清单（码率/采样率/分段/审校要求）实测 → <code>docs/channel-master-checklist.md</code></li>
+  <li>Spotify for Authors 与 INaudio→Spotify 两条通道的实际收益差异</li>
+  <li>时长池分模型下，网文长篇（50+ 小时）的单位小时收益测算</li>
+  <li>中文区各平台 AI 听书当前的分账单价与是否要求独家</li>
+  <li>PublishDrive / StreetLib 的有声书 API 能否接进现有流水线做自动上架</li>
+  <li>自有站方案的支付通道对「AI 生成内容」的受理政策</li>
+  <li><b>代工报价的五个人工待标定项</b>（听感返工率 / 标注复核工时 / 拣声工时 / GPU 元每小时 / 全检 vs 抽检）——见 <code>docs/cost-model.md</code> §5，未补齐之前 <code>docs/price-list.md</code> 的价格一律标 [待验]，不得发客户</li>
+  <li>真人有声书制作的两个真实询价对照（800–2000 元/成品小时 目前是外部行情假设，未经询价验证）</li>
+  <li>3–5 家中小出版社 / 10 个网文作者的预算问询：<b>有没有人愿意为代工付钱</b>。这条不成立，上面全部作废</li>
+</ul>
+
+<h2 id="log">11 · 探索日志</h2>
+<table>
+<tr><th>日期</th><th>事件</th><th>结论</th></tr>
+<tr><td>2026-10-10</td><td>全球有声书渠道首轮调研，建成本 Wiki</td><td>ACX/Audible 因 AI 朗读政策出局；主通道定为 Author's Republic + Voices by INaudio；确认版权（非渠道）是本项目当前实际瓶颈，公版书为推荐入口</td></tr>
+<tr><td>2026-10-10（第二轮）</td><td>变现模式修正 + 产能实测 + 交付级后期落地</td><td><b>收入改走代工（卖产出），渠道版税降级为客户的发行选项</b>；实测 RTF 1.88、252.5 字/分钟、1 万字 = 1.24 GPU 小时；发现原导出无任何响度处理（−23.25 LUFS / −1.18 dBTP，两项均不合格），<code>backend/master_audio.py</code> 修到 −16.45 / −2.16，章节与时长零漂移</td></tr>
+<tr><td>2026-10-10（第三轮）</td><td>渠道母带规格对照 + LUFS↔RMS 差值实测标定</td><td>产出 <code>docs/channel-master-checklist.md</code>。AR/ACX 家族硬指标逐条比对本项目：<b>3 项参数冲突（128k→192k CBR、缺 <code>-ac 1</code>、真峰值 −2.16 超 −3 上限）+ 1 项结构冲突（170 MB 上限须分卷，100 万字 = 44 段）+ 2 项缺失</b>。用 7 本真人出版的正式有声书同窗对测，<b>LUFS − RMS 差值 = +3.37 ～ +4.05（中位 +3.55）</b>，据此把响度这项<b>从冲突翻案为合格</b>（−16 LUFS ≈ −19.6 dB RMS，在 −23～−18 窗内），<code>TARGET_I</code> 不动。同时测出中文商业成品普遍响于该窗口（迈克狐真峰值 +0.8 dBFS 已削顶），印证 §12：两套口径并存，客户口径不必向渠道靠拢。<b>未改动 <code>master_audio.py</code> / <code>price-list.md</code></b></td></tr>
+<tr><td>2026-10-10（第四轮）</td><td>头部厂牌规格与交付工艺对标（§16）</td><td>机构实践与本能反应相反：<b>只维护一份母带，规格差异交给下游</b>——Spotify 默认归一到 −14 LUFS、Apple/YouTube 各自归一，所以渠道的 RMS 窗口是<b>上传闸门而非播放标准</b>，不为单平台派生第三版。机构四支柱 = 机检先行（ACX 官方 Audio Analysis + 第三方 checker 生态）/ 底噪用 30 s room tone 单测 / <b>prooflisten 与 technical QC 分设两岗</b> / 按 PFH 分环节计价（narration $200–400、prooflisten ≈$45、≈6.2 人工小时每成品小时）。定位出唯一打不平的一格：<b>technical QC 可压到近零（我们的结构优势），prooflisten 不可自动化（真实成本下限）</b>——这正是 <code>price-list.md</code> 那个 <code>[待定] ‰</code> 阈值必须靠全听一本标定才有解的原因</td></tr>
+<tr><td>2026-10-10（第五轮）</td><td>把响度修复<b>接入导出链路</b></td><td>上一轮发现的缺陷此前只有一个人手动跑的脚本，等于没修。现在阈值/判定收敛到 <code>backend/master_audio.py</code> 一份真源，安装器 <code>deploy/patches/add_export_loudnorm.py</code> 把归一挂进 <code>merge_audio</code> 与 <code>merge_m4b</code> 两个出口，导出即归一并落 <code>delivery_report.json</code>；挂钩失败回退原音频且显式打警告，不阻断导出。已在服务器 <code>PATCHED</code>（<code>.bak_pre_loudnorm</code> 留备份），<b>需下次启动主服务生效</b>。pydub 读回再导出不破坏归一这一跳已在服务器 venv 实测（−55.95 → −16.02 LUFS，读回后仍 −16.02）</td></tr>
+<tr><td>2026-10-11</td><td>「配音之外还要求什么」→ 工序对照与开发排期</td><td>产出 <code>docs/post-production-plan.md</code>。真人剪辑的七项里我们天生合格五项（无呼吸/口水音/喷麦/跨场次电平漂移/房间噪声），<b>但缺三项工位：错读检出（prooflisten）、段边界拼接痕、机检闸门</b>。重新定义了 §15 的「底噪检测」缺项——段间是数字零静音，渠道那条判据<b>恒过且无意义</b>，真正会响的是 TTS 段尾残留波形硬接进零。<b>排期按 GPU 是否阻塞切两刀：M1 机检闸门 / M2 拼接痕 / M3 审听工位全部可在已在盘上的 259 段上做，纯 CPU</b>；只有产新样音卡在 §14。M3 的两个数（出错率 ‰、人工工时比）是 §13 缺口 4 与 <code>price-list.md</code> 那个 <code>[待定]</code> 的唯一解</td></tr>
+<tr><td>2026-10-11（第六轮）</td><td>GPU 恢复 → <b>导出链路真跑通并验收</b>；M2 仪器上线；两处结论被实测推翻</td><td>① <b>后期接线第一次在活服务上验证</b>：<code>/api/merge</code> 与 <code>/api/merge_m4b</code> 都出 <code>−16.0 LUFS / −2.48 dBTP / 1508.6 s / 259 章 / 通过</code>；交付的 MP3 复测 −16.50 LUFS（pydub 往返没吃掉归一）。修掉接线缺陷：<code>delivery_report.json</code> 写在 <code>root_dir</code>（多书共享软链根）→ 换书即覆盖、<code>书</code> 恒为 "alexandria"，改为写在<b>成品自己的真实目录</b>（新安装器 <code>fix_master_report_dir.py</code>，因为老安装器见已接线就跳过）。② <b>M2 实测推翻自己的假设</b>：372 段拼接痕 flag <b>0 段</b>（最大跳变 −34.34 dB，阈 −12）——"段尾硬边接零会爆音"不成立；同一仪器量出真问题是<b>段首死气</b>：中位 437 ms、最大 1273 ms，叠加固定 500 ms 段间静音后实际停顿 ≈1.0 s、抖动 ±850 ms。这是真人后期"剪气口"的等价物，立为 <b>M2b</b>（导出层裁剪，纯 CPU，改 <code>combine_audio_with_pauses</code> 与 <code>compute_timeline</code> 两处，否则章节轴漂）。③ <b>§15 的翻案再被推翻</b>：我方母带 LUFS−RMS 差值 <b>+0.65</b>（非商用样本的 +3.55），−16.0 LUFS 实为 <b>−16.65 dB RMS，超渠道 −18 天花板 1.35 dB</b> → 渠道 profile 必须直接按 RMS 定 <code>TARGET_I</code>（约 −19.6），两版母带是真要出。默认客户口径未动。④ <b>M2b 段首死气裁剪上线</b>：真正该剪的不是爆音是气口——段首静音中位 437 ms（最大 1273），段间 500 ms 是代码里的固定值，随机那截全在段头。裁到 80 ms 后同一本书 <b>1508.62 → 1399.75 s（−7.2%）</b>，段首跳变最大 −40.38 dB（阈 −12、超阈 0 段），259 章末章 END 正落在文件尾，章节轴没漂。<b>报价影响：每万字耗的 GPU 小时不变、可计费的成品小时少 7%</b>，按成品小时计价单位成本升约 8%，按万字计价不受影响——见 <code>cost-model.md</code></td></tr>
+<tr><td>2026-10-11（第七轮）</td><td><b>M1 机检闸门上线：不合格交不出去</b></td><td>① 判定层补齐：<code>inspect()</code> 出全项实测（LUFS / RMS / 真峰值 / 时长 / 章节数 / 体积 / 文件首尾静默），<b>判据分两层</b>——<code>gate()</code> 客户口径（响度、真峰值）才有拦交付的权力，<code>channel_gate()</code> 渠道口径（RMS / 峰值 / 体积）只报数不拦，避免渠道 profile 未定稿前把客户挡在收货门外。CLI 加 <code>--inspect 成品</code>（不合格非 0 退出），<code>--check</code> 里带一个<b>削顶反例</b>。② 接线：<code>GET /api/delivery_report</code> + <code>/export</code> 的 LIBRARY 机检栏，<code>通过=false</code> 时红字、<b>下载按钮禁用</b>（试听仍可）；归一崩溃、机检跑不起来都写成 <code>通过=false</code>，不留「读不到文件 = 没跑过」的模糊态。安装器 <code>add_delivery_gate.py</code>。③ 两个只有实测才会暴露的坑：<b>ffmpeg <code>lavfi</code> 的 <code>sine</code> 源不是满幅（实测峰 −18.06 dBFS）</b>，拿它当「顶满样本」会因为响度过轻而 FAIL，看着测过了其实没测削顶——断言因此收紧成「没有一项 PASS」；<b>机检一度量错了文件</b>：归一只能看中间 WAV，报告里 <code>章节数: 0→0</code>、体积 117.7 MB（成品 m4b 实际 20.4 MB），「章节标记没丢」这条判据<b>从来没生效过</b>，而本轮就真丢过两次 259 章——导出末尾补一道 <code>finalize()</code> 对真成品复判。④ 真成品实测：<code>−16.06 LUFS / −2.19 dBTP / 259 章 / 20.4 MB / 头 16 ms / 尾 0 ms</code>，客户口径 2/2 通过；渠道口径 RMS 与峰值两项仍超（差 1.7 dB / 0.8 dB），归 M4 的 profile，不在这里拦客户</td></tr>
+</table>
+
+<h2 id="service">12 · 变现模式修正：卖产出，不是卖分成</h2>
+<p>§2–§7 回答的是「音频能发到哪」，本节回答「钱从哪进」。这两件事的答案不一样，是本 Wiki 首轮调研最大的盲点。</p>
+
+<div class="grid">
+  <div><b>路线一 · 卖成品版税</b><span>自建/自有文本上 AR·INaudio，吃时长池分。<b>现金 60–90 天后首笔，单本量级极小</b>，且流量要自己解决。这是试水，不是商业化。</span></div>
+  <div><b>路线二 · 中文区分账</b><span>番茄畅听 / 懒人畅听。<b>有声改编权在平台手里</b>，个人拿不到那纸合同，且常要求独家。走不通。</span></div>
+  <div><b>路线三 · 卖产出（代工）</b><span>客户出文本与版权，我们出产能，<b>收入前置、签约即收</b>，不经过任何平台的 AI 朗读审核。<b>唯一一条现在就跑通的路。</b></span></div>
+</div>
+
+<div class="card">
+<h3>为什么代工能吃掉闸门 A</h3>
+<p>闸门 A（文本版权）卡住了我们<b>自己发书</b>，但它是<b>客户的存量资产</b>：中小出版社、腰部网文作者、知识付费讲师手上都有「一本有版权的书 + 想要有声版 + 真人制作报价 800–2000 元/成品小时做不起」。流水线的作用是把这段成本压到 GPU 工时 + 人工抽检，于是<b>版权由委托方持有并书面担保，我们不承担权利瑕疵</b>。同一道闸门，在路线一是墙，在路线三是护城河——它天然排除掉所有网盘内容的竞争者。</p>
+<p><b>与「卖软件」的区别：</b>交付物是母带（M4B/MP3/WAV 分轨 + 验收报告 + AI 朗读声明文件），不是工具授权。不做用户体系、不做多租户、不做在线控制台。</p>
+</div>
+
+<h3>实测产能（数字可回溯，脚本 <code>deploy/cost_probe.py</code>）</h3>
+<table>
+<tr><th>指标</th><th>实测值</th><th>来源</th></tr>
+<tr><td>产速 RTF</td><td><b>1.88</b> GPU 秒 / 音频秒</td><td>日志 487 条生成记录，方差极小</td></tr>
+<tr><td>成片语速</td><td><b>252.5 字/分钟</b>（与真人 250–300 同档）</td><td>259 段逐段 ffprobe</td></tr>
+<tr><td>1 万字原稿</td><td>0.66 音频小时 = <b>1.24 GPU 小时</b></td><td>以上两项换算</td></tr>
+<tr><td>单机月产能</td><td>≈ 400 万字原稿（已扣 30% 占用）</td><td>720 GPU 小时 / 1.24</td></tr>
+<tr><td>量产技术失败率</td><td>0 / 259，<b>但不足以定返工率</b></td><td>日志批次读数；听感返工另计</td></tr>
+</table>
+<p class="sub">注：技术失败 ≠ 听感合格。日志只记「没生成出来」，不记「这个字念错了」。长篇的错读集中在生僻字、数字串、多音字，必须人工全听一本才能定返工率——这是 <code>docs/cost-model.md</code> §5 的五个待标定项之一。</p>
+
+<h2 id="gaps">13 · 补充环节缺口清单</h2>
+<p>从「能跑」到「能收钱」之间缺的环节，按是否阻塞开工排序。<b>这不是待办清单，是接单能力的前置条件。</b></p>
+<table>
+<tr><th>#</th><th>缺口</th><th>状态</th><th>缺了会怎样</th></tr>
+<tr><td>1</td><td>产能与成本实测</td><td><b>已完成</b> <code>docs/cost-model.md</code></td><td>报不了价，只能瞎猜</td></tr>
+<tr><td>2</td><td>交付级后期管线</td><td><b>已完成并接入导出链路</b>：判定与阈值唯一真源 <code>backend/master_audio.py</code>，<code>deploy/patches/add_export_loudnorm.py</code> 把它挂进 <code>merge_audio</code> / <code>merge_m4b</code>（服务器已 PATCHED，<b>需重启主服务才生效</b>）</td><td>成品过不了渠道审核，也过不了客户验收</td></tr>
+<tr><td>3</td><td>验收口径 / SLA</td><td>草案见 <code>docs/price-list.md</code>，错读率阈值未定</td><td>尾款必然扯皮</td></tr>
+<tr><td>4</td><td>报价与人工工时标定</td><td>价格表已列，人工项<b>全是假设值</b></td><td>毛利是算出来的还是运气，不知道</td></tr>
+<tr><td>5</td><td>权利凭证链</td><td><b>已落一张表 + 一道闸</b>（2026-10-11）：<code>docs/rights-ledger.md</code> 定义字段与模板文本，<code>deploy/check_rights.py</code>（线上在 <code>alexandria/deploy_patches/</code>）读 <code>projects/&lt;slug&gt;/rights.json</code>，缺件退出码 1 = 不开工。实测这本书 8 个角色虽全 <code>type=clone</code>，参考音频却都是 persona 造的 <code>designed_voices/*_preview.wav</code>，<b>不含任何真人声纹</b>；检查器用路径认这件事，外录样本冒充「自研音色」会被拦。合同条款文本仍是业务草稿，<b>未过法务</b></td><td>拿网盘文本做样音去接单，侵权从「个人学习使用」升级成「营利性侵权」，责任落在制作方</td></tr>
+<tr><td>6</td><td>并发接单</td><td><b>结构阻塞</b></td><td>切书会重启后端（<code>usage-wiki.md</code> §2 多书切换），实际是单书串行，接不了 3 单以上</td></tr>
+<tr><td>7</td><td>获客物料</td><td><b>完全空白</b></td><td>公版样音 + 一页报价 + 两三个询价反馈。缺这个，前面六项都是自嗨</td></tr>
+</table>
+
+<div class="card red">
+<h3>后期管线为什么是硬门槛（实测证据）</h3>
+<p>原 <code>merge_m4b</code> 只做 concat + 转 AAC，<b>没有任何响度处理</b>。拿现有成品 <code>projects/shuxue/audiobook.m4b</code> 实测：综合响度 <b>−23.25 LUFS</b>、真峰值 <b>−1.18 dBTP</b>——比流媒体标准轻 7 dB，峰值还超标。客户听到的就是这本书。</p>
+<p><code>backend/master_audio.py</code> 两遍 loudnorm + 真峰值限制后：<b>−16.45 LUFS / −2.16 dBTP</b>，章节 259→259 全存活，时长 1504.89→1504.90 s 零漂移。<b>用 <code>linear=true</code> 是前提</b>——只有恒定增益才不会改动时间轴，章节标记才可信。</p>
+<p><b>脚本自身踩到的两个坑，留此备查：</b>① 本 build 的 <code>alimiter</code> 默认 <code>level=true</code>（自动补偿增益），会把结果顶到 −14.8 LUFS / +0.19 dBTP，两个指标同时破，必须显式 <code>level=0</code>；② <code>alimiter</code> 限<b>采样峰值</b>，验收读的是<b>帧间真峰值</b>，后者恒高，不留 1 dB 余量会卡在 −1.19 dBTP 过不了 −1.5。</p>
+<p><b>已从「独立脚本」接进导出链路：</b>阈值与判定只有一份真源 <code>backend/master_audio.py</code>；<code>deploy/patches/add_export_loudnorm.py</code> 按本仓库的安装器约定，把 <code>_normalize_master</code> 同时挂到 <code>merge_audio</code>（MP3）与 <code>merge_m4b</code>（M4B）两个出口——导出即归一，不再依赖有人手动跑一遍。挂钩是<b>失败即回退原音频并打一条 <code>!! 母带后期执行失败，成品未归一（不要交付）</code></b>，所以接线本身不会让导出挂掉；每次导出另写 <code>delivery_report.json</code>（实测 LUFS / dBTP / 通过与否 / 章节数 / 时长），<b>不达标不靠人听，看这个文件</b>。服务器已 <code>PATCHED</code>，<b>下次启动主服务才生效</b>（生成任务在跑时不重启，见 <code>usage-wiki.md</code> §4.3）。</p>
+</div>
+
+<h3>下一步（按现金距离排）</h3>
+<ul>
+  <li><b>开发排期已落 <code>docs/post-production-plan.md</code></b>：M1 机检闸门 / M2 拼接痕机检 / M3 审听工位（prooflisten）/ M4 渠道交付包 / M5 交付组装与权利台账。<b>关键：M1–M3 全是 CPU 侧、且能在已在盘上的 259 段音频上做，不受 §14 的 GPU 阻塞影响</b>——所以 GPU 坏着的这段时间正好用来做它们，而不是等。M3 出的两个数（出错率 ‰、人工工时比）就是下面那条报价单里 <code>[待定]</code> 的唯一解。</li>
+  <li><b>本周：</b>用公版文本产两本样音（阻塞项：见 §14 的 GPU 驱动），配 <code>docs/price-list.md</code> 去问 3–5 家中小出版社 / 10 个网文作者的预算。<b>目的是拿到「有没有人付钱」的证据，不是把功能补完。</b></li>
+  <li><b>拿到第一单意向后</b>再做：SLA 定稿、权利凭证表、并发接单改造。在此之前它们都是给不存在的需求补功能。</li>
+  <li>渠道侧（§2–§3）降级为<b>给客户的交付选项</b>：我们产母带，客户决定发哪，版税归客户。</li>
+</ul>
+
+<h2 id="open2">14 · 环境阻塞（本轮实测发现）</h2>
+<ul>
+  <li><b>GPU 曾不可用（2026-10-11 已解除）：</b>当时 <code>nvidia-smi</code> 报 <code>Failed to initialize NVML: Driver/library version mismatch</code>（NVML 595.99），主服务未在跑、HTTP :4200 不通。<b>驱动已修好，服务在跑（GPU free 24 GiB），产样音不再被这条卡住。</b>留这条是因为踩坑过程值得记：诊断脚本 <code>start_novelTTS.sh</code> 里加了 NVML 三方版本对照输出，下次一眼能定位是驱动/库失配还是没重启。</li>
+  <li>本轮所有产能数字来自<b>历史日志与既有成品文件</b>，未重新跑批，因此不需要 GPU。这也说明实测可以离线补，别为了测数去重启生产机。</li>
+</ul>
+
+<h2 id="ar">15 · 渠道母带规格对照（本轮实测）</h2>
+<p>§2–§3 回答「能发到哪」，本节回答「现有母带过不过得了质检」。完整清单落在
+<code>docs/channel-master-checklist.md</code>，此处只记结论。</p>
+<table>
+<tr><th>渠道硬指标（AR / ACX 家族）</th><th>本项目现状</th><th>判定</th></tr>
+<tr><td>MP3 / CBR / ≥192 kbps</td><td><code>master_audio.py</code> 输出 128k</td><td class="n">改参数</td></tr>
+<tr><td>44.1 kHz</td><td><code>SAMPLE_RATE = 44100</code></td><td class="y">合格</td></tr>
+<tr><td>单声道 mono</td><td>无 <code>-ac 1</code>，跟随输入</td><td class="n">未保证</td></tr>
+<tr><td>真峰值 ≤ −3 dBFS</td><td>母带实测 −2.48 dBTP / 采样峰值 −2.30 dBFS</td><td class="n">超 0.84 dB</td></tr>
+<tr><td>响度 −23 ～ −18 dB <b>RMS</b></td><td>母带实测 −16.0 LUFS = <b>−16.65 dB RMS</b></td><td class="n">超天花板 1.35 dB（判了两次，第二次才算数）</td></tr>
+<tr><td>底噪 ≤ −60 dB RMS</td><td>段间是数字零静音，<b>恒过且无信息量</b>；已在 372 段上改测段边界拼接痕，flag 0 段</td><td class="y">改判：对我们不是缺口</td></tr>
+<tr><td>单文件 ≤ 170 MB</td><td>整书一个文件</td><td class="n">须分卷：1.5 h/段，100 万字 = 41 段（按剪气口后 272 字/分钟）</td></tr>
+<tr><td>AI 朗读声明</td><td><code>price-list.md</code> 交付物 5 已有</td><td class="y">覆盖</td></tr>
+</table>
+<div class="card green">
+<h3>一个被推翻两次的数：LUFS ↔ dB RMS 差值（商用样本 +3.55，我方母带 +0.65）</h3>
+<p>渠道用的是宽带 RMS，我们的验收用的是门控 K 加权 LUFS，两者不等价，原本判断必须重做一版母带。
+用本机样本里 <b>7 本真人录制的正式出版有声书</b>同窗对测，差值稳定落在 <b>+3.37 ～ +4.05</b>，中位 <b>+3.55</b>。
+据此一度判"现行 −16 LUFS ≈ −19.6 dB RMS，本来就在窗内"，两版母带缩成"一处参数 + 一次复测"。</p>
+<p><b>2026-10-11 在我方母带上直测，那句话作废：</b>同一份音频 <b>−16.0 LUFS / −16.65 dB RMS</b>，差值只有 <b>+0.65 LU</b>，
+RMS <b>超渠道天花板 −18 达 1.35 dB</b>。<b>差值不能跨来源套用</b>——它是频谱分布的函数，合成声拿不到真人低中频那部分 K 加权增益（机制未证实，两条候选见 §15 引用的清单 §2.2）。
+所以渠道 profile 必须<b>直接按 RMS 定目标</b>：按 +0.65 反推，<code>TARGET_I</code> 得降到约 <b>−19.6 LUFS</b>，比客户口径轻 3.6 LU。<b>两版母带是真要出</b>；但 §12 的"客户口径不必向渠道靠拢"仍然成立，默认验收口径一字不动。</p>
+<p><b>反向证据：</b>中文商业成品普遍比该窗口响得多（迈克狐 RMS −16.2 dB、真峰值 +0.8 dBFS 已削顶）。
+说明 <code>−23～−18 dB RMS / ≤ −3 dB peak</code> 是<b>欧美渠道的本地惯例，不是行业物理量</b>——
+这印证了 §12 的修正：客户交付口径不必向渠道口径靠拢，两套并存按需切换。</p>
+</div>
+<p class="sub">待办与参数落点见 <code>docs/channel-master-checklist.md</code> §2.2/§7–§8，已按 2026-10-11 的母带实测改写判定。§14 的 GPU 阻塞<b>已解除</b>（驱动对齐、主服务在跑），剩下的渠道 profile 与分卷是排期问题（<code>docs/post-production-plan.md</code> M4），不是访问问题。<b>默认验收口径与 <code>price-list.md</code> 一字未改</b>——它是对客户的合同承诺；<code>TARGET_I</code> 只在显式的渠道 profile 里降。</p>
+
+<h2 id="pro">16 · 顶级机构怎么做（规格与交付工艺对标）</h2>
+<p>问题来自 §15 的收尾判断：规格冲突要不要演化成「多版母带」，以及这块成本怎么进报价。
+对标头部有声书厂牌（PRH Audio / Recorded Books / Podium / Brilliance 一类）的公开工艺，
+结论是<b>它们的做法恰好和本能反应相反</b>。</p>
+
+<div class="card green">
+<h3>核心发现：机构只维护一份母带，规格差异交给下游</h3>
+<p>为每个平台做一版响度，是<b>已经被播放侧归一化淘汰的旧做法</b>。Spotify 默认把内容归一到 <b>−14 LUFS</b>（用户可选 −11 / −23），Apple Music、YouTube、Amazon Music 各有各的归一。
+你做到 −14 和做到 −23，平台听完一样响——差别只体现在你<b>越不越峰值上限</b>。</p>
+<p>于是渠道那套 <code>−23～−18 dB RMS</code> 的真实身份是<b>上传闸门（一次通过的机检），不是播放标准</b>。
+闸门只需过一次的推论：与其维护 N 版，不如产 <b>1 份最高规格档案 + 1 份渠道交付包</b>。§15 里"是否要为渠道单做一版"的问题，在机构实践里不成立。</p>
+</div>
+
+<h3>四条机构工艺对照</h3>
+<table>
+<tr><th>机构做法</th><th>具体形态</th><th>本项目现状</th><th>差多远</th></tr>
+<tr><td><b>机检先行，人只听 flagged</b></td><td>ACX 官方内建 Audio Analysis 工具，上传即测 RMS / 峰值 / 采样率；交付方普遍在提交前自跑校验（第三方 ACX checker 已成生态，测 RMS、真峰值、底噪、首尾静默）。技术项由机器判，人不管</td><td>验收报告是<b>人工读的数字</b>（LUFS / dBTP / 时长 / CER 抽检）</td><td class="m">方向对，但没有做成<b>闸门</b>——现在是"报告里有数"，机构是"不合格不让交"</td></tr>
+<tr><td><b>底噪用 room tone 单独测</b></td><td>行业惯例是取 30 s 环境静音单独量底噪，而不是从成片里猜；首尾静默 0.5–1 s 也是逐项检查</td><td>未检测（§15 缺项 7、10）</td><td class="n">完全缺，且我们其实<b>有结构性优势</b>：合成语音没有房间噪声，段间静音是数字零</td></tr>
+<tr><td><b>技术质检与文本校对分设两岗</b></td><td>Prooflisten 听「念错没有」（错读、漏段、角色串音），technical QC 听「声学合不合规」（爆音、拼接痕、齿音过载）。两者失败模式不同，不可互相替代</td><td>混在「人工审校」一格，未拆</td><td class="n">这是 <code>price-list.md</code> 错读率阈值一直定不下来的原因——两个岗被当成一个岗报价</td></tr>
+<tr><td><b>按 PFH 分环节计价</b></td><td>行业报价单位是 per finished hour，且<b>拆环节</b>：narration $200–400 PFH、editing、prooflisten ≈$45 PFH 另计、mastering 再计；经验工时 ≈ <b>6.2 人工小时 / 1 成品小时</b></td><td>按<b>原稿字数</b>报价，人工工时占比标着「尚未标定」</td><td class="m">按字数报价对量产方（我们）不利、对客户有利，风险不对称；但换成 PFH 前必须先有返工率</td></tr>
+</table>
+
+<h3>这套对标暴露出的一个成本结构优势</h3>
+<div class="card">
+<p>机构的 6.2 人工小时/成品小时，大头是<b>演播与重录</b>，不是质检。拆成两岗看：</p>
+<ul>
+  <li><b>technical QC（声学合规）</b>：完全可以脚本化。RMS / 真峰值 / 底噪 / 首尾静默 / 文件体积 / 章节对齐，六项全是 ffmpeg 一行命令。机构靠第三方工具做到，我们靠 <code>backend/master_audio.py</code> 的验收报告改造即可——<b>这一岗我们能把成本压到接近 0</b>。</li>
+  <li><b>prooflisten（文本正确性）</b>：合成语音不会累，但会<b>念错字</b>（生僻字、数字串、多音字），且没有"重录一条"的自然修复。这一岗<b>不可自动化、不可压缩</b>，是我们的真实成本下限。</li>
+</ul>
+<p><b>结论：对标机构的意义不是让我们也跟着慢，而是定位了唯一打不平的那一格。</b>
+报价模型里唯一必须用「全听一本」来标定的数，就是 prooflisten 的错读检出工时——它决定毛利率上限，也正是 <code>price-list.md</code> 里那个 <code>[待定] ‰</code>。</p>
+</div>
+
+<h3>落到本项目的三条改法</h3>
+<ol>
+  <li><b>产物收敛为两层</b：① 高规格档案（WAV / 整书 M4B，给客户自用与再版）② 渠道交付包（192k CBR mono 分段 MP3，§15 的四项参数改动）。<b>不为单个平台再派生第三版</b>——平台会归一。</li>
+  <li><b>把验收报告升级成闸门</b：<code>master_audio.py</code> 已经是「非 0 退出码可当交付闸门」的形态，补上底噪 + 首尾静默 + RMS 三项机检即对齐机构做法。改动只在导出层，成本约每本几十分钟 CPU。</li>
+  <li><b>审校格拆成两栏报价</b：文本校对（人工，按成品小时）与技术质检（自动，含在产制里）。<code>price-list.md</code> §「不含」里的「人工审校工时」应从模糊项变成显性计价项。</li>
+</ol>
+<p class="sub">注：本节的机构做法来自公开条款、平台文档与从业者报价口径的交叉印证，不是厂牌内部流程一手资料；标 <b>≈</b> 与 $ 的数字为行业区间而非合同价。对标结论（一份母带、机检闸门、两岗分离）在各来源间一致性较高，可当作方向使用。</p>
+
+<h2 id="src">17 · 来源</h2>
+<ul>
+  <li><a href="https://storyvox.app/blog/are-ai-audiobooks-accepted-on-audible-2026-rules">Are AI Audiobooks Accepted on Audible in 2026?</a></li>
+  <li><a href="https://authorsrepublic.zendesk.com/hc/en-us/articles/17274538468244--Audio-Requirements-List">Author's Republic — Audio Requirements List</a>（MP3 / CBR / ≥192 kbps / 44.1 kHz / 底噪 ≤ −60 dB RMS / 单文件 ≤ 170 MB）</li>
+  <li><a href="https://www.authorsrepublic.com/learn/blog/57/understanding-audio-requirements">Author's Republic — Audio Standards for Audiobook Recording</a>（每轨 RMS −23 ～ −18 dB；页面有反爬，需后台核对）</li>
+  <li><a href="https://www.trevorohare.com/blog/understanding-the-acx-submission-requirements-for-audio">ACX Audio Requirements 2026: RMS, Peak &amp; Noise Floor</a></li>
+  <li><a href="https://help.acx.com/s/article/what-are-the-acx-audio-submission-requirements">ACX audio submission requirements（官方）</a></li>
+  <h4 style="margin:16px 0 4px;color:var(--dim);font-size:12px">§16 机构工艺对标</h4>
+  <li><a href="https://support.spotify.com/us/artists/article/loudness-normalization/">Spotify — Loudness normalization（官方，默认 −14 LUFS，可选 −11 / −23）</a></li>
+  <li><a href="https://www.forasoft.com/learn/audio-for-video/articles-audio/lufs-targets-per-platform-2026">LUFS targets per platform in 2026（各平台归一目标汇总）</a></li>
+  <li><a href="https://www.izotope.com/community/blog/mastering-for-streaming-platforms">iZotope — Mastering for streaming platforms</a></li>
+  <li><a href="https://help.acx.com/s/article/acx-audio-analysis-tool-faq-s">ACX Audio Analysis tool FAQ（上传即机检 RMS / 峰值 / 采样率）</a></li>
+  <li><a href="https://chapterpass.com/free-acx-check">Free ACX Check: Loudness, Peak, Silence</a> / <a href="https://audiopod.ai/free-tools/acx-checker">ACX Audiobook Checker</a>（第三方机检工具生态）</li>
+  <li><a href="https://mastering.to/audible">Getting Your Audiobook onto Audible</a>（底噪与首尾静默实操）</li>
+  <li><a href="https://www.reddit.com/r/ACX/comments/1ioylzz/book_kicked_back_by_qc/">r/ACX — Book kicked back by QC</a>（30 s room tone 量底噪的通行做法）</li>
+  <li><a href="https://www.acx.com/mp/blog/money-talks-paying-and-getting-paid-for-your-audiobook">ACX — Money Talks: PFH 行业报价拆分</a></li>
+  <li><a href="https://karencommins.com/2017/10/top-10-q-audiobook-production.html">Karen Commins — Q&amp;A on Audiobook Production（narration / editor / prooflisten 分岗计价）</a></li>
+  <li><a href="https://alpacaauthors.com/blog/self-publish-audiobook-guide-costs-distribution">Self Publish Audiobook: 2026 Guide（$150–400+ PFH；≈6.2 人工小时/成品小时）</a></li>
+  <li><a href="https://www.theaudiobookguy.co.uk/post/how-much-does-it-cost-to-turn-my-book-into-an-audiobook">The Audiobook Guy — 成本拆解（QC 另计 $45 PFH）</a></li>
+  <li><a href="https://narrationbox.com/blog/can-you-use-ai-voice-for-audible-acx-and-findaway-voices-(2025-guide)">AI Voice for Audible, ACX, and Findaway</a></li>
+  <li><a href="https://www.audie.ai/can-you-use-ai-voices-on-audible-what-authors-need-to-know">Can You Use AI Voices on Audible?</a></li>
+  <li><a href="https://janefriedman.com/what-authors-need-to-know-about-the-return-of-findaway-as-inaudio/">The Return of Findaway as INaudio</a></li>
+  <li><a href="https://storyvox.app/blog/findaway-voices-guide-distribution-royalties-setup">Findaway Voices / INaudio Guide: Distribution, Royalties &amp; Setup</a></li>
+  <li><a href="https://scribecount.com/author-resource/publishing-a-book/how-to-distribute-audiobooks-on-authors-republic">How to Distribute Audiobooks on Author's Republic</a></li>
+  <li><a href="https://scribecount.com/author-resource/audiobook-creation-guide/audiobook-platform-comparison">Audiobook Platform Comparison for Indie Authors 2026</a></li>
+  <li><a href="https://reedsy.com/blog/guide/audiobooks/distribution/">The Ultimate Guide to Audiobook Distribution (Reedsy)</a></li>
+  <li><a href="https://reedsy.com/blog/audiobook-services/">Best Audiobook Production Services of 2026 (Reedsy)</a></li>
+  <li><a href="https://aiwritebook.com/en/blog/acx-alternatives/">ACX Alternatives: Findaway, Spotify, Apple, and More</a></li>
+  <li><a href="https://www.midiaresearch.com/blog/spotifys-embrace-of-ai-generated-audio-is-a-blessing-and-curse-for-authors">Spotify's embrace of AI-generated audio — MIDiA Research</a></li>
+  <li><a href="https://tools.miku.ac/blog/tts-disclosure-rules-eu-acx-2026">EU AI Act, ACX, and TTS disclosure rules 2026</a></li>
+  <li><a href="https://www.im-pg.com/zbzx/13612.shtml">有声风口已至，为何国内出版业感知不到增长红利？</a></li>
+  <li><a href="https://news.qq.com/rain/a/20250522A02NW400">TME 若收购喜马拉雅，能打破音频平台的规模困境吗</a></li>
+  <li><a href="https://zhuanlan.zhihu.com/p/1916196869312348342">300亿龙头，打折卖了（番茄畅听 / 七猫 / 起点听书格局）</a></li>
+  <li><a href="https://mp.m.ofweek.com/finance/a056714105527">耳朵经济开辟新局？腾讯音乐拟收购喜马拉雅</a></li>
+  <li><a href="https://www.ebrun.com/20250612/582706.shtml">喜马拉雅"上岸"应该感谢字节（懒人畅听 / 酷我矩阵）</a></li>
+</ul>
+
+<footer>
+novel-audiobook · 商业变现 Wiki · 建页 2026-10-10 · 本页为单文件零依赖 HTML，可直接双击打开或提交版本库。<br>
+分成与政策类信息随平台条款变动，签约前以当时后台条款为准。
+</footer>
+
+</main>
+</div>
+</body>
+</html>

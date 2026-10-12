@@ -7,3 +7,29 @@ __pycache__/
 *.db-shm
 
 sampling/
+
+# ---- 媒体音频（仅本地，不进远程）----
+凯叔讲故事/
+口袋神探/
+神探迈克狐/
+我的老千生涯/
+鬼吹灯/
+voice_extract/
+
+# ---- 第三方大二进制 ----
+deploy/ollama-linux-amd64.tar.zst
+
+# ---- vendored 上游仓库（需要则改用 submodule）----
+upstream/
+
+# ---- 依赖/构建产物 ----
+frontend/node_modules/
+frontend/dist/
+node_modules/
+dist/
+
+# ---- 临时/日志 ----
+*.log
+pt_probe*.txt
+links_mp3.txt
+info.txt

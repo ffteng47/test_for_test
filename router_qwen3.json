@@ -1,0 +1,24 @@
+{
+  "writer": {
+    "base_url": "http://127.0.0.1:11500/v1",
+    "model": "qwen3:8b",
+    "timeout_s": 600,
+    "extra_body": {"reasoning_effort": "none"}
+  },
+  "extract": {
+    "base_url": "http://127.0.0.1:11500/v1",
+    "model": "qwen3:8b",
+    "max_tokens": 800,
+    "temperature": 200,
+    "timeout_s": 600,
+    "extra_body": {"reasoning_effort": "none"}
+  },
+  "plan": {
+    "base_url": "http://127.0.0.1:11500/v1",
+    "model": "qwen3:8b",
+    "max_tokens": 1500,
+    "temperature": 500,
+    "timeout_s": 600,
+    "extra_body": {"reasoning_effort": "none"}
+  }
+}

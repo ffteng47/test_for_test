@@ -1,0 +1,8 @@
+# Qoder Sites agent project descriptor
+# This file is machine-managed. Do not edit or commit.
+# Binding is held in host account storage, not this file.
+slug: novel-audiobook
+site_id: 019fd207-d8cd-72c6-9f56-9e87857c9362
+project_id: 019fd207-d895-748b-911d-1745c6a6cae2
+action_id: 019fd207-d895-748b-911d-1745c6a6cae2
+revision: 1
