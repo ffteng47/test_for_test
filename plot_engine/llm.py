@@ -97,6 +97,18 @@ def _urllib_transport(url: str, payload: dict, headers: Mapping[str, str],
         raise LlmUnavailable(f"{url} 不可达（{e}）；本地模型需先加载，冷启动约 65s") from e
 
 
+@dataclass
+class CallDiag:
+    """一次调用的接线读数：正文为空时它是唯一的证据（30b 初筛十章空产出，run.log 里一个字没有）。"""
+    role: str
+    model: str
+    finish: str
+    content_chars: int
+    reasoning_chars: int
+    max_tokens: int
+    raw: str = ""          # 仅正文为空时留档的响应截断
+
+
 class LlmClient:
     """OpenAI 兼容 `/chat/completions` 客户端 + token/成本累计（08 §3 成本字段的数据源）。"""
 
@@ -105,6 +117,7 @@ class LlmClient:
         self._transport = transport or _urllib_transport
         self.total_tokens = 0
         self.total_cost_usd = 0.0
+        self.calls: List[CallDiag] = []
 
     def complete(self, role: str, messages: List[dict]) -> Tuple[str, Usage]:
         ep = self.router.endpoints[role]                    # 未配置角色 = 配置错误，直接抛
@@ -115,11 +128,30 @@ class LlmClient:
         resp = self._transport(f"{ep.base_url.rstrip('/')}/chat/completions",
                                payload, headers, ep.timeout_s)
         try:
-            text = resp["choices"][0]["message"]["content"]
+            choice = resp["choices"][0]
+            msg = choice["message"]
+            text = msg["content"]
         except (KeyError, IndexError, TypeError) as e:
             raise LlmUnavailable(f"{ep.model} 响应缺少 choices：{str(resp)[:200]}") from e
+        reasoning = msg.get("reasoning") or ""
+        self.calls.append(CallDiag(role=role, model=ep.model,
+                                   finish=str(choice.get("finish_reason") or ""),
+                                   content_chars=len(text or ""),
+                                   reasoning_chars=len(reasoning),
+                                   max_tokens=ep.max_tokens,
+                                   raw="" if text else str(resp)[:300]))
         u = resp.get("usage") or {}
         usage = Usage(int(u.get("prompt_tokens", 0) or 0), int(u.get("completion_tokens", 0) or 0))
         self.total_tokens += usage.total
         self.total_cost_usd += usage.total / 1000.0 * ep.usd_per_1k_tokens
         return text, usage
+
+    def render_call_diagnostics(self) -> str:
+        """接线摘要一行；只点名被截断或空正文的调用。全正常 ⇒ 只给计数。"""
+        bad = [c for c in self.calls if not c.content_chars or c.finish == "length"]
+        head = f"调用 {len(self.calls)} 次"
+        if not bad:
+            return head + "｜接线正常（无空正文、无截断）"
+        return head + f"｜可疑 {len(bad)} 次：" + " ".join(
+            f"[{c.role} {c.model} finish={c.finish} 正文={c.content_chars} "
+            f"思考={c.reasoning_chars} 上限={c.max_tokens}]" for c in bad[:8])

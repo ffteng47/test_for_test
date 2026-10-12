@@ -1,0 +1,21 @@
+{
+  "writer": {
+    "base_url": "http://127.0.0.1:11500/v1",
+    "model": "qwen3:30b",
+    "max_tokens": 4000,
+    "timeout_s": 900,
+    "extra_body": {
+      "think": false
+    }
+  },
+  "extract": {
+    "base_url": "http://127.0.0.1:11500/v1",
+    "model": "qwen3:30b",
+    "max_tokens": 3200,
+    "temperature": 200,
+    "timeout_s": 900,
+    "extra_body": {
+      "think": false
+    }
+  }
+}

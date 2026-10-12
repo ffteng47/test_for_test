@@ -367,7 +367,9 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
         note += f"｜停在第 {report.unresolved_chapters[-1]} 章（P2 语义，分母 = 停前生成章数）"
     if dump_dir is not None:
         note += "｜终态 " + " ".join(f"{k}={v}" for k, v in sorted(count_dispositions(dump_dir).items()))
-    return report, note, extraction_diagnostics(source.channels)
+    diag = extraction_diagnostics(source.channels)
+    diag["calls"] = getattr(client, "render_call_diagnostics", lambda: "")()
+    return report, note, diag
 
 
 def count_dispositions(dump_dir) -> Dict[str, int]:
@@ -511,6 +513,8 @@ def main(argv: Optional[List[str]] = None) -> int:
               f"用时={report.total_duration_ms / 1000:.0f}s｜"
               f"抽取产出 {diag['proposals']} 条（规则提升 {diag['promoted']}）"
               f" / 坏料 {diag['malformed'] or '无'}")
+        if diag.get("calls"):
+            print(f"接线：{diag['calls']}")
         print(render_review_text(architecture_review(report)))
         return 0
 

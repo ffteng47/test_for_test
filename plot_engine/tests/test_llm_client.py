@@ -163,3 +163,25 @@ def test_extra_body_defaults_empty_and_is_reportable():
     r = LlmRouter(endpoints={"writer": ModelEndpoint()})
     assert r.endpoints["writer"].extra_body == {}
     assert r.to_config()["writer"]["extra_body"] == {}
+
+
+# —— 接线盲区（30b 初筛：十章空正文，run.log 一个字没有）
+def test_empty_content_is_recorded_with_reasoning_and_raw_snippet():
+    transport, _ = _fake_transport([
+        {"choices": [{"message": {"content": "", "reasoning": "我需要先回忆…"},
+                      "finish_reason": "length"}], "usage": {"completion_tokens": 1200}}])
+    c = LlmClient(LlmRouter.default(), transport=transport)
+    c.complete("writer", [{"role": "user", "content": "写第一章"}])
+    line = c.render_call_diagnostics()
+    assert "可疑 1 次" in line and "finish=length" in line and "思考=7" in line
+    assert "我需要先回忆" in c.calls[0].raw          # 空正文时把原始响应留档
+
+
+def test_clean_calls_are_not_flagged():
+    transport, _ = _fake_transport([
+        {"choices": [{"message": {"content": "张三凝视印章。"}, "finish_reason": "stop"}],
+         "usage": {}}] * 3)
+    c = LlmClient(LlmRouter.default(), transport=transport)
+    for _ in range(3):
+        c.complete("writer", [{"role": "user", "content": "y"}])
+    assert c.render_call_diagnostics() == "调用 3 次｜接线正常（无空正文、无截断）"
