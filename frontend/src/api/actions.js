@@ -71,6 +71,27 @@ async function kick(promise, task, name, type, refreshers) {
   track(task, name, type, refreshers)
 }
 
+// busy 是纯前端内存态：刷新页面后，后端真在跑的任务会显示成「没在跑」——
+// 批量生成按钮又能点、也停不掉正在跑的任务。启动时向后端核对一遍真实状态，在跑就恢复跟踪。
+export async function resyncRunning() {
+  if (store.mode !== 'live') return
+  const specs = [
+    ['audio', '批量生成', 'tts', [loadChunks]],
+    ['persona', '音色设计', 'persona', [loadVoices]],
+    ['script', '剧本标注', 'annotate', [loadChunks, loadVoices]],
+    ['review', '剧本复查', 'qc', [loadChunks]]
+  ]
+  for (const [task, name, type, fns] of specs) {
+    if (store.busy[task]) continue
+    let s = null
+    try { s = await api.status(task) } catch { return }
+    if (s && s.running) {
+      toast(`检测到后端「${name}」任务进行中，已恢复进度跟踪`, 'warn')
+      track(task, name, type, fns)
+    }
+  }
+}
+
 export const actions = {
   // ---- 导入/剧本 ----
   uploadBook: (file) => {

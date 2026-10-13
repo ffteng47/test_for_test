@@ -140,7 +140,7 @@
         <div v-if="genError" class="err-box">{{ genError }}</div>
         <div v-for="r in results" :key="r.id" class="result-row">
           <div class="r-meta">
-            <div class="r-model">{{ r.model_label }}<span class="r-time">· {{ r.gen_time_s }}s 生成 / {{ r.duration_s }}s 音频 · seed {{ r.seed }}</span></div>
+            <div class="r-model">{{ r.name || r.model_label }}<button class="btn btn-ghost btn-sm" @click="renameRec(r)">✎</button><span class="r-time">· {{ r.gen_time_s }}s 生成 / {{ r.duration_s }}s 音频 · seed {{ r.seed }}</span></div>
             <div class="r-line dim mono">{{ r.sample_text }}</div>
             <div class="r-desc dim" v-if="r.description">{{ r.description }}</div>
           </div>
@@ -169,7 +169,8 @@
         </div>
         <div v-for="r in history" :key="'h'+r.id" class="result-row hist-row">
           <div class="r-meta">
-            <div class="r-model">{{ r.model_label }}
+            <div class="r-model">{{ r.name || r.model_label }}
+              <button class="btn btn-ghost btn-sm" @click="renameRec(r)">✎</button>
               <span class="r-time">· {{ r.created_at }} · seed {{ r.seed }}<template v-if="r.speaker"> · 目标 {{ r.speaker }}</template></span>
             </div>
             <textarea class="r-text" rows="2" :value="r.sample_text" @change="patchText(r, $event.target.value)"></textarea>
@@ -363,6 +364,20 @@ export default {
         this.saving = ''
       }
     },
+    async renameRec(r) {
+      const cur = r.name || ''
+      const name = window.prompt('给这条声音起个标题（留空 = 恢复显示模型名）', cur)
+      if (name === null) return
+      this.saving = r.id
+      try {
+        Object.assign(r, await api.voiceLabRecordUpdate({ id: r.id, name: name.trim() }))
+        toast(name.trim() ? `✓ 标题已改为「${name.trim()}」` : '已恢复模型名显示', 'ok')
+      } catch (e) {
+        toast(`改名失败：${e.message}`, 'err')
+      } finally {
+        this.saving = ''
+      }
+    },
     async dropRecord(r) {
       const extra = this.purgeFile ? '，并删掉它的音频文件' : '（音频文件保留）'
       if (!window.confirm(`删除「${r.model_label} / seed ${r.seed}」这条记录${extra}？`)) return
@@ -498,6 +513,11 @@ export default {
     },
     async apply(r) {
       if (!this.speakerLabel) { toast('先选择目标角色', 'warn'); return }
+      // 串绑防护：这条声音当时是给别的角色造的，绑到当前角色前必须二次确认
+      if (r.speaker && r.speaker !== this.speakerLabel) {
+        const from = this.store.characters.find((c) => c.label === r.speaker)
+        if (!window.confirm(`这条声音是给「${from ? from.name : r.speaker}」造的，确定绑给「${this.currentCharName}」？`)) return
+      }
       const eng = r.engine || 'qwen'   // 服务端回传实际出声引擎，批量生成据此分发
       this.applying = r.id
       let cfg

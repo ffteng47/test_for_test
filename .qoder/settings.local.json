@@ -37,7 +37,12 @@
       "Bash(ls \"E:/github/semecTeachGroup/novel-audiobook\" | head -40; echo ---; find \"E:/github/semecTeachGroup/novel-audiobook\" -maxdepth 2 -iname \"*第一册*\" -o -maxdepth 2 -iname \"*册*\" 2>/dev/null | head)",
       "Bash(ls -R \"E:/github/semecTeachGroup/novel-audiobook/E-books\" 2>/dev/null | head -30; echo ====; ls \"E:/github/semecTeachGroup/novel-audiobook/第1册/output/第1册\" | head)",
       "Bash(cd /e/github/semecTeachGroup/novel-audiobook; PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe -m pytest plot_engine/tests/test_derive_contract.py -q 2>&1 | tail -6)",
-      "Bash(cd /e/github/semecTeachGroup/novel-audiobook; git add plot_engine/derive.py plot_engine/tests/test_derive_contract.py && git commit -m \"fix\\(derive\\): reader_signals 按目标态到达过滤（v4.0 §3.4 / E25 机制修）——gate 成熟后读者已达 hinted/knows 的 fact 不再每章进契约，deceived 属旁支错误态不算到达；+1 测，471 绿\" -q && git add docs/samples/blind-v2paired-scores-agent.md && git commit -q -m \"docs\\(samples\\): 配对盲评第一棒（agent 首评）10 组全序——低置信组（组1 六变体全三重锚定）与近并列位已标注；key 未读\" && git log --oneline -2)"
+      "Bash(cd /e/github/semecTeachGroup/novel-audiobook; git add plot_engine/derive.py plot_engine/tests/test_derive_contract.py && git commit -m \"fix\\(derive\\): reader_signals 按目标态到达过滤（v4.0 §3.4 / E25 机制修）——gate 成熟后读者已达 hinted/knows 的 fact 不再每章进契约，deceived 属旁支错误态不算到达；+1 测，471 绿\" -q && git add docs/samples/blind-v2paired-scores-agent.md && git commit -q -m \"docs\\(samples\\): 配对盲评第一棒（agent 首评）10 组全序——低置信组（组1 六变体全三重锚定）与近并列位已标注；key 未读\" && git log --oneline -2)",
+      "Bash(curl -s -m 8 http://127.0.0.1:11500/v1/models | head -c 200)",
+      "Bash(grep -n 'busy' /e/github/semecTeachGroup/novel-audiobook/frontend/src/data/store.js | head -20; grep -n 'status\\(' /e/github/semecTeachGroup/novel-audiobook/frontend/src/api/client.js)",
+      "Bash(for r in v4c1 v4c2 v4c3; do head -1 sampling/$r.log | cut -c1-250; grep -o \"可疑 [0-9]*\" sampling/$r.log; done)",
+      "Bash(ssh tff@192.168.31.213 'bash /home/tff/software/novel-audiobook/start_novelTTS.sh' 2>&1 | tail -20)",
+      "Bash(cd /e/github/semecTeachGroup/novel-audiobook/frontend && npm run build 2>&1 | tail -12)"
     ]
   }
 }

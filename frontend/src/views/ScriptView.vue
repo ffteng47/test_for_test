@@ -107,7 +107,7 @@
 
 <script>
 import { store, speakerOf, engineLabel, fmtTime, VERDICT, VERDICT_ICON } from '../data/store.js'
-import { actions } from '../api/actions.js'
+import { actions, resyncRunning } from '../api/actions.js'
 import { toggleUrl } from '../audio/player.js'
 
 export default {
@@ -138,6 +138,7 @@ export default {
       return s.qc === 'pass' ? '✓ 转录一致' : '⚠ 疑似漏字，待复核'
     }
   },
+  created() { resyncRunning() },
   watch: {
     curSeg: {
       immediate: true,
