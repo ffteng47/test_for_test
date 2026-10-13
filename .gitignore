@@ -5,7 +5,8 @@ __pycache__/
 *.db
 *.db-wal
 *.db-shm
-
+1.txt
+opencode.exe
 # ---- 媒体音频（仅本地，不进远程）----
 凯叔讲故事/
 口袋神探/

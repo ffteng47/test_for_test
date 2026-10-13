@@ -280,6 +280,15 @@ cd frontend && npm run build && cd dist \
 
 自检：`cd alexandria/app && ../venv/bin/python engines.py` → `SELFTEST OK`。
 
+一键升级（推荐，2026-10-13 起）：在开发机仓库根跑 `deploy/deploy.ps1`（Windows PowerShell，内部即上面「前端发布」+「安装器」两段的串行版）：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File deploy/deploy.ps1            # 构建前端 + 跑指定安装器 + 覆盖 studio + 安全检查后重启
+powershell -ExecutionPolicy Bypass -File deploy/deploy.ps1 -DryRun    # 只打印将执行的命令，不动服务器
+```
+
+`-Installers a.py,b.py` 指定要跑的安装器（默认 `add_clone_ref_text.py`）；`-SkipFrontend` 跳过前端构建与发布；`-NoRestart` 只落文件不重启（会打印手动重启命令）；`-Force` 在有生成任务时强推（会中断任务，慎用）。重启前脚本会逐个查 `/api/status/{script,review,audio,persona,m4b_export,audacity_export}` 的 `running`（见 §4.3），任一在跑就拒绝重启。
+
 ### 4.3 重启纪律（硬性）
 
 **生成任务在跑时绝不重启。** 重启前先确认：
@@ -452,3 +461,5 @@ logs/                           主服务/任务/sidecar 日志与 pid
 - **CDP 驱动真页面复验（用户开 `--remote-debugging-port=9222` 时）**：`curl http://127.0.0.1:9222/json` 拿 `webSocketDebuggerUrl`，Node 全局 `WebSocket` 直连，`Runtime.evaluate`（`awaitPromise` + `returnByValue`）读 DOM/组件状态、`Input.dispatchKeyEvent` 发键、`Page.captureScreenshot` 看图；组件实例从 `document.querySelector('.transport').__vue__` 拿。两个**假象**别当真 bug：① 后台标签页 rAF 冻结 → `<transition mode="out-in">` 永远停在 `fade-leave-active`，看着像「切路由后白屏/列表空」，标签页一亮就自己好了；② `element.click()` 不算用户激活 → `audio.play()` 被 autoplay 挡，播不出声不等于按钮没接上——**连 `Input.dispatchMouseEvent` 发的「真实」鼠标事件在后台标签页也不算**（实测 `navigator.userActivation.hasBeenActive` 始终 `false`，新建一个静音 `new Audio()` 照样 `NotAllowedError`），所以「按钮接上了没有」看 `store.transport.url` 有没有落到本段路径，不看有没有声音。另两条驱动口径：`Page.navigate` 换 hash 是**同文档导航、不重载**，验新 bundle 必须换 path 或加 `?v=`（否则你以为在测新版，其实进程还是旧的）；组件实例只在 `.transport` 这类真实节点上取（本页 `#app` 取不到）。
 - **M5④ 权利台账落地（2026-10-11）**：`deploy/check_rights.py`（部署在 `alexandria/deploy_patches/`，只读检查、不改后端、不需要重启）+ `docs/rights-ledger.md`。台账一本书一份写 `alexandria/projects/<slug>/rights.json`，认书走 `projects.json` 的 `active`（同 M3 那条：`chunks.json` 在共享根上是真文件，不能 `realpath` 反查）。三条判据缺任一条退出码 1 = 不开工：文本三权利 + 书面担保 + 侵权自担 + 合同凭证 / 每个 `type=clone` 角色的声线来源 / AI 朗读声明文本。跑法：`cd alexandria/deploy_patches && ../venv/bin/python check_rights.py`（`--slug` 指书、`--init` 写空模板、`--demo` 自检）。**实测声线**：这本书 8 个角色全 `type=clone`，但参考音频一律是 persona 造的 `designed_voices/*_preview.wav`，不是真人声纹——所以 `来源=自研音色` 合法，检查器用路径认这件事，参考音频落在 `designed_voices/` 之外还按自研填的直接拦。当前这本书没填台账，检查器判「缺 `rights.json` → 不开工」是对的。**留着的垃圾**：`alexandria/delivery_report.json`（02:13、`书=alexandria`、`输出=temp_master_norm.wav`）是修目录那次的过期产物，现行的是 `projects/shuxue/delivery_report.json`（04:15），`/api/delivery_report` 实测读的是后者，闸门没读错；删它不可逆，等单独批准。
 - **验收口径实测（2026-10-11，服务重启后真跑两条导出链路）**：MP3 与 M4B 都验到 `−16.0 LUFS / −2.48 dBTP / 时长 1508.6 s / 259 章`，`通过: true`。踩到并修掉的接线缺陷：报告原先写在 `root_dir`（共享软链根）上——换书即被覆盖、`书` 字段恒为 `"alexandria"`；改成写在成品的真实目录（安装器 `deploy_patches/fix_master_report_dir.py`，旧机器专用，因为 `add_export_loudnorm.py` 见已接线就跳过）。**重新导出 M4B 要带 `per_chunk_chapters=true`**，默认 `false` 走标题检测分组、导出不带章节标记（现成母带的 259 章是 2026-10-04 带该参数导出的）。顺带：我方母带的 LUFS−RMS 差值只有 **+0.65**（不是商用样本的 +3.55），渠道 RMS 窗口的判定因此改写，见 `channel-master-checklist.md` §2.2。
+- **参考克隆 ref_text 持久化（2026-10-13）**：VoiceLab 参考音频的 ASR 文本原先只活在前端内存——`clone_voices/manifest.json` 只存 `{id,name,filename}`，选已上传样本时不回填 ref_text（旧 UI 对 clone 样本是显式清空），每次都得重录重转。现在 upload 接口收 `ref_text` 字段落 manifest；新增 `POST /api/clone_voices/ref_text` 按 id 回写（`list` 自动带回）；VoiceLab 选样本 `@change` 即回填、上传 ASR 后自动持久化，并加「↻ 重新转写」按钮给缺文本的旧样本补；CastView 导入参考音频时也顺手回写。安装器 `deploy/patches/add_clone_ref_text.py`（幂等，备份 `app.py.bak_pre_clone_ref_text`），改了 `app.py`，**需重启**。
+- **一键升级部署脚本（2026-10-13）**：`deploy/deploy.ps1`（Windows 开发机，`-DryRun` 只打印）。串联 npm build → scp 安装器到 `alexandria/deploy_patches/` 并用 `venv/bin/python` 跑 → tar 覆盖 `alexandria/studio/` → 安全检查 → stop/start 主服务 → 就绪自检；`-Installers`/`-SkipFrontend`/`-NoRestart`/`-Force` 见 §4.2。重启门禁改为直接查六个任务的 `/api/status/*` 的 `running`，不必手抄 stats 数字。

@@ -295,6 +295,8 @@ export default {
         )
         if (refText === null) { toast('已上传但未绑定，可稍后在绑定区保存', 'warn') }
         else if (ch) {
+          // 顺手把参考文本落回 clone_voices/manifest.json，实验室选样时可直接回填
+          try { await api.cloneVoiceRefText({ id: r.voice_id, ref_text: refText }) } catch { /* 非关键路径 */ }
           const ok = await actions.saveVoiceConfig({
             [ch.label]: { type: 'clone', voice: null, engine: this.engine, ref_audio: `clone_voices/${r.filename}`,
                           ref_text: refText, description: '', character_style: asr.instruct || '', seed: -1 }

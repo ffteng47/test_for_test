@@ -71,6 +71,8 @@ export const api = {
   cancelAudio: () => request('/api/cancel_audio', { method: 'POST', timeoutMs: 15000 }),
   // ---- Voice Lab（声音实验室）----
   cloneVoices: () => request('/api/clone_voices/list', { timeoutMs: 5000 }),
+  // 回写参考音频的 ASR 转写，落 clone_voices/manifest.json，选样时回填用
+  cloneVoiceRefText: (body) => request('/api/clone_voices/ref_text', { method: 'POST', body, timeoutMs: 8000 }),
   engines: () => request('/api/engines', { timeoutMs: 5000 }),
   emotions: () => request('/api/emotions', { timeoutMs: 5000 }),
   voiceLabModels: () => request('/api/voice_lab/models', { timeoutMs: 8000 }),

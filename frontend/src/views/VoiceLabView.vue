@@ -48,7 +48,7 @@
         <template v-if="method === 'clone'">
           <div class="field">
             <div class="label">参考音频（先「导入参考声音」上传）</div>
-            <select v-model="refAudio">
+            <select v-model="refAudio" @change="onPickRef">
               <option value="">— 选择已上传样本 —</option>
               <option v-for="v in cloneList" :key="v.filename" :value="v.filename">{{ v.name }}</option>
             </select>
@@ -64,6 +64,9 @@
           <div class="field">
             <div class="label">参考音频对应台词（ref_text，必填）</div>
             <textarea v-model="refText" rows="2"></textarea>
+            <button class="btn btn-ghost btn-sm" :disabled="uploading || !refAudio" @click="retranscribeRef">
+              {{ uploading ? '转写中…' : '↻ 重新转写（选已有样本补文本）' }}
+            </button>
           </div>
           <div class="field">
             <div class="label">情绪指令 · 仅「CosyVoice2 情感指令」模型生效（改语气，不改年龄音色）</div>
@@ -429,6 +432,40 @@ export default {
     fillSample() {
       if (!this.sampleText && this.firstLineOfSpeaker) this.sampleText = this.firstLineOfSpeaker
     },
+    onPickRef() {
+      const v = this.cloneList.find((x) => x.filename === this.refAudio)
+      this.refText = (v && v.ref_text) || ''
+    },
+    async persistRefText(id) {
+      if (!id) return
+      try {
+        await api.cloneVoiceRefText({ id, ref_text: this.refText })
+        const v = this.cloneList.find((x) => x.id === id)
+        if (v) v.ref_text = this.refText
+      } catch { /* 落盘失败不拦生成，文本仍在内存里 */ }
+    },
+    async retranscribeRef() {
+      if (!this.refAudio) { toast('先选择参考音频', 'warn'); return }
+      this.uploading = true
+      try {
+        const res = await fetch(`/clone_voices/${this.refAudio}`)
+        if (!res.ok) throw new Error(`${res.status}`)
+        const blob = await res.blob()
+        const file = new File([blob], this.refAudio, { type: blob.type || 'audio/wav' })
+        const asr = await api.transcribeRef(file)
+        if (asr.text) {
+          this.refText = asr.text
+          await this.persistRefText((this.cloneList.find((x) => x.filename === this.refAudio) || {}).id)
+          toast('ref_text 已重新转写并保存', 'ok')
+        } else {
+          toast('ASR 未识别到文本，请手工填写', 'warn')
+        }
+      } catch (e) {
+        toast(`重新转写失败：${e.message}`, 'warn')
+      } finally {
+        this.uploading = false
+      }
+    },
     async onRefFile(ev) {
       const file = ev.target.files[0]
       this.uploading = true
@@ -444,7 +481,8 @@ export default {
             // ASR 情感标签只在风格指令为空时填入，不覆盖手工选择
             const emo = asr.instruct || (asr.emotion ? asr.emotion.toLowerCase() : '')
             if (emo && !this.description) this.description = emo
-            toast(`ref_text 已自动转写${emo ? `（情感：${emo}，已填入风格指令）` : ''}`, 'ok')
+            await this.persistRefText(r.voice_id)
+            toast(`ref_text 已自动转写并保存${emo ? `（情感：${emo}，已填入风格指令）` : ''}`, 'ok')
           } else {
             toast('ASR 未识别到文本，请手工填写 ref_text', 'warn')
           }
