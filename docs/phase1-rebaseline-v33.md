@@ -188,3 +188,30 @@ v4 把三元组拆成双钉是减半了彩票数，但 tp9 的两枚都押在尺
 复现：`.venv/Scripts/python.exe -m plot_engine.readout sampling/v4r1 sampling/v4r2 sampling/v4r3`；
 `.venv/Scripts/python.exe -m plot_engine.reanchor sampling/v4r1 sampling/v4r2 sampling/v4r3`；
 正文中位用 `plot_engine.prose_audit.chapter_texts_from` 逐目录取 len 中位。
+
+## 10. 抽取上限批次 v4c 三采样（冻结面 `4d388cf` = §9 结论的直接执行：extract 800→2400，夹具/Writer 面与 §9 全同，2026-10-13）
+
+命令同 §7、目录 `sampling/v4c1..3`，首行戳新增 `｜抽取上限=2400`。与 §9 三臂**只差抽取上限一个字段** ⇒ 同表对读归因截断污染。
+
+| 跑法 | E2 | 税 | 首轮 | 判死(ARC) | 待人工 | 截断次数 | ch09 | 章正文中位 |
+|---|---|---|---|---|---|---|---|---|
+| v4r1..3（上限800） | 20/20/20 | 0 | 2/2/1 | 2/2/1 | 6/6/7 | 10/10/13 | ARC×3（落空 ['BELIEVES','INFERS']） | 2421/2467/2578 |
+| v4c1 | 30% | 0 | 1(+救2) | 2（ch05,09） | 5 | 1 | ARC（落空 ['BELIEVES']） | 2633 |
+| v4c2 | 20% | 0 | 2 | 2（ch05,09） | 6 | 4 | ARC（落空 ['BELIEVES']） | 2663 |
+| v4c3 | 20% | 0 | 2 | **0** | 8 | 2 | FAIL 待人工（HARD=4，**BELIEVES 抽中**） | 2570 |
+
+**截断归因裁定（一因一批的验收线）**：上限 2400 后 `finish=length` 从 10/10/13 次缩到 1/4/2 次，
+通道基本打开；但 **E2 只从 20% 挪到 20–30%（极差 10pp，压线可读）**——§9 那批双钉章 FAIL
+（2,3,4,7,10 三跑恒定）**不是截断假象，是真实兑现/抽取失败**。抬上限买到的是归因澄清，不是通过率。
+
+**盲区上移一级**：截断退场后 E18 的语义盲区接棒成为主仪器缺口——ch09 落空集从 ['BELIEVES','INFERS']
+缩到 ['BELIEVES']（INFERS 现在抽得出来；v4c3 连 BELIEVES 也抽中一次、ARC=0），
+FAIL 章残留主导仍是 `H5.1 BELIEVES/READS 0<1` + `H5.3 belief/knowledge 无实现事件`。
+⇒ 下一把尺的靶心是 **BELIEVES 的判据/提示词（抽取面 v3.4）**，不是任何再上限或夹具改动。
+
+**§3.4b 台账改口（挂全量的那笔债开始到期）**：未命令重锚 v4c 三臂 3/1/14——v4c3 复现 w4r3 型爆走，
+v4r 的 2/1/0 乐观读数不成立；收益判定回到「三跑只报观测」，占比裁决挂全量重基线，不动。
+
+接线：tokens 113k–144k/跑（对照 v4r 90k–142k，上限抬升的成本可见≈+20%）、用时 1099–1381s。
+复现：`.venv/Scripts/python.exe -m plot_engine.readout sampling/v4c1 sampling/v4c2 sampling/v4c3`；
+`.venv/Scripts/python.exe -m plot_engine.reanchor sampling/v4c1 sampling/v4c2 sampling/v4c3`。
