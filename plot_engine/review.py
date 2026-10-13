@@ -369,6 +369,9 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
         return None, f"模型在实验中途不可用，本报告作废。{where}\n原因：{e}", None
     note = (f"{msg}｜prompt={prompt_version(arm)}｜抽取尺={EXTRACTION_RULER}"
             f"｜指引={GUIDE_VERSION}｜夹具={fx.LADDER_VERSION}｜Writer面={WRITER_SURFACE}")
+    cap = getattr(client, "router", None)
+    if cap is not None and "extract" in cap.endpoints:
+        note += f"｜抽取上限={cap.endpoints['extract'].max_tokens}"
     if fail_stop and report.unresolved_chapters:
         note += f"｜停在第 {report.unresolved_chapters[-1]} 章（P2 语义，分母 = 停前生成章数）"
     if dump_dir is not None:
