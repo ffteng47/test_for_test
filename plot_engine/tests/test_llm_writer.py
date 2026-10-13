@@ -158,3 +158,34 @@ def test_told_prompt_names_transitions_but_never_the_forbidden_fact():
     # 禁条目标：条目不渲染，且 description 里的 id 也被兜底抹掉
     assert "belief" not in joined.split("必须发生的跃迁")[1]
     assert "fact_000002" not in joined and "真凶是李四" not in joined
+
+
+def test_writer_spec_replaces_paragraph_count_with_chars_range():
+    """§3.3 定标：段数死规格删（无人判定段数），场级字数区间进 prompt，章长戳进尺面。"""
+    msgs = scene_prompt(_scene(), _contract(), None)
+    system = msgs[0]["content"]
+    assert "自然段" not in system
+    assert "700~1000 字" in system
+    from plot_engine.llm_writer import WRITER_SURFACE
+    assert WRITER_SURFACE == "w4-scene700-1000+ledger"
+
+
+def test_ledger_lists_established_cognition_and_respects_forbidden():
+    """§3.4b（E25 台账注入）：ch09 六臂 0/6 首轮、抽到的 BELIEVES 全锚 F1——把
+    「各人已建立到什么程度」显式交给 Writer，并要求写新推进而不是重锚。forbidden 不进台账。"""
+    from plot_engine.models.ledger import BeliefEntry, KnowledgeEntry
+    st = _state().model_copy(update={"knowledge_ledger": [
+        KnowledgeEntry(character_id="char_000001", fact_id="fact_000001",
+                       knowledge_state="known", strength=600, source_event_id="e1",
+                       acquired_at_chapter=1, last_updated_chapter=1, epoch=EPOCH),
+        KnowledgeEntry(character_id="char_000001", fact_id="fact_000002",
+                       knowledge_state="known", strength=600, source_event_id="e2",
+                       acquired_at_chapter=1, last_updated_chapter=1, epoch=EPOCH)],
+        "belief_ledger": [
+        BeliefEntry(character_id="char_000001", fact_id="fact_000001",
+                    belief_state="believes", strength=700, source_event_id="e3",
+                    acquired_at_chapter=1, last_updated_chapter=1, epoch=EPOCH)]})
+    joined = "\n".join(m["content"] for m in scene_prompt(_scene(), _contract(), st, arm="told"))
+    assert "已建立认知（勿重复锚定，写新的推进）" in joined
+    assert "fact_000001=known(600)" in joined and "fact_000001~believes(700)" in joined
+    assert "fact_000002" not in joined                   # forbidden 的 ledger 条目同样抹除

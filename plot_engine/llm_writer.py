@@ -67,7 +67,28 @@ def _vocab(scene: Scene, contract: ChapterContract, state: Optional[StoryState],
              f"本章目标: {contract.story_goal}｜目标张力 {scene.tension / 1000:.2f}"]
     if facts:
         lines.append("可以使用的事实: " + "；".join(facts))
+    if state is not None:
+        ledger = _established_ledger(state, forbidden)
+        if ledger:
+            lines.append(ledger)
     return "\n".join(lines)
+
+
+def _established_ledger(state: StoryState, forbidden: set) -> str:
+    """§3.4b（E25 台账注入）：列出各人物**已建立**的认知（fact→状态/强度），逼 Writer
+    写新推进而不是重锚旧事实。ch09 六臂 0/6 首轮、抽到的 BELIEVES 全锚 F1——病相是无意识
+    重锚上一章已建立的 fact，台账把「已经知道/相信到什么程度」显式交给模型。forbidden fact 不进。"""
+    by_char: dict = {}
+    for e in state.knowledge_ledger:
+        if e.fact_id not in forbidden:
+            by_char.setdefault(e.character_id, []).append(f"{e.fact_id}={e.knowledge_state}({e.strength})")
+    for e in state.belief_ledger:
+        if e.fact_id not in forbidden:
+            by_char.setdefault(e.character_id, []).append(f"{e.fact_id}~{e.belief_state}({e.strength})")
+    if not by_char:
+        return ""
+    seg = [f"{cid}：" + "、".join(v) for cid, v in sorted(by_char.items()) if v]
+    return "已建立认知（勿重复锚定，写新的推进）: " + "；".join(seg)
 
 
 def _told_lines(contract: ChapterContract) -> List[str]:
@@ -88,6 +109,14 @@ def _told_lines(contract: ChapterContract) -> List[str]:
 
 ARMS = ("beats", "stripped", "told", "persona")
 
+# Writer 输入面版本（§3.3 场级 700–1000 字规格 + §3.4b 已建立认知台账）：尺面戳，进 run.log 首行。
+# 旧语料（无此戳 = Writer面 v0）不得与新语料同表比较。
+WRITER_SURFACE = "w4-scene700-1000+ledger"
+
+# §3.3（v4 定标：章长 2000–3000，夹具派生 3 场/章 ⇒ 场级 700–1000）。段数死规格已删——
+# 无人判定的名义规格留着只会被违反。这是尺面：换规格 = 换尺，戳进 run.log 首行 `章长规格=`。
+WRITER_SPEC = "w4-scene-700-1000"
+
 
 def prompt_version(arm: str) -> str:
     """基线不叫 blind：`_vocab` 的 节拍意图 无条件带出事件类型与 fact ID（08 采样期实测）。"""
@@ -96,13 +125,14 @@ def prompt_version(arm: str) -> str:
 
 
 def scene_prompt(scene: Scene, contract: ChapterContract,
-                 state: Optional[StoryState] = None, *, max_chars: int = 1200,
-                 arm: str = "beats") -> List[dict]:
+                 state: Optional[StoryState] = None, *, min_chars: int = 700,
+                 max_chars: int = 1000, arm: str = "beats") -> List[dict]:
     forbidden = set(contract.knowledge_forbidden)
     rules = [
         "你是悬疑长篇正文写手。只写本 Scene 的叙事文本。",
-        "写 2~4 个自然段，段与段之间空一行；总长不超过 "
-        f"{max_chars} 字。",
+        # §3.3：段数死规格删掉（无人判定段数，留着只会被违反），改成字数区间硬要求。
+        # 夹具每章 3 场 ⇒ 场级 700~1000 字 ≈ 章 2100~3000 字（docs/phase1-fixture-v4-design.md §1 定标）。
+        f"写满 {min_chars}~{max_chars} 字（不含空行），宁长勿短；段与段之间空一行。",
         "不要输出任何 HTML 注释、标记、标题、小标题或元数据（如“本章悬念”）。",
         "不要提前揭露尚未到揭示时机的事实，也不要解释你写了什么。",
         "中文，第三人称，与既有世界设定保持一致。",
@@ -135,11 +165,12 @@ def _clean(raw: str, max_chars: int) -> str:
     return "\n\n".join(kept)
 
 
-def make_scene_writer(client: LlmClient, *, max_chars: int = 1200,
+def make_scene_writer(client: LlmClient, *, min_chars: int = 700, max_chars: int = 1000,
                       role: str = "writer", arm: str = "beats") -> SceneWriter:
     def write_scene(scene: Scene, contract: ChapterContract,
                     state: Optional[StoryState] = None) -> str:
         text, _usage = client.complete(role, scene_prompt(scene, contract, state,
+                                                          min_chars=min_chars,
                                                           max_chars=max_chars, arm=arm))
         draft = _clean(text or "", max_chars)
         if not draft:

@@ -19,8 +19,9 @@ SCENE = _scene(beats=[
     Beat(beat_id="bt_000001", seq=1, intent="OBSERVES fact_000001", beat_type="setup"),
     Beat(beat_id="bt_000002", seq=2, intent="过渡", beat_type="setup")])
 
-# 冻结于 `dcf771f`（即产出 t1–t3 的 told 渲染路径）；改动该路径必须连带重跑并换哈希
-TELL_GOLDEN_SHA256 = "571d02f30f523c0eb2035b53b560c3cbf7c16e615fa1206f3f496d234c11032f"
+# 冻结于 Writer 面批次 `w4-scene700-1000+ledger`（§3.3 场级字数规格替换段数规格——渲染路径变了，
+# 旧哈希 571d02f3… 属 dcf771f 前的 t1–t3 面，新旧语料不同面、不入同表）；改动该路径必须连带重跑并换哈希
+TELL_GOLDEN_SHA256 = "1db6766ade26fc1f62a335bccf5206a7f4ccf921adad4be165f3799fda704143"
 
 
 def _joined(arm: str) -> str:
