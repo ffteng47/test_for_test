@@ -265,7 +265,7 @@ def test_revision_round_rewrites_are_visible_in_the_dump(tmp_path):
                                                     created_at="2026-10-10T00:00:00Z")})
     dumps = tmp_path / "d"
     run_experiment(cfg, store=store, log=log,
-                   chapter_source=fixture.build_source({2: "no_obs"}, cfg.arc_contract),
+                   chapter_source=fixture.build_source({2: "no_nail"}, cfg.arc_contract),
                    scene_writer=fixture.dummy_writer, revision_loop=loop,
                    on_chapter=lambda ch, rounds, out, trace: _write_chapter_dump(
                        dumps, ch, rounds, out, trace))

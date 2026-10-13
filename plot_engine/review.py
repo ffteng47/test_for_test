@@ -458,7 +458,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         description="Phase-0 实验 → 08 §6 失败分类 / §7 冻结闸 / §8 退出条件决策单（只读）")
     ap.add_argument("--chapters", type=int, default=10)
     ap.add_argument("--defect", action="append", default=[], metavar="CH:KIND",
-                    help="注入缺陷章，KIND ∈ {leak, dead, no_obs}；可重复。用于验证分类归因是否落对桶")
+                    help="注入缺陷章，KIND ∈ {leak, dead, no_nail}；可重复。用于验证分类归因是否落对桶")
     ap.add_argument("--live", action="store_true",
                     help="用真实模型（默认本机 Ollama）跑实验；换 vLLM 只改 --model-config")
     ap.add_argument("--model-config", metavar="JSON", default=None,
@@ -488,8 +488,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     defects: Dict[int, str] = {}
     for spec in args.defect:
         ch, _, kind = spec.partition(":")
-        if kind not in ("leak", "dead", "no_obs"):
-            ap.error(f"--defect {spec!r}: KIND 必须是 leak|dead|no_obs")
+        if kind not in ("leak", "dead", "no_nail"):
+            ap.error(f"--defect {spec!r}: KIND 必须是 leak|dead|no_nail")
         try:
             defects[int(ch)] = kind
         except ValueError:

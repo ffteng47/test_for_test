@@ -1,7 +1,7 @@
 """确定性 10 章实验 `chapter_source`（08 Day 20–22 测试夹具，网络无关）。
 
 **契约与场景不再手写**：这里是 `docs/phase0-live-run-10ch.md` backlog #1 的修复处——
-一份**有内容的 ArcContract**（逐章张力、三个 turning point、四个知识闸门（含一个中段开闸）、
+一份**有内容的 ArcContract**（逐章张力、三个 turning point、十二章知识闸门、
 十章逐章意图），Chapter Contract 与 ScenePlan 由 `plot_engine.derive` 按 04 §4.3 / 附录 B 派生。
 于是每一章的约束真的不一样，10 章实验才开始测试「跨章推进」而不是一条约束重复十遍。
 
@@ -10,7 +10,19 @@
 跃迁**，并由本章事件流里一条同 field 的实现事件兑现；`add` 仅出现在事实首次建立的那一章，
 此后写成 rank 更新（suspected→known）。第 8 步的 `must_change` 故意为空——契约必须允许
 「本章不推进」这个合法形态。三个 turning point 落在阶梯的第 1/5/9 步，其
-`required_event_types` 直接取那一步真的会发出的事件类型，H5.1 因此不可能自相矛盾。
+`required_event_types` 直接取那一步钉死的强制事件类型，H5.1 因此不可能自相矛盾。
+
+**ladder-v4（v4.1 批次，§3.1+§3.2 收尾）**：
+- 规模：4 有名人物（张三/李四/王五/赵六，各有 belief 线）、12 fact、3 locations、2 items、
+  2 relationships、1 faction；10 章的 (人物, field, fact) 三元组互不相同、不回环。
+- 多线：每章 2~3 条并行线在**不同人物对**上展开（多数章 must_change ≥2，王五/李四/赵六
+  各自的知识与信念进各自角色的 ledger——H5.3 按 actor 匹配，逼抽取器认对人）。
+- §3.2 收尾：ch08 式「纯再锚钉」清零（本章不推进 ⇒ 强制集为空）；其余钉全是**叙事模态本身**
+  （亲眼看见/读到/当面告知/内心确认），derive 04 §4.2 守卫要求的 field 覆盖由这些钉自己满足。
+- 定标（tff 2026-10-11，「有效出场」可机检定义）：**本章内有台词、行动、或改变了至少一条
+  事件状态**才算出场，仅被提及名字不算。夹具侧的保证是静态的：每章 cast 从 must_change 的
+  actor 与强制事件的 actors_involved 里来（derive `_contract_cast`），进不了 cast 的人物
+  本来就进不了契约；正文侧的 H 系列按同一文本判定（待尺面裁定后进 validator）。
 
 闸门不给 reveal 限期：夹具 Writer 是确定性的，要求它写不出的东西只会让离线演练一路 FAIL，
 那就变成在测夹具而不是测管道。`defects` 把指定章改成 "leak"（追加一条建立禁止知识
@@ -24,7 +36,7 @@ from typing import Any, Dict, List, Optional
 
 from plot_engine.derive import derive_chapter_contract, derive_scene_plan
 from plot_engine.models.contract import ArcContract, ChapterContract
-from plot_engine.models.entity import Character
+from plot_engine.models.entity import Character, Faction, Item, Location, Relationship
 from plot_engine.models.experiment import ChapterArtifacts, ExperimentConfig
 from plot_engine.models.fact import Fact
 from plot_engine.models.proposal import EventProposal
@@ -36,88 +48,114 @@ NOW = "2026-10-09T00:00:00Z"
 # 阶梯版本进 run.log 第 1 行（与抽取尺戳同处）：**改 `_STEPS` 任意一项必须同时 bump 这里**。
 # 没有这一行，新旧基线并列时「这一跑跑在哪版夹具上」只能靠 commit 时间倒推（docs/measurement-errata.md §四）。
 # 戳进日志之前（含 v32r1–3、bo_* 、q3_14b_r* 、q25_11500_r*）的所有跑法一律是 ladder-v1。
-# ladder-v3：唯一一处改动＝ch09 的类型钉（v2 把整步事件流都钉成 Arc 强制 ⇒ 三类型同钉，
-# 任一落空即 ARC_CONFLICT，全库首轮仅 3/27，见 docs/phase1-rebaseline-v33.md §6）。§3.2 定标：
-# required_events 只钉「本章 must_change 的模态」，重复锚定（OBSERVES F3 / INFERS F1 早已建立）移出强制集。
-LADDER_VERSION = "ladder-v3-ch09-single-nail"
-_ACTOR = "char_000001"
+# ladder-v3：唯一一处改动＝ch09 的类型钉（§3.2 首笔，一次一个因）。
+# ladder-v4：§3.1 规模（4 人物/12 fact/3 地/2 物/2 关系/1 门派）+ §3.2 收尾（ch08 式纯再锚钉
+# 清零、每钉都是叙事模态）+ 逐章三元组唯一不回环。六臂 lv3 读数见 docs/phase1-rebaseline-v33.md §7。
+LADDER_VERSION = "ladder-v4-multi-scene"
+_ACTOR = "char_000001"          # 张三（调查者）
+_LI = "char_000002"             # 李四（嫌疑人，objective_truth=False 的 F2 本体）
+_WANG = "char_000003"           # 王五（守阁人）
+_ZHAO = "char_000004"           # 赵六（杂役，线人）
 _DEAD_ACTOR = "char_000009"
 _F1, _F2, _F3, _F4 = "fact_000001", "fact_000002", "fact_000003", "fact_000004"
+_F5, _F6, _F7, _F8 = "fact_000005", "fact_000006", "fact_000007", "fact_000008"
+_F9, _F10, _F11, _F12 = "fact_000009", "fact_000010", "fact_000011", "fact_000012"
 # H5.5 把章尾 hook 与 contract.ending.type 对齐 ⇒ 逐章意图只能在兼容 cliffhanger
 # 的目标类型里变（04 §4.4）。
 _GOAL_TYPES = ["revelation", "escalation", "confrontation"]
-_GOALS = ["张三在藏宝阁验出印章是伪造的。", "伪造印章把矛头指向宗门内部。",
-          "有人不想让张三继续查下去。", "张三第一次怀疑身边人的说法。",
-          "线索断在一句对不上的供词上。", "张三被迫在真相与立场之间选边。",
-          "印泥的来源指向守阁的人。", "一次回避比一句谎话更像回答。",
-          "张三把三件小事串成同一条线。", "结论逼近，但说出来的代价开始显现。"]
+_GOALS = ["张三在藏宝阁验出印章是伪造的。", "阁簿缺了三页，守阁人却笃定钥匙没少。",
+          "赵六说他那夜值守，张三听完没全信。", "密信笔迹像王五，李四第一个说信是伪造的。",
+          "李四被看见与外客会饮，矛头转向宗门内部。", "印泥的来源指向城外，赵六下山来报。",
+          "库房簿记上少了一把专用刻刀。", "一次回避比一句谎话更像回答。",
+          "张三把印泥、缺页与夜值串成同一条线。", "结论逼近——有人否认听说过叛徒。"]
 _FIX = json.loads((Path(__file__).parent / "traitor_arc.json").read_text(encoding="utf-8"))
 
 
 # ---- 阶梯的一步 = 本章真的发生的一次跃迁 + 兑现它的事件 ---------------------------
+# 事件默认挂在 _ACTOR 名下；多线章用 actor= 把跃迁记到别的角色 ledger 上
+# （H5.3 按 actor+fact+field 匹配实现事件，「谁看见」必须真的是谁）。
 
-def _obs(fact: str, method: str = "sight") -> Dict[str, Any]:
-    return {"event_type": "OBSERVES", "fact": fact, "confidence": 1000,
+def _obs(fact: str, actor: str = _ACTOR, method: str = "sight") -> Dict[str, Any]:
+    return {"event_type": "OBSERVES", "fact": fact, "actor": actor, "confidence": 1000,
             "payload": {"fact_id": fact, "method": method}}
 
 
-def _reads(fact: str) -> Dict[str, Any]:
-    return {"event_type": "READS", "fact": fact, "confidence": 900,
+def _reads(fact: str, actor: str = _ACTOR) -> Dict[str, Any]:
+    return {"event_type": "READS", "fact": fact, "actor": actor, "confidence": 900,
             "payload": {"fact_id": fact, "method": "ledger"}}
 
 
-def _infers(conclusion: str, evidence: List[str]) -> Dict[str, Any]:
-    return {"event_type": "INFERS", "fact": conclusion, "confidence": 700,
+def _told(fact: str, actor: str = _ACTOR, by: str = "") -> Dict[str, Any]:
+    """IS_TOLD 的 actor 是**听的人**（知识进谁的 ledger）；by 只进 actors_involved 供场景成互动。"""
+    return {"event_type": "IS_TOLD", "fact": fact, "actor": actor, "with": by,
+            "confidence": 900,
+            "payload": {"fact_id": fact, "trust_level": 900, "message_strength": 900}}
+
+
+def _infers(conclusion: str, evidence: List[str], actor: str = _ACTOR) -> Dict[str, Any]:
+    return {"event_type": "INFERS", "fact": conclusion, "actor": actor, "confidence": 700,
             "payload": {"conclusion_fact_id": conclusion, "evidence_fact_ids": evidence}}
 
 
-def _belief(event_type: str, fact: str, strength: int) -> Dict[str, Any]:
-    return {"event_type": event_type, "fact": fact, "confidence": strength,
+def _belief(event_type: str, fact: str, strength: int,
+            actor: str = _ACTOR) -> Dict[str, Any]:
+    return {"event_type": event_type, "fact": fact, "actor": actor, "confidence": strength,
             "payload": {"fact_id": fact, "belief_strength": strength}}
 
 
-def _knows(op: str, fact: str, expected: str) -> Dict[str, Any]:
-    return {"character_id": _ACTOR, "field": "knowledge", "operation": op,
+def _knows(op: str, fact: str, expected: str, actor: str = _ACTOR) -> Dict[str, Any]:
+    return {"character_id": actor, "field": "knowledge", "operation": op,
             "target": fact, "expected_value": expected}
 
 
-def _holds(op: str, fact: str, expected: str) -> Dict[str, Any]:
-    return {"character_id": _ACTOR, "field": "belief", "operation": op,
+def _holds(op: str, fact: str, expected: str, actor: str = _ACTOR) -> Dict[str, Any]:
+    return {"character_id": actor, "field": "belief", "operation": op,
             "target": fact, "expected_value": expected}
 
 
 # expected_value 不超过该事件类型的 reducer 上限（03 §4.3/§5.1）：
-# OBSERVES/READS→known，INFERS→suspected，BELIEVES→believes，SUSPECTS→suspects，DOUBTS→doubts。
+# OBSERVES/READS→known，IS_TOLD→believed，INFERS→suspected；
+# BELIEVES→believes，SUSPECTS→suspects，DOUBTS→doubts。
+# 十章互不回环：每章的 (人物, field, fact) 三元组全库唯一（test_experiment_e2e 静态钉死）。
 _STEPS: List[Dict[str, Any]] = [
     {"events": [_obs(_F3), _infers(_F1, [_F3])],
+     "mandatory": [_obs(_F3)],                     # 钉「亲眼验印」；INFERS 是派生线，不钉
      "must_change": [_knows("add", _F3, "known"), _knows("add", _F1, "suspected")]},
-    {"events": [_obs(_F1)], "must_change": [_knows("update", _F1, "known")]},
-    {"events": [_belief("BELIEVES", _F1, 700)],
-     "must_change": [_holds("add", _F1, "believes")]},
-    {"events": [_belief("DOUBTS", _F1, 500)], "must_change": [_holds("update", _F1, "doubts")]},
-    {"events": [_infers(_F4, [_F1])], "must_change": [_knows("add", _F4, "suspected")]},
-    {"events": [_reads(_F4)], "must_change": [_knows("update", _F4, "known")]},
-    # ch07：信念阶梯续在 F1 上（believes ch03 → doubts ch04 → suspects ch07）。
-    # 原先钉在 F4（E14）：ch06 刚用 READS 把 F4 升到 known，「怀疑一个自己刚读实的事实」
-    # 在戏剧上不成立 ⇒ 七个同端点跑法全在这里不通过（ch07 无一首轮），每臂白吃一章处置税。
-    # rank doubts(0) < suspects(1)，SUSPECTS 是升级不是降级（`reducers/belief.py:15,54-57`）。
-    {"events": [_belief("SUSPECTS", _F1, 500)],
-     "must_change": [_holds("update", _F1, "suspects")]},
-    {"events": [_obs(_F3)], "must_change": []},          # 本章不推进：合法形态
-    {"events": [_obs(_F3), _infers(_F1, [_F3]), _belief("BELIEVES", _F3, 600)],
-     # §3.2（ladder-v3）：强制集只钉本章 Δ 的模态 BELIEVES（must_change belief→F3，
-     # derive 的 04 §4.2 守卫也要求 belief 族类型在强制集内）；OBSERVES/INFERS 是对
-     # 已建立事实的再确认——照旧进事件流与离线抽取道，但不再钉成 Arc 强制项。
-     "mandatory": [_belief("BELIEVES", _F3, 600)],
-     "must_change": [_holds("add", _F3, "believes")]},
-    {"events": [_obs(_F2)], "must_change": [_knows("add", _F2, "known")],
-     "must_not_change": []},                             # 第 10 步解禁 fact_000002
+    {"events": [_reads(_F5), _belief("BELIEVES", _F8, 700, _WANG)],
+     "must_change": [_knows("add", _F5, "known"),
+                     _holds("add", _F8, "believes", _WANG)]},
+    {"events": [_told(_F6, by=_ZHAO), _belief("SUSPECTS", _F6, 500)],
+     "must_change": [_knows("add", _F6, "believed"), _holds("add", _F6, "suspects")]},
+    {"events": [_reads(_F7, _WANG), _belief("DOUBTS", _F7, 500, _LI)],
+     "must_change": [_knows("add", _F7, "known", _WANG),
+                     _holds("add", _F7, "doubts", _LI)]},
+    {"events": [_obs(_F9), _belief("SUSPECTS", _F1, 500)],
+     "must_change": [_knows("add", _F9, "known"), _holds("add", _F1, "suspects")]},
+    {"events": [_obs(_F10, _ZHAO), _told(_F10, by=_ZHAO)],
+     "mandatory": [_told(_F10, by=_ZHAO)],         # 钉「下山来报」；赵六的观测不钉、自由 roll
+     "must_change": [_knows("add", _F10, "known", _ZHAO), _knows("add", _F10, "believed")]},
+    {"events": [_reads(_F11), _belief("BELIEVES", _F3, 600, _WANG)],
+     "must_change": [_knows("add", _F11, "known"),
+                     _holds("add", _F3, "believes", _WANG)]},
+    {"events": [_obs(_F3)], "mandatory": [],       # 本章不推进：合法形态；再锚旧事实不再钉成 Arc 强制项
+     "must_change": []},
+    {"events": [_infers(_F4, [_F10, _F6]), _belief("BELIEVES", _F4, 600)],
+     # 两钉都是本章的叙事模态：把线串起来＝INFERS，内心确认＝BELIEVES。
+     # derive 04 §4.2 守卫要求的 belief 族覆盖由 BELIEVES 钉自己满足（同 lv3 裁定）。
+     "must_change": [_knows("add", _F4, "suspected"), _holds("add", _F4, "believes")]},
+    {"events": [_obs(_F2), _belief("DOUBTS", _F1, 400, _LI)],
+     "must_change": [_knows("add", _F2, "known"),
+                     _holds("add", _F1, "doubts", _LI)],
+     "must_not_change": []},                        # 第 10 步解禁 fact_000002
 ]
-# turning point 挂在阶梯上真的有对应事件的第 1/5/9 步（事件类型由那一步自己给出）。
+# turning point 挂在阶梯上真的有对应强制事件的第 1/5/9 步（事件类型由那一步的钉给出）。
 _TURNS = {1: ("revelation", "印章是伪造的"), 5: ("escalation", "矛头指向内部"),
           9: ("crisis", "串成一条线")}
-# 闸门绝对章号与阶梯首轮的步号对齐：fact_000004 第 5 步首次被推断、fact_000002 第 10 步解禁。
-_GATE_F4, _GATE_F2 = 5, 10
+# 闸门：fact 解禁章号 = 该 fact 首次被本章约束引用之前；F4 中段开闸（ch5 起对读者暗示）、
+# F2 第 10 章解禁。hidden 阶段不产 reader_signal（04 §4.3 D9）。
+_GATES = [(_F1, 1, "hinted"), (_F2, 10, "hidden"), (_F3, 1, "confirmed"), (_F4, 5, "hinted"),
+          (_F5, 2, "hinted"), (_F6, 3, "hinted"), (_F7, 4, "hinted"), (_F8, 2, "hidden"),
+          (_F9, 5, "hinted"), (_F10, 6, "hinted"), (_F11, 7, "hinted"), (_F12, 8, "hinted")]
 
 
 def _step(ch: int) -> Dict[str, Any]:
@@ -129,6 +167,10 @@ def _mandatory(ch: int) -> List[Dict[str, Any]]:
     `events` 仍整条进离线抽取道与正文，只是不钉 required_events ⇒ 重复锚定不再吃类型彩票。"""
     step = _step(ch)
     return step.get("mandatory", step["events"])
+
+
+def _actors(e: Dict[str, Any]) -> List[str]:
+    return [a for a in [e.get("actor", _ACTOR), e.get("with", "")] if a]
 
 
 def build_arc(chapters: int = 10) -> ArcContract:
@@ -144,7 +186,7 @@ def build_arc(chapters: int = 10) -> ArcContract:
                      "target": _F2}]),
                 "required_events": [{"event_type": e["event_type"],
                                      "description": f"{e['event_type']} {e['fact']}",
-                                     "actors_involved": [_ACTOR]}
+                                     "actors_involved": _actors(e)}
                                     for e in _mandatory(ch)]}
                for ch in range(1, chapters + 1)]
     return ArcContract(
@@ -153,12 +195,8 @@ def build_arc(chapters: int = 10) -> ArcContract:
         turning_points=[{"chapter": c, "type": t, "description": d,
                          "required_event_types": sorted({e["event_type"] for e in _mandatory(c)})}
                         for c, (t, d) in _TURNS.items() if c <= chapters],
-        # hidden = 本章不给读者建立该事实 → 不产生 reader_signal（04 §4.3 D9）
-        knowledge_gates=[
-            {"fact_id": _F1, "allowed_after_chapter": 1, "reveal_stage_target": "hidden"},
-            {"fact_id": _F3, "allowed_after_chapter": 1, "reveal_stage_target": "confirmed"},
-            {"fact_id": _F4, "allowed_after_chapter": _GATE_F4, "reveal_stage_target": "hinted"},
-            {"fact_id": _F2, "allowed_after_chapter": _GATE_F2, "reveal_stage_target": "hidden"}],
+        knowledge_gates=[{"fact_id": f, "allowed_after_chapter": a, "reveal_stage_target": s}
+                         for f, a, s in _GATES if a <= chapters],
         reader_beats=intents, created_at=NOW)
 
 
@@ -183,15 +221,16 @@ _MARK_KIND = {"knows": "learns", "hinted": "hinted", "deceived": "deceived"}
 
 
 def _proposals(ch: int, defect: Optional[str]) -> List[EventProposal]:
-    actor = _DEAD_ACTOR if defect == "dead" else _ACTOR
+    out: List[EventProposal] = []
     events = list(_step(ch)["events"])
     if defect == "leak":
         events = events + [_obs(_F2)]                    # 建立本章仍禁止的知识 → H5.7
-    if defect == "no_obs":
-        # 必需的观察事件整条没写出来 → H5.1 + 与之配对的 H5.3（must_change 失去实现事件）
-        events = [e for e in events if e["event_type"] != "OBSERVES"]
-    out: List[EventProposal] = []
+    if defect == "no_nail":
+        # 本章钉成 Arc 强制项的事件整条没写出来 → H5.1 + 与之配对的 H5.3（must_change 失去实现事件）
+        nails = {m["event_type"] for m in _mandatory(ch)}
+        events = [e for e in events if e["event_type"] not in nails]
     for i, e in enumerate(events):
+        actor = _DEAD_ACTOR if defect == "dead" else e.get("actor", _ACTOR)
         out.append(EventProposal(
             proposed_event_type=e["event_type"], actor=actor, target=e["fact"], chapter=ch,
             seq=i, preconditions=[f"evt_{ch:08d}_000"] if e["event_type"] == "INFERS" and i else [],
@@ -221,19 +260,78 @@ def build_source(defects: Optional[Dict[int, str]] = None,
     return src
 
 
+# ---- v4 世界表（§3.1 规模门槛；traitor_arc.json 被 8 个 golden/单测共用，一字不动，
+# 扩容全部在这里程序化追加）--------------------------------------------------------
+
+def _char(cid: str, name: str) -> Character:
+    return Character(character_id=cid, name=name, status="alive", faction_id="fac_00001",
+                     current_location="loc_000012", introduced_at_chapter=1, epoch=EPOCH)
+
+
+def _fact(fid: str, prop: str, canon: str, ftype: str = "existence",
+          objective: str = "true", stage: str = "hinted") -> Fact:
+    return Fact(fact_id=fid, fact_type=ftype, proposition=prop, canonical_form=canon,
+                narrative_truth="unknown", objective_truth=objective, reveal_stage=stage,
+                defined_at_chapter=1, epoch=EPOCH)
+
+
+_NEW_CHARS = {_LI: _char(_LI, "李四"), _WANG: _char(_WANG, "王五"), _ZHAO: _char(_ZHAO, "赵六")}
+
+_NEW_FACTS = {
+    _F5: _fact(_F5, "藏宝阁簿记缺了三页", "ledger_missing_pages(pavilion_17)"),
+    _F6: _fact(_F6, "赵六那夜在藏宝阁值守", "on_duty(zhao_liu, night_17)", "event"),
+    _F7: _fact(_F7, "密信笔迹与王五手书同源", "handwriting_like(wang_wu, secret_letter)"),
+    _F8: _fact(_F8, "藏宝阁钥匙一共有两把", "two_keys_exist(pavilion_17)"),
+    _F9: _fact(_F9, "李四与外客在山下会饮", "drinks_with_outsider(li_si)", "event"),
+    _F10: _fact(_F10, "印泥出自城外商号", "inkpad_from_shop_outside(city_gate)"),
+    _F11: _fact(_F11, "伪造官印需要专用刻刀", "forgery_requires_knife(seal_17)"),
+    _F12: _fact(_F12, "王五欠着外债", "debt_owed(wang_wu)"),
+}
+
+_NEW_LOCATIONS = {
+    "loc_000013": Location(location_id="loc_000013", name="城外印泥铺",
+                           introduced_at_chapter=1, epoch=EPOCH),
+    "loc_000014": Location(location_id="loc_000014", name="山下酒肆",
+                           introduced_at_chapter=1, epoch=EPOCH),
+}
+
+_NEW_ITEMS = {
+    "item_000001": Item(item_id="item_000001", name="专用刻刀", item_type="equipment",
+                        unique=True, stackable=False, introduced_at_chapter=1, epoch=EPOCH),
+    "item_000002": Item(item_id="item_000002", name="藏宝阁钥匙", item_type="key",
+                        unique=False, stackable=True, introduced_at_chapter=1, epoch=EPOCH),
+}
+
+_NEW_RELATIONSHIPS = [
+    Relationship(relationship_id="rel_000001", from_character=_ACTOR, to_character=_LI,
+                 type="master_disciple", strength=600, trust=600, symmetric=True,
+                 established_at_chapter=1, epoch=EPOCH),
+    Relationship(relationship_id="rel_000002", from_character=_WANG, to_character=_ACTOR,
+                 type="colleague", strength=500, trust=400, symmetric=True,
+                 established_at_chapter=1, epoch=EPOCH),
+]
+
+_NEW_FACTIONS = {
+    "fac_00001": Faction(faction_id="fac_00001", name="青嶝宗",
+                               members=[_ACTOR, _LI, _WANG, _ZHAO],
+                               controlled_locations=["loc_000012"],
+                               introduced_at_chapter=1, epoch=EPOCH),
+}
+
+
 def make_config(chapters: int = 10) -> ExperimentConfig:
     genesis = StoryState(**{**_FIX["genesis"], "state_hash": ""})
-    chars = dict(genesis.characters)
-    chars[_DEAD_ACTOR] = Character(character_id=_DEAD_ACTOR, name="旧主", status="dead",
-                                   death_chapter=1, introduced_at_chapter=1, epoch=EPOCH)
-    facts = dict(genesis.facts)
-    # 第 5 章起才允许对读者暗示（中段开闸）。夹具的事件流按阶梯走到它，
-    # 加它只为让闸门到期这件事真的发生在十章里（04 §4.3 D5/D9）。
-    facts[_F4] = Fact(fact_id=_F4, fact_type="existence", proposition="守阁的人碰过印泥",
-                      canonical_form="存在=守阁的人碰过印泥",
-                      narrative_truth="unknown", objective_truth="true",
-                      defined_at_chapter=1, epoch=EPOCH)
-    genesis = genesis.model_copy(update={"characters": chars, "facts": facts})
+    genesis = genesis.model_copy(update={
+        "characters": {**genesis.characters, **_NEW_CHARS,
+                       _DEAD_ACTOR: Character(character_id=_DEAD_ACTOR, name="旧主",
+                                              status="dead", death_chapter=1,
+                                              introduced_at_chapter=1, epoch=EPOCH)},
+        "facts": {**genesis.facts, _F4: _fact(
+            _F4, "守阁的人碰过印泥", "touched_inkpad(pavilion_keeper)"), **_NEW_FACTS},
+        "locations": {**genesis.locations, **_NEW_LOCATIONS},
+        "items": _NEW_ITEMS,
+        "relationships": list(_NEW_RELATIONSHIPS),
+        "factions": _NEW_FACTIONS})
     return ExperimentConfig(story_id="s1", chapters=chapters, arc_contract=build_arc(chapters),
                             initial_state=genesis, seed=42, epoch=EPOCH)
 

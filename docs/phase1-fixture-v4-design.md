@@ -47,6 +47,12 @@ print(len(L), st.median(L), round(st.mean(L),1), sum(1 for x in L if x>=2000), s
 
 ### 3.1 夹具规模（`plot_engine/tests/fixtures/experiment_10ch.py`，`LADDER_VERSION → "ladder-v4-multi-scene"`）
 
+**已落地（v4.1 批次，2026-10-13）**：4 有名人物（张三/李四/王五/赵六，李四王五赵六各有
+belief/知识线并进自己角色的 ledger）、12 fact、3 locations、2 items、2 relationships、1 faction；
+10 章 (actor, field, fact) 三元组全库唯一不回环；9/10 章 must_change ≥2（第 8 章「本章不推进」保留）。
+`traitor_arc.json` 被 8 个 golden 测试共用、一字未动，扩容在 `make_config` 程序化追加。
+世界表规模、三元组唯一、拐点钉形已全部静态钉死在 `test_experiment_e2e`。
+
 - **≥4 有名人物**（char_000001 之外至少 3 个有名字、有 belief 线的角色），**≥12 fact**，
   3 locations、≥2 items、≥2 relationships、≥1 faction——多局面 = 每章 2–3 条并行线在不同人物对上展开。
   定标（tff 2026-10-11）：每章**有效出场人物 ≥1**，主要互动场景通常 **2–4 人**，不设全章统一的两人硬门槛。
@@ -57,6 +63,13 @@ print(len(L), st.median(L), round(st.mean(L),1), sum(1 for x in L if x>=2000), s
   **允许多数章 must_change ≥2 条**，逼近 08 对真实契约的假设。
 
 ### 3.2 场级断言（消类型彩票，**不动 H5.1 判据**）
+
+**收尾已落地（ladder-v4，同一批）**：ch08 式「纯再锚钉」清零（该章 mandatory=[]，再锚事件照进
+事件流）；其余每一钉都是本章的叙事模态（亲眼验印 OBSERVES / 读簿 READS / 下山来报 IS_TOLD /
+串线 INFERS / 内心确认 BELIEVES）。derive 04 §4.2 守卫仍要求每 field 有族内钉——该守卫读的是
+required_events，所以「兑现事件完全不钉」在现引擎下不可行，v4 的形态是**每 field 至多一枚模态钉**
+（v3 是每事件一枚）。`fixture_audit.unreachable_by_construction` 随之改读步的事件流（钉子集化后
+required_events 不再是可达性的全集）；缺陷注入 `no_obs` 泛化为 `no_nail`（drop 本章强制集类型）。
 
 - 规则：required_event 只在**叙事模态本身是剧情**时押单类型（例：「他读到密信」这一拍非 READS 不可）；
   纯粹为兑现 must_change 而生的事件**不再写进 required_events**——H5.3 已按 `FIELD_EVENT_TYPES`

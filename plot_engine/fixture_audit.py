@@ -20,21 +20,26 @@ from pathlib import Path
 from typing import Dict, List
 
 from plot_engine.metrics import metrics_from_dump
-from plot_engine.tests.fixtures.experiment_10ch import build_arc
+from plot_engine.tests.fixtures.experiment_10ch import _step
 
 # field → 事件类型能达到的最高档（reducer 上限，不是提示词里的说法）
 _CAPS = {"knowledge": {"OBSERVES": "known", "READS": "known",
                        "IS_TOLD": "believed", "INFERS": "suspected"},
-         "belief": {"BELIEVES": "believes", "SUSPECTS": "suspects", "DOUBTS": "doubts"}}
+          "belief": {"BELIEVES": "believes", "SUSPECTS": "suspects", "DOUBTS": "doubts"}}
 
 
 def unreachable_by_construction(chapters: int = 10) -> Dict[int, List[str]]:
-    """章号 → 不可达说明。空字典＝夹具的期望值全部落在本章事件类型的上限之内。"""
+    """章号 → 不可达说明。空字典＝夹具的期望值全部落在本章事件类型的上限之内。
+
+    v4（§3.2 收尾）改读**步的事件流**而不是 required_events 钉：兑现 must_change 的事件
+    可以留在事件流里不钉成 Arc 强制项（H5.3 按事件流做 field 级检查），本审计只问
+    「就算全按夹具点名的写，期望值可达吗」。
+    """
     out: Dict[int, List[str]] = {}
-    for beat in build_arc(chapters).reader_beats:
-        types = {e["event_type"] for e in beat["required_events"]}
+    for ch in range(1, chapters + 1):
+        types = {e["event_type"] for e in _step(ch)["events"]}
         bad = []
-        for c in beat["must_change"]:
+        for c in _step(ch)["must_change"]:
             table = _CAPS.get(c["field"])
             if table is None:                      # CHANGES/RELATIONSHIP/ITEM 等字段不在这张表里，不判
                 continue
@@ -43,7 +48,7 @@ def unreachable_by_construction(chapters: int = 10) -> Dict[int, List[str]]:
                 bad.append(f"{c['character_id']}.{c['field']}→{c['expected_value']}"
                            f"（本章 {sorted(types)} 最高只到 {'/'.join(reach)}）")
         if bad:
-            out[beat["chapter_no"]] = bad
+            out[ch] = bad
     return out
 
 
