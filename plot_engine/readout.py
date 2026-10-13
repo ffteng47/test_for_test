@@ -24,7 +24,56 @@ from plot_engine.prose_audit import audit, chapter_texts_from
 _SYMBOL = {"first_pass": "首", "rewrite_rescued": "救",
            "renegotiate_only": "继", "disposition": "处"}
 _COLUMNS = ["跑法", "生成", "E2", "H5.1等价税", "处置率", "首轮", "救回", "继", "判死",
-            "待人工", "修订环章", "穿帮章", "章首同主语", "跨章重复", "tokens", "用时"]
+            "待人工", "修订环章", "穿帮章", "章首同主语", "跨章重复", "废卷率", "一致率",
+            "tokens", "用时"]
+
+
+def _waste_rate(run, d) -> str:
+    """instr-v2 常设列：章级废卷率 = 废章 / 生成章（任务单 W5：30 章即 0 章）。
+
+    章级废卷 = 整章无可用条目（`malformed_reply` 单跑路径 / `chapter_empty` 分段路径）。
+    段级 `segment_failed` 只废该段、不废全章（任务单 W2 原话），不进章级分母；
+    段内细节记 `segment_unparsable`，同样不混入章级。
+    无 _junk 或无生成章记 "-"（旧跑法无此账，不硬填 0，避免把"没测"读成"全好"）。
+    """
+    from pathlib import Path as _P
+    import json as _json
+    junk = _P(d) / "_junk.json"
+    if not junk.exists():
+        alt = _P(run) / "_junk.json"
+        junk = alt if alt.exists() else junk
+    if not junk.exists():
+        return "-"
+    try:
+        # utf-8-sig 同时容纳带/不带 BOM（旧目录常由别的机器/工具落盘）
+        entries = _json.loads(junk.read_text(encoding="utf-8-sig", errors="replace"))
+    except (ValueError, OSError):
+        return "-"
+    waste_ch = {e.get("chapter") for e in (entries or [])
+                if e.get("reason") in ("malformed_reply", "chapter_empty")
+                and e.get("chapter") is not None}
+    gen = len(list(_P(d).glob("ch*.md"))) or 1
+    return f"{len(waste_ch) / gen:.0%}"
+
+
+def _consistency(run) -> str:
+    """instr-v2 常设列：W5 双跑一致率（Jaccard 中位）。
+
+    读 `<跑法>_fluctuation.json`（任务单"落档"：`instr_cli --out` 写这个文件）；
+    无此文件记 "-"（没测 ≠ 0，不硬填 0）。
+    """
+    from pathlib import Path as _P
+    import json as _json
+    for cand in (_P(str(run) + "_fluctuation.json"), _P(run) / "fluctuation.json"):
+        if cand.exists():
+            try:
+                data = _json.loads(cand.read_text(encoding="utf-8-sig",
+                                                  errors="replace"))
+                med = data.get("jaccard_med")
+                return f"{float(med):.2f}" if med is not None else "-"
+            except (ValueError, OSError, TypeError):
+                return "-"
+    return "-"
 
 
 def _prose(lines: List[str], want: str) -> str:
@@ -96,6 +145,7 @@ def row(run_dir) -> Dict[str, str]:
             "穿帮章": str(sum(1 for x in prose if "穿帮" in x)),
             "章首同主语": _prose(prose, "章首同主语"),
             "跨章重复": _prose(prose, "跨章重复"),
+            "废卷率": _waste_rate(run, d), "一致率": _consistency(run),
             "tokens": _cost(run)[0], "用时": _cost(run)[1]}
 
 

@@ -288,9 +288,9 @@ def _write_chapter_dump(dump_dir, ch: int, rounds, out, trace) -> None:
     (d / f"ch{ch:02d}.md").write_text("\n".join(lines), encoding="utf-8")
 
 
-def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
-              arm: str = "beats", state_dir: Optional[str] = None,
-              fail_stop: bool = False):
+def _live_run(chapters: int, model_config: dict, *, client=None, cloud_client=None,
+              dump_dir=None, arm: str = "beats", state_dir: Optional[str] = None,
+              fail_stop: bool = False, use_segmented: bool = False, lane: str = "local"):
     """真实模型实验：Writer/抽取换成本地端点，其余管道与离线演练完全一致。
 
     返回 `(report|None, 端点说明, 抽取诊断)`：端点不可达时不烧预算，实验中途端点失效时
@@ -303,6 +303,12 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
     `state_dir` 给定时 State/EventLog 落在那儿（默认临时目录、跑完即弃）——
     **跨进程救援（`--rescue`）要求链还在盘上**，所以采样跑法恒带这个参数。
     救援本身不在这里跑：`main()` 拒绝 `--live --rescue` 同命令，人工重入是测量之后的独立一步。
+
+    `use_segmented=True`（`--instr v2`）挂 instr-v2 分段抽取通道（W1 分段合并、W2 修复环+
+    段级降级、W3 别名解析、W4a 代码默认值），run.log 仪器戳从 `instr-v1` 升到 `instr-v2-local`。
+    `lane="cloud"`（`--lane cloud`）在 W1–W4 管道上加模型路由层（W6）：两条车道共用同一套
+    分段/修复/别名/默认值，只有抽取 client 不同——读数差异才能干净归因于模型本身。
+    `cloud_client` 缺失时车道即本地：戳必须说实话（护栏 3：换车道 = 仪器版本变更）。
     """
     import dataclasses
     import tempfile
@@ -311,8 +317,9 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
 
     from plot_engine.eventlog import EventLog
     from plot_engine.experiment import run_experiment
-    from plot_engine.live import (build_client, build_live_source, check_reachable,
-                                  extraction_diagnostics)
+    from plot_engine.live import (build_client, build_laned_source,
+                                   build_live_source, check_reachable,
+                                   extraction_diagnostics)
     from plot_engine.llm import LlmUnavailable
     from plot_engine.llm_extract import EXTRACTION_RULER
     from plot_engine.llm_writer import WRITER_SURFACE, make_scene_writer, prompt_version
@@ -326,6 +333,16 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
     ok, msg = check_reachable(client)
     if not ok:
         return None, msg, None
+    # W6 云端车道：抽取端点单独验活，Writer 仍走本地；云端不可达即整体不收尾，
+    # 不静默回落到本地（读数归因要干净：跑的是哪条车道必须一眼看得出）。
+    if lane == "cloud":
+        if cloud_client is None:
+            return None, ("--lane cloud 需要 --cloud-config（云端模型路由 JSON 或 @文件）；"
+                          "不静默回落本地：车道的归属必须写进 run.log"), None
+        ok, cmsg = check_reachable(cloud_client)
+        if not ok:
+            return None, f"云端抽取端点不可达，本报告作废：{cmsg}", None
+        msg = f"{msg}｜云端抽取：{cmsg}"
 
     cfg = fx.make_config(chapters)
     tmp = Path(state_dir) if state_dir else Path(tempfile.mkdtemp(prefix="phase0-live-"))
@@ -349,10 +366,16 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
                                  "renegotiate_contract": renegotiate_contract(
                                      cfg.arc_contract, created_at=fx.NOW)})
     # 逐章契约/场景对**当前** State 派生：Arc 只有一份，约束必须一章一个样（backlog #1）。
-    source = build_live_source(client,
-                               contracts=lambda ch, cur: fx.contract_for(cfg.arc_contract,
-                                                                         ch, cur),
-                               plans=fx.plan_for)
+    contracts = lambda ch, cur: fx.contract_for(cfg.arc_contract, ch, cur)  # noqa: E731
+    plans = fx.plan_for
+    if use_segmented and (lane == "cloud" or cloud_client is not None):
+        source = build_laned_source(client, cloud_client, contracts=contracts,
+                                    plans=plans, lane=lane)
+    elif use_segmented:
+        source = build_live_source(client, contracts=contracts, plans=plans,
+                                   use_segmented=True)
+    else:
+        source = build_live_source(client, contracts=contracts, plans=plans)
     on_chapter = None
     if dump_dir is not None:
         on_chapter = lambda ch, rounds, out, trace: _write_chapter_dump(
@@ -378,6 +401,11 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
         note += "｜终态 " + " ".join(f"{k}={v}" for k, v in sorted(count_dispositions(dump_dir).items()))
     diag = extraction_diagnostics(source.channels)
     diag["calls"] = getattr(client, "render_call_diagnostics", lambda: "")()
+    # 仪器戳与尺戳分开记账（任务单"落档"）：instr-v1 单跑 / instr-v2-local / instr-v2-cloud
+    _instr = diag.get("instr") or {}
+    note += f"｜仪器={_instr.get('instr', 'instr-v1')}"
+    if _instr.get("lanes"):
+        note += f"｜车道={'+'.join(_instr['lanes'])}"
     if dump_dir is not None:
         # §3.5 取证：坏料逐条（章号+原因+原文片段）落盘，计数只说明「丢了多少」，说不清「丢了什么」
         import json
@@ -484,10 +512,25 @@ def main(argv: Optional[List[str]] = None) -> int:
                     help="产品语义（裁定 P2）：任一章判死/待人工就停整条链，后面的章不再生成。"
                          "默认关＝测量语义（十章分布）。两者 E2 分母不同，不可同表并列")
     ap.add_argument("--prompt", choices=ARMS, default="beats",
-                    help="Writer 提示词臂（docs/phase0-final-report-and-v3-config-ab.md §10.2）："
-                         "beats=v0-beats 基线金丝雀；stripped=臂 A 节拍行抹掉类型名与 ID；"
-                         "told=臂 B 追加 must_change 目标与必需事件类型（裸 ID，不给禁条）；"
-                         "persona=臂 C = 臂 B + 角色一致性规则；仅 --live 生效")
+                     help="Writer 提示词臂（docs/phase0-final-report-and-v3-config-ab.md §10.2）："
+                          "beats=v0-beats 基线金丝雀；stripped=臂 A 节拍行抹掉类型名与 ID；"
+                          "told=臂 B 追加 must_change 目标与必需事件类型（裸 ID，不给禁条）；"
+                          "persona=臂 C = 臂 B + 角色一致性规则；仅 --live 生效")
+    ap.add_argument("--instr", choices=["v1", "v2"], default="v1",
+                     help="抽取仪器版本（与尺戳分开记账）：v1=单跑基线；"
+                          "v2=instr-v2 分段抽取（W1 分段合并去重、W2 JSON 修复环+段级降级、"
+                          "W3 别名解析、W4a 代码默认值 700）。默认 v1 保持存量读数可比；"
+                          "历史抽取读数与 v2 不同表")
+    ap.add_argument("--lane", choices=["local", "cloud"], default="local",
+                     help="W6 抽取车道：local=本地 14B（默认，保 COGS）；cloud=云端最强模型。"
+                          "两条车道共用同一套分段/修复/别名/默认值，只有模型不同。"
+                          "--lane cloud 隐含 --instr v2，且必须给 --cloud-config；"
+                          "切换默认车道 = 仪器戳升档（instr-v2-local → instr-v2-cloud）")
+    ap.add_argument("--cloud-config", metavar="JSON", default=None,
+                     help='云端抽取路由 JSON 或 @文件路径，例：{"extract":{"base_url":"https://api.<供应商>/v1",'
+                          '"model":"<型号>","api_key_env":"MY_KEY","max_tokens":800,"temperature":200,'
+                          '"usd_per_1k_tokens":0.002}}；仅 --lane cloud 生效。'
+                          '密钥只走 api_key_env，绝不写进命令与配置')
     args = ap.parse_args(argv)
 
     import sys
@@ -504,6 +547,11 @@ def main(argv: Optional[List[str]] = None) -> int:
         except ValueError:
             ap.error(f"--defect {spec!r}: CH 必须是整数")
 
+    if args.lane == "cloud" and not args.cloud_config:
+        # 云端抽取端点必须显式给出：拿本地默认路由器顶替会让 run.log 里的车道说谎
+        ap.error("--lane cloud 需要 --cloud-config（云端模型路由 JSON 或 @文件）；"
+                 "不静默回落本地：车道的归属必须写进 run.log")
+
     if args.rescue:
         if not args.state_dir:
             ap.error("--rescue 要求 --state-dir：链不在盘上就没有可救援的账")
@@ -518,9 +566,22 @@ def main(argv: Optional[List[str]] = None) -> int:
         return 0
 
     if args.live:
+        from plot_engine.live import build_client
+        # 车道语义（任务单 W6）：--lane cloud 隐含 --instr v2——两条车道跑的是
+        # **同一套** 分段/修复/别名/默认值管道，只有模型不同，否则归因不干净。
+        lane = args.lane
+        use_segmented = args.instr == "v2"
+        cloud_client = None
+        if lane == "cloud":
+            use_segmented = True
+            cloud_client = build_client(_read_model_config(args.cloud_config))
+        elif args.cloud_config:
+            print("提示：--cloud-config 只在 --lane cloud 下生效（已忽略）")
         report, msg, diag = _live_run(args.chapters, _read_model_config(args.model_config),
                                       dump_dir=args.dump_dir, arm=args.prompt,
-                                      state_dir=args.state_dir, fail_stop=args.fail_stop)
+                                      state_dir=args.state_dir, fail_stop=args.fail_stop,
+                                      use_segmented=use_segmented, lane=lane,
+                                      cloud_client=cloud_client)
         print(msg)
         if report is None:
             return 2
@@ -528,6 +589,12 @@ def main(argv: Optional[List[str]] = None) -> int:
               f"用时={report.total_duration_ms / 1000:.0f}s｜"
               f"抽取产出 {diag['proposals']} 条（规则提升 {diag['promoted']}）"
               f" / 坏料 {diag['malformed'] or '无'}")
+        _ins = diag.get("instr") or {}
+        if _ins.get("segments_run"):
+            print(f"仪器：分段 {_ins['segments_run']} 段｜修复 {_ins.get('repaired', 0)} 次"
+                  f"｜合并去重 {_ins.get('deduped', 0)} 条｜别名映射 {_ins.get('alias_mapped', 0)} 条"
+                  f"（多义 {_ins.get('alias_ambiguous', 0)}）｜代码补默认 {_ins.get('defaulted', 0)} 处"
+                  f"｜段级废卷 {len(_ins.get('missing_windows') or [])} 段")
         if diag.get("calls"):
             print(f"接线：{diag['calls']}")
         print(render_review_text(architecture_review(report)))

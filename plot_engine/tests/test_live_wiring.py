@@ -1,7 +1,8 @@
 # Task 4：真实模型接入实验管道（08 §3 tokens/cost/时长）+ 网络故障的可读出口
 from plot_engine.eventlog import EventLog
 from plot_engine.llm import LlmClient, LlmRouter, ModelEndpoint
-from plot_engine.live import build_client, build_live_source, check_reachable
+from plot_engine.live import build_client, build_laned_source, build_live_source
+from plot_engine.live import check_reachable
 from plot_engine.models.experiment import ChapterArtifacts
 from plot_engine.store import StateStore
 from plot_engine.tests.fixtures import experiment_10ch as fx
@@ -129,3 +130,87 @@ def test_extraction_diagnostics_counts_proposals_and_bad_reasons():
             "正文", None, fx.contract_for(cfg.arc_contract, ch, state), state)
     diag = extraction_diagnostics(src.channels)
     assert diag["proposals"] == 2 and diag["malformed"] == {}
+
+
+def test_build_live_source_can_hang_the_segmented_channel():
+    """接线缺口回归：instr-v2 分段通道必须能从 build_live_source 挂上真跑路径。"""
+    cfg = fx.make_config(1)
+    src = build_live_source(
+        _client(), contracts=lambda ch, cur: fx.contract_for(cfg.arc_contract, ch, cur),
+        plans=fx.plan_for, use_segmented=True)
+    art = src(1, cfg.initial_state)
+    channel = art.llm_channel
+    assert channel.instr_version == "instr-v2-local"
+    channel("正文", None, fx.contract_for(cfg.arc_contract, 1, cfg.initial_state),
+            cfg.initial_state)
+    assert channel.segments_run >= 1
+    assert src.channels == [channel]
+
+
+def test_build_laned_source_stamps_the_cloud_lane_and_identity():
+    """W6：云端车道挂同一套管道，但仪器戳与身份档案必须换成云的。"""
+    cloud = LlmClient(LlmRouter(endpoints={
+        "extract": ModelEndpoint(model="cloud-x",
+                                 base_url="https://api.example/v1",
+                                 usd_per_1k_tokens=0.002)}),
+        transport=lambda *a: {"choices": [{"message": {"content": "[]"}}],
+                              "usage": {}})
+    cfg = fx.make_config(1)
+    src = build_laned_source(
+        _client(), cloud,
+        contracts=lambda ch, cur: fx.contract_for(cfg.arc_contract, ch, cur),
+        plans=fx.plan_for, lane="cloud")
+    ch1 = src(1, cfg.initial_state).llm_channel
+    assert ch1.instr_version == "instr-v2-cloud"
+    assert ch1.lane_identity["model"] == "cloud-x"
+    assert ch1.lane_identity["usd_per_1k_tokens"] == 0.002
+    assert src.instr == "instr-v2-cloud"
+
+
+def test_cli_lane_cloud_requires_cloud_config(capsys):
+    """--lane cloud 却不给 --cloud-config ⇒ 拒绝，不拿默认本地端点顶替。"""
+    import pytest
+    from plot_engine.review import main
+    with pytest.raises(SystemExit):
+        main(["--live", "--lane", "cloud"])
+    assert "cloud-config" in capsys.readouterr().err
+
+
+def test_cli_instr_v2_reaches_the_live_run(monkeypatch, capsys):
+    """接线缺口回归：--instr v2 必须真的换通道，而不是只能从测试调到。"""
+    from plot_engine.review import main
+    from plot_engine import review
+    seen = {}
+
+    def stub(chapters, model_config, **kw):
+        seen.update(kw)
+        return None, "端点说明", None
+    monkeypatch.setattr(review, "_live_run", stub)
+    assert main(["--live", "--instr", "v2"]) == 2
+    assert seen["use_segmented"] is True and seen["lane"] == "local"
+    assert seen["cloud_client"] is None
+    assert "端点说明" in capsys.readouterr().out
+
+
+def test_live_run_note_carries_the_instrument_stamp_separate_from_the_ruler(
+        tmp_path, monkeypatch):
+    """仪器戳与尺戳分开记账：run.log 首行同时有两枚戳，且互不覆盖。"""
+    from plot_engine.review import _live_run
+    monkeypatch.setattr("plot_engine.live.check_reachable",
+                        lambda client: (True, "端点可用 models=m"))
+    report, msg, diag = _live_run(2, {}, client=_client(), use_segmented=True,
+                                  state_dir=str(tmp_path),
+                                  dump_dir=str(tmp_path / "dump"))
+    assert report is not None
+    assert "抽取尺=v3.3-belief-type-criteria" in msg      # 尺戳不动
+    assert "仪器=instr-v2-local" in msg                   # 仪器戳新增
+    assert diag["instr"]["instr"] == "instr-v2-local"
+    assert diag["instr"]["segments_run"] >= 1
+
+
+def test_live_run_cloud_lane_without_cloud_client_is_refused():
+    """云端车道不给 cloud_client 就明确拒绝，不静默回本地（归因要干净）。"""
+    from plot_engine.review import _live_run
+    report, msg, _ = _live_run(2, {}, use_segmented=True, lane="cloud",
+                               client=_client(), cloud_client=None)
+    assert report is None and "cloud-config" in msg
