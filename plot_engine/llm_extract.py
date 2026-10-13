@@ -323,7 +323,9 @@ def make_llm_channel(client: LlmClient, *, max_items: int = 24,                 
             bad.append({"reason": "over_cap", "item": len(props)})
             props = props[:max_items]
         promoted = _promote_infers(props, _strip_markup(draft))
-        channel.malformed.extend(bad)
+        # 坏料记章号：只按 reason 聚总的话，dump 里说不清哪章丢了什么（§3.5 取证缺口）
+        ch = getattr(contract, "chapter_no", 0)
+        channel.malformed.extend([{**b, "chapter": ch} for b in bad])
         channel.produced += len(props) + len(promoted)
         channel.promoted += len(promoted)
         return props + promoted

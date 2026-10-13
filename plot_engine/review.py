@@ -378,6 +378,12 @@ def _live_run(chapters: int, model_config: dict, *, client=None, dump_dir=None,
         note += "｜终态 " + " ".join(f"{k}={v}" for k, v in sorted(count_dispositions(dump_dir).items()))
     diag = extraction_diagnostics(source.channels)
     diag["calls"] = getattr(client, "render_call_diagnostics", lambda: "")()
+    if dump_dir is not None:
+        # §3.5 取证：坏料逐条（章号+原因+原文片段）落盘，计数只说明「丢了多少」，说不清「丢了什么」
+        import json
+        junk = [b for chn in source.channels for b in chn.malformed]
+        Path(dump_dir, "_junk.json").write_text(
+            json.dumps(junk, ensure_ascii=False), encoding="utf-8")
     return report, note, diag
 
 

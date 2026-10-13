@@ -199,6 +199,13 @@ def test_channel_records_bads_for_observability_instead_of_silently_dropping():
     assert [b["reason"] for b in channel.malformed] == ["unknown_event_type"]
 
 
+def test_bad_records_carry_the_chapter_for_the_dump():
+    """§3.5 取证：坏料只按 reason 聚总的话，`_junk.json` 落盘也说不清是哪章丢的。"""
+    channel = make_llm_channel(_client([_reply('[{"event_type": "MURDERS"}]')]))
+    channel(DRAFT, None, _contract(), _state())
+    assert channel.malformed[0]["chapter"] == 47
+
+
 def test_channel_caps_output_at_max_items():
     one = '{"event_type": "OBSERVES", "payload": {"fact_id": "fact_000001"}}'
     many = "[" + ",".join(one for _ in range(6)) + "]"
