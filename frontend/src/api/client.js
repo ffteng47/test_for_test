@@ -46,6 +46,7 @@ export const api = {
   prooflisten: () => request('/api/prooflisten'),
   prooflistenPut: (ord, result, secs) => request(`/api/prooflisten?${qs({ ord, result, secs })}`, { method: 'POST', timeoutMs: 8000 }),
   projects: () => request('/api/projects', { timeoutMs: 5000 }),
+  scriptMap: () => request('/api/script_map', { timeoutMs: 8000 }),
 
   // ---- 写 ----
   upload: (file) => {

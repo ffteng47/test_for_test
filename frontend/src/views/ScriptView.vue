@@ -2,12 +2,12 @@
   <div class="wrap">
     <div class="view-head">
       <div>
-        <div class="view-title">剧本工作台 <span class="chapter-tag mono">第二章 · 铜哨</span></div>
+        <div class="view-title">剧本工作台 <span class="chapter-tag mono" v-if="curSeg.episode">第 {{ curSeg.episode }} 集 · {{ epName(curSeg.episode) }}</span><span class="chapter-tag mono" v-else>{{ store.project.title || '当前书籍' }}</span></div>
         <div class="view-sub">逐句标注：说话人归属 · instruct 情绪指令 · 确认锁定后可批量生成</div>
       </div>
       <div class="head-actions">
         <div class="seg-switch">
-          <button v-for="c in chapters" :key="c.id" class="btn btn-ghost" :class="{ cur: c.id === 2 }">{{ c.title.slice(0, 3) }}</button>
+          <button v-for="c in chapters" :key="c.id" class="btn btn-ghost" :class="{ cur: c.id === curSeg.episode }" @click="jumpEp(c.id)">{{ c.title.slice(0, 4) }}</button>
         </div>
         <button class="btn" :disabled="busy.script" @click="act('script', actions.generateScript)">{{ busy.script ? '标注中…' : '⟳ 重新标注' }}</button>
         <button class="btn" :disabled="busy.review" @click="act('review', actions.reviewScript)">{{ busy.review ? '复查中…' : '✓ 校验归属' }}</button>
@@ -30,8 +30,12 @@
           </span>
         </div>
 
-        <div v-for="s in segments" :key="s.id" class="seg" :class="{ sel: s.id === selected, locked: s.status === 'done' }"
-             @click="pick(s.id)">
+        <template v-for="(s, i) in segments">
+          <div v-if="s.episode && (i === 0 || segments[i - 1].episode !== s.episode)" :key="'ep' + s.episode" class="ep-sep">
+            第 {{ s.episode }} 集 · {{ epName(s.episode) }}
+          </div>
+          <div :key="s.id" class="seg" :class="{ sel: s.id === selected, locked: s.status === 'done' }"
+               @click="pick(s.id)">
           <div class="seg-idx mono">{{ String(s.order).padStart(2, '0') }}</div>
           <div class="seg-spk">
             <span class="chip" :style="spkStyle(s.speaker)">{{ spkName(s.speaker) }}</span>
@@ -53,6 +57,7 @@
             <button class="btn btn-ghost mini" @click.stop="expanded = expanded === s.id ? 0 : s.id">⌄</button>
           </div>
         </div>
+        </template>
       </div>
 
       <aside class="card inspector">
@@ -106,7 +111,7 @@
 </template>
 
 <script>
-import { store, speakerOf, engineLabel, fmtTime, VERDICT, VERDICT_ICON } from '../data/store.js'
+import { store, speakerOf, engineLabel, fmtTime, epTitle, VERDICT, VERDICT_ICON } from '../data/store.js'
 import { actions } from '../api/actions.js'
 import { toggleUrl } from '../audio/player.js'
 
@@ -166,6 +171,19 @@ export default {
     },
     stopGenerate() { actions.cancelAudio() },
     pick(id) { this.selected = id; this.store.transport.segId = id },
+    epName(ep) {
+      const e = (this.store.system.scriptMap && this.store.system.scriptMap.episodes || []).find(x => x.episode === ep)
+      return e ? epTitle(e) : ''
+    },
+    jumpEp(ep) {
+      const idx = this.segments.findIndex(s => s.episode === ep)
+      if (idx < 0) return
+      this.pick(this.segments[idx].id)
+      this.$nextTick(() => {
+        const el = this.$el.querySelector('.seg.sel')
+        if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' })
+      })
+    },
     async saveDraft() {
       const ok = await actions.editChunk(this.curSeg.id - 1, { text: this.draft.text, instruct: this.draft.instruct })
       if (ok) this.curSeg.text = this.draft.text
@@ -210,6 +228,13 @@ export default {
   gap: 10px; align-items: start;
   padding: 12px 16px; border-bottom: 1px solid var(--line);
   cursor: pointer; transition: background 0.12s;
+}
+/* 集分隔条：钉在 stats 条下面滚过才可见，一眼知道当前滚到第几集 */
+.ep-sep {
+  position: sticky; top: 40px; z-index: 2;
+  padding: 7px 16px; font-size: 12px; font-weight: 700;
+  color: var(--teal); background: var(--bg2);
+  border-top: 1px solid var(--line2); border-bottom: 1px solid var(--line);
 }
 .seg:hover { background: var(--bg2); }
 .seg.sel { background: var(--accent-dim); box-shadow: inset 3px 0 0 var(--accent); }

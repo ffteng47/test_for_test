@@ -84,6 +84,7 @@ export async function loadSystem() {
     qc: store.system.qc || null,
     delivery: store.system.delivery || null,
     listen: store.system.listen || null,
+    scriptMap: store.system.scriptMap || null,
     ttsMode: config.tts?.mode || 'local'
   }
 }
@@ -117,6 +118,7 @@ export async function loadChunks() {
       qc: null,
       qcErr: null,
       listen: null,    // 审听判定：必须在此声明，事后挂到段上不被追踪，高亮不会跟着变
+      episode: null,   // 分集归属：同上，必须在字面量里声明（loadScriptMap 回填）
       versions: 1,
       chosen: i + 1
     }
@@ -205,6 +207,31 @@ export async function loadJobs() {
   let id = 1
   for (const j of jobs) if (!j.id) j.id = id++
   store.jobs = jobs
+}
+
+// 分集映射（E-books 导入的 script_map.json，安装器 add_script_map_endpoint.py 暴露）：
+// 回填每段 episode + 用真实集数替换 loadChunks 里的假单章。老后端 404 时静默缺席。
+export async function loadScriptMap() {
+  let m = null
+  try { m = await api.scriptMap() } catch { store.system.scriptMap = null; return }
+  store.system.scriptMap = m
+  const epOf = {}
+  for (const c of (m.chunks || [])) epOf[c.chunk] = c.episode
+  for (const seg of store.segments) seg.episode = epOf[seg.id - 1] ?? null
+  const eps = (m.episodes || []).map(e => {
+    const own = store.segments.filter(s => s.episode === e.episode)
+    return {
+      id: e.episode,
+      title: epTitle(e),
+      duration: 0,
+      status: own.length ? (own.every(s => s.status === 'done') ? 'generated' : 'annotated') : 'pending'
+    }
+  })
+  if (eps.length) store.chapters = eps
+}
+
+export function epTitle(e) {
+  return String(e.file || `第${e.episode}集`).replace(/\.txt$/, '').replace(/_/g, ' · ')
 }
 
 export async function loadContinuity() {
@@ -304,6 +331,7 @@ export async function hydrate() {
     await loadProjects()
     await loadEngines()
     await loadChunks()
+    await loadScriptMap()
     await loadVoices()
     await loadContinuity()
     await loadQc()

@@ -88,7 +88,7 @@ voice_config 里的 `mode` 字段只有两个值：`zero_shot`（纯克隆）/ `
   - **全局启动蒙版**（`frontend/src/components/GlobalLock.vue`，新）：所有会发起请求的动作点击**立刻**全屏遮罩「正在启动「…」…」，禁一切操作；**直到后端确认真正启动**（`/api/status` 出现 `running:true`）才解除——不是 POST 返回就撤：后端 background task 在响应**之后**才置 running（`app.py` generate_batch 实测），若响应一返回就解锁，首读会撞进缝隙看到 `running:False`、`busy` 被误清、按钮秒回可点的「重新生成」，重复提交防护形同虚设。确认后每 600ms 快轮状态，一般 1 秒内解锁；宽限 8s 仍未见 running 则按已结束处理（秒完成任务兜底）。覆盖：批量生成/重生成角色台词/音色设计/标注/质检等后台任务（走 `kick()`），以及上传、保存绑定、单段重生成、建书/切书等直接动作。`store.lock` 必须在 `reactive()` 前声明（见 store.js 注释血泪教训）。
   - **kick() 时序修正**：原来 `await POST` 之后才置 `busy`，导致点击后 5~10 秒按钮才变「生成中」，且这个窗口里连点会发出多个 POST（后端 `/api/generate_batch` 是先 return、background task 后置 running，缝隙内两次请求都能穿过 `running` 检查 → 双路并发写同一批段）。现在**同步**先占 `busy` + 起 HUD 占位任务 + 挂蒙版，再发请求；失败才回滚。按钮点击即刻反馈，连点被前端挡死。
   - **loadJobs 冲进度修复**：15s 一轮的 `loadJobs()` 原来整表重建 `store.jobs`，把轮询写进活任务对象的 done/total 进度**覆盖回快照**——这是生成车间 TTS 进度条根本不动的根因。现在按 `task` 命中且 `busy[task]` 为真时**保留活对象**，只更新空闲任务的快照；进度字段（done/total/failed/startedAt）统一由 `progress.js` 的 `applyProgress` 写入。
-- 章节切换按钮当前是装饰（无 handler）。
+- **分集归属（2026-10-14）**：标题栏原来那个「第二章 · 铜哨」是 mock 残留的死文案，**已删**。E-books 导入产出的 `script_map.json`（episodes + 每段集号）以前只有导入脚本看得见，现在经安装器 `deploy/patches/add_script_map_endpoint.py` 暴露为 `GET /api/script_map`（改了 `app.py`，需重启生效）。前端 `store.loadScriptMap()` 在 hydrate 里回填每段 `episode`（该键已在 loadChunks 字面量里预声明——Vue2 事后加键不追踪的老坑）、列表按集插 **sticky 分隔条**「第 N 集 · 标题」、`store.chapters` 用真实集数替换假单章（生成车间章节矩阵跟着变真实）、顶部集数按钮变成**点跳**（滚到该集第一段）。非 E-books 导入的书没有 script_map.json → 端点 404 → 整套静默缺席，显示书名兜底。
 - QC 框：`音频回听一致 CER x%`（ASR 回听 vs 台词）、`原文无损`（字级）、`转录一致/疑似漏字`。
 
 ### 03 角色与声音 `/cast`
@@ -191,6 +191,7 @@ voice_config 里的 `mode` 字段只有两个值：`zero_shot`（纯克隆）/ `
 ### 04 生成车间 `/studio`
 
 - 队列卡片：GPU 显存 / 当前任务 / 待生成段 / 失败段（自动重试 ≤3 次后转人工）。
+- `＋ 批量生成`：对全部非 done 段（pending+error+generating）跑 `/api/generate_batch`（同剧本台那条，但**不走确认弹窗**）。2026-10-14 起按钮态**跟随顶栏 audio 任务**（`store.busy.audio || store.jobs` 里 running 的 audio 任务）：在跑就显示「◌ 生成中 i/n」并禁用，不再只认本页的 busy 标志。
 - 任务行：类型（TTS/标注/质检/音色/导出）、进度、ETA、状态、`取消`（仅 running 时出现）。
 - `⏸ 暂停队列`：**前端状态**，实现是调 `/api/cancel_audio`；服务端没有真正的 pause，恢复即重新起批。
 - `重试全部失败段` → 对 `status==='error'` 的段跑 `/api/generate_batch`。
