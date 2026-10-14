@@ -420,3 +420,40 @@ Proposals 读的是修稿后正文——「归因杀」可能部分是修稿换�
 全绿，但**未施加**——按一因一批，(c)③ 重基线读数必须先跑在 v3.5/g2/instr-v2 面上。补丁存于
 repo 根 `_patch_a_attribution.diff`、`_patch_b3_deadfilter.diff`（未入册工作产物，`git apply
 --check` 双双通过），施加序 = (c)③ 归档 → (a) → (b)（b 判据行措辞仍等 q30b 读数）。
+
+## 18. q30b 探针裁决：本地也躲不开 MoE——摇尺的是专家路由，不是云（2026-10-14，零付费，tff 追问「能否换一个」的直接产出）
+
+**目的**：§14 判云端 DeepSeek 不可当尺后，回答「非确定性到底是云的问题，还是模型的问题」——
+在 213 本地 Ollama 上跑 qwen3:30b（MoE/A3B）× 同一 30 份 v4c 冻结草稿 × 两遍 temp0，零付费。
+
+**车道配方（先付过两笔学费，均归档）**：
+- 首跑（v1 配置）思维链吃光 2400 预算 ⇒ 0 proposal / 201 junk，档 `sampling/w6/q30b_fail1_thinktruncated.json`；
+  四种 think 关闭参数（`reasoning_effort:none`/`think:false`/`thinking.disabled`/`chat_template_kwargs.enable_thinking`）
+  在 Ollama 的 OpenAI 兼容层上全部无效或产空。
+- v2 配方 = **不带 extra_body + max_tokens 6000**，CoT 落 `reasoning` 字段、`content` 为纯 JSON
+  （单调用 44 s 验证过），配置 `sampling/w6/router_q30b_probe.json`（5576fa2）。
+- 混淆项如实挂账：预算 6000 ≠ 14b 基线 2400。但两遍同配方，J 塌方只能来自模型侧，预算差解释不了。
+
+**读数（平铺 10 章口径，两遍同尺法）**：
+- 每章 J = 0.667, 0.375, 0.263, 0.400, 0.524, 0.222, 0.316, 0.321, 0.320, 0.417 ⇒ **J 中位 0.348**（W5 闸 ≥0.85 碎）；
+- BELIEVES/SUSPECTS 键集 **9/10 章不一致**（唯一一致的 ch06 只有 6 条提案）；两遍 n=163/181、
+  malformed=49/56、tokens=398,936/406,801；
+- 型别面：pass1 出 READS 11、LIES 2、HAPPENS 1（14b 基线 READS 仅 2、无 LIES/HAPPENS）——
+  30b **敢落格**，但落不稳（p2 READS 只剩 7）。
+
+**裁定一（尺）**：三车道并排——14b（稠密，本地）J=1.0；DeepSeek Flash（MoE，云）J=0.592；
+qwen3:30b（MoE，本地）J=0.348。**云/本地不是变量，稠密/MoE 才是**：temp0+seed+top_p+惩罚项
+压不住专家路由随批次的漂移。测量尺主机限定稠密本地车道（现 qwen2.5:14b），**任何 MoE 模型
+不得上尺面**，无论部署在哪。商用选型「换模型」的期望随之修正：换 DeepSeek-Pro（同为 MoE）无效。
+
+**裁定二（#70 判据批措辞）**：容量假说（「14B 不敢落键」）在 30b 上**未被证实也未被证伪**——
+尺不稳则容量读数无意义。§17 的定性维持：READS/OBSERVES 型别判据行按 14b 同尺读数推进；
+30b「敢落但落不稳」仅作旁证记档，不进判据。
+
+**注**：18:57–19:0x pass2 曾与另一会话的 v4d 回放共卡（该会话已自行关闭）；只影响用时，
+本轮**不记用时读数**。
+
+**复现**：`.venv/Scripts/python.exe -m plot_engine.instr_replay --runs v4c1,v4c2,v4c3
+--chapters 1..10 --client @sampling/w6/router_q30b_probe.json --lane local --out sampling/w6/q30b_pass{1,2}.json`；
+读数 = 平铺 `chapters` 口径逐章 `chapter_jaccard` + `believes_keys` 差集（§13 口径：本档案
+`sampling/w6/q30b_pass{1,2}.json` 齐，可复跑）。
