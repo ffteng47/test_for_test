@@ -28,9 +28,13 @@ body {
   font: 14px/1.55 -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
   -webkit-font-smoothing: antialiased;
 }
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
+/* 全局滚动条：旧版 thumb 用 --bg3、宽 8px、轨道透明，在深色底上几乎不可见，
+   用户只能滚轮。现在做成明显可拖的块（content-box 留白显得细一点但热区仍是 12px）。
+   注意：不要再加全局 scrollbar-color，Chrome 121+ 会因此忽略下面的 webkit 定制。 */
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: var(--bg0); }
+::-webkit-scrollbar-thumb { background: #46536a; border: 3px solid transparent; background-clip: content-box; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover, ::-webkit-scrollbar-thumb:active { background: var(--accent); border: 3px solid transparent; background-clip: content-box; }
 
 .label {
   font-size: 11px;
