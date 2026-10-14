@@ -1,0 +1,21 @@
+{
+  "_comment": "W6 后续容量探针（2026-10-14）：与 router_w5_frozen.json 逐字段同，只换 extract.model=qwen3:30b——一因一批。用途：在确定性本地栈上检验『BELIEVES 盲区=14b 容量不足』假设；不用于任何采样臂。",
+  "writer": {
+    "base_url": "http://192.168.31.213:11434/v1",
+    "model": "qwen3:30b",
+    "timeout_s": 900,
+    "extra_body": {
+      "reasoning_effort": "none"
+    }
+  },
+  "extract": {
+    "base_url": "http://192.168.31.213:11434/v1",
+    "model": "qwen3:30b",
+    "max_tokens": 2400,
+    "temperature": 0,
+    "timeout_s": 900,
+    "extra_body": {
+      "reasoning_effort": "none"
+    }
+  }
+}
