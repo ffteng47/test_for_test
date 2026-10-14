@@ -109,8 +109,8 @@
         </div>
 
         <div class="field regen-row">
-          <button class="btn btn-busy" :disabled="!charLines || store.busy.audio" @click="regenChar">
-            {{ store.busy.audio ? `◌ 生成中${audioProg}（顶栏看进度，可停止）` : `↻ 重生成该角色台词（${charLines} 段）` }}
+          <button class="btn btn-busy" :disabled="!charLines || audioBusy" @click="regenChar">
+            {{ audioBusy ? `◌ 生成中${audioProg}（顶栏看进度，可停止）` : `↻ 重生成该角色台词（${charLines} 段）` }}
           </button>
           <div class="hint">换声只写入绑定，<b>已生成的音频不会自动变</b>——要让新声音生效，必须重跑该角色的段。</div>
         </div>
@@ -198,9 +198,18 @@ export default {
     charLines() {
       return this.current ? this.store.segments.filter(s => s.speaker === this.current.id).length : 0
     },
-    // 刷新后按钮也要真知道在跑：进度取自全局 audio 任务（track/resync 都在喂 store.jobs）
+    // 按钮态跟随顶栏任务：busy 只是本标签页 kick 的私有标志，跨刷新/跨标签要靠
+    // store.jobs（loadJobs 快照 + pollTask 活对象）里的 running audio 任务——
+    // 只看 busy 时顶栏明明在跑、按钮还显示可点的「重生成」，延迟十几秒才变。
+    audioJob() {
+      return this.store.jobs.find(x => x.task === 'audio' && x.status === 'running')
+    },
+    audioBusy() {
+      return !!this.store.busy.audio || !!this.audioJob
+    },
+    // 进度取自全局 audio 任务（track/resync/loadJobs 都在喂 store.jobs）
     audioProg() {
-      const j = this.store.jobs.find(x => x.task === 'audio' && x.status === 'running')
+      const j = this.audioJob
       return j && j.total ? ` ${j.done}/${j.total}` : '…'
     },
     isCloneEngine() { return this.engine === 'cosy' || this.engine === 'index' },

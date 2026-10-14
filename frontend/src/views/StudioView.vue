@@ -9,7 +9,9 @@
         <button class="btn" :class="{ 'btn-stop': paused }" @click="toggleQueue">
           {{ paused ? '▶ 恢复队列' : '⏸ 暂停队列' }}
         </button>
-        <button class="btn btn-primary" @click="batch">＋ 批量生成</button>
+        <button class="btn btn-primary" :disabled="audioBusy" @click="batch">
+          {{ audioBusy ? `◌ 生成中${audioProg}` : '＋ 批量生成' }}
+        </button>
       </div>
     </div>
 
@@ -119,6 +121,17 @@ export default {
   computed: {
     running() {
       return this.store.jobs.find(j => j.status === 'running')
+    },
+    // 批量生成按钮态跟随顶栏 audio 任务（同 CastView）：跨刷新/跨标签也知道自己「在跑」
+    audioJob() {
+      return this.store.jobs.find(x => x.task === 'audio' && x.status === 'running')
+    },
+    audioBusy() {
+      return !!this.store.busy.audio || !!this.audioJob
+    },
+    audioProg() {
+      const j = this.audioJob
+      return j && j.total ? ` ${j.done}/${j.total}` : '…'
     },
     pendingSegs() {
       return this.store.segments.filter(s => s.status === 'pending' || s.status === 'generating').length
