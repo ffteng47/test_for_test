@@ -251,6 +251,10 @@ def test_live_run_persists_run_log_and_state_into_dump_dir(tmp_path, monkeypatch
     assert "夹具=" in first and "仪器=" in first
     assert (dump / "state" / "state.db").exists()
     assert (dump / "state" / "event.db").exists()
+    from plot_engine.review import dump_complete
+    assert dump_complete(str(dump)) == []            # 完工自检：三件套齐
+    (dump / "run.log").unlink()
+    assert dump_complete(str(dump)) == [str(dump / "run.log")]   # 缺件即点名
 
 
 def test_live_run_cloud_lane_without_cloud_client_is_refused():

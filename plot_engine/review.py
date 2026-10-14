@@ -427,6 +427,15 @@ def _live_run(chapters: int, model_config: dict, *, client=None, cloud_client=No
     return report, note, diag
 
 
+def dump_complete(dump_dir, state_dir=None) -> list:
+    """完工自检：run.log / state/event.db / _junk.json 三件套，返回缺件清单（空=齐）。"""
+    from pathlib import Path
+    root = Path(dump_dir)
+    state = Path(state_dir) if state_dir else root / "state"
+    cand = [root / "run.log", state / "event.db", root / "_junk.json"]
+    return [str(p) for p in cand if not p.exists()]
+
+
 def count_dispositions(dump_dir) -> Dict[str, int]:
     """从逐章快照数**终态分布**——人工处置率的唯一可数来源。
     `status=` 是 outcome 的 CommitStatus（07 §4.1 没有 NEEDS_HUMAN 这个值），
@@ -609,6 +618,12 @@ def main(argv: Optional[List[str]] = None) -> int:
                   f"｜段级废卷 {len(_ins.get('missing_windows') or [])} 段")
         if diag.get("calls"):
             print(f"接线：{diag['calls']}")
+        if args.dump_dir:
+            # 完工自检（卫生批 #2，§13/§15）：取证三件套缺一件即拒收，不许事后 mtime 救援。
+            missing = dump_complete(args.dump_dir, args.state_dir)
+            if missing:
+                print(f"完工自检失败：缺 {missing} ⇒ 本跑不得作为取证归档")
+                return 3
         print(render_review_text(architecture_review(report)))
         return 0
 
