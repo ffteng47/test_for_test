@@ -764,11 +764,18 @@ LAB_WRITE_ANCHOR = '''    mpath = os.path.join(_ctx["designed_dir"], "voice_lab_
 
 
 def patch(path, pairs, tag):
-    """pairs: (old, new, marker)。marker 已存在则跳过该条。"""
+    """pairs: (old, new, marker[, optional])。marker 已存在则跳过该条。
+    optional=True 的条目是给老部署做的升级迁移：锚点不在 = 本机从没装过旧版，跳过即可，
+    不能让它的 assert 把同文件其他必需补丁一起带崩（patch() 是全建成功才落盘）。"""
     src = open(path, encoding="utf-8").read()
     changed = False
-    for old, new, marker in pairs:
+    for entry in pairs:
+        old, new, marker = entry[:3]
+        optional = entry[3] if len(entry) > 3 else False
         if marker in src:
+            continue
+        if optional and old not in src:
+            print(f"{tag}: skip optional -> {old[:60]!r}")
             continue
         assert old in src, f"{tag}: anchor missing -> {old[:80]!r}"
         src = src.replace(old, new, 1)
@@ -806,7 +813,7 @@ patch(LAB, [
      '''            hit["tags"] = tag_vocab.validate(req.tags)
         except ValueError as exc:
             raise HTTPException(status_code=400, detail=str(exc))''',
-     'hit["tags"] = tag_vocab.validate(req.tags)'),
+     'hit["tags"] = tag_vocab.validate(req.tags)', True),
 ], "LAB_RECORDS")
 
 for f in (VOC, VAU, NDB, APP, LAB):
