@@ -1,0 +1,21 @@
+{
+  "_comment": "尺可移植性检验（2026-10-14）：与 router_w5_frozen.json 唯一差异 = base_url 指向本机 3090（模型/预算/温度/extra_body 逐字段照抄）。两遍 J=1.0 ⇒ 稠密+本地+串行的可复现性随硬件迁移，尺可搬家；J<0.85 ⇒ 本机车道有独立变量，先修车道。",
+  "writer": {
+    "base_url": "http://localhost:11434/v1",
+    "model": "qwen2.5:14b",
+    "timeout_s": 600,
+    "extra_body": {
+      "reasoning_effort": "none"
+    }
+  },
+  "extract": {
+    "base_url": "http://localhost:11434/v1",
+    "model": "qwen2.5:14b",
+    "max_tokens": 2400,
+    "temperature": 0,
+    "timeout_s": 600,
+    "extra_body": {
+      "reasoning_effort": "none"
+    }
+  }
+}

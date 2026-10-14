@@ -1,0 +1,15 @@
+{
+  "_comment": "稠密候选上尺闸（2026-10-14）。§18 规程：换任何候选模型上尺面前，先对 30 份 v4c 冻结草稿跑双遍 temp0，J 中位 ≥0.85 才有尺面资格。本档 = qwen3.5:27b（稠密，213 已装 16.3GB，零下载）。配方沿用 30b v2：无 extra_body + max_tokens 6000（qwen3.5 思考型，先例证明这台 Ollama 关不掉思考；两遍同配方 ⇒ 预算混杂项不影响双遍一致率读数）。不用于任何采样臂。",
+  "writer": {
+    "base_url": "http://192.168.31.213:11434/v1",
+    "model": "qwen3.5:27b",
+    "timeout_s": 900
+  },
+  "extract": {
+    "base_url": "http://192.168.31.213:11434/v1",
+    "model": "qwen3.5:27b",
+    "max_tokens": 6000,
+    "temperature": 0,
+    "timeout_s": 900
+  }
+}

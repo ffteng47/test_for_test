@@ -1,0 +1,15 @@
+{
+  "_comment": "#72 后半：deepseek-r1:32b 稠密上尺闸，本地 3090（ollama v0.40.3，OLLAMA_MODELS=E:\\github\\LLM\\ollama）。r1 系=qwen3 底座，沿用 §18/探针 v2 配方：无 extra_body + extract max_tokens 6000 ⇒ CoT 自动落 reasoning 字段、content 纯 JSON。闸判据同 W5：30 草稿双遍 J med ≥0.85、废卷率 <2%、钉测章 2/3/9 BELIEVES/SUSPECTS 稳定。稠密⇒预期 determinism 好；若过闸，3090 车道多出 32b 稠密容量档。不用于任何生成采样臂，仅零生成回放。",
+  "writer": {
+    "base_url": "http://localhost:11434/v1",
+    "model": "deepseek-r1:32b",
+    "timeout_s": 900
+  },
+  "extract": {
+    "base_url": "http://localhost:11434/v1",
+    "model": "deepseek-r1:32b",
+    "max_tokens": 6000,
+    "temperature": 0,
+    "timeout_s": 900
+  }
+}

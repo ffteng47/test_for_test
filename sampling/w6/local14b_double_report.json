@@ -1,0 +1,204 @@
+{
+  "instr": "instr-v2-local",
+  "chapters": 30,
+  "waste_chapters": [],
+  "waste_rate": 0.0,
+  "jaccard_med": 1.0,
+  "per_chapter": [
+    {
+      "chapter": "v4c1#1",
+      "jaccard": 1.0,
+      "n_a": 4,
+      "n_b": 4
+    },
+    {
+      "chapter": "v4c1#10",
+      "jaccard": 1.0,
+      "n_a": 14,
+      "n_b": 14
+    },
+    {
+      "chapter": "v4c1#2",
+      "jaccard": 1.0,
+      "n_a": 21,
+      "n_b": 20
+    },
+    {
+      "chapter": "v4c1#3",
+      "jaccard": 1.0,
+      "n_a": 10,
+      "n_b": 10
+    },
+    {
+      "chapter": "v4c1#4",
+      "jaccard": 1.0,
+      "n_a": 13,
+      "n_b": 13
+    },
+    {
+      "chapter": "v4c1#5",
+      "jaccard": 1.0,
+      "n_a": 19,
+      "n_b": 19
+    },
+    {
+      "chapter": "v4c1#6",
+      "jaccard": 1.0,
+      "n_a": 11,
+      "n_b": 11
+    },
+    {
+      "chapter": "v4c1#7",
+      "jaccard": 1.0,
+      "n_a": 10,
+      "n_b": 10
+    },
+    {
+      "chapter": "v4c1#8",
+      "jaccard": 1.0,
+      "n_a": 13,
+      "n_b": 13
+    },
+    {
+      "chapter": "v4c1#9",
+      "jaccard": 1.0,
+      "n_a": 20,
+      "n_b": 20
+    },
+    {
+      "chapter": "v4c2#1",
+      "jaccard": 1.0,
+      "n_a": 6,
+      "n_b": 6
+    },
+    {
+      "chapter": "v4c2#10",
+      "jaccard": 1.0,
+      "n_a": 7,
+      "n_b": 7
+    },
+    {
+      "chapter": "v4c2#2",
+      "jaccard": 1.0,
+      "n_a": 14,
+      "n_b": 14
+    },
+    {
+      "chapter": "v4c2#3",
+      "jaccard": 1.0,
+      "n_a": 5,
+      "n_b": 5
+    },
+    {
+      "chapter": "v4c2#4",
+      "jaccard": 1.0,
+      "n_a": 9,
+      "n_b": 9
+    },
+    {
+      "chapter": "v4c2#5",
+      "jaccard": 1.0,
+      "n_a": 24,
+      "n_b": 24
+    },
+    {
+      "chapter": "v4c2#6",
+      "jaccard": 1.0,
+      "n_a": 24,
+      "n_b": 24
+    },
+    {
+      "chapter": "v4c2#7",
+      "jaccard": 1.0,
+      "n_a": 9,
+      "n_b": 9
+    },
+    {
+      "chapter": "v4c2#8",
+      "jaccard": 1.0,
+      "n_a": 13,
+      "n_b": 13
+    },
+    {
+      "chapter": "v4c2#9",
+      "jaccard": 1.0,
+      "n_a": 16,
+      "n_b": 16
+    },
+    {
+      "chapter": "v4c3#1",
+      "jaccard": 1.0,
+      "n_a": 7,
+      "n_b": 7
+    },
+    {
+      "chapter": "v4c3#10",
+      "jaccard": 1.0,
+      "n_a": 5,
+      "n_b": 5
+    },
+    {
+      "chapter": "v4c3#2",
+      "jaccard": 1.0,
+      "n_a": 10,
+      "n_b": 10
+    },
+    {
+      "chapter": "v4c3#3",
+      "jaccard": 1.0,
+      "n_a": 6,
+      "n_b": 6
+    },
+    {
+      "chapter": "v4c3#4",
+      "jaccard": 1.0,
+      "n_a": 14,
+      "n_b": 14
+    },
+    {
+      "chapter": "v4c3#5",
+      "jaccard": 1.0,
+      "n_a": 14,
+      "n_b": 14
+    },
+    {
+      "chapter": "v4c3#6",
+      "jaccard": 1.0,
+      "n_a": 7,
+      "n_b": 7
+    },
+    {
+      "chapter": "v4c3#7",
+      "jaccard": 1.0,
+      "n_a": 17,
+      "n_b": 17
+    },
+    {
+      "chapter": "v4c3#8",
+      "jaccard": 1.0,
+      "n_a": 12,
+      "n_b": 12
+    },
+    {
+      "chapter": "v4c3#9",
+      "jaccard": 1.0,
+      "n_a": 20,
+      "n_b": 20
+    }
+  ],
+  "believes_stable": true,
+  "believes_mismatch_chapters": [],
+  "thresholds": {
+    "waste_lt": 0.02,
+    "jaccard_med_ge": 0.85
+  },
+  "gate": {
+    "pass": true,
+    "waste_rate": 0.0,
+    "jaccard_med": 1.0,
+    "believes_stable": true,
+    "waste_ok": true,
+    "jaccard_ok": true
+  },
+  "upgrade_path": "pass:open_v4d_baseline"
+}

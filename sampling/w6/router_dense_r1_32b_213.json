@@ -1,0 +1,15 @@
+{
+  "_comment": "#72 后半（改道）：deepseek-r1:32b 稠密上尺闸，213 车道。起因：本地 3090 Windows 下 32b 级不可载（WDDM 单块 18.1GB cudaMalloc 失败；减层 offload 的 CUDA_Host pinned 分配 4.9–7.8GB 亦失败=锁页策略限制），213 Linux 无此限。配方同 §18 v2：r1=qwen3 底座，无 extra_body + max_tokens 6000 ⇒ CoT 落 reasoning、content 纯 JSON。闸判据同 W5：30 草稿双遍 J med ≥0.85、废卷 <2%、钉测章 2/3/9 BELIEVES/SUSPECTS 稳定。尺可移植性已由 local14b_double_report.json 证 J=1.0，故 213 读数与本地车道可比。仅零生成回放，不动生成采样臂。等 #71 的 27b 双遍收口后在 213 起跑。",
+  "writer": {
+    "base_url": "http://192.168.31.213:11434/v1",
+    "model": "deepseek-r1:32b",
+    "timeout_s": 900
+  },
+  "extract": {
+    "base_url": "http://192.168.31.213:11434/v1",
+    "model": "deepseek-r1:32b",
+    "max_tokens": 6000,
+    "temperature": 0,
+    "timeout_s": 900
+  }
+}
