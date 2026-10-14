@@ -2,6 +2,7 @@
 // 写路径在 actions.js：动作 -> 后端任务 -> pollTask -> 重新 load 对应切片。
 // mock 回退保证无后端时（如 Qoder Site 演示）页面照常工作。
 import { reactive } from 'vue'
+import { applyProgress } from './progress.js'
 import { store as mockStore, fmtTime } from './mock.js'
 import { api } from '../api/client.js'
 
@@ -20,6 +21,7 @@ export function speakerKey(label) {
 export const store = reactive(Object.assign(structuredClone(mockStore), {
   mode: 'mock',
   busy: {},          // task -> true，按钮防重
+  lock: { on: false, text: '' },   // 全局启动蒙版：写动作 POST 在途时锁住整页，防连点重复提交
   toast: [],         // { text, kind }
   projects: { active: null, list: [] },   // 多书注册表快照
   engines: []        // 服务端 engines.ENGINES：出声引擎下拉框唯一来源
@@ -180,21 +182,28 @@ const JOB_NAMES = {
 }
 
 export async function loadJobs() {
+  const entries = Object.entries(JOB_NAMES)
+  const states = await Promise.all(entries.map(([task]) => api.status(task).catch(() => null)))
   const jobs = []
+  entries.forEach(([task, [name, type]], i) => {
+    const live = store.jobs.find(x => x.task === task)
+    // pollTask 正在跟踪的任务：以活对象为准（带真进度 done/total 和 startedAt），
+    // 在这里整表重建会把 hydrate 周期（15s）内的真进度冲掉——TTS 进度条不动的根因。
+    if (live && store.busy[task]) { jobs.push(live); return }
+    const s = states[i]
+    if (!s) return
+    const j = {
+      id: 0, task, name, type,
+      progress: s.running ? 50 : 100, eta: '',
+      status: s.running ? 'running' : 'done',
+      logs: (s.logs || []).slice(-8),
+      done: 0, total: 0, failed: 0, startedAt: 0
+    }
+    if (s.running) applyProgress(j, s.logs || [], false)
+    jobs.push(j)
+  })
   let id = 1
-  for (const [task, [name, type]] of Object.entries(JOB_NAMES)) {
-    try {
-      const s = await api.status(task)
-      const logs = s.logs || []
-      jobs.push({
-        id: id++, task, name, type,
-        progress: s.running ? 50 : 100,
-        eta: s.running ? '—' : '',
-        status: s.running ? 'running' : 'done',
-        logs: logs.slice(-8)
-      })
-    } catch { /* 任务不可达则跳过 */ }
-  }
+  for (const j of jobs) if (!j.id) j.id = id++
   store.jobs = jobs
 }
 

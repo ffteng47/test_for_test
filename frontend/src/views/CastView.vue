@@ -109,8 +109,8 @@
         </div>
 
         <div class="field regen-row">
-          <button class="btn" :disabled="!charLines || store.busy.audio" @click="regenChar">
-            {{ store.busy.audio ? '生成中…（见任务队列）' : `↻ 重生成该角色台词（${charLines} 段）` }}
+          <button class="btn btn-busy" :disabled="!charLines || store.busy.audio" @click="regenChar">
+            {{ store.busy.audio ? `◌ 生成中${audioProg}（顶栏看进度，可停止）` : `↻ 重生成该角色台词（${charLines} 段）` }}
           </button>
           <div class="hint">换声只写入绑定，<b>已生成的音频不会自动变</b>——要让新声音生效，必须重跑该角色的段。</div>
         </div>
@@ -197,6 +197,11 @@ export default {
     },
     charLines() {
       return this.current ? this.store.segments.filter(s => s.speaker === this.current.id).length : 0
+    },
+    // 刷新后按钮也要真知道在跑：进度取自全局 audio 任务（track/resync 都在喂 store.jobs）
+    audioProg() {
+      const j = this.store.jobs.find(x => x.task === 'audio' && x.status === 'running')
+      return j && j.total ? ` ${j.done}/${j.total}` : '…'
     },
     isCloneEngine() { return this.engine === 'cosy' || this.engine === 'index' },
     engineEmo() {
@@ -396,6 +401,11 @@ export default {
 .two-btns { display: flex; gap: 8px; }
 .two-btns .btn { flex: 1; justify-content: center; }
 .regen-row .btn { width: 100%; justify-content: center; }
+.btn-busy {
+  background: rgba(124, 108, 255, 0.16); color: var(--accent);
+  border-color: var(--accent-dim, rgba(124,108,255,.4)); animation: busy-breathe 1.6s ease-in-out infinite;
+}
+@keyframes busy-breathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.62; } }
 .vhist { margin-top: 6px; }
 .vrow {
   display: flex; gap: 12px; font-size: 12px; padding: 6px 0;

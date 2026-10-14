@@ -38,19 +38,14 @@
       </div>
     </header>
 
+    <TaskHud />
+
     <nav class="rail">
       <router-link v-for="s in steps" :key="s.path" :to="s.path" class="step" active-class="on">
         <span class="step-no">{{ s.no }}</span>
         <span class="step-name">{{ s.name }}</span>
         <span class="step-tag" v-if="s.tag">{{ s.tag }}</span>
       </router-link>
-      <div class="rail-foot">
-        <div class="label">当前任务</div>
-        <div class="job-mini" v-for="j in runningJobs" :key="j.id">
-          <div class="job-name">{{ j.name }}</div>
-          <div class="bar"><i :style="{ width: j.progress + '%' }"></i></div>
-        </div>
-      </div>
     </nav>
 
     <main class="main">
@@ -61,6 +56,8 @@
 
     <TransportBar />
 
+    <GlobalLock />
+
     <transition-group name="toast" tag="div" class="toasts">
       <div v-for="t in store.toast" :key="t.at" class="toast" :class="'k-' + t.kind">{{ t.text }}</div>
     </transition-group>
@@ -69,11 +66,13 @@
 
 <script>
 import { store, hydrate } from './data/store.js'
-import { actions } from './api/actions.js'
+import { actions, resyncRunning } from './api/actions.js'
 import TransportBar from './components/TransportBar.vue'
+import TaskHud from './components/TaskHud.vue'
+import GlobalLock from './components/GlobalLock.vue'
 
 export default {
-  components: { TransportBar },
+  components: { TransportBar, TaskHud, GlobalLock },
   data() {
     return { store }
   },
@@ -94,9 +93,6 @@ export default {
       if (!segs.length) return 0
       return Math.round(segs.filter((s) => s.status === 'done').length / segs.length * 100)
     },
-    runningJobs() {
-      return this.store.jobs.filter((j) => j.status === 'running')
-    },
     switching() {
       return !!this.store.busy.switch
     }
@@ -115,6 +111,8 @@ export default {
   async mounted() {
     const mode = await hydrate()
     if (mode === 'live') {
+      // 刷新后进的是任何页面（不只剧本工作台）都要恢复后端在跑的任务与进度
+      resyncRunning()
       this._timer = setInterval(() => hydrate(), 15000)
     }
   },
@@ -212,9 +210,6 @@ export default {
   margin-left: auto; font-size: 10.5px; font-family: var(--mono);
   background: var(--bg3); padding: 1px 7px; border-radius: 999px; color: var(--t2);
 }
-.rail-foot { margin-top: auto; padding: 12px; }
-.job-mini { margin-top: 10px; }
-.job-name { font-size: 12px; color: var(--t2); margin-bottom: 5px; }
 .main { grid-area: main; overflow: auto; padding: 22px 26px 26px; }
 .toasts { position: fixed; right: 18px; bottom: 86px; display: flex; flex-direction: column; gap: 8px; z-index: 50; }
 .toast {

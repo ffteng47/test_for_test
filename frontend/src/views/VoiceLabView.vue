@@ -167,7 +167,6 @@
             </select>
             <button class="btn btn-sm" :disabled="histOffset <= 0" @click="loadHistory(histOffset - histLimit)">← 上页</button>
             <button class="btn btn-sm" :disabled="histOffset + histLimit >= histTotal" @click="loadHistory(histOffset + histLimit)">下页 →</button>
-            <label class="purge"><input type="checkbox" v-model="purgeFile" />删除时连音频</label>
           </span>
         </div>
         <div v-for="r in history" :key="'h'+r.id" class="result-row hist-row">
@@ -208,6 +207,21 @@
       <div v-if="applying" class="apply-mask">
         <div class="spin"></div>
         <div class="apply-txt">正在把这条声音绑定到「{{ currentCharName }}」…</div>
+      </div>
+    </transition>
+
+    <transition name="mask">
+      <div v-if="dropTarget" class="apply-mask" @click.self="dropTarget = null">
+        <div class="dbox">
+          <div class="dbox-title">删除记录 · 确认</div>
+          <div class="dbox-sub">删除「{{ dropTarget.name || dropTarget.model_label }} / seed {{ dropTarget.seed }}」这条记录？</div>
+          <label class="dbox-chk"><input type="checkbox" v-model="purgeFile" /> 同时删除音频文件（默认勾选；不勾 = 只删台账记录，wav 保留）</label>
+          <div class="dbox-warn" v-if="purgeFile && boundCharOf(dropTarget)">⚠ 这条声音正被「{{ boundCharOf(dropTarget).name }}」绑定使用，删文件会让该绑定失声；若已存仓库，仓库行也会变 missing 取不出声。</div>
+          <div class="dbox-acts">
+            <button class="btn btn-ghost" @click="dropTarget = null">取消</button>
+            <button class="btn btn-primary dbox-del" :disabled="saving === dropTarget.id" @click="confirmDrop">{{ saving === dropTarget.id ? '删除中…' : '删除' }}</button>
+          </div>
+        </div>
       </div>
     </transition>
   </div>
@@ -276,7 +290,8 @@ export default {
       histSpeaker: '',
       editing: '',
       editTags: {},
-      purgeFile: false,
+      purgeFile: true,
+      dropTarget: null,
       saving: '',
       busy: false,
       doneCount: 0,
@@ -381,15 +396,19 @@ export default {
         this.saving = ''
       }
     },
-    async dropRecord(r) {
-      const extra = this.purgeFile ? '，并删掉它的音频文件' : '（音频文件保留）'
-      if (!window.confirm(`删除「${r.model_label} / seed ${r.seed}」这条记录${extra}？`)) return
+    dropRecord(r) {
+      this.purgeFile = true   // 每次弹窗默认「连音频一起删」，取消勾选 = 保留文件
+      this.dropTarget = r
+    },
+    async confirmDrop() {
+      const r = this.dropTarget
       this.saving = r.id
       try {
         await api.voiceLabRecordDelete({ id: r.id, purge: this.purgeFile })
         this.history = this.history.filter((x) => x.id !== r.id)
         this.histTotal -= 1
-        toast(this.purgeFile ? '记录与音频已删除' : '记录已删除', 'ok')
+        toast(this.purgeFile ? '记录与音频已删除' : '记录已删除（音频保留）', 'ok')
+        this.dropTarget = null
       } catch (e) {
         toast(`删除失败：${e.message}`, 'err')
       } finally {
@@ -607,7 +626,6 @@ export default {
 .hist-head { border-top: 1px solid var(--line); margin-top: 10px; }
 .hist-tools { display: flex; align-items: center; gap: 8px; font-size: 12px; }
 .hist-tools select { font-size: 12px; padding: 3px 6px; }
-.purge { display: flex; align-items: center; gap: 4px; color: var(--t2); }
 .hist-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; }
 .hist-tags.editing { display: block; }
 .chip-dim { background: var(--bg3); color: var(--t2); }
@@ -660,4 +678,15 @@ export default {
 @keyframes spin { to { transform: rotate(360deg); } }
 .mask-enter-active, .mask-leave-active { transition: opacity 0.25s ease; }
 .mask-enter-from, .mask-leave-to { opacity: 0; }
+.dbox {
+  width: min(420px, 90vw); padding: 18px 20px; border-radius: 12px;
+  background: var(--bg2, #11151f); border: 1px solid var(--line2);
+  display: flex; flex-direction: column; gap: 12px;
+}
+.dbox-title { font-weight: 700; font-size: 14px; color: var(--t1); }
+.dbox-sub { font-size: 12.5px; color: var(--t1); }
+.dbox-chk { font-size: 12.5px; color: var(--t1); display: flex; align-items: center; gap: 6px; }
+.dbox-warn { font-size: 12px; color: var(--red, #f87171); background: rgba(248, 113, 113, 0.12); padding: 8px 10px; border-radius: 8px; }
+.dbox-acts { display: flex; justify-content: flex-end; gap: 10px; }
+.dbox-del { background: var(--red, #f87171); border-color: var(--red, #f87171); color: #fff; }
 </style>

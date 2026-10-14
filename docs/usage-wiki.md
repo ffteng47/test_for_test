@@ -79,7 +79,14 @@ voice_config 里的 `mode` 字段只有两个值：`zero_shot`（纯克隆）/ `
   - `▷ 试听本句`：只播**已生成的文件**，没有音频时按钮禁用
   - `↻ 重生成` → `/api/chunks/{index}/generate`
   - `▶ 批量生成` → `/api/generate_batch`（2026-10-12 改）：点击**先弹确认**（列出未完成段数 = pending+error），勾「以后不再弹出此确认」记在 localStorage `novel.skipGenConfirm`，此后直接启动。**运行中按钮变「⏹ 停止生成」** → `POST /api/cancel_audio`：任务在跑就置 cancel 标志（当前段出完才停，已生成音频保留，再点批量只补未做的）；空闲时该端点把卡在 `generating` 的段复位成 `pending`。
-  - **刷新页面后仍能停（2026-10-13）**：`busy` 原本是纯前端内存态，批量生成跑一半刷新一下按钮就变回「▶ 批量生成」，看着像没法中止。现在进入工作台会跑 `resyncRunning()`（`frontend/src/api/actions.js`）：逐个查后端 `/api/status/{audio,persona,script,review}`，凡是 `running:true` 的任务自动恢复进度轮询，按钮重新变「⏹ 停止生成」。状态以**后端**为准，前端只是显示器。
+  - **刷新页面后仍能停（2026-10-13）**：`busy` 原本是纯前端内存态，批量生成跑一半刷新一下按钮就变回「▶ 批量生成」，看着像没法中止。现在进入工作台会跑 `resyncRunning()`（`frontend/src/api/actions.js`，App.vue mounted 时 live 模式调用）：查后端 `/api/status/{audio,persona,script,review}`，凡是 `running:true` 的任务自动恢复进度轮询，按钮重新变「⏹ 停止生成」。状态以**后端**为准，前端只是显示器。2026-10-14 起 4 个状态查询改为 `Promise.all` **并行**，不再串行排队（原先串行时每个请求慢一点都会拖满恢复时间）。
+- **任务进度体系 + 全局启动蒙版（2026-10-14 重构）**：
+  - **顶部任务 HUD**（`frontend/src/components/TaskHud.vue`，新）：只要有 running 任务就在页头下方常驻一条横幅——脉冲圈动画、进度条（有真进度走百分比，没有走斑马条纹不定式）、`done/total · 剩 N · 失败 n · %`、`已跑 X · 预计还需 Y`，TTS 任务右侧带 ⏹ 停止。**取代**了原来左下角的「当前任务」小块（太小看不到，已删）。
+  - **真进度从哪来**：后端 `/api/status/audio` 的批量生成日志本来就带结构化行 `Progress: 179/273 (179 done, 0 failed)`（`generate_batch_endpoint` 的 progress_callback），前端 `frontend/src/data/progress.js`（新，唯一换算源）倒序解析这行，得到 done/total/failed，再算 pct/remain/elapsed/eta。**零后端改动**。HUD、剧本工作台、生成车间三处共用同一份换算。
+  - **轮询时机**：任务启动确认后 `pollTask` 立即读一次状态、之后每 3s 一轮，日志有变化才刷新；跑完自动收尾并刷新段数据。长任务**不**全屏锁死——启动锁 + HUD 两段式，生成期间页面照常可用。
+  - **全局启动蒙版**（`frontend/src/components/GlobalLock.vue`，新）：所有会发起请求的动作点击**立刻**全屏遮罩「正在启动「…」…」，禁一切操作；POST 确认返回即解除（最短 350ms，防闪一下）。覆盖：批量生成/重生成角色台词/音色设计/标注/质检等后台任务（走 `kick()`），以及上传、保存绑定、单段重生成、建书/切书等直接动作。`store.lock` 必须在 `reactive()` 前声明（见 store.js 注释血泪教训）。
+  - **kick() 时序修正**：原来 `await POST` 之后才置 `busy`，导致点击后 5~10 秒按钮才变「生成中」，且这个窗口里连点会发出多个 POST（后端 `/api/generate_batch` 是先 return、background task 后置 running，缝隙内两次请求都能穿过 `running` 检查 → 双路并发写同一批段）。现在**同步**先占 `busy` + 起 HUD 占位任务 + 挂蒙版，再发请求；失败才回滚。按钮点击即刻反馈，连点被前端挡死。
+  - **loadJobs 冲进度修复**：15s 一轮的 `loadJobs()` 原来整表重建 `store.jobs`，把轮询写进活任务对象的 done/total 进度**覆盖回快照**——这是生成车间 TTS 进度条根本不动的根因。现在按 `task` 命中且 `busy[task]` 为真时**保留活对象**，只更新空闲任务的快照；进度字段（done/total/failed/startedAt）统一由 `progress.js` 的 `applyProgress` 写入。
 - 章节切换按钮当前是装饰（无 handler）。
 - QC 框：`音频回听一致 CER x%`（ASR 回听 vs 台词）、`原文无损`（字级）、`转录一致/疑似漏字`。
 
@@ -100,7 +107,7 @@ voice_config 里的 `mode` 字段只有两个值：`zero_shot`（纯克隆）/ `
   - 情感载体说明（例如 cosy = 自动包成「用…的语气说话」；kokoro = ⚠ 无情感通道）
 - `试听当前绑定`：播参考样本（本次新增：声音实验室也能直接播上传的参考音频）。
 - `保存绑定`：只写配置，**已生成的音频不会自动变**。
-- `↻ 重生成该角色台词（N 段）`：让新声音真正作用到已有段落。
+- `↻ 重生成该角色台词（N 段）`：让新声音真正作用到已有段落。2026-10-14 起：点击即挂全局启动蒙版；TTS 任务在跑时该按钮变「◌ 生成中 done/total（顶栏看进度，可停止）」带呼吸动画，刷新后由 `resyncRunning` 恢复状态——不再是骗人的可点态。
 - 换声不必重标全书：别名归并表让「他 / 少爷 / 晚晚」解析到同一 voice_id。
 
 ### ✚ 声音实验室 `/voice-lab`
@@ -126,7 +133,7 @@ voice_config 里的 `mode` 字段只有两个值：`zero_shot`（纯克隆）/ `
   - `标注`：按音频仓库的词表打标（情绪/强度/感情/情节/音色质感/语速/音高/评级/备注，见 §2◆），写进记录的 `tags`；
   - 改文本：直接编辑那段试听文本（`record/update`）；
   - `存仓库`：把这条送进音频仓库（入库即实测时长/字每秒/基频）。仓库条目的 `role` 取这条记录的 `speaker`，记录是空的就用你当前选中的目标角色兜底；
-  - `删除`：默认只删记录、保留 wav（它可能正被当参考样本用），勾上「删除时连音频」才删 `previews/` 下的文件。**仓库与实验室共享文件（引用式，不是拷贝）**：purge 删掉文件后，仓库里引用它的行不会消失，但会标 `missing`、再也取不出声；不勾 purge 则记录、文件、仓库行都互不相干。「选用/取消」只写 voice_config，不动文件也不动仓库。
+  - `删除`：点开后是**确认弹窗**（2026-10-13 改），内含复选项「同时删除音频文件」——**默认勾选（删记录+删 wav）**，取消勾选 = 只删台账记录、wav 保留。若这条声音正被某角色绑定，勾选删文件时弹窗会红字警告「删文件会让该绑定失声」。后端语义不变：`record/delete` 默认不动文件，`purge=true` 才删 `previews/` 下的文件。**仓库与实验室共享文件（引用式，不是拷贝）**：purge 删掉文件后，仓库里引用它的行不会消失，但会标 `missing`、再也取不出声；不勾 purge 则记录、文件、仓库行都互不相干。「选用/取消」只写 voice_config，不动文件也不动仓库。
 
 ### ◆ 音频仓库 `/vault`
 
@@ -372,6 +379,8 @@ sudo apt-mark unhold $NV $KER
 | 克隆出来不像参考音频（例如要老人声却是少年） | 克隆音色 100% 来自 ref_audio；年龄描述写在 `character_style` 里，sidecar 根本不读 | 「角色与声音」重传/重选参考音频；要老人就录老人。段级 instruct 只改语气不改年龄 |
 | 同一角色每句音色都在飘 | voice_config 里 `type: design`（描述造声）被拿去量产 | 绑定处现在会给🔴红字警告；去声音实验室 `选用` 一条固化成 clone 参考 |
 | 批量生成跑一半，刷新页面后按钮变回「▶ 批量生成」、看着停不掉 | `store.busy` 是纯前端内存态，刷新即丢，后端任务其实还在跑 | 已修（2026-10-13）：进工作台时 `resyncRunning()` 查后端 `/api/status`，running 的任务自动恢复跟踪、按钮回到「⏹ 停止生成」；强刷浏览器缓存的旧 bundle 会没有这行为，见 §4.2 部署映射 |
+| 生成车间 TTS 进度条一动不动 | 15s 轮询的 `loadJobs()` 整表重建 `store.jobs`，把轮询写进活任务的 done/total 进度覆盖回快照 | 已修（2026-10-14）：busy 任务保留活对象不被快照冲写；进度改由 `data/progress.js` 解析后端 `Progress: i/n` 日志统一供给，顶部 HUD 实时显示 |
+| 点生成后 5~10 秒按钮才变「生成中」；连点会重复提交 | `kick()` 在 `await POST` 之后才置 busy，窗口期可连点；后端 `/api/generate_batch` 先 return 后置 running，缝隙内双请求都能穿过 | 已修（2026-10-14）：点击**同步**占 busy + 起全局启动蒙版（`GlobalLock.vue`，POST 返回即解除，最短 350ms），连点被前端挡死；resync 也改并行 |
 | 给 A 角色造的声音绑到了 B 角色（串绑） | 记录带生成时的 `speaker`，选用却按当时下拉框的角色写入，两边不一致时无提示 | 已加防护（2026-10-13）：`选用` 时 记录 speaker ≠ 当前角色 会弹二次确认；历史行也回显「目标 ××」。既成串绑（如根 voice_config 里 PIKE←LANDLADY 的样本）仍需手工重绑修复 |
 | 批量生成直接报错不发声 | cosy/index + `zero_shot` + **空 ref_text** | 补 ref_text（ASR 可自动转写），或把通道切到「情感指令」 |
 | 批量生成**全量秒失败**（进度 0 done, N failed） | CUDA OOM：24G 卡被 **ollama llama-server（实测 14.4GiB，keep_alive 常驻）+ mineru VLLM（~6.7GiB）+ app.py 自身 2.5GiB** 挤满（2026-10-12 实录） | 生成前卸载 ollama 模型（`ollama stop <model>` 或配 `OLLAMA_KEEP_ALIVE=0`）、或停 mineru；确认法：`nvidia-smi` 看占用 PID，`ps -p <pid> -o args` 认进程 |

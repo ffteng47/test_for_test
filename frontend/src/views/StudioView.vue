@@ -53,6 +53,7 @@
             <div class="prog"><i :style="{ width: j.progress + '%' }" :class="'pg-' + j.status"></i></div>
             <div class="job-meta">
               <span>{{ j.progress }}%</span>
+              <span v-if="j.total" class="mono">{{ j.done }}/{{ j.total }} · 剩 {{ remain(j) }}<template v-if="j.failed"> · 失败 {{ j.failed }}</template></span>
               <span v-if="j.eta" class="mono">ETA {{ j.eta }}</span>
               <span :class="statusCls(j.status)">{{ statusText(j.status) }}</span>
             </div>
@@ -108,6 +109,7 @@
 <script>
 import { store } from '../data/store.js'
 import { actions } from '../api/actions.js'
+import { remain } from '../data/progress.js'
 
 export default {
   name: 'StudioView',
@@ -129,6 +131,7 @@ export default {
     }
   },
   methods: {
+    remain,
     typeLabel(t) {
       return { tts: 'TTS', annotate: '标注', qc: '质检', persona: '音色', export: '导出' }[t] || t
     },

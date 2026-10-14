@@ -3,9 +3,29 @@
 // 后端多 TTS 引擎/多音色类型由 config 透传，本层不感知引擎细节。
 import { api } from './client.js'
 import { store, toast, loadChunks, loadVoices, loadJobs, loadExports, loadContinuity, loadSystem, loadQc, loadProjects, loadEngines, loadDelivery, loadListen, hydrate } from '../data/store.js'
+import { applyProgress } from '../data/progress.js'
 
 const POLL_MS = 3000
 const MAX_MIN = 60
+const LOCK_MIN_MS = 350   // 蒙版最短驻留：POST 秒回时也闪一下，让用户确认「点到了」而非以为卡死
+
+let lockTimer = null
+let lockSince = 0
+
+// 全局启动蒙版：写动作 POST 在途时锁整页，杜绝连点重复提交。
+// 长任务不长期锁——POST 确认启动后立即解锁，交给顶部 HUD 非阻断地显示进度。
+function lockOn(text) {
+  clearTimeout(lockTimer)
+  lockSince = Date.now()
+  store.lock.text = text
+  store.lock.on = true
+}
+
+function lockOff() {
+  const wait = Math.max(0, LOCK_MIN_MS - (Date.now() - lockSince))
+  clearTimeout(lockTimer)
+  lockTimer = setTimeout(() => { store.lock.on = false; store.lock.text = '' }, wait)
+}
 
 function guard() {
   if (store.mode !== 'live') {
@@ -18,8 +38,10 @@ function guard() {
 function upsertJob(task, name, type) {
   let j = store.jobs.find(x => x.task === task)
   if (!j) {
-    j = { id: Date.now(), task, name, type, progress: 0, eta: '', status: 'running', logs: [] }
+    j = { id: Date.now(), task, name, type, progress: 0, eta: '', status: 'running', logs: [], done: 0, total: 0, failed: 0, startedAt: Date.now() }
     store.jobs = [j, ...store.jobs]
+  } else if (j.status !== 'running') {
+    j.startedAt = Date.now(); j.done = 0; j.total = 0; j.failed = 0; j.progress = 0
   }
   j.status = 'running'
   j.name = name
@@ -27,23 +49,25 @@ function upsertJob(task, name, type) {
   return j
 }
 
-async function track(task, name, type, refreshers) {
-  store.busy[task] = true
-  const job = upsertJob(task, name, type)
+// 轮询单个任务直到结束：立即先读一次（启动即出进度），之后每 POLL_MS 一轮；超时 60 分钟。
+async function pollTask(task, name, job, refreshers) {
   const deadline = Date.now() + MAX_MIN * 60000
-  let logsLen = 0
+  let logsLen = -1
   try {
-    while (Date.now() < deadline) {
-      await new Promise(r => setTimeout(r, POLL_MS))
-      let s
-      try { s = await api.status(task) } catch { continue }
-      const logs = s.logs || []
-      if (logs.length !== logsLen) {
-        logsLen = logs.length
-        job.logs = logs.slice(-8)
-        job.progress = Math.min(95, Math.round((logs.length / Math.max(1, logsLen)) * 100) || 50)
+    for (;;) {
+      let s = null
+      try { s = await api.status(task) } catch { /* 单次网络失败下一轮重试 */ }
+      if (s) {
+        const logs = s.logs || []
+        if (logs.length !== logsLen) {
+          logsLen = logs.length
+          job.logs = logs.slice(-8)
+        }
+        applyProgress(job, logs, !s.running)
+        if (!s.running) { job.progress = 100; break }
       }
-      if (!s.running) { job.progress = 100; break }
+      if (Date.now() >= deadline) break
+      await new Promise(r => setTimeout(r, POLL_MS))
     }
     job.status = 'done'
     for (const fn of refreshers) {
@@ -55,20 +79,35 @@ async function track(task, name, type, refreshers) {
     toast(`${name} 失败：${e.message}`, 'err')
   } finally {
     store.busy[task] = false
-    loadJobs()
   }
+}
+
+// 供 resyncRunning 用：后端已确认在跑，直接置忙并开轮询
+async function track(task, name, type, refreshers) {
+  store.busy[task] = true
+  const job = upsertJob(task, name, type)
+  if (!job.startedAt) job.startedAt = Date.now()   // 刷新接管的在跑任务补计时起点
+  await pollTask(task, name, job, refreshers)
 }
 
 async function kick(promise, task, name, type, refreshers) {
   if (!guard()) return
   if (store.busy[task]) { toast(`${name} 正在进行中`, 'warn'); return }
+  // 同步占位再发请求：杜绝「请求在途、busy 还没置真」窗口里的连点重复 POST
+  store.busy[task] = true
+  const job = upsertJob(task, name, type)
+  lockOn(`正在启动「${name}」…`)
   try {
     await promise()
   } catch (e) {
+    lockOff()
+    store.busy[task] = false
+    job.status = 'failed'
     toast(`${name} 启动失败：${e.message}`, 'err')
     return
   }
-  track(task, name, type, refreshers)
+  lockOff()   // 启动已确认：蒙版让位顶部 HUD，长任务期间不再锁页面
+  await pollTask(task, name, job, refreshers)
 }
 
 // busy 是纯前端内存态：刷新页面后，后端真在跑的任务会显示成「没在跑」——
@@ -81,25 +120,25 @@ export async function resyncRunning() {
     ['script', '剧本标注', 'annotate', [loadChunks, loadVoices]],
     ['review', '剧本复查', 'qc', [loadChunks]]
   ]
-  for (const [task, name, type, fns] of specs) {
-    if (store.busy[task]) continue
-    let s = null
-    try { s = await api.status(task) } catch { return }
-    if (s && s.running) {
-      toast(`检测到后端「${name}」任务进行中，已恢复进度跟踪`, 'warn')
-      track(task, name, type, fns)
-    }
-  }
+  // 并行查一遍，刷新后 1 个来回就恢复 busy/进度（串行会拖 4 个 RTT，按钮迟迟不亮）
+  const states = await Promise.all(specs.map(([task]) => api.status(task).catch(() => null)))
+  specs.forEach(([task, name, type, fns], i) => {
+    const s = states[i]
+    if (!s || !s.running || store.busy[task]) return
+    toast(`检测到后端「${name}」任务进行中，已恢复进度跟踪`, 'warn')
+    track(task, name, type, fns)
+  })
 }
 
 export const actions = {
   // ---- 导入/剧本 ----
   uploadBook: (file) => {
     if (!guard()) return Promise.resolve(false)
+    lockOn(`正在上传 ${file.name}…`)
     return api.upload(file)
       .then(() => { toast(`已上传 ${file.name}`, 'ok'); return true })
       .catch(e => { toast(`上传失败：${e.message}`, 'err'); return false })
-      .finally(() => { loadSystem() })
+      .finally(() => { lockOff(); loadSystem() })
   },
   generateScript: (opts) => kick(() => api.generateScript(opts || {}),
     'script', '剧本标注', 'annotate', [loadChunks, loadVoices, loadContinuity]),
@@ -113,14 +152,17 @@ export const actions = {
     'persona', '音色设计', 'persona', [loadVoices]),
   saveVoiceConfig: (configMap) => {
     if (!guard()) return Promise.resolve(false)
+    lockOn('正在保存音色配置…')
     return api.saveVoiceConfig(configMap)
       .then(() => { toast('音色配置已保存', 'ok'); loadVoices(); return true })
       .catch(e => { toast(`保存失败：${e.message}`, 'err'); return false })
+      .finally(lockOff)
   },
 
   // ---- 生成 ----
   editChunk: (index, patch) => {
     if (!guard()) return Promise.resolve(false)
+    lockOn('正在保存修改…')
     return api.editChunk(index, patch)
       .then((c) => {
         const seg = store.segments[index]
@@ -132,6 +174,7 @@ export const actions = {
         return true
       })
       .catch(e => { toast(`编辑失败：${e.message}`, 'err'); return false })
+      .finally(lockOff)
   },
   generateChunk: (index) => kick(() => api.generateChunk(index),
     'audio', '本段生成', 'tts', [loadChunks]),
@@ -190,17 +233,20 @@ export const actions = {
     if (!guard()) return false
     if (store.busy.switch) { toast('切换已在进行中', 'warn'); return false }
     store.busy.switch = true
+    lockOn('正在创建新书并切换…')
     let slug
     try {
       slug = (await api.addProject(title)).slug
       toast(`已创建《${title}》，切换中…`, 'warn')
     } catch (e) {
+      lockOff()
       store.busy.switch = false
       toast(`新建失败：${e.message}`, 'err')
       return false
     }
     await new Promise((r) => setTimeout(r, 6000))
     const up = await actions.waitForEngine()
+    lockOff()
     store.busy.switch = false
     if (!up) { toast('服务 3 分钟未恢复：显存不足？查 logs/switch.log', 'err'); return false }
     await hydrate()
@@ -211,16 +257,19 @@ export const actions = {
     if (!guard()) return false
     if (store.busy.switch) { toast('切换已在进行中', 'warn'); return false }
     store.busy.switch = true
+    lockOn('正在切换工作区（服务重启中）…')
     try {
       await api.switchProject(slug)
       toast(`切换《${slug}》：服务重启中…`, 'warn')
     } catch (e) {
+      lockOff()
       store.busy.switch = false
       toast(`切换启动失败：${e.message}`, 'err')
       return false
     }
     await new Promise((r) => setTimeout(r, 6000))
     const up = await actions.waitForEngine()
+    lockOff()
     store.busy.switch = false
     if (!up) {
       toast('服务 3 分钟未恢复：显存不足？查 logs/switch.log', 'err')
