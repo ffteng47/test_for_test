@@ -22,8 +22,9 @@ from plot_engine.models.state import StoryState
 PROBE_TIMEOUT_S = 10
 
 
-def _get_json(url: str, timeout: int) -> dict:
-    req = urllib.request.Request(url, headers={"Accept": "application/json"})
+def _get_json(url: str, timeout: int, headers: Optional[Dict[str, str]] = None) -> dict:
+    req = urllib.request.Request(url, headers={**(headers or {}),
+                                              "Accept": "application/json"})
     with urllib.request.urlopen(req, timeout=timeout) as resp:      # noqa: S310（本机/自建端点）
         return json.loads(resp.read().decode("utf-8"))
 
@@ -39,8 +40,12 @@ def check_reachable(client: LlmClient) -> Tuple[bool, str]:
     if ep is None:
         return False, "没有配置任何模型角色（model_router_config 为空）"
     url = f"{ep.base_url.rstrip('/')}/models"
+    # 带上该角色的认证头：本地/自建端点没有 key 时行为不变，但云端车道若不带
+    # Authorization 就会永远 401 —— 于是"云端通不通"这件事根本测不出来，
+    # 而护栏 1 要求仪器（含其可用性）必须先被度量。
+    headers = {"Authorization": f"Bearer {ep.api_key}"} if ep.api_key else {}
     try:
-        data = _get_json(url, PROBE_TIMEOUT_S)
+        data = _get_json(url, PROBE_TIMEOUT_S, headers)
     except (urllib.error.URLError, OSError, ValueError) as e:
         return False, f"模型端点不可达：{url}（{e}）"
     ids = [str(m.get("id", "?")) for m in (data.get("data") or [])]

@@ -88,7 +88,8 @@ def test_offline_path_is_byte_for_byte_unchanged(tmp_path):
 
 def test_unreachable_endpoint_reports_a_readable_error_not_a_stack(monkeypatch, capsys):
     monkeypatch.setattr("plot_engine.live._get_json",
-                        lambda url, timeout: (_ for _ in ()).throw(OSError("refused")))
+                        lambda url, timeout, headers=None: (
+                            _ for _ in ()).throw(OSError("refused")))
     client = build_client({})
     ok, msg = check_reachable(client)
     assert ok is False and "不可达" in msg
@@ -96,8 +97,37 @@ def test_unreachable_endpoint_reports_a_readable_error_not_a_stack(monkeypatch, 
 
 def test_reachable_reports_model_names(monkeypatch):
     monkeypatch.setattr("plot_engine.live._get_json",
-                        lambda url, timeout: {"data": [{"id": "qwen2.5:14b"}]})
+                        lambda url, timeout, headers=None: {"data": [{"id": "qwen2.5:14b"}]})
     assert check_reachable(build_client({}))[0] is True
+
+
+def test_check_reachable_sends_the_bearer_header_for_cloud_lanes(monkeypatch):
+    """真缺陷回归：`_get_json` 原来只发 Accept，云端车道于是永远 401——
+    「云端通不通」根本测不出来。上游 fix：验活必须带上该角色的认证头。
+
+    本地端点无 key 时行为不变（headers 为空），故这条只对云端有意义。
+    """
+    seen = {}
+    monkeypatch.setattr("plot_engine.live._get_json",
+                        lambda url, timeout, headers=None: seen.update(
+                            {"headers": headers}) or {"data": [{"id": "deepseek-flash"}]})
+    monkeypatch.setenv("ALEXANDRIA_CLOUD_API_KEY", "sk-fake-for-test")
+    client = build_client({"extract": {
+        "base_url": "https://api.deepseek.com", "model": "deepseek-flash",
+        "api_key_env": "ALEXANDRIA_CLOUD_API_KEY"}})
+    ok, msg = check_reachable(client)
+    assert ok and "deepseek-flash" in msg
+    assert seen["headers"] == {"Authorization": "Bearer sk-fake-for-test"}
+
+
+def test_check_reachable_without_key_sends_no_auth_header(monkeypatch):
+    """本地/自建端点没有 key 时不得凭空塞一个空 Bearer 头。"""
+    seen = {}
+    monkeypatch.setattr("plot_engine.live._get_json",
+                        lambda url, timeout, headers=None: seen.update(
+                            {"headers": headers}) or {"data": [{"id": "qwen2.5:14b"}]})
+    ok, _ = check_reachable(build_client({}))
+    assert ok and seen["headers"] == {}
 
 
 def test_build_client_from_config_dict_selects_router_roles():
