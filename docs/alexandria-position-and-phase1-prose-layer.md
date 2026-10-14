@@ -94,3 +94,20 @@ Publish
 无。Phase 0 全部行为保持冻结语义（epoch_0）。
 本文档第 3 节即 Phase 1 立项时的需求输入；届时按 brainstorming → spec →
 plan 流程另出 `2026-XX-XX-alexandria-prose-layer-design.md`。
+
+## 6. Writer 面实锤缺陷挂账（v4d 期观察，2026-10-14，不动码不入尺）
+
+现行尺/仪器**只量事件锚定，不量场面逻辑**，以下两类错误在 validator 里无规则可落，
+记为 Phase 1 文笔层候选判据（归 §3.1 Critic 维度的"一致性"新列，或独立轻规则）：
+
+1. **同章同人双位置**：v4d1/ch10 张三先在外间与李四对话（Draft :26），转身入内室
+   又见李四伏案（:44）——同章同人无转场双处在场。
+2. **台词与已建立事实矛盾**：同章张三质问李四"你和赵六前晚在藏宝阁值守"，
+   与 F6「赵六那夜在藏宝阁值守」（on_duty 仅赵六）冲突——口供式新断言不核对既有事实库。
+
+取证：`sampling/v4d1/ch10.md`（该章终态 status=FAIL/NEEDS_HUMAN，读数走税桶，
+本观察与 E2 无关）；对照其他跑法同章人物密度
+`awk '/^## Draft/,/^## Proposals/' sampling/<dir>/ch10.md | grep -oE "张三|李四|王五|赵六" | sort | uniq -c`。
+注意区分：**契约没错**——ch10 两个钉（OBSERVES fact_000002「李四是叛徒」、李四 DOUBTS fact_000001）
+都在李四身上，内室对象是李四合规；错只在场面调度层。
+
