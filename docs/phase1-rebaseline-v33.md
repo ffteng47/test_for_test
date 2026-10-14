@@ -460,3 +460,31 @@ qwen3:30b（MoE，本地）J=0.348。**云/本地不是变量，稠密/MoE 才�
 --chapters 1..10 --client @sampling/w6/router_q30b_probe.json --lane local --out sampling/w6/q30b_pass{1,2}.json`；
 读数 = 平铺 `chapters` 口径逐章 `chapter_jaccard` + `believes_keys` 差集（§13 口径：本档案
 `sampling/w6/q30b_pass{1,2}.json` 齐，可复跑）。
+
+## §19 W6 后续两闸：本地 14b 可移植性 = 满分；qwen3.5:27b 上尺判负（2026-10-15）
+
+**闸一（#72）本地 3090 尺可移植性**。qwen2.5:14b 从 213 迁到本机 ollama 0.40.3
+（模型经局域网 tar 拷贝、16/16 blob SHA256 全验），30 草稿双遍：
+**J med = 1.0（30/30 章逐章 1.0）、废卷率 0%、钉测章 2/3/9 BELIEVES/SUSPECTS 全稳定**。
+⇒ 尺面可整体迁本地车道，跨机读数同表合法。
+档案 `sampling/w6/local14b_pass{1,2}.json` + `local14b_double_report.json`；
+复现 `-m plot_engine.instr_cli sampling/w6/local14b_pass1.json sampling/w6/local14b_pass2.json --probes 2,3,9`。
+
+**闸二（#71）qwen3.5:27b（稠密）上尺闸**。30 草稿双遍@213（配方 §18 v2：无 extra_body
++ max_tokens 6000）：**gate FAIL——废卷率 33.3%（闸线 <2%）、产量 3/374（对照 14b）**；
+J med=1.0 与钉测稳定仅剩"幸存者确定性"意义（稠密判定复证，但不构成过闸）。
+档案 `sampling/w6/dense_q35_27b_pass{1,2}.json` + `dense_q35_27b_double_report.json`（同复现式）。
+
+**归因（探针实测，issue-diagnoser 流程）**：`sampling/w6/probe_q35_raw.txt`——qwen3.5 的
+content **协议完全服从**（逐字 `"event_type"` 键 + CoT 正确落 reasoning 字段，H2 键名漂移假设证伪），
+病灶=**temp0 退化重复循环**：同一对象复读直至 6000 预算烧穿（finish=length）。三车道 token 账：
+14b 157,100→374 提案；qwen3:30b 398,936→163；qwen3.5:27b 460,629→3。
+open 项：`unknown_event_type×116` 的 item=null 需带 raw 留证的逐段复跑才能定谳
+（留证=尺改，入 #70 批次视域）。
+
+**裁定**：①**稠密是上尺的必要条件，不是充分条件**——§18 的 MoE 禁令之外，新增
+「协议服从 + 无退化重复」门槛，qwen3.5 世代在 instr-v2 尺下**不得用**；②容量假设
+（更大杯抽得更稳）改用**同世代 qwen2.5:32b**（已落 213）验证，其闸排 #67 之后；
+③r1:32b 闸降级为诊断性（qwen3 世代，预计同病，过闸前不进任何表）。
+**车道现状**：本地 3090 载不动 32b 级（WDDM 单块 18.1GB cudaMalloc 失败 + pinned
+offload 锁页失败，14b 档为其实际上限），32b 级模型全部驻 213。

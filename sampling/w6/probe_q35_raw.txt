@@ -1,0 +1,26 @@
+[
+  {
+    "event_type": "BELIEVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+      "fact_id": "fact_000003",
+      "belief_strength": 5
+    },
+    "paragraph": 5
+  },
+  {
+    "event_type": "SUSPECTS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+      "fact_id": "fact_000001"
+    },
+    "paragraph": 6
+  },
+  {
+    "event_type": "BELIEVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+      "fact_id": "fact_000001
