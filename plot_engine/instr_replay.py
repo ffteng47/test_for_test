@@ -137,9 +137,16 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--lane", choices=["local", "cloud"], default="local")
     ap.add_argument("--seg-max-chars", type=int, default=1800)
     ap.add_argument("--seg-overlap", type=int, default=200)
+    ap.add_argument("--force", action="store_true",
+                    help="覆盖已存在的 --out（默认拒绝：两会话同参并跑会互相吞读数，"
+                         "review.py 的 state.db 链护栏同理）")
     # `python -m` 时 argv 为 None，必须回落 sys.argv[1:]（instr_cli 同款修法，
     # 漏了就会「参数明明传了却报缺参数」——试水第一跑就是这么炸的）
     args = ap.parse_args(list(sys.argv[1:] if argv is None else argv))
+    if Path(args.out).exists() and not args.force:
+        # 拒覆盖在烧 GPU 之前——两个会话同参并跑时，后写完的那个会静默吞掉先落的读数。
+        sys.exit(f"拒收：{args.out} 已存在（可能是另一个会话的产物）。"
+                 f"确认要覆盖加 --force，或换 --out 路径")
     if str(REPO) not in sys.path:
         sys.path.insert(0, str(REPO))
     from plot_engine.live import build_client
