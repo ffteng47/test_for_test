@@ -1,21 +1,15 @@
 {
-  "_comment": "W6 后续容量探针（2026-10-14）：与 router_w5_frozen.json 逐字段同，只换 extract.model=qwen3:30b——一因一批。用途：在确定性本地栈上检验『BELIEVES 盲区=14b 容量不足』假设；不用于任何采样臂。",
+  "_comment": "W6 后续容量探针（2026-10-14 v2）。与 router_w5_frozen.json 的差异与归因：①extract.model=qwen3:30b（一因：容量假设）；②max_tokens 2400→6000 + 去掉 extra_body——**非自由变量**：这台 Ollama 关不掉 qwen3 思考（reasoning_effort:none 把 CoT 灌进 content；think:false/chat_template_kwargs/thinking.disabled 全部无效或返空），2400 预算被思考吃光 ⇒ 首跑 0 提案/201 坏料（sampling/w6/q30b_pass1.json 留档）。实测无参数+6000 预算时 CoT 自动落 reasoning 字段、content 为纯 JSON。⇒ 本探针的读数含「上限 6000」混杂项，结论只能答「容量车道能不能稳定抽出」，不能与 14b@2400 的表并列下容量裁定（v4c 已证 14b 抬 800→2400 几乎无增益，可作参照但不能顶替）。不用于任何采样臂。",
   "writer": {
     "base_url": "http://192.168.31.213:11434/v1",
     "model": "qwen3:30b",
-    "timeout_s": 900,
-    "extra_body": {
-      "reasoning_effort": "none"
-    }
+    "timeout_s": 900
   },
   "extract": {
     "base_url": "http://192.168.31.213:11434/v1",
     "model": "qwen3:30b",
-    "max_tokens": 2400,
+    "max_tokens": 6000,
     "temperature": 0,
-    "timeout_s": 900,
-    "extra_body": {
-      "reasoning_effort": "none"
-    }
+    "timeout_s": 900
   }
 }
