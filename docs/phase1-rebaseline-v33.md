@@ -215,3 +215,43 @@ v4r 的 2/1/0 乐观读数不成立；收益判定回到「三跑只报观测」
 接线：tokens 113k–144k/跑（对照 v4r 90k–142k，上限抬升的成本可见≈+20%）、用时 1099–1381s。
 复现：`.venv/Scripts/python.exe -m plot_engine.readout sampling/v4c1 sampling/v4c2 sampling/v4c3`；
 `.venv/Scripts/python.exe -m plot_engine.reanchor sampling/v4c1 sampling/v4c2 sampling/v4c3`。
+
+## 11. W5 冻结语料零生成回放（v3.5 尺面 × instr-v2-local，任务单 `1.txt`，2026-10-14）
+
+**口径（1.txt 钉死）**：读 `sampling/v4c1..3` 各章 dump 的 `## Draft` 段，零生成；contract/state 由
+v4 夹具离线派生——id 词表与实跑输入相同（静态 genesis），但 `knowledge_forbidden` 等契约字段按当前
+夹具现值取 ⇒ **近似已写明，读数只在本 runner 本冻结内可比，不入任何 E2/§表、不与 v4c 历史读数同表**。
+车道三戳：尺 `v3.5-schema-hint-no-bare-type`｜仪器 `instr-v2-local`｜车道 `local`（`router_w5_frozen.json`，
+extract 温度 0、上限 2400、直连 192.168.31.213:11434）。
+
+**试水（3 桶 × 2 跑，只做验收证据，不算门槛）**：1.txt 三件事全过——Draft 解析 OK；离线派生同词表；
+run JSON 可进 `instr_cli`。最长章 v4c1/ch03（2999 字）回放无 `finish=length`，分段修复复验通过。
+但同正文同模型温度 0，两跑条目集 Jaccard 中位 **0.67**（门槛 ≥0.85）、BELIEVES 检出两跑不一致、
+章级废卷 0。⇒ 试水当时读作"B 层波动坐实"，**后被两个正式口径推翻**（见下"试水 0.67 的处置"）。
+
+**runner 编写期抓到的 3 个真 bug（已修，523 全过）**：① `main` 的 `argv=None` 未回落 `sys.argv[1:]`
+（instr_cli 同款病复发）；② 只落"有产出的章" ⇒ 0 提案章从分母消失、一致率被悄悄抬高，改为按请求章
+全集落盘；③ 配置 `_comment` 键炸 `from_config`，runner 侧剥下划线键。
+
+**全量两跑（同 runner、同冻结 `354c710`+runner 本体）**：
+合并口径 `sampling/w5/pass{1,2}.json`——10 章桶 × 每桶 3 稿（v4c1/2/3 同章号并入），
+374 条提案/跑、18 条坏料（`id_value_not_id`7 / `stripped_payload_key`6 / `over_cap`2 / `truncated_segment`2 /
+`unknown_id`1）、153k tokens。**Jaccard 中位 1.0、BELIEVES 全桶一致、废卷 0 ⇒ 门槛过**。
+单稿口径复核 `sampling/w5/v4c1_p{1,2}.json`（防"并桶饱和"假象）：**9/10 桶 Jaccard=1.0，仅 ch1=0.8，
+中位 1.0；BELIEVES 一致、废卷 0 ⇒ 门槛过，与合并口径同向**。`upgrade_path=pass:open_v4d_baseline`，
+预登记升级机制**不触发**——qwen2.5:14b 温度 0 同机抽取近确定性，B 层天花板读数未坐实。
+
+**试水 0.67 的处置（不可取证，判为修复中间态测量）**：两个正式口径都不能复现试水的 0.67 与
+"BELIEVES 两跑不一致"；试水跑发生在 runner 三 bug 修复中间态（0 提案章漏分母一条会直接扭曲一致率），
+且试水两份 JSON 未归档 ⇒ 该读数作废不采信，只留作流程学费：**验收证据也是仪器读数，必须落盘才能对质**。
+
+**分母口径注**：runner 按章号并桶，"30 章"是稿数、桶数是 10；门槛报告须按实际桶数写，不冒领 30。
+（runner 改为 (跑法,章) 30 桶 = 仪器口径修正，另批走，不影响本批判定——两口径读数同向。）
+
+
+**检视页**：`python sampling/w5/make_view.py` 生成 `sampling/w5/view.html`（左导航 10 桶、右表两跑对照，
+绿=双跑命中、粉=单边波动条目）。
+
+**W6 云端 2×2：停等 tff 当面确认**（书稿出域 + 真花钱）。技术面已就绪：09e505f 修了验活缺 Bearer
+（否则云端车道永远测不通），deepseek-flash 上 v3.5 措辞复验通过。
+
