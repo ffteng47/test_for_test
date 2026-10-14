@@ -1,0 +1,21 @@
+{
+  "_comment": "W5 专用跑法配置（任务单 1.txt）。与在用臂 router_q25_14b.json 分开建，避免混账：本配置只服务 instr-v2 双跑波动测量，不用于任何采样臂。差异只有三处——base_url 指向 192.168.31.213:11434、extract.temperature 钉 0（W5 规格：温度 0 连跑两遍）、其余逐字段照抄在用臂（max_tokens 2400 / reasoning_effort none / timeout 600）。云端对照另用 deepseek.router.json，两车道同温度同窗口才能归因干净。",
+  "writer": {
+    "base_url": "http://192.168.31.213:11434/v1",
+    "model": "qwen2.5:14b",
+    "timeout_s": 600,
+    "extra_body": {
+      "reasoning_effort": "none"
+    }
+  },
+  "extract": {
+    "base_url": "http://192.168.31.213:11434/v1",
+    "model": "qwen2.5:14b",
+    "max_tokens": 2400,
+    "temperature": 0,
+    "timeout_s": 600,
+    "extra_body": {
+      "reasoning_effort": "none"
+    }
+  }
+}

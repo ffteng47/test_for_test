@@ -19,7 +19,9 @@ from typing import Any, Callable, Dict, List, Mapping, Optional, Tuple
 
 from pydantic import BaseModel, Field
 
-DEFAULT_LOCAL_BASE_URL = "http://127.0.0.1:11434/v1"
+# 默认端点跟随用户实际的 Ollama（原写死 127.0.0.1；模型机不在本机时 `--live`
+# 不带 config 会静默连错地方）。换机/换端口改这一行，或显式 --model-config 覆盖。
+DEFAULT_LOCAL_BASE_URL = "http://192.168.31.213:11434/v1"
 
 # (url, payload, headers, timeout_s) -> 解析后的 JSON dict
 Transport = Callable[[str, dict, Mapping[str, str], int], dict]

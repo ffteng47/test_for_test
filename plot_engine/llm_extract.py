@@ -36,7 +36,13 @@ _ID_RE = re.compile(r"^(?:char|fact|item|loc|faction|realm|ability|region|rel)_\
 #        正式进入冻结面：缺省补 700 由代码做并记 `defaulted_fixed_point` 账。
 #        读数与 v3.3 不可并列的原因：v3.3 时代一个 700 分不清是模型真判断还是抄默认，
 #        v3.4 起 700 = 模型真判断，缺省 = 代码补 + 台账有账。
-EXTRACTION_RULER = "v3.4-default-700-removed"
+# v3.5 = 修 schema 提示的措辞诱发（tff 裁定，2026-10-14）：`type {t} 的 payload 只放 X`
+#        里的裸词 "type" 被 qwen2.5:14b 忠实抄成键名 {"type": "fact_000001"}（W5 冒烟实例），
+#        是 `TYPE:key` 变体（见 :59 案底）之后的**第二个变体**。改为「事件 {t}：payload
+#        应包含 X」，且不用"只放"——它同样可能被抄成键。触碰尺面 ⇒ 与 v3.4 读数不同表。
+#        同时 missing_payload_keys 坏料补记 gave（模型实际给的键），把「没写」与「改名」
+#        在废卷筐里分开——此前两者同形，只能人肉看 raw 才发现（取证缺陷）。
+EXTRACTION_RULER = "v3.5-schema-hint-no-bare-type"
 
 # 本通道只承接 reducer 真能消费的 event_type，且键名逐一对齐 01 §4.1 的实际取用（reducer 里
 # 的 event.payload[...]）。缺键的产物放下去只会变成 MALFORMED_PROPOSAL 级联，归因反而更难。
@@ -57,8 +63,12 @@ PAYLOAD_SCHEMA: Dict[str, Tuple[str, ...]] = {
     "REVEALS": ("fact_id", "new_narrative_truth"),
 }
 # 提示词不能用 `TYPE:key` 形态 —— 实测模型会把它整段抄成 payload 里的 {"TYPE": "key"}。
+# 也不能用裸词 `type`——qwen2.5:14b 实测把「type OBSERVES 的 payload 只放 fact_id」
+# 忠实执行成 {"type": "fact_000001"}（W5 冒烟，2026-10-14）。同一失败模式的两个变体。
+# 现措辞只留事件名与「应包含」，不出现任何可能被误认为键名的裸词（type / 只放 都危险：
+# 后者照样可能被抄成键）。历史教训同款修法，改它 = 尺面变更，见 EXTRACTION_RULER。
 _SCHEMA_HINT = "；".join(
-    f"type {t} 的 payload 只放 {','.join(k) if k else '空对象'}"
+    f"事件 {t}：payload 应包含 {','.join(k) if k else '空对象'}"
     for t, k in PAYLOAD_SCHEMA.items())
 
 
@@ -274,7 +284,12 @@ def parse_proposals(raw: str, chapter: int,
         missing = _unusable_keys(payload, PAYLOAD_SCHEMA[etype])
         if missing:
             bad.append({"reason": "missing_payload_keys",
-                        "item": f"{etype} 缺 {','.join(missing)}"})
+                        "item": f"{etype} 缺 {','.join(missing)}",
+                        # 取证补齐（E26 同型）：只写「缺哪个键」时分不清模型是**没写**还是
+                        # **改了名**（实测 {"type": "fact_000001"} 就死于后者，两者在废卷筐里
+                        # 长得一模一样）。把模型实际给的键一并落 _junk.json，下次这种模式
+                        # 从台账直接可见，不必人肉守 raw。
+                        "gave": sorted(payload) if isinstance(payload, dict) else None})
             continue
         if known is not None:
             bad_ref = _bad_id_key(etype, payload, known)
@@ -349,7 +364,7 @@ def extract_prompt(draft, scene_plan, contract, state) -> List[dict]:
         "类型按「该事实如何进入人物内心」选：OBSERVES=在场亲眼注意到；READS=读到写着的文字；"
         "IS_TOLD=被人当面告知；INFERS=由已知证据推出；BELIEVES=内心确认某事为真；"
         "SUSPECTS=起疑并把嫌疑指向某人/某事；DOUBTS=明确怀疑或否定该事。",
-        f"payload 必须给全这些键: {_SCHEMA_HINT}。",
+        f"各事件 payload 的键如下: {_SCHEMA_HINT}。",
         "payload 的键名只能是上面列出的键名本身，绝不要把事件类型名（如 OBSERVES）写成键。",
         "fact_id / conclusion_fact_id / stated_fact_id / audience 这些键的值必须是下面词表里"
         "出现过的 id 字符串（如 \"fact_000001\"），绝不要写成 3 这样的裸整数，也绝不要用"

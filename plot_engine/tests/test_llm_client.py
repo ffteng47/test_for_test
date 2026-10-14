@@ -21,7 +21,9 @@ def _fake_transport(replies):
 def test_default_router_is_local_ollama_and_needs_no_key():
     r = LlmRouter.default()
     ep = r.endpoints["writer"]
-    assert ep.base_url.startswith("http://127.0.0.1:")      # 默认本地，不指向任何公网
+    # 默认必须指向**本地/内网**端点，绝不指向任何公网（数据不出机器是硬约束）
+    assert ep.base_url.startswith("http://127.0.0.1") or ep.base_url.startswith("http://192.168.")
+    assert ":11434/" in ep.base_url                      # Ollama 端口
     assert ep.api_key is None
     assert r.roles() == ["extract", "plan", "writer"]
 

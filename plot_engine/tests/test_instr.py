@@ -201,15 +201,64 @@ def test_w4b_default_700_sentence_is_gone_everywhere():
 
 
 def test_w4b_ruler_stamp_bumped_and_flag_records_the_ruling():
-    """尺戳必须换名，否则 W5 的 700 会被当成与 v3.3 同一种 700 读。"""
+    """W4b 裁定必须留下痕迹：尺戳已离开 v3.3，且开关记为已执行。
+
+    不断言具体版本号——每次尺面微调都会 bump（v3.4 W4b / v3.5 schema 措辞），
+    钉版本号等于每次都要回来改测试。
+    """
     from plot_engine import instr
     from plot_engine.llm_extract import EXTRACTION_RULER
-    assert EXTRACTION_RULER.startswith("v3.4")
     assert EXTRACTION_RULER != "v3.3-belief-type-criteria"
+    assert EXTRACTION_RULER.split("-")[0] >= "v3.4"
     assert instr.W4B_TOUCHED is True
 
 
-def test_w5_gate_and_upgrade_path():
+def test_v35_ruler_stamp_records_the_schema_hint_fix():
+    """v3.5 是尺面变更（schema 提示措辞），必须与 v3.4 读数不同表。"""
+    from plot_engine.llm_extract import EXTRACTION_RULER
+    assert EXTRACTION_RULER.startswith("v3.5")
+    assert EXTRACTION_RULER != "v3.4-default-700-removed"
+
+
+def test_v35_schema_hint_has_no_bare_word_the_model_could_echo():
+    """尺面 v3.5：schema 提示里不许再出现会被抄成键名的裸词。
+
+    案底两个变体：`TYPE:key`（v3.3 前）、裸词 `type`（v3.4，W5 冒烟实测
+    {"type": "fact_000001"} 整章 0 产出）。"只放" 同样危险，一并禁掉。
+    """
+    import re
+    from plot_engine.llm_extract import _SCHEMA_HINT
+    hint = _SCHEMA_HINT
+    assert "只放" not in hint
+    # 裸 type 不作为提示词词汇出现（事件名列表里的类型名另算，此处只查提示词措辞）
+    assert not re.search(r"(?<![A-Za-z_])type(?![A-Za-z_])", hint)
+    for t in ("OBSERVES", "IS_TOLD", "BELIEVES"):
+        assert f"事件 {t}：payload 应包含" in hint, t
+
+
+def test_missing_payload_keys_records_what_the_model_actually_gave():
+    """取证补齐：坏料只写「缺哪个键」时，「没写」与「改名」同形，只能人肉看 raw。
+
+    实例（W5 冒烟，qwen2.5:14b@11434）：模型给 {"type": "fact_000001"}，
+    语义全对、格式层死亡。got 键必须落进台账，废卷筐里才看得出这是改名。
+    """
+    props, bad = parse_proposals(
+        '[{"event_type": "OBSERVES", "actor": "char_000001", '
+        '"payload": {"type": "fact_000001"}}]', 10, _state())
+    assert props == []
+    rec = bad[-1]
+    assert rec["reason"] == "missing_payload_keys"
+    assert rec["gave"] == ["type"], rec
+    assert "fact_id" in rec["item"]
+
+
+def test_echo_key_is_still_stripped_and_counted():
+    """`OBSERVES:fact_id` 回声键的旧行为不变：剥键、记账、留事件。"""
+    props, bad = parse_proposals(
+        '[{"event_type": "OBSERVES", "actor": "char_000001", '
+        '"payload": {"fact_id": "fact_000001", "OBSERVES": "fact_id"}}]', 10, _state())
+    assert len(props) == 1 and props[0].payload == {"fact_id": "fact_000001"}
+    assert any(b["reason"] == "stripped_payload_key" for b in bad)
     from plot_engine.instr_measure import double_run_report
     from plot_engine.models.proposal import EventProposal
 
