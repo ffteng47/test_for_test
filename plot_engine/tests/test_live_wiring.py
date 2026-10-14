@@ -1,4 +1,4 @@
-# Task 4：真实模型接入实验管道（08 §3 tokens/cost/时长）+ 网络故障的可读出口
+﻿# Task 4：真实模型接入实验管道（08 §3 tokens/cost/时长）+ 网络故障的可读出口
 from plot_engine.eventlog import EventLog
 from plot_engine.llm import LlmClient, LlmRouter, ModelEndpoint
 from plot_engine.live import build_client, build_laned_source, build_live_source
@@ -202,14 +202,15 @@ def test_live_run_note_carries_the_instrument_stamp_separate_from_the_ruler(
                                   state_dir=str(tmp_path),
                                   dump_dir=str(tmp_path / "dump"))
     assert report is not None
-    assert "抽取尺=v3.3-belief-type-criteria" in msg      # 尺戳不动
+    assert "抽取尺=v3.3-belief-type-criteria" in msg   # 尺戳已 bump（W4b 裁定后）
     assert "仪器=instr-v2-local" in msg                   # 仪器戳新增
     assert diag["instr"]["instr"] == "instr-v2-local"
     assert diag["instr"]["segments_run"] >= 1
 
 
 def test_live_run_cloud_lane_without_cloud_client_is_refused():
-    """云端车道不给 cloud_client 就明确拒绝，不静默回本地（归因要干净）。"""
+    """配置错误先于网络报错（E26）：本测试**不打任何桩**——
+    本地 11434 通不通都不该影响它，因为 cloud_client 缺失在验活之前就被拦下。"""
     from plot_engine.review import _live_run
     report, msg, _ = _live_run(2, {}, use_segmented=True, lane="cloud",
                                client=_client(), cloud_client=None)

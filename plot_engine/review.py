@@ -329,12 +329,10 @@ def _live_run(chapters: int, model_config: dict, *, client=None, cloud_client=No
     from plot_engine.writer import compose_chapter_draft
     from plot_engine.tests.fixtures import experiment_10ch as fx
 
+    # 配置校验永远先于网络探针（E26：本地 Ollama 不在时，`cloud_client is None`
+    # 的配置错误曾被 `check_reachable` 的网络报错盖住，人先修的是错的病）。
+    # 顺序 = 客户端配置 → 车道声明 → 验活 → 后面一切。
     client = client or build_client(model_config)
-    ok, msg = check_reachable(client)
-    if not ok:
-        return None, msg, None
-    # W6 云端车道：抽取端点单独验活，Writer 仍走本地；云端不可达即整体不收尾，
-    # 不静默回落到本地（读数归因要干净：跑的是哪条车道必须一眼看得出）。
     if lane == "cloud":
         if cloud_client is None:
             return None, ("--lane cloud 需要 --cloud-config（云端模型路由 JSON 或 @文件）；"
@@ -342,6 +340,10 @@ def _live_run(chapters: int, model_config: dict, *, client=None, cloud_client=No
         ok, cmsg = check_reachable(cloud_client)
         if not ok:
             return None, f"云端抽取端点不可达，本报告作废：{cmsg}", None
+    ok, msg = check_reachable(client)
+    if not ok:
+        return None, msg, None
+    if lane == "cloud":
         msg = f"{msg}｜云端抽取：{cmsg}"
 
     cfg = fx.make_config(chapters)
