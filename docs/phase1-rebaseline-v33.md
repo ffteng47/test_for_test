@@ -301,3 +301,29 @@ instr-v2 只活在 W5 回放道）｜夹具 ladder-v4｜Writer 面 w4-scene700-1
    （`314be60`，`--state-dir` 从此可省）；待补的完工自检（卫生批 #2）：跑后断言
    `run.log`、`state/event.db`、`_junk.json` 三件齐，缺件即作废报告，不得事后救援。
 
+## 14. W6 云端 2×2（2026-10-14，冻结语料回放，零生成）
+
+**放行记录**：tff 原话「W6 云端 2×2（已放行，夹具语料无出域问题，成本 6 美分）」＋「ALEXANDRIA_CLOUD_API_KEY 环境变量已经设置好了」。语料 = v4c1..3 冻结 `## Draft`（本机模型产出的原创章节），不含第三方书稿。
+
+**模型身份核对**（稽核条件）：端点回执 `deepseek-flash` = **DeepSeek-V4.1-Flash**，context 1M，`thinking=disabled`、temperature 0——InkOS「V4 Flash/Pro 分工」佐证在代际上对得上（星数/万人级仍为外部传闻，未入册）。
+
+**跑法**：同 W5 全同参（30 稿×2 遍，分段 1800/200，尺 v3.5，`instr-v2-cloud`）；E27 修复（`b6bcce8`）先行，成本字段按 $0.41/百万入。
+
+| 车道 | 遍内一致率 J（中位） | mean_items | 坏料 | tokens/臂 | USD/臂 |
+|---|---|---|---|---|---|
+| 本地 qwen2.5:14b@11500 | **1.00**（逐章全 1.0） | 37.4 | 18 | 153,083 | 0（本地） |
+| 云端 deepseek-flash | **0.592** | 49.7 | 5 | 138,718 / 141,380 | **$0.057 / $0.058** |
+
+逐章云一致率：0.46–0.88（最差 ch05=0.46、ch07=0.55、ch08/10=0.56）；跨车道同章 J 中位 **0.212**（两个抽取器对同一正文的键集分歧远大于车道内）。信念键计数：BELIEVES 云 23 vs 局 14、SUSPECTS 云 31 vs 局 18、DOUBTS 云 32–35 vs 局 63。
+
+**裁定**：
+1. **云端 temp 0 不自再现**（0.59 < 0.85 门槛）⇒ 云端**不能做尺的家**——测量要求机器可复现（E19 同族），`instr_cli` 判语 `local_default_cloud_per_chapter_fallback` 成立：本地为默认量尺车道，云只作单章兜底。
+2. **容量信号是真的**：同一冻结正文、同一把尺，云抽取的 BELIEVES/SUSPECTS 键数近乎翻倍、坏料反而少（5 vs 18）⇒「BELIEVES 盲区 = 14B 容量问题」的假设获得正面读数，与提示词假设（v3.6 判据批）现在**两个候选都有证据**——这正是它当初要回答的问题。钉密度脱敏重算（卫生批后续）决定 v3.6 走哪边。
+3. **成本口径对表**：$0.057/臂，与放行材料「6 美分」一致（E27 修复后首次可信钱数；tokens/USD 并列即该防线）。
+
+**未决（进 50–100 章验收跑前必须清偿）**：门数漂移——T10 冻结判据是干净 E2 均值 ≥**70%**（`c6615d5`），推进材料写 ≥50% 且处置率≤30%；降档须经 tff **预注册**入册并写明与 T10 的关系（替代还是分层：10 章仪器闸 vs 商用闸），不得采样后追认。
+
+归档：`sampling/w6/cloud_pass1.json`、`cloud_pass2.json`（本地腿 `sampling/w5/pass{1,2}.json`）。
+复现：`.venv/Scripts/python.exe -m plot_engine.instr_replay --runs v4c1,v4c2,v4c3 --chapters 1,2,3,4,5,6,7,8,9,10 --client @deepseek.router.json --lane cloud --out sampling/w6/cloud_passN.json`；
+`.venv/Scripts/python.exe -m plot_engine.instr_cli sampling/w5/pass1.json sampling/w5/pass2.json sampling/w6/cloud_pass1.json sampling/w6/cloud_pass2.json`。
+
