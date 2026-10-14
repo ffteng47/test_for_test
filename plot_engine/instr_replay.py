@@ -74,6 +74,7 @@ def replay(lane_client, *, runs: Sequence[str], chapters: Sequence[int],
     src = fx.build_source(None, cfg.arc_contract)
 
     by_ch: Dict[int, list] = {}
+    by_run: Dict[str, Dict[int, list]] = {r: {} for r in runs}
     malformed: List[dict] = []
     total_tokens = 0
     for run, ch, path in frozen_corpus(runs, chapters):
@@ -90,6 +91,7 @@ def replay(lane_client, *, runs: Sequence[str], chapters: Sequence[int],
             if m:
                 p = p.model_copy(update={"source_ref": p.source_ref})
         by_ch.setdefault(ch, []).extend(props)
+        by_run[run][ch] = props
         for b in ch_obj.malformed:
             malformed.append({k: v for k, v in b.items() if k != "raw"})
         log(f"  {run} ch{ch:02d}: {len(props)} 条 | 段 {ch_obj.segments_run} "
@@ -98,8 +100,13 @@ def replay(lane_client, *, runs: Sequence[str], chapters: Sequence[int],
     # 按**请求的章全集**落盘：跑了但 0 提案的章也要在（空集 vs 空集的 Jaccard 是 1.0，
     # 而缺章会让一致率的分母悄悄少一格——E5「累计当终值」的同族病）。
     # JSON 的 dict key 只能是字符串，instr_cli.load_run 会 int() 回来归一化。
+    # 卫生批 #4：合并桶（chapters）把 3 跑×10 章压成 10 桶，条目量/一致率的分母失真；
+    # 新增 by_run 保留 (跑法, 章) 30 桶原形，load_run 见到它就展开复合 key 报告。
     return {"chapters": {ch: [_prop_json(p) for p in by_ch.get(ch, [])]
                          for ch in sorted(set(by_ch) | set(chapters))},
+            "by_run": {run: {ch: [_prop_json(p) for p in by_run[run].get(ch, [])]
+                             for ch in sorted(set(by_run[run]) | set(chapters))}
+                       for run in runs},
             "malformed": malformed,
             "tokens": total_tokens,
             "recall": 0.0,

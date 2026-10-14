@@ -77,3 +77,28 @@ def test_replay_never_touches_a_dump_directory(tmp_path):
     replay(client, runs=["v4c1"], chapters=[2], log=lambda *a: None)
     after = {p.name for p in Path("sampling/v4c1").glob("*")}
     assert before == after, "runner 动了冻结 dump 目录：读数会混账"
+
+
+def test_by_run_buckets_survive_roundtrip_as_30_denominator(tmp_path):
+    """卫生批 #4：3 跑×N 章不再压进 N 桶。by_run 原形落盘，load_run 展开复合 key，
+    report 的分母 = 稿数；无 by_run 的旧归档文件仍按 int 章号读（向后兼容）。"""
+    from plot_engine.instr_cli import load_run, report
+    from plot_engine.llm import LlmClient, LlmRouter, ModelEndpoint
+
+    client = LlmClient(LlmRouter(endpoints={
+        "extract": ModelEndpoint(model="fake")}),
+        transport=lambda url, payload, headers, timeout_s: {
+            "choices": [{"message": {"content": "[]"}}],
+            "usage": {"prompt_tokens": 10, "completion_tokens": 2}})
+    data = replay(client, runs=["v4c1", "v4c2"], chapters=[2], lane="local",
+                  seg_max_chars=900, seg_overlap=100, log=lambda *a: None)
+    assert set(data["by_run"]) == {"v4c1", "v4c2"}
+    loaded = load_run(write_run(data, tmp_path / "r1.json"))
+    assert sorted(loaded["props"]) == ["v4c1#2", "v4c2#2"]
+    rep = report([loaded, loaded], n_chapters=2)
+    assert rep["chapters"] == 2 and rep["jaccard_med"] == 1.0
+
+    import copy
+    old = copy.deepcopy(data)
+    old.pop("by_run")
+    assert sorted(load_run(write_run(old, tmp_path / "r2.json"))["props"]) == [2]

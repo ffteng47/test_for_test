@@ -26,19 +26,33 @@ def load_run(path) -> Dict[str, object]:
     """
     data = json.loads(Path(path).read_text(encoding="utf-8-sig", errors="replace"))
     by_ch: Dict[int, List[EventProposal]] = {}
+    by_run = data.get("by_run") or {}
+    for run, buckets in by_run.items():
+        # 卫生批 #4：30 桶格式。key 展开成 "跑法#章号" 复合字符串，
+        # double_run_report 只要求两端 key 对齐可排序，不要求是 int。
+        for ch, items in buckets.items():
+            by_ch[f"{run}#{ch}"] = _props(items, int(ch))
+    if by_run:
+        return {"props": by_ch, "malformed": list(data.get("malformed") or []),
+                "recall": float(data.get("recall") or 0.0),
+                "tokens": int(data.get("tokens") or 0)}
     for ch, items in (data.get("chapters") or {}).items():
-        props = []
-        for i, it in enumerate(items or []):
-            props.append(EventProposal(
-                proposed_event_type=str(it.get("type")),
-                actor=it.get("actor"), target=it.get("target"),
-                chapter=int(ch), seq=i, payload=dict(it.get("payload") or {}),
-                source_ref=it.get("source_ref", ""), extraction_method="llm",
-                extraction_confidence=1000))
-        by_ch[int(ch)] = props
+        by_ch[int(ch)] = _props(items or [], int(ch))
     return {"props": by_ch, "malformed": list(data.get("malformed") or []),
             "tokens": int(data.get("tokens") or 0),
             "recall": float(data.get("recall") or 0.0)}
+
+
+def _props(items, chapter: int) -> List[EventProposal]:
+    props = []
+    for i, it in enumerate(items):
+        props.append(EventProposal(
+            proposed_event_type=str(it.get("type")),
+            actor=it.get("actor"), target=it.get("target"),
+            chapter=chapter, seq=i, payload=dict(it.get("payload") or {}),
+            source_ref=it.get("source_ref", ""), extraction_method="llm",
+            extraction_confidence=1000))
+    return props
 
 
 def report(runs: Sequence[Dict[str, object]], *, probe_chapters: Sequence[int] = (),

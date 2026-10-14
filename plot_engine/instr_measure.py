@@ -48,13 +48,14 @@ def double_run_report(*, run_a: Dict[int, list], run_b: Dict[int, list],
                       probe_chapters: Sequence[int] = (),
                       instr: str = INSTR_VERSION) -> Dict[str, object]:
     chapters = sorted(set(run_a) | set(run_b))
+    probes = {int(str(c).split("#")[-1]) for c in probe_chapters}   # 钉测按章号匹配，兼容 "跑法#章" 复合 key
     per_chapter = []
     believes_mismatch = []
     for ch in chapters:
         a, b = run_a.get(ch, []), run_b.get(ch, [])
         per_chapter.append({"chapter": ch, "jaccard": chapter_jaccard(a, b),
                             "n_a": len(a), "n_b": len(b)})
-        if probe_chapters and ch in set(probe_chapters):
+        if probes and int(str(ch).split("#")[-1]) in probes:
             if believes_keys(a) != believes_keys(b):
                 believes_mismatch.append(ch)
     med = median_jaccard([chapter_jaccard(run_a.get(c, []), run_b.get(c, []))
