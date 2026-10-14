@@ -283,8 +283,21 @@ instr-v2 只活在 W5 回放道）｜夹具 ladder-v4｜Writer 面 w4-scene700-1
 5. **接线教训（仪器 backlog，另批走）**：本次只传 `--dump-dir` 未传 `--state-dir`，state 落临时目录
    差点丢（靠 `phase0-live-*` mtime 精确对回三臂）；后台跑不产 `run.log`，readout 的 tokens/用时/
    一致率变 `?`（本次手工拆戳行补录）。⇒ review.py 应自动把 run.log + state 落进 dump 目录，取证三项补全。
+   **已修（`314be60`，2026-10-14）**：`--state-dir` 可省，state 默认 `<dump>/state`、戳线自动落 `<dump>/run.log`；完工自检仍挂卫生批。
 6. **正文中位 2304/2347/2185**（v4c 2570–2663，约 −12%）：Writer 面一字未动，属彩票偏薄，下批盯。
 
 复现：`.venv/Scripts/python.exe -m plot_engine.readout sampling/v4d1 sampling/v4d2 sampling/v4d3`；
 `.venv/Scripts/python.exe -m plot_engine.reanchor sampling/v4d1 sampling/v4d2 sampling/v4d3`。
+
+## 13. 读数与数字的落盘纪律（2026-10-14 入册，v4d 事故 + 0.67 作废的直接产出）
+
+1. **`1.txt` 是临时任务单，随时被覆盖**——纪律性条款不写它，只入永久档（本节）。
+2. **任何进报告的读数必须带 `sampling/` 归档路径 + 复现命令**；未落盘的读数不得进结论。
+   先例两笔：试水 0.67（JSON 未落盘、不可复现，判修复中间态测量作废）；「lint 移植 429 条
+   逐字节对账」（会话数字，全仓无档，降为**未入册**——要么补命令+输出归档，要么改写为
+   「待对账」）。口径、成本估算（如「6 美分」）同此律：单价本身未入册时（E27 修复前），
+   报告里的钱数只能写作估算区间。
+3. **落盘三件套由工具保证，不靠人**：dump/state/戳线随 `--dump-dir` 自动落
+   （`314be60`，`--state-dir` 从此可省）；待补的完工自检（卫生批 #2）：跑后断言
+   `run.log`、`state/event.db`、`_junk.json` 三件齐，缺件即作废报告，不得事后救援。
 
