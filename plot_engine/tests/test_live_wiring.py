@@ -238,6 +238,21 @@ def test_live_run_note_carries_the_instrument_stamp_separate_from_the_ruler(
     assert diag["instr"]["segments_run"] >= 1
 
 
+def test_live_run_persists_run_log_and_state_into_dump_dir(tmp_path, monkeypatch):
+    """v4d 事故回归：只传 --dump-dir 的跑法，戳链与 state 必须随 dump 落盘。"""
+    from plot_engine.review import _live_run
+    monkeypatch.setattr("plot_engine.live.check_reachable",
+                        lambda client: (True, "端点可用 models=m"))
+    dump = tmp_path / "dump"
+    report, msg, _ = _live_run(2, {}, client=_client(),
+                               dump_dir=str(dump))
+    assert report is not None
+    first = (dump / "run.log").read_text(encoding="utf-8").splitlines()[0]
+    assert "夹具=" in first and "仪器=" in first
+    assert (dump / "state" / "state.db").exists()
+    assert (dump / "state" / "event.db").exists()
+
+
 def test_live_run_cloud_lane_without_cloud_client_is_refused():
     """配置错误先于网络报错（E26）：本测试**不打任何桩**——
     本地 11434 通不通都不该影响它，因为 cloud_client 缺失在验活之前就被拦下。"""

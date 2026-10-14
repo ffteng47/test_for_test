@@ -300,8 +300,10 @@ def _live_run(chapters: int, model_config: dict, *, client=None, cloud_client=No
     `stripped`=臂 A（节拍行抹掉类型名与 ID，第一次真盲写）、`told`=臂 B（裸 ID 汇总两行，
     渲染与 t1–t3 逐字节一致）、`persona`=臂 C（臂 B + 角色一致性规则）；基线 `beats` 留作金丝雀。
     提示词是产品配置不是协议，只有臂 A/B/C 的渲染过滤器不动尺，版本随端点说明落进 run.log。
-    `state_dir` 给定时 State/EventLog 落在那儿（默认临时目录、跑完即弃）——
-    **跨进程救援（`--rescue`）要求链还在盘上**，所以采样跑法恒带这个参数。
+    `state_dir` 给定时 State/EventLog 落在那儿；未给但有 dump_dir 时默认 `<dump_dir>/state`
+    （v4d 事故修复：只传 --dump-dir 的后台跑法把链丢进 temp，reanchor 分母靠 mtime 手工救回来的）；
+    两者都没有才是临时目录、跑完即弃。**跨进程救援（`--rescue`）要求链还在盘上**，
+    所以采样跑法恒带这个语义。戳线同样自动落 `<dump_dir>/run.log` 首行。
     救援本身不在这里跑：`main()` 拒绝 `--live --rescue` 同命令，人工重入是测量之后的独立一步。
 
     `use_segmented=True`（`--instr v2`）挂 instr-v2 分段抽取通道（W1 分段合并、W2 修复环+
@@ -347,6 +349,10 @@ def _live_run(chapters: int, model_config: dict, *, client=None, cloud_client=No
         msg = f"{msg}｜云端抽取：{cmsg}"
 
     cfg = fx.make_config(chapters)
+    if dump_dir is not None and state_dir is None:
+        # 事故修复：链默认随 dump 走，跑完不丢（换尺重跑同一 dump 目录会被下面的
+        # 已有链护栏拦住，不会并账）。
+        state_dir = str(Path(dump_dir) / "state")
     tmp = Path(state_dir) if state_dir else Path(tempfile.mkdtemp(prefix="phase0-live-"))
     tmp.mkdir(parents=True, exist_ok=True)
     if (tmp / "state.db").exists():
@@ -408,6 +414,10 @@ def _live_run(chapters: int, model_config: dict, *, client=None, cloud_client=No
     note += f"｜仪器={_instr.get('instr', 'instr-v1')}"
     if _instr.get("lanes"):
         note += f"｜车道={'+'.join(_instr['lanes'])}"
+    if dump_dir is not None:
+        # 戳线自落盘：后台跑法没人抄 stdout，reanchor 的 `夹具=` 只能从 run.log 读
+        Path(dump_dir).mkdir(parents=True, exist_ok=True)
+        Path(dump_dir, "run.log").write_text(note + "\n", encoding="utf-8")
     if dump_dir is not None:
         # §3.5 取证：坏料逐条（章号+原因+原文片段）落盘，计数只说明「丢了多少」，说不清「丢了什么」
         import json
