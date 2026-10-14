@@ -41,6 +41,20 @@ info.txt
 # ---- SQLite 临时文件（即使 sampling 全量同步也排除）----
 sampling/**/*.db-shm
 sampling/**/*.db-wal
+# `!sampling/**` 把全局 __pycache__ 规则翻回来了，这里补回去
+sampling/**/__pycache__/
+# 一次性查看器产物（自包含 HTML，脚本可重生成，不入库）
+sampling/*.html
+sampling/w5/*.html
+
+# ---- 编辑器/Agent 配置目录（各 CLI 自带，不入库）----
+.agents/
+.claude/
+.codex/
+.kimi-code/
+.opencode/
+.qoder/skills/
+tools/
 
 # ---- 编辑器/Agent worktree（独立检出，不入库）----
 .qoder/worktrees/
