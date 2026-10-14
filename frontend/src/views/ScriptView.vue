@@ -177,7 +177,7 @@ export default {
 </script>
 
 <style scoped>
-.wrap { min-width: 900px; }
+.wrap { min-width: 900px; height: 100%; display: flex; flex-direction: column; }
 .btn-stop { background: var(--red); border-color: var(--red); color: #fff; }
 .gmask {
   position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55); z-index: 60;
@@ -194,12 +194,15 @@ export default {
 .chapter-tag { font-size: 12px; color: var(--teal); background: rgba(52, 214, 198, 0.1); padding: 3px 10px; border-radius: 999px; vertical-align: middle; margin-left: 6px; }
 .seg-switch { display: flex; gap: 2px; margin-right: 6px; }
 .seg-switch .cur { background: var(--accent-dim); color: #fff; }
-.cols { display: grid; grid-template-columns: 1fr 280px; gap: 18px; align-items: start; }
-.seglist { overflow: hidden; }
+.cols { display: grid; grid-template-columns: 1fr 280px; gap: 18px; flex: 1; min-height: 0; }
+/* 两栏各自全高内滚：几百段的列表自带贴手的滚动条（旧版整页滚，滑块在视口最边、拖不动）；
+   stats 钉在列表顶，翻到第 800 段也看得到全书计数 */
+.seglist { overflow-y: auto; min-height: 0; }
 .stats {
   display: flex; gap: 16px; padding: 12px 16px; font-size: 12px;
   border-bottom: 1px solid var(--line); color: var(--t2);
   background: var(--bg1);
+  position: sticky; top: 0; z-index: 3;
 }
 .stats b { color: var(--t1); }
 .seg {
@@ -229,7 +232,7 @@ export default {
 .s-pend { color: var(--t3); }
 .s-run { color: var(--amber); animation: blink 1s infinite; }
 @keyframes blink { 50% { opacity: 0.3; } }
-.inspector { padding: 16px; position: sticky; top: 0; }.ins-head { margin-bottom: 12px; }
+.inspector { padding: 16px; overflow-y: auto; min-height: 0; }.ins-head { margin-bottom: 12px; }
 .ins-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 13px; border-bottom: 1px dashed var(--line); }
 .ins-row.col { flex-direction: column; align-items: stretch; gap: 6px; }
 .k { color: var(--t3); font-size: 11px; letter-spacing: 0.06em; min-width: 60px; }
