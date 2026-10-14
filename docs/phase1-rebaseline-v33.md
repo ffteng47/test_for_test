@@ -350,3 +350,39 @@ instr-v2 只活在 W5 回放道）｜夹具 ladder-v4｜Writer 面 w4-scene700-1
 **§14 复现命令成本标注**：云臂复现非免费（≈6 美分/臂·次，实测锚见 errata E27），跑前先声明。
 
 
+
+## 16. 钉密度脱敏重算：v4d 残差三分解，裁定 v3.6 = 尺批（2026-10-14，零 GPU 离线读档）
+
+**问题**（§14 遗留、推进队列关键路径第 1 项）：v4d FAIL 群 {2,3,4,6,7,10}+ARC{9} 的质量到底押在
+「钉密度（契约批：夹具 2–3 钉 roll 不中）」还是「抽取面（尺批：判据/提示词/reducer 归因）」上。
+
+**口径**（`sampling/_probe_pinmask.py`，复现 `.venv/Scripts/python.exe sampling/_probe_pinmask.py`）：
+三跑 8 个非 OK 章 × 夹具 mandatory 钉型 = 45 个钉实例（不重叠），对**终局 `## Proposals`** 二分：
+①**型别缺失** 24（53%）：钉型在终局提案完全没出现 ⇒ 抽取提示面洞；
+②**在场未落账** 14（31%）：钉型出现但章仍死 ⇒ 归因/方向杀（actor/fact 挂错、reducer 语义）；
+③**全灭吞钉** 7（16%）：终局 Proposals 为空（`_junk.json` 的 `malformed_reply` 整章吞掉：
+v4d1 ch06/07/09、v4d3 ch07）⇒ 仪器解析面，与尺/契约无关。
+
+**逐类读数（钉实例，非章数）**：缺席 by 类型 READS 9（剔全灭后 7/7——凡要 READS 的活章全部抽不出，
+本章实为真盲区）、BELIEVES 8、IS_TOLD 4、SUSPECTS 4、OBSERVES 3、DOUBTS 2、INFERS 1；
+在场未落账 by 类型 DOUBTS 4、OBSERVES 3、SUSPECTS 2、IS_TOLD 2、INFERS 2、BELIEVES 1——**七个类型全中**，
+归因错不是盲区型的专利。两条已解剖的机制样本：
+- **ch06（IS_TOLD 方向翻转）**：正文「下山来报」戏齐全（赵六当面告知原文在案），终局提案
+  `IS_TOLD actor=char_000004 target=char_000001` ×2——夹具语义明文 actor=**听的人**（experiment_10ch.py:88-89），
+  抽取器把 actor 给了说的人 ⇒ H5.1 计数过关、H2.2 双双不成立、整章死。单钉章 3/3 死，与密度无关。
+- **ch09（INFERS 结论挂偏）**：v4d2/3 抽出 INFERS ×16–17（正文推断密度肉眼可见），但
+  `conclusion_fact_id` 恒挂 fact_000001 枢纽、不挂钉住的 fact_000004 ⇒ 「在场未落账」，
+  ARC 报 BELIEVES（+v4d1 INFERS）落空。§9 的「先修抽取面」候选由本表兑现：**不是抽不出 INFERS，是结论事实绑错**。
+
+** masked 上界**：假设②全修好（在场即落账），可翻章 v4d1 0 / v4d2 {6,10} / v4d3 {5,6}
+⇒ E2 上界 20% / 40% / 40%（均值 33%），**仍不过商用闸 50%**——归因修复单独不够，剩余质量在①型别洞
+（READS/BELIEVES/SUSPECTS/IS_TOLD 提示面）；假设①②全修好则死因只剩③，那已是「完美抽取器」反事实，不作宣判数。
+
+**裁定**：契约批（改夹具降钉密度）**无证据支持**——FAIL 与钉数不相关（单钉 ch6 三跑全死、
+双钉 ch5 两跑只差一个 OBSERVES），主导质量 53% 是型别缺失+31% 归因杀，都在抽取-判定-落账链上。
+⇒ **v3.6 = 尺批**，工作清单拆三（各自独立一批、一因一戳）：
+(a) **归因面**：IS_TOLD actor 方向（提示词判别 + reducer 侧「说/听」语义对齐）、INFERS conclusion 绑偏、DOUBTS 落账；
+(b) **型别面**：READS（最硬的盲区，疑被并成 OBSERVES）、BELIEVES、SUSPECTS、IS_TOLD 的提示词判据；
+(c) **仪器面**：malformed_reply 整章吞（v4d1 三章）归 W2/解析修复，不混进尺批。
+**局限**：在场≠挂对（②按类型在场即计，actor/fact 未校验，上界是一阶）；OK 章不采样；rounds>0 章终局
+Proposals 读的是修稿后正文——「归因杀」可能部分是修稿换正文的复合态。E2 极差纪律不适用本节（零跑动，纯读数）。
