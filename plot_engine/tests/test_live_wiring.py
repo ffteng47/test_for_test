@@ -1,4 +1,4 @@
-﻿# Task 4：真实模型接入实验管道（08 §3 tokens/cost/时长）+ 网络故障的可读出口
+# Task 4：真实模型接入实验管道（08 §3 tokens/cost/时长）+ 网络故障的可读出口
 from plot_engine.eventlog import EventLog
 from plot_engine.llm import LlmClient, LlmRouter, ModelEndpoint
 from plot_engine.live import build_client, build_laned_source, build_live_source
@@ -202,7 +202,7 @@ def test_live_run_note_carries_the_instrument_stamp_separate_from_the_ruler(
                                   state_dir=str(tmp_path),
                                   dump_dir=str(tmp_path / "dump"))
     assert report is not None
-    assert "抽取尺=v3.3-belief-type-criteria" in msg   # 尺戳已 bump（W4b 裁定后）
+    assert "抽取尺=v3.4-default-700-removed" in msg   # 尺戳已 bump（W4b 裁定后）
     assert "仪器=instr-v2-local" in msg                   # 仪器戳新增
     assert diag["instr"]["instr"] == "instr-v2-local"
     assert diag["instr"]["segments_run"] >= 1

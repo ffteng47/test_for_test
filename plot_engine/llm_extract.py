@@ -28,7 +28,15 @@ _ID_RE = re.compile(r"^(?:char|fact|item|loc|faction|realm|ability|region|rel)_\
 # v3.2 = 加上 `_promote_infers` 确定性提升（`docs/phase1-merged-plan-final.md` §7.3-1）。
 # v3.3 = 抽取提示词加「类型怎么选」判据（E18：belief 三兄弟与 knowledge 四兄弟无可区分口径）
 #        ⇒ 抽取读数与 v3.2 不可并列，历史读数靠尺戳分开。
-EXTRACTION_RULER = "v3.3-belief-type-criteria"
+# v3.4 = W4b 裁定执行（tff，2026-10-14）：删掉「数值键一律给 700」那句。
+#        位置核查（重要，别再找错）：该句**从未进生产提示词 extract_prompt**，它只存在于
+#        探针的 v3.4 草案补丁 `sampling/_probe_believes.py` 的 `v34_patch()`（追加在
+#        「payload 必须给全这些键」之后）——已从该补丁删除。生产面本来就是「不给默认」，
+#        故 v3.3→v3.4 的提示词文本零变化；这次 bump 记录的是 W4b 裁定 + W4a 代码兜底
+#        正式进入冻结面：缺省补 700 由代码做并记 `defaulted_fixed_point` 账。
+#        读数与 v3.3 不可并列的原因：v3.3 时代一个 700 分不清是模型真判断还是抄默认，
+#        v3.4 起 700 = 模型真判断，缺省 = 代码补 + 台账有账。
+EXTRACTION_RULER = "v3.4-default-700-removed"
 
 # 本通道只承接 reducer 真能消费的 event_type，且键名逐一对齐 01 §4.1 的实际取用（reducer 里
 # 的 event.payload[...]）。缺键的产物放下去只会变成 MALFORMED_PROPOSAL 级联，归因反而更难。
@@ -298,7 +306,8 @@ def parse_proposals(raw: str, chapter: int,
 def _vocab(state: StoryState) -> str:
     """角色注册表（含别名，W1/W3：每段提示词携带，供别名映射用）。
 
-    W4b 说明：本函数历史上不含"默认 700"句，核查通过——提示词不写默认值，
+    W4b 说明：本函数（生产提示词）不含任何"默认 700"指令——那句话只存在于探针的
+    v3.4 草案补丁（见 `EXTRACTION_RULER` 注释），已删除，故此处无需改动。
     数值缺省一律由 W4a 代码后处理补（`code_defaults=True`），此处无尺面触碰。
     """
     parts = []

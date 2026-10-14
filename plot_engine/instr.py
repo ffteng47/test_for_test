@@ -34,9 +34,10 @@ INSTR_VERSION = INSTR_VERSION_LOCAL
 #: W4a：数值键缺省的全局唯一取值点（可审计、可全局改）。
 DEFAULT_FIXED_POINT = 700
 
-#: W4b 全批次唯一的尺面触碰（一行删除）。默认 False = 缓办。
-#: 置 True 之前需要拍板；本仓库默认不触碰提示词文本。
-W4B_TOUCHED = False
+#: W4b：全批次唯一的尺面触碰。tff 已于 2026-10-14 裁定「删」。
+#: 位置核查：那句「数值键一律给 700」**不在生产提示词**，只在探针的 v3.4 草案补丁
+#: （`sampling/_probe_believes.py` 的 `v34_patch()`）里，已删除。True = 裁定已执行。
+W4B_TOUCHED = True
 
 #: W5 预登记硬门槛。
 WASTE_RATE_MAX = 0.02
@@ -359,12 +360,23 @@ def describe_endpoint(ep) -> dict:
             "extra_body": data.get("extra_body", {})}
 
 
+#: W6 车道切换余量（tff 裁定，2026-10-14）：原规则 `cr > lr` 是噪声开关——10~30 章
+#: 样本里召回差 1~2pp 完全在波动范围内，据此切默认车道等于拿抖动做产品决策。
+#: 现要求云端召回领先 >10pp **且** 一致率不低于本地 −2pp 才切默认；
+#: 后者是「一致性铁律」的下行容差：宁可少收 2pp 一致率，不可让默认车道更抖。
+LANE_RECALL_MARGIN = 0.10
+LANE_JACCARD_TOLERANCE = 0.02
+
+
 def decide_lane(local: dict, cloud: dict) -> str:
-    """W6 预登记决策规则：云端召回显著更高且一致率 ≥ 本地 ⇒ 默认切云端；
-    两者差不多 ⇒ 留本地，云端只按章兜底。"""
+    """W6 预登记决策规则（含余量，见 `LANE_RECALL_MARGIN` / `LANE_JACCARD_TOLERANCE`）。
+
+    - 云端召回领先 >10pp 且一致率 ≥ 本地 −2pp ⇒ 默认切云端，本地留降级档；
+    - 两者差不多 ⇒ 留本地（省 COGS、少一个外部依赖），云端只按章兜底。
+    """
     lr, cr = float(local.get("recall", 0) or 0), float(cloud.get("recall", 0) or 0)
     lj, cj = float(local.get("jaccard_med", 0) or 0), float(cloud.get("jaccard_med", 0) or 0)
-    if cr > lr and cj >= lj:
+    if cr >= lr + LANE_RECALL_MARGIN and cj >= lj - LANE_JACCARD_TOLERANCE:
         return "cloud_default_local_fallback"
     return "local_default_cloud_per_chapter_fallback"
 

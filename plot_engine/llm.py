@@ -107,6 +107,7 @@ class CallDiag:
     reasoning_chars: int
     max_tokens: int
     raw: str = ""          # 仅正文为空时留档的响应截断
+    reasoning_tokens: int = 0   # 思考 token 数（云端 thinking 模式按输出计费，必须入账）
 
 
 class LlmClient:
@@ -133,14 +134,19 @@ class LlmClient:
             text = msg["content"]
         except (KeyError, IndexError, TypeError) as e:
             raise LlmUnavailable(f"{ep.model} 响应缺少 choices：{str(resp)[:200]}") from e
-        reasoning = msg.get("reasoning") or ""
+        # CoT 字段两种方言都认：Ollama/本地推理框架给 `reasoning`，
+        # OpenAI 兼容的云端（DeepSeek 等）给 `reasoning_content`。只认前者会让
+        # 云端思考型模型的 reasoning_chars 恒为 0，「模型在思考还是在答非所问」就看不出来。
+        reasoning = msg.get("reasoning") or msg.get("reasoning_content") or ""
+        u = resp.get("usage") or {}
+        r_tokens = int((u.get("completion_tokens_details") or {}).get("reasoning_tokens", 0) or 0)
         self.calls.append(CallDiag(role=role, model=ep.model,
                                    finish=str(choice.get("finish_reason") or ""),
                                    content_chars=len(text or ""),
                                    reasoning_chars=len(reasoning),
                                    max_tokens=ep.max_tokens,
-                                   raw="" if text else str(resp)[:300]))
-        u = resp.get("usage") or {}
+                                   raw="" if text else str(resp)[:300],
+                                   reasoning_tokens=r_tokens))
         usage = Usage(int(u.get("prompt_tokens", 0) or 0), int(u.get("completion_tokens", 0) or 0))
         self.total_tokens += usage.total
         self.total_cost_usd += usage.total / 1000.0 * ep.usd_per_1k_tokens

@@ -30,8 +30,9 @@ def v34_patch(messages):
                 "DOUBTS=明确怀疑或否定此前相信的事。内心确认与推理并存时两个都输出。")
         elif line.startswith("payload 必须给全这些键"):
             out.append(line)
-            out.append("其中 belief_strength/trust_level/message_strength 这类数值键：正文没有可读数值时一律给 700，"
-                       "别因为没数字就不输出这条事件。")
+            # W4b 裁定（tff，2026-10-14）：v3.4 草案曾在此追加一句数值键一律填某定值的指令，
+            # 该指令令读数里的 700 分不清是模型真判断还是抄默认，构成双盲区，已删。
+            # 缺省改由代码补并记 defaulted_fixed_point 账（生产面本就不写默认值）。
         else:
             out.append(line)
     return [{"role": "system", "content": "\n".join(out)}, messages[1]]

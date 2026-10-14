@@ -179,10 +179,34 @@ def test_w4a_wrong_typed_fixed_point_still_dropped():
     assert props == []
 
 
-def test_w4b_prompt_has_no_default_sentence():
+def test_w4b_default_700_sentence_is_gone_everywhere():
+    """W4b 两处都要锁：①生产提示词 never 有这句；②探针的 v3.4 草案补丁已删除它。
+
+    位置史（别再找错）：那句话从来不在 `extract_prompt`，只在
+    `sampling/_probe_believes.py` 的 `v34_patch()` 里，故 ② 才是真删除点。
+    """
+    import io
+    import re
     from plot_engine.llm_extract import extract_prompt
+
     system = extract_prompt("正文。", None, _contract(), _state())[0]["content"]
-    assert "默认 700" not in system
+    assert "默认 700" not in system and "一律给 700" not in system
+
+    probe = io.open("sampling/_probe_believes.py", encoding="utf-8",
+                    errors="replace").read()
+    # 只查会被送进模型的字符串常量（注释里复述这句不构成泄漏，不算违规）
+    assert not re.search(r"out\.append\([^)]*一律给\s*700", probe)
+    assert not re.search(r'"数值键[^"]*700', probe)
+    assert "一律给 700" not in re.sub(r"#[^\n]*", "", probe)
+
+
+def test_w4b_ruler_stamp_bumped_and_flag_records_the_ruling():
+    """尺戳必须换名，否则 W5 的 700 会被当成与 v3.3 同一种 700 读。"""
+    from plot_engine import instr
+    from plot_engine.llm_extract import EXTRACTION_RULER
+    assert EXTRACTION_RULER.startswith("v3.4")
+    assert EXTRACTION_RULER != "v3.3-belief-type-criteria"
+    assert instr.W4B_TOUCHED is True
 
 
 def test_w5_gate_and_upgrade_path():
@@ -234,6 +258,24 @@ def test_w6_lane_decision_rule():
     assert I.decide_lane({"recall": 0.7, "jaccard_med": 0.9},
                          {"recall": 0.7, "jaccard_med": 0.9}) == \
         "local_default_cloud_per_chapter_fallback"
+
+
+def test_lane_switch_needs_a_margin_not_a_coin_flip():
+    """裁定（1.txt）：`cr > lr` 在 10~30 章样本里是噪声开关。召回只领先几个 pp
+    不得切默认车道；领先但一致率掉太多也不切（一致性铁律的下行容差）。"""
+    base = {"recall": 0.60, "jaccard_med": 0.90}
+    # 领先 1~5pp：全是噪声，不切
+    for lead in (0.01, 0.02, 0.05, 0.099):
+        assert I.decide_lane(base, {"recall": base["recall"] + lead,
+                                    "jaccard_med": 0.90}).startswith("local"), lead
+    # 领先 >10pp 且一致率不掉 ⇒ 切
+    assert I.decide_lane(base, {"recall": 0.71, "jaccard_med": 0.90}) == \
+        "cloud_default_local_fallback"
+    # 领先 >10pp 但一致率掉超过 2pp ⇒ 仍不切（宁可少收一致率，不让默认车道更抖）
+    assert I.decide_lane(base, {"recall": 0.80, "jaccard_med": 0.87}).startswith("local")
+    # 一致率掉 2pp 整：边界含等号，切
+    assert I.decide_lane(base, {"recall": 0.80, "jaccard_med": 0.88}) == \
+        "cloud_default_local_fallback"
 
 
 def test_flags_rollback_segmentation_off():

@@ -185,3 +185,53 @@ def test_clean_calls_are_not_flagged():
     for _ in range(3):
         c.complete("writer", [{"role": "user", "content": "y"}])
     assert c.render_call_diagnostics() == "调用 3 次｜接线正常（无空正文、无截断）"
+
+
+# ---- 云端车道（W6）：CoT 方言 + 密钥只走环境变量 ----
+
+def test_cloud_reasoning_content_is_read_not_silently_dropped():
+    """DeepSeek 等 OpenAI 兼容端点把 CoT 放 `reasoning_content`；只认 Ollama 的
+    `reasoning` 会让云端思考型模型的 reasoning_chars 恒为 0，仪器说谎。"""
+    transport, _ = _fake_transport([
+        {"choices": [{"message": {"content": "[]", "reasoning_content": "先想一遍案情"}}],
+         "usage": {"prompt_tokens": 10, "completion_tokens": 20,
+                   "completion_tokens_details": {"reasoning_tokens": 17}}}])
+    c = LlmClient(LlmRouter.default(), transport=transport)
+    c.complete("writer", [{"role": "user", "content": "x"}])
+    d = c.calls[0]
+    assert d.reasoning_chars == 6 and d.reasoning_tokens == 17
+
+
+def test_cloud_lane_config_resolves_key_from_env_not_from_the_file(monkeypatch):
+    """护栏 1/2：云端配置只写 api_key_env，真值从环境解析；to_config 只留变量名。"""
+    monkeypatch.setenv("ALEXANDRIA_CLOUD_API_KEY", "sk-fake-for-test")
+    r = LlmRouter.from_config({
+        "extract": {"base_url": "https://api.deepseek.com", "model": "deepseek-flash",
+                    "api_key_env": "ALEXANDRIA_CLOUD_API_KEY",
+                    "temperature": 0, "extra_body": {"thinking": {"type": "disabled"}}}})
+    ep = r.endpoints["extract"]
+    assert ep.api_key == "sk-fake-for-test"                 # 环境解析成功
+    assert "api_key" not in r.to_config()["extract"]        # 落盘形态不含密钥
+    assert r.to_config()["extract"]["api_key_env"] == "ALEXANDRIA_CLOUD_API_KEY"
+
+
+def test_inline_api_key_in_config_is_refused():
+    """`from_config` 主动剔掉配置里的 api_key：配置文件会被 trace/报告引用。"""
+    r = LlmRouter.from_config({"extract": {"model": "deepseek-flash",
+                                           "api_key": "sk-should-not-survive"}})
+    assert r.endpoints["extract"].api_key is None
+
+
+def test_deepseek_template_keeps_thinking_off_and_temperature_zero():
+    """W5 规格是温度 0；DeepSeek 在 thinking 模式下 temperature 不起作用，
+    所以模板必须显式关思考，否则两跑一致率测的不是同一个东西。"""
+    import json
+    from pathlib import Path
+    cfg = json.loads(Path("deepseek.router.json").read_text(encoding="utf-8-sig"))
+    ep = cfg["extract"]
+    assert ep["base_url"] == "https://api.deepseek.com"
+    assert ep["model"] in ("deepseek-flash", "deepseek-v4-pro")
+    assert ep["temperature"] == 0
+    assert ep["extra_body"]["thinking"]["type"] == "disabled"
+    # 模板里绝不带密钥（_comment 里的 sk-... 只是示例占位，不算）
+    assert ep["api_key_env"] and "sk-" not in json.dumps(ep)
