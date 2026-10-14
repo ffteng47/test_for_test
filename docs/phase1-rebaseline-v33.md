@@ -414,12 +414,15 @@ Proposals 读的是修稿后正文——「归因杀」可能部分是修稿换�
 复现：读戏扫描与提案对表 = 本会话离线脚本（读 `sampling/v4d{1,2,3}/ch0{2,4,7}.md` 的 `## Draft` 段与终局
 `## Proposals` 段，正则口径见正文引用词，无副作用可重跑）。
 
-**补丁预备状态（2026-10-14，非 GPU，冻结面未动）**：(a) 归因面（IS_TOLD actor=听的人判据行
-+ 尺戳 v3.6 + FIX_GUIDE g3 补句「补写缺的戏，不许删替换已有读戏」）与 (b)③ 已故人派生层过滤
-（derive.py，dead/unborn 剥出 mental 候选 actors，H1.1 兜底闸不动）均已写好、离线的 527 测试
-全绿，但**未施加**——按一因一批，(c)③ 重基线读数必须先跑在 v3.5/g2/instr-v2 面上。补丁存于
-repo 根 `_patch_a_attribution.diff`、`_patch_b3_deadfilter.diff`（未入册工作产物，`git apply
---check` 双双通过），施加序 = (c)③ 归档 → (a) → (b)（b 判据行措辞仍等 q30b 读数）。
+**补丁预备状态（2026-10-14 晚更新，非 GPU，冻结面未动）**：三段补丁按施加链齐备——
+`_patch_a_attribution.diff`（(a) 归因面：IS_TOLD actor=听的人判据行 + 尺戳 v3.6 + FIX_GUIDE
+g3 补句「补写缺的戏，不许删替换已有读戏」）、`_patch_b3_deadfilter.diff`（(b)③ 已故人派生层
+过滤：derive.py dead/unborn 剥出 mental 候选 actors，H1.1 兜底闸不动）、
+`_patch_b12_typecriteria.diff`（(b)①② 型别判据行：READS/OBSERVES 切分「账走文字进来的就是
+READS」+ BELIEVES/SUSPECTS 落格触发，尺戳 v3.7；措辞依 §18 裁定二=按 14b 同尺读数推进，
+30b 旁证不进判据）。链验已做：HEAD → a → b3 → b12 逐段 `git apply` 后 **528 测试全绿**，
+随即 revert，冻结面保持 v3.5/g2/instr-v2。施加序 = (c)③ 归档 → (a) 三跑 → (b) 三跑；
+GPU 批次全部受 §13.4 放行约束。补丁为未入册工作产物（repo 根，不 commit）。
 
 ## 18. q30b 探针裁决：本地也躲不开 MoE——摇尺的是专家路由，不是云（2026-10-14，零付费，tff 追问「能否换一个」的直接产出）
 
