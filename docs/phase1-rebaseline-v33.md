@@ -255,6 +255,36 @@ run JSON 可进 `instr_cli`。最长章 v4c1/ch03（2999 字）回放无 `finish
 **W6 云端 2×2：tff 裁定采"省钱读法"（2026-10-14）**——云端两腿推迟（语料出域 + 真消费未放行），
 v4d 基线先走本地车道；2×2 的本地两腿即本批 `pass{1,2}.json`（同语料同尺同分段），云端一旦放行只补
 两腿即可出对表，零重复调用。技术面已就绪：09e505f 修了验活缺 Bearer，deepseek-flash 上 v3.5 复验通过。
-**v4d 基线三采样**（冻结面 `24d42c2` + W5 后零漂移：尺 v3.5｜仪器 instr-v2｜夹具 ladder-v4｜Writer 面
-w4-scene700-1000+ledger｜上限 2400｜隧道 11500 在用配置）：`sampling/v4d1..3`，完成后按 E2 一致性铁律读。
+**v4d 基线三采样**（冻结面 `649a5b6` 代码面 = `24d42c2` 后仅 docs 变动：尺 v3.5｜仪器 instr-v1（实跑戳；
+instr-v2 只活在 W5 回放道）｜夹具 ladder-v4｜Writer 面 w4-scene700-1000+ledger｜上限 2400｜隧道 11500
+在用配置）：`sampling/v4d1..3`，读数见 §12。
+
+## 12. v4d 基线三采样（v3.5 尺面过 W5 门槛后的首批正式读数，2026-10-14）
+
+三臂首行戳逐字相同：`prompt=v0-beats｜抽取尺=v3.5-schema-hint-no-bare-type｜指引=g2-suspects-added｜
+夹具=ladder-v4-multi-scene｜Writer面=w4-scene700-1000+ledger｜抽取上限=2400｜仪器=instr-v1`。
+
+| 跑法 | E2 | 首轮 | 判死(ARC) | 待人工 | 修订环章 | 台账重锚(未命令) | 坏料 | tokens/用时 | 正文中位 |
+|---|---|---|---|---|---|---|---|---|---|
+| v4c 三跑（旧尺 v3.3） | 30/20/20% | 1/2/2 | 2/2/0 | 5/6/8 | — | 3/1/14 | — | 113–144k | 2570–2663 |
+| v4d1 | 20% | 1(+救1) | 2（05,09） | 6 | 2,3,4,6,7,10 | 0 | 80 | 107k/1047s | 2304 |
+| v4d2 | 20% | 2 | 2（05,09） | 6 | 2,4,6,7,10 | 1 | 0 | 119k/1051s | 2347 |
+| v4d3 | 20% | 2 | 1（09） | 7 | 2,4,5,7,10 | 0 | 17 | 119k/1292s | 2185 |
+
+1. **E2 20/20/20，极差 0pp**（铁律内最差情形=一致 ⇒ 可下结论）。v3.5 只动措辞不动判据，
+   通过率与 v4 三采样（§9，同为 20/20/20）重合——"修格式层不改兑现率"的裁定第三次成立。
+   FAIL 恒集 {2,4,6,7,10}、OK 恒集 {1,8} 不变。
+2. **BELIEVES 盲区未收敛**：ch09 落空集 2/3 臂仍含 ['BELIEVES']（v4d1 还带 INFERS），v4c3 那一次
+   BELIEVES 抽中未被复现——它是彩票不是修复。新形态：ch05 落空 ['OBSERVES','SUSPECTS']（v4d1）。
+3. **台账债降级**：未命令重锚 0/1/0——v4c 的 3/1/14 爆走三跑未复现。§3.4b 那笔"挂全量"的债
+   可改判低频事件观察；n=3 纪律不变，只报观测。
+4. **坏料双峰 80/0/17**：v4d1 的 66 条是 `DOUBTS.belief_strength` 冗余键被**无损剥离**（集中在 ch3
+   47 条）——键剥了、事件活着，属 Writer 面格式彩票，不是尺缺料；废卷率列口径注意别和它混读。
+5. **接线教训（仪器 backlog，另批走）**：本次只传 `--dump-dir` 未传 `--state-dir`，state 落临时目录
+   差点丢（靠 `phase0-live-*` mtime 精确对回三臂）；后台跑不产 `run.log`，readout 的 tokens/用时/
+   一致率变 `?`（本次手工拆戳行补录）。⇒ review.py 应自动把 run.log + state 落进 dump 目录，取证三项补全。
+6. **正文中位 2304/2347/2185**（v4c 2570–2663，约 −12%）：Writer 面一字未动，属彩票偏薄，下批盯。
+
+复现：`.venv/Scripts/python.exe -m plot_engine.readout sampling/v4d1 sampling/v4d2 sampling/v4d3`；
+`.venv/Scripts/python.exe -m plot_engine.reanchor sampling/v4d1 sampling/v4d2 sampling/v4d3`。
 
