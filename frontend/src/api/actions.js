@@ -8,6 +8,8 @@ import { applyProgress } from '../data/progress.js'
 const POLL_MS = 3000
 const MAX_MIN = 60
 const LOCK_MIN_MS = 350   // 蒙版最短驻留：POST 秒回时也闪一下，让用户确认「点到了」而非以为卡死
+const START_GRACE_MS = 8000   // 确认启动宽限：后端 background task 在 POST 响应之后才置 running
+const START_POLL_MS = 600      // 宽限期内快轮，确认越早蒙版撤得越早
 
 let lockTimer = null
 let lockSince = 0
@@ -50,10 +52,25 @@ function upsertJob(task, name, type) {
 }
 
 // 轮询单个任务直到结束：立即先读一次（启动即出进度），之后每 POLL_MS 一轮；超时 60 分钟。
-async function pollTask(task, name, job, refreshers) {
+// confirmStart=true（kick 起的任务）：后端是先 return 响应、background task 后置 running=True，
+// 首读极可能读到 False。确认到 running 之前蒙版不撤、不做结束判定——否则 busy 秒清、
+// 按钮回到可点的「重新生成」，连点照样重复提交。宽限 START_GRACE_MS 后仍未见 running，
+// 视为秒完成任务（或后端没起来），交还主循环按结束处理。
+async function pollTask(task, name, job, refreshers, confirmStart = false) {
   const deadline = Date.now() + MAX_MIN * 60000
   let logsLen = -1
   try {
+    if (confirmStart) {
+      const giveUpAt = Date.now() + START_GRACE_MS
+      for (;;) {
+        let s = null
+        try { s = await api.status(task) } catch { /* 网络抖动下一轮重试 */ }
+        if (s && s.running) break
+        if (Date.now() >= giveUpAt) break
+        await new Promise(r => setTimeout(r, START_POLL_MS))
+      }
+      lockOff()
+    }
     for (;;) {
       let s = null
       try { s = await api.status(task) } catch { /* 单次网络失败下一轮重试 */ }
@@ -106,8 +123,8 @@ async function kick(promise, task, name, type, refreshers) {
     toast(`${name} 启动失败：${e.message}`, 'err')
     return
   }
-  lockOff()   // 启动已确认：蒙版让位顶部 HUD，长任务期间不再锁页面
-  await pollTask(task, name, job, refreshers)
+  // 蒙版保持到 pollTask 确认后端真的 running 才撤（见其 confirmStart 注释）
+  await pollTask(task, name, job, refreshers, true)
 }
 
 // busy 是纯前端内存态：刷新页面后，后端真在跑的任务会显示成「没在跑」——
