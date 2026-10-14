@@ -306,8 +306,9 @@ def _live_run(chapters: int, model_config: dict, *, client=None, cloud_client=No
     所以采样跑法恒带这个语义。戳线同样自动落 `<dump_dir>/run.log` 首行。
     救援本身不在这里跑：`main()` 拒绝 `--live --rescue` 同命令，人工重入是测量之后的独立一步。
 
-    `use_segmented=True`（`--instr v2`）挂 instr-v2 分段抽取通道（W1 分段合并、W2 修复环+
-    段级降级、W3 别名解析、W4a 代码默认值），run.log 仪器戳从 `instr-v1` 升到 `instr-v2-local`。
+    `use_segmented=True`（`--instr v2`，**实跑默认**，tff 裁定 2026-10-14）挂 instr-v2
+    分段抽取通道（W1 分段合并、W2 修复环+段级降级、W3 别名解析、W4a 代码默认值），
+    run.log 仪器戳从 `instr-v1` 升到 `instr-v2-local`；存量读数复现走 `--instr v1`，两表不并列。
     `lane="cloud"`（`--lane cloud`）在 W1–W4 管道上加模型路由层（W6）：两条车道共用同一套
     分段/修复/别名/默认值，只有抽取 client 不同——读数差异才能干净归因于模型本身。
     `cloud_client` 缺失时车道即本地：戳必须说实话（护栏 3：换车道 = 仪器版本变更）。
@@ -537,11 +538,12 @@ def main(argv: Optional[List[str]] = None) -> int:
                           "beats=v0-beats 基线金丝雀；stripped=臂 A 节拍行抹掉类型名与 ID；"
                           "told=臂 B 追加 must_change 目标与必需事件类型（裸 ID，不给禁条）；"
                           "persona=臂 C = 臂 B + 角色一致性规则；仅 --live 生效")
-    ap.add_argument("--instr", choices=["v1", "v2"], default="v1",
-                     help="抽取仪器版本（与尺戳分开记账）：v1=单跑基线；"
-                          "v2=instr-v2 分段抽取（W1 分段合并去重、W2 JSON 修复环+段级降级、"
-                          "W3 别名解析、W4a 代码默认值 700）。默认 v1 保持存量读数可比；"
-                          "历史抽取读数与 v2 不同表")
+    ap.add_argument("--instr", choices=["v1", "v2"], default="v2",
+                     help="抽取仪器版本（与尺戳分开记账）：v2=instr-v2 分段抽取（W1 分段合并去重、"
+                          "W2 JSON 修复环+段级降级、W3 别名解析、W4a 代码默认值 700）**默认**；"
+                          "v1=单跑基线，仅供复现存量读数（`--instr v1`），与 v2 读数不同表。"
+                          "切换经 tff 裁定 2026-10-14：v4d 的 7 个 malformed 吞钉全在 v1 跑道，"
+                          "v2 的 W2 修复环已在 W5 证明——实跑默认仪器切 v2，重基线读数离 v1 表。")
     ap.add_argument("--lane", choices=["local", "cloud"], default="local",
                      help="W6 抽取车道：local=本地 14B（默认，保 COGS）；cloud=云端最强模型。"
                           "两条车道共用同一套分段/修复/别名/默认值，只有模型不同。"
