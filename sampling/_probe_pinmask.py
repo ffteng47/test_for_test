@@ -47,11 +47,13 @@ def main() -> int:
     n_miss = sum(len(m) for _, m, _ in per.values())
     n_attr = sum(len(a) for _, _, a in per.values())
     n_dead = sum(len(PINS[c]) for (d, c), (k, _, _) in per.items() if k == "全灭")
-    print(f"钉实例总数 {n_miss + n_attr + n_dead}｜型别缺失 {n_miss}"
-          f"｜在场未落账 {n_attr}｜全灭章吞钉 {n_dead}")
-    cm = Counter(t for _, m, _ in per.values() for t in m)
+    # 三分解不重叠：全灭章的钉只记 ③，不重复进 ①（防 E26 式「52 vs 45」误读）
+    print(f"钉实例总数 {n_miss + n_attr}｜型别缺失 {n_miss - n_dead}"
+          f"｜在场未落账 {n_attr}｜全灭章吞钉 {n_dead}"
+          f"（三分类合计 {(n_miss - n_dead) + n_attr + n_dead}）")
+    cm = Counter(t for (d, c), (k, m, _) in per.items() if k != "全灭" for t in m)
     ca = Counter(t for _, _, a in per.values() for t in a)
-    print("缺席 by 类型:", dict(cm.most_common()))
+    print("型别缺失 by 类型（已剔全灭章）:", dict(cm.most_common()))
     print("在场未落账 by 类型:", dict(ca.most_common()))
     for d in ARMS:
         rows = [(c, k, m, a) for (dd, c), (k, m, a) in per.items() if dd == d]
