@@ -488,3 +488,43 @@ open 项：`unknown_event_type×116` 的 item=null 需带 raw 留证的逐段复
 ③r1:32b 闸降级为诊断性（qwen3 世代，预计同病，过闸前不进任何表）。
 **车道现状**：本地 3090 载不动 32b 级（WDDM 单块 18.1GB cudaMalloc 失败 + pinned
 offload 锁页失败，14b 档为其实际上限），32b 级模型全部驻 213。
+
+## §20 #67 v4d 双遍判负 + 机制定谳（缓存谱系敏感）+ A 坏料留证（2026-10-15，零付费）
+
+**#67 读数（v4d 三十草稿 instr-v2 双遍@本地 14b，temp0）**：废卷率 0%、J med=1.0，
+但 30 章中 10 章逐章 J<1.0，且**钉测不稳定：believes_stable=False**，失稳章
+`v4d1#2 / v4d2#3 / v4d3#2 / v4d3#3` ⇒ **gate FAIL**（对照：v4c 三十草稿 30/30 J=1.0）。
+档案 `sampling/v4d/replay_v2_pass{1,2}.json` + `replay_v2_double_report.json`；
+复现 `-m plot_engine.instr_cli sampling/v4d/replay_v2_pass1.json sampling/v4d/replay_v2_pass2.json --probes 2,3,9`。
+
+**B（失稳章退化度本地文本快检，零 GPU）**：章内 8-gram 复读率——v4d 失稳章
+0.002–0.014，**低于** v4c 稳定章 0.011–0.016；正文标记钉残留=0。
+⇒ **「草稿表面复读导致抽取失稳」假设证伪**：失稳章在文本表层比稳定章更不重复，
+病灶不在文本退化，在解码边界。
+
+**C（冷缓存对照实验，定谳机制）**：单章 v4d1#2，每遍前 `keep_alive:0` 逐出模型
+（冷 KV/前缀缓存），temp0 连跑两遍——**cold1 == cold2：9 项 keyset 逐字节全等**
+（各 4500 tok）。同一冷读与渐进暖缓存谱系下的 pass1/pass2 比较：
+冷∩暖p1 = 5/并15，冷∩暖p2 = 5/并20（p1 11 项、p2 16 项）。
+⇒ **同输入同模型同温度：同谱系必全等，跨谱系可不同**。机制=llama.cpp 前缀缓存
+数值路径在社区已知（缓存命中与冷算的 logits 末位差可翻转临界处 greedy argmax）；
+v4d 草稿恰在语义刀锋上（DOUBTS/SUSPECTS/BELIEVES 竞争同一事实），故被谱系翻转。
+v4c 不敏感 = 其章节不在刀锋，不是尺更稳。
+
+**尺纪律（新增，入正文不入代码）**：temp0 跨遍确定性只在**同缓存谱系**内成立。
+三采样/双遍闸跑法必须二选一：①全程同谱系（一遍暖机后不再逐出）；②每遍前统一
+逐出（全冷）。混用谱系的跨遍比较作废。本条不改 runner 代码——runner 加逐出会动
+采样面，属尺改，需要时另批。
+
+**A（坏料留证，尺观察侧）**：`llm_extract.py` 四类拒收记录
+（`not_an_object`/`unknown_event_type`/`type_not_supported`/`float_in_payload`）
+增留 `raw_head`（raw 前 200 字），与既有 `malformed_reply` 对齐；
+`test_llm_extract.py` 钉住断言，全链 **525 绿**。读数不变（纯取证），
+下批 27b 复跑即可定谳 §19 open 项 `unknown_event_type×116` 的 item=null 实形。
+档案 `sampling/v4d/ch2_cold{1,2}.json`；冷跑复现：
+先 `curl 192.168.31.213:11434/api/generate -d '{"model":"qwen2.5:14b","keep_alive":0}'`
+逐出，再 `-m plot_engine.instr_replay --runs v4d1 --chapters 2 --client @sampling/w6/router_local_q25_14b.json --lane local --out <新名>`（--force 拒覆盖）。
+
+**归类判词（#73–#77 收口）**：模型问题=主因且两病理（qwen3.5 世代 temp0 确定性复读退化；
+v4d×引擎组合的刀锋谱系敏感）；工程问题=放大器（坏料不留 raw 已修=A；贪婪数组解析为已知脆弱面）；
+架构面无实现缺陷，但「尺的世代校准契约 + 确定性假设」是设计边界，§20 纪律即其补丁文。

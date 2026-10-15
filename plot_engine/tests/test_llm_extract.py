@@ -76,6 +76,7 @@ def test_illegal_event_type_is_dropped_and_recorded_not_committed():
     props, bad = parse_proposals('[{"event_type": "MURDERS"}]', 47, _state())
     assert props == []
     assert bad and bad[0]["reason"] == "unknown_event_type"
+    assert bad[0]["raw_head"] == '[{"event_type": "MURDERS"}]'
 
 
 def test_unparsable_reply_yields_no_proposals_and_one_malformed_record():

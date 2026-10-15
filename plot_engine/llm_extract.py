@@ -222,7 +222,8 @@ def parse_proposals(raw: str, chapter: int,
                     alias_role: str = "extract",
                     code_defaults: bool = False,
                     ) -> Tuple[List[EventProposal], List[dict]]:
-    """模型文本 → (合法 Proposal, 坏料记录)。坏料只记录原因，不猜、不补、不提交。
+    """模型文本 → (合法 Proposal, 坏料记录)。坏料记录原因并留 raw 前 200 字取证（A 批），
+    不猜、不补、不提交。
 
     opt-in 仪器开关（默认全关 = instr-v1 存量行为，保证旧测试与旧读数可比）：
     - ``code_defaults=True``（W4a）：数值定点键缺失/null 由代码补
@@ -243,14 +244,14 @@ def parse_proposals(raw: str, chapter: int,
     bad: List[dict] = []
     for item in array:
         if not isinstance(item, dict):
-            bad.append({"reason": "not_an_object", "item": item})
+            bad.append({"reason": "not_an_object", "item": item, "raw_head": raw[:200]})
             continue
         etype = item.get("event_type") or item.get("proposed_event_type")
         if etype not in _VALID_TYPES:
-            bad.append({"reason": "unknown_event_type", "item": etype})
+            bad.append({"reason": "unknown_event_type", "item": etype, "raw_head": raw[:200]})
             continue
         if etype not in PAYLOAD_SCHEMA:
-            bad.append({"reason": "type_not_supported", "item": etype})
+            bad.append({"reason": "type_not_supported", "item": etype, "raw_head": raw[:200]})
             continue
         payload = item.get("payload") or {}
         conf = item.get("confidence", 700)
@@ -261,7 +262,7 @@ def parse_proposals(raw: str, chapter: int,
                 bad.append({"reason": "defaulted_fixed_point",
                             "item": f"{etype}.{k}"})
         if not isinstance(payload, dict) or _has_float(payload) or _has_float(conf):
-            bad.append({"reason": "float_in_payload", "item": etype})
+            bad.append({"reason": "float_in_payload", "item": etype, "raw_head": raw[:200]})
             continue
         actor, target = item.get("actor"), item.get("target")
         if resolve_aliases and state is not None:
