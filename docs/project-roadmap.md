@@ -6,6 +6,7 @@
 > 单写者纪律：本文档由问题助手会话持有；其他会话改动须先批注声明（防文档面撞车，稽核建议 2026-10-15）。
 > v0.2→v0.3：全文补齐文件路径，新增 §6 关键文件索引。
 > v0.4→v0.5（现势同步，经 tff 授权补齐）：#69 已收口（§23：Jmed 三臂回 1.0、闸 1/3、H5.1 税 0）；#70 (b) 批已施加（尺戳 v3.7 入册 29774db，b3 同批，链验 528），三跑 v4g1..3 在跑；#78 判过（v4fL E2 20% 带内）；WP-E 排队条件收敛为 #70 收口；基线 526→528。
+> v0.8→v0.9（现势同步）：**#79 已收口**（de88d9e：ladder-v5 五十章不回环夹具 + `review --fixture` 接线，离线 50/50 全绿、0 修订轮、E1–E6 全 True，链 526→531）；**WP-E 已起跑**：`sampling/wpe50ch/`（@213 暖隧道 qwen2.5:14b，instr-v2 默认，五十字节 ladder-v5），跑批期间 `plot_engine/` 全冻结。
 > v0.7→v0.8（tff 裁定四则，2026-10-15）：①**商业姿态定案**——不进通用工具市场，纵深走垂直有声书交付（Phase 3 行更新）；②**R8 并入**为路线（§2 末），六项按 确认闸>爽点工程>量化去味>拆文库>扫榜>旧稿导入 入队；③**temp0 重复/刀锋失稳的前置 schema（grammar-constrained decoding）登记为 R4 后期补充**（L4 注）；④WP-E **放行**，硬前置 #79（50 章阶梯夹具）开工；oh-story（MIT）吸收通道 = WP-F 入矩阵。
 > v0.6→v0.7（撤销批同步，tff 确认）：#70 (b) 型别批**判负已撤销**（§24：双遍闸 1/3、两臂 Jmed~0.60、失稳由型别互翻扩为事件存在性抖动；revert 29774db=90ea95b，尺退 v3.6@`llm_extract.py:49`，b3 同撤，链验回 526）；#70 收口→WP-A/WP-E 串行条件满足；v4gL 本地臂 E2 10% 带外（v3.7 尺面判负旁证）。补记入 §24。
 > v0.5→v0.6（tff 指令，2026-10-15）：§6 新增"商业化分析文档"索引（docs/commercial/ 9 份 + refrence_projects/ 代码基线）
@@ -126,7 +127,7 @@
 
 | 用户计划 | 项目映射 | 涉及路线 | 当前状态 | 下一步 |
 |---|---|---|---|---|
-| Phase 0 生产内核 | alexandria Phase 0 | L0–L3 + R5 压测 | 已建成，50 章证据缺 | **WP-E 已放行（tff 2026-10-15）**；硬前置 #79 五十章阶梯夹具开工中，夹具收口即起跑 |
+| Phase 0 生产内核 | alexandria Phase 0 | L0–L3 + R5 压测 | 已建成，50 章证据缺 | **WP-E 已放行（tff 2026-10-15）**；#79 夹具已收口（de88d9e）；**在跑**：`sampling/wpe50ch/` |
 | Phase 1 剧情能力 | epoch_1 语义层（`docs/epoch1-foreshadow-design.md` v0.2） | R0→R1→R2→R3 | 设计稿已产出待冻结 | 契约冻结会 → WP-A 码批（串行条件已满足：#70 撤销收口） |
 | Phase 2 成品质量 | 测量/文风/生成约束 | R4 + R5 + R6 | 约半数超前开工 | WP-B 码批 / **WP-D 即刻开工**（`docs/wp-d-noveldb-mapping.md` v0.2） |
 | Phase 3 商业验证 | 盲测→读者→付费 | R6 + R7 + 盲测 + **R8** | 工具已备，数据未启动 | **已定案：不进通用工具市场，纵深走垂直有声书交付**；50 章产物 → 盲评 → 接 R7 |
@@ -147,7 +148,7 @@
 | WP-C 文风 lint | `plot_engine/ai_flavor_lint.py` + `plot_engine/tests/` | **`plot_engine/ai_flavor_*.py` 是他人在做面（指南 §2）** | — | tff 协调归属 | **暂停** |
 | WP-D noveldb 导入 | `backend/` 新导入器模块 + 测试（`plot_engine/` 零改动）；依据 `docs/wp-d-noveldb-mapping.md` v0.2 | 无（禁区清单不含 `backend/`） | 无（纯离线，指南 §3 点名） | 无（开放问题①已关闭） | **现在即可开工** |
 | WP-F oh-story 吸收 | `docs/`（方法论+需求拆解），如落地 lint 另批申报 | 量化去味条目与 WP-C 同面（禁区 `ai_flavor_*.py`） | 零 GPU；AGPL 件禁代码引入 | R8 入队序第 4–5 位 | 排队（R8） |
-| WP-E 50 章压测 | `sampling/<批次>/` + 新报告 `docs/phase0-50ch-stress.md` | 禁读 `docs/samples/blind-v2paired-key.md` | 独占 @213；跑批期间 `plot_engine/` 全冻结 | **已放行（tff 2026-10-15）**；锁 qwen2.5:14b；谱系=**暖**（与 v4 基线同谱系） | **待 #79 夹具收口即起跑** |
+| WP-E 50 章压测 | `sampling/<批次>/` + 新报告 `docs/phase0-50ch-stress.md` | 禁读 `docs/samples/blind-v2paired-key.md` | 独占 @213；跑批期间 `plot_engine/` 全冻结 | **已放行（tff 2026-10-15）**；锁 qwen2.5:14b；谱系=**暖**（与 v4 基线同谱系）；夹具=ladder-v5 | **在跑 `sampling/wpe50ch/`（#79 收口 de88d9e 后即起）** |
 
 **在跑/在队批次登记（时间互斥的真实来源，2026-10-15 稽核实测）**：
 
@@ -156,7 +157,7 @@
 | #69 (a) 归因判据批 | IS_TOLD actor 判据入尺，尺戳 v3.6 | `plot_engine/llm_extract.py` + `plot_engine/tests/test_instr.py` | **已收口**（f326660；读数 §23：Jmed 1.0×3、闸 1/3、H5.1 税 0/0/0） |
 | #70 (b) 型别批 | READS/BELIEVES/SUSPECTS 型别判据，尺戳 **v3.7** | `plot_engine/llm_extract.py:52` + `plot_engine/tests/test_instr.py`（`_patch_b12_typecriteria.diff`） | **判负已撤销**（三跑 v4g1..3 闸 1/3，§24；revert=90ea95b，尺退 v3.6） |
 | b3 合法性修正批 | dead/unborn 不进 mental 事件候选 actor 集 | `plot_engine/derive.py:154-169` + `plot_engine/tests/test_derive_contract.py`（`_patch_b3_deadfilter.diff`） | **已撤销**（随 90ea95b；dead/unborn 过滤回到原实现） |
-| #79 五十章阶梯夹具 | 10 步循环夹具在 ch11+ 重复 add=压测伪影；新阶梯+review 夹具接线 | `plot_engine/tests/fixtures/`、`review.py` | **开工中**；收口=离线 50 章跑通+链验绿 |
+| #79 五十章阶梯夹具 | 10 步循环夹具在 ch11+ 重复 add=压测伪影；新阶梯+review 夹具接线 | `plot_engine/tests/fixtures/`、`review.py` | **已收口（de88d9e）**：ladder-v5（20 对×2 章不回环），离线 50/50 全绿，链 526→531 |
 | #78 闸 | 生成批跨机可移植性 | 全生成面 | **已判过**（v4fL E2 20% 带内，§23；生成批默认车道仍 @213） |
 
 **验证基线（改码前后都要绿）**：`.venv/Scripts/python.exe -m pytest plot_engine/tests -q` = **526 passed**（2026-10-15 撤销批后复测；历次 525→526→528→撤→526；注：沙盒内跑会因 WinError 5 临时目录权限产生 87 errors 假象，须非沙盒或先配置可用 TEMP）。
