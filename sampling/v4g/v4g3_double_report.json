@@ -1,0 +1,88 @@
+{
+  "instr": "instr-v2-local",
+  "chapters": 10,
+  "waste_chapters": [],
+  "waste_rate": 0.0,
+  "jaccard_med": 0.5953177257525084,
+  "per_chapter": [
+    {
+      "chapter": "v4g3#1",
+      "jaccard": 1.0,
+      "n_a": 9,
+      "n_b": 9
+    },
+    {
+      "chapter": "v4g3#10",
+      "jaccard": 0.75,
+      "n_a": 13,
+      "n_b": 11
+    },
+    {
+      "chapter": "v4g3#2",
+      "jaccard": 0.5384615384615384,
+      "n_a": 10,
+      "n_b": 11
+    },
+    {
+      "chapter": "v4g3#3",
+      "jaccard": 0.3076923076923077,
+      "n_a": 8,
+      "n_b": 9
+    },
+    {
+      "chapter": "v4g3#4",
+      "jaccard": 0.25,
+      "n_a": 11,
+      "n_b": 20
+    },
+    {
+      "chapter": "v4g3#5",
+      "jaccard": 0.3888888888888889,
+      "n_a": 16,
+      "n_b": 9
+    },
+    {
+      "chapter": "v4g3#6",
+      "jaccard": 1.0,
+      "n_a": 8,
+      "n_b": 8
+    },
+    {
+      "chapter": "v4g3#7",
+      "jaccard": 0.5217391304347826,
+      "n_a": 22,
+      "n_b": 19
+    },
+    {
+      "chapter": "v4g3#8",
+      "jaccard": 0.6521739130434783,
+      "n_a": 19,
+      "n_b": 19
+    },
+    {
+      "chapter": "v4g3#9",
+      "jaccard": 0.8235294117647058,
+      "n_a": 24,
+      "n_b": 24
+    }
+  ],
+  "believes_stable": false,
+  "believes_mismatch_chapters": [
+    "v4g3#2",
+    "v4g3#3",
+    "v4g3#9"
+  ],
+  "thresholds": {
+    "waste_lt": 0.02,
+    "jaccard_med_ge": 0.85
+  },
+  "gate": {
+    "pass": false,
+    "waste_rate": 0.0,
+    "jaccard_med": 0.5953177257525084,
+    "believes_stable": false,
+    "waste_ok": true,
+    "jaccard_ok": false
+  },
+  "upgrade_path": "ceiling_B:route_stronger_model_or_self_consistency_x3"
+}
