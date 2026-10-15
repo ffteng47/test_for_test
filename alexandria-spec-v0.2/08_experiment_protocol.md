@@ -112,7 +112,7 @@ Day 23-25  Architecture Review
 text
 Chapter Contract → ScenePlan（3~7 Scene）→ Beat（每 Scene 3~7 个）→ Writer
 Schema 与自校验规则见 04 附录 B（SP1~SP7）。
-Writer 失败以 Scene 为最小重写单位（06 §4.1）。
+Writer 失败以章为最小重写单位（06 §4.1，v0.12 裁定 2A 改判——原 scene 级为虚阶梯）。
 6. Failure Classification
 text
 实验结束后，每个 failure 必须分类：
@@ -126,6 +126,9 @@ text
 | State Commit 正确但剧情不好 | 不属于 Phase 0          |
 | LLM 偶尔写出奇怪句子        | 不属于 Phase 0          |
 | Event 无法 replay          | 架构阻断问题            |
+
+勘误（v0.12 冻结会追认，裁定 3）：上表无 extraction 独立桶位，H8.1/H8.2 的置信度失败
+**只记 by_rule 明细，不进分类桶聚合**——落桶会污染 G4/E6 类读数（WP-E 前实测教训）。
 7. Architecture Freeze Gate
 Day 23-25 的 Review 禁止因为单个小说样本失败就随意改架构。
 

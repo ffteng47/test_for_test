@@ -202,6 +202,8 @@ class ChapterContract(BaseModel):
 | D7 | must_change / must_not_change 必须显式声明 derived_from |
 | D8 | ending.type 必须与 story_goal_type 兼容（§4.4） |
 | D9 | v0.2：reader_signals 引用的 fact_id 必须存在；target_state 与 gate 不冲突（未到期 gate 的 fact 不得标 knows） |
+| D10 | **epoch_1 补记（v0.12 裁定 1A）**：每条 must_change 必须存在可兑现其 Δ 的 required_event（field→事件映射 10 §4.3）。derive 阶段前置拦截：不满足 → `ArcConflict`（06 §4.3 归属登记——Arc 输入错误，不是重写可修）；不许让它烧满三轮修订才以 H5.3 现形 |
+| D11 | **epoch_1 新增（v0.12 裁定 4A）**：伏笔限期单源——`ForeshadowingEntry.due_by_chapter` 必须等于同名 fact 的 `gate.must_reveal_by_chapter`；漂移 → derive 抛 `ArcConflict`（回 Arc 层修账，抽取侧不得发明第二个期限） |
 
 ### 4.4 story_goal_type 与 ending.type 兼容矩阵
 

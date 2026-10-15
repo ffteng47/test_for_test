@@ -104,6 +104,15 @@ H8.2 500 ≤ extraction_confidence < 700 → 该 Proposal 隔离（不入本批 
 H8.2x 双通道（规则 vs LLM）同段结果冲突 → confidence = 500，由 H8.1/H8.2 接住
 H8.3 Proposal 与 Draft 疑似语义不一致：LLM-as-validator 只产 SOFT finding 并转人工复核，
      不产 HARD（维护 §9 I1）
+H9 伏笔生命周期（epoch_1 新增，WP-A 设计稿 §4；台账语义 03 §6.5）
+text
+H9.1 章提交时存在 chapter_no > due_by_chapter 且未回收的伏笔（lifecycle ∉ {paid, expired}）
+     → HARD，归因 arc（弧线债，06 §4）
+H9.2 FORESHADOWING_PAID 引用不存在的 foreshadow_id，或对已 paid/expired 条目重复回收
+     → HARD，归因 extraction（回收料本身错）
+H9.3 伏笔 planted 后连续 N=5 章无任何 hint 联动（HINTS/READER_HINTED）→ SOFT，归因 writer
+     （N 建议入 RevisionPolicy 可调，未落地前为模块常量）
+H9.4 伏笔回收距埋点 < 3 章（伏笔过浅，读者无期待感）→ OBSERVATION
 5. SOFT 规则集（Phase 0，只记录）
 text
 S1 Pacing：Scene 张力与 contract.tension_target 偏差 > 300（定点 ×1000）
@@ -158,7 +167,7 @@ Level 2：结构化检查（基于 Ledger / Contract）
 text
 - 零容错
 - 无需 LLM
-- 覆盖 H2 / H5
+- 覆盖 H2 / H5 / H9（H9 为 epoch_1 伏笔族，台账只读判定）
 Level 3：LLM-as-validator
 text
 - 仅在 Level 1/2 通过后运行

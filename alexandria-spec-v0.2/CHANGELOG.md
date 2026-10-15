@@ -14,6 +14,21 @@
 
 ---
 
+## epoch_1 生效记录（2026-10-15 冻结会裁定 → WP-A v3.8 码批落盘，触发 T1+T2+T5）
+
+> 设计依据：`docs/epoch1-foreshadow-design.md` v0.2 + 拍板六项（`docs/freeze-meeting-and-r8-briefs.md`）。
+> 协议正文变更：01 §4.1（伏笔 payload 两行）/ 03 §6.5（剧情台账新节）/ 04 §4.3（D10、D11）/
+> 05（H9 族 + Level-2 覆盖行）/ 06 §4.0-4.3 + §5 + §5.1（归属登记、四级阶梯、弃伏）/
+> 08（Scene 重写单位改章 + H8.x 桶位勘误）/ 09 §3.1（生效记录）。
+> 代码：models（ForeshadowingEntry/CharacterGoalEntry/ArcProgress）、reducers/plot.py 实装 +
+> HINTS/READER_HINTED 联动、validator H9 族、derive D11 漂移拦截、阶梯四级化、
+> EXTRACTION_RULER v3.6→v3.8-foreshadow-payload。
+> 迁移：存量空集（foreshadowing 占位无写入方），schema 升级 + 全链 Replay parity 断言；
+> fixture 层 EPOCH 字符串暂留 epoch_0，数据面首条 epoch_1 事件写入即按 09 §5 流程走。
+> 尺面纪律：v3.8 起读数与 v3.6 分表，不并列。
+
+---
+
 ## §A 变更草案（修改 1~10）
 
 ### 修改 1：新增 10_world_state_protocol.md

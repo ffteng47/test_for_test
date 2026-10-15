@@ -41,6 +41,21 @@ epoch_2: ...
 
 text
 
+### 3.1 epoch_1 生效记录（WP-A，v0.12 契约冻结会裁定后落地）
+
+- 触发条件：T1（新增 FORESHADOWING_SET / FORESHADOWING_PAID 事件语义与 payload）
+  + T2（payload 字段增）+ T5（HARD 增：H9.1/H9.2）——见 §4。
+- 内容定义：01 §4.1 伏笔 payload 行、03 §6.5 剧情台账（ForeshadowingEntry /
+  CharacterGoalEntry / ArcProgress 字段冻结）、04 §4.3 D10/D11、05 H9 族、
+  06 §5 四级阶梯（裁定 2A）+ §5.1 弃伏动作（裁定 5A）、08 勘误（裁定 3）。
+- 迁移（§6 V1–V6）：epoch_0 的 `StoryState.foreshadowing` 为无写入方占位（存量空集）、
+  `character_goals` 新增默认空、`active_arc` 存量 null → 迁移 = schema 升级 + 空集断言；
+  全量 Replay parity 验证通过后方视为生效；旧 epoch_0 数据只读（V4）。
+- 抽取尺联动：PAYLOAD_SCHEMA 变更 ⇒ EXTRACTION_RULER v3.6 → **v3.8**（v3.7 已由 #70
+  型别批烧掉，编号不复用）；新旧尺号读数分表，永不并列。
+- 字段先行、语义后置：ArcProgress 只冻字段（裁定 6A），路由语义留 epoch_2；
+  character_goals 本 epoch 无写入方。
+
 ## 4. 升级触发条件
 
 满足任一条件即触发 epoch 升级：

@@ -225,6 +225,16 @@ RELATIONSHIP_CHANGED:
 READER_LEARNS / READER_DECEIVED / READER_HINTED:
   fact_id: str              # 读者认知涉及的 fact
   # 唯一来源：Draft 标注通道（07 §4.4 M1~M3；缺失即 H2.3 违规，05 §4）
+
+# --- epoch_1（WP-A，v0.12 契约冻结会）：伏笔生命周期事件族 ---
+FORESHADOWING_SET:
+  foreshadow_id: str        # fsh_\d{6}
+  fact_id: str              # 伏笔指向的事实（回收时揭示）
+  due_by_chapter: int       # 单源 = knowledge_gates.must_reveal_by_chapter（04 D11，漂移即 ArcConflict）
+  strength: int             # 0~1000 显著度（定点）；缺省回退 event.confidence，不伪造默认值
+
+FORESHADOWING_PAID:
+  foreshadow_id: str        # 目标条目必须处于 planted/hinted/due；无源或重复回收 → H9.2（05）
 ```
 
 ## 5. Event 因果关系

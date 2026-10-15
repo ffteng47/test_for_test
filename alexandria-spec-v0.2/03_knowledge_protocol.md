@@ -186,6 +186,52 @@ def apply_reader_hinted(self, event, state):
     """READER_HINTED   → reader_state = "hinted"（unaware → hinted；不回退已 knows 的记录）"""
 ```
 
+## 6.5 剧情台账：伏笔与人物目标（epoch_1 新增，WP-A；编号避让既有 §7~§10 引用）
+
+### 6.5.1 ForeshadowingEntry（StoryState.foreshadowing）
+
+```python
+ForeshadowingEntry:
+  foreshadow_id: str             # fsh_\d{6}
+  fact_id: str                   # 伏笔指向的事实（回收时揭示）
+  lifecycle: Literal["planted", "hinted", "due", "paid", "expired"]
+  strength: int                  # 0~1000 显著度（定点）
+  planted_chapter: int
+  due_by_chapter: int            # 单源 = gate.must_reveal_by_chapter（04 D11）
+  paid_chapter: Optional[int]
+  source_event_id: str
+  last_updated_chapter: int
+  epoch: str
+```
+
+状态机（单向，回退视为新事件而非状态回写）：`planted → hinted → due → paid`；逾期不回收由 validator 判 H9.1（05），`expired` 只由显式人工动作 `abandon_foreshadowing` 写入（06 §5，v0.12 裁定 5A）——reducer 不自发、`due` 是派生态不落账，保持 Replay 确定性。
+
+### 6.5.2 更新规则
+
+| 触发 | 效果 |
+|---|---|
+| FORESHADOWING_SET | 新增 `lifecycle=planted` 条目；同 foreshadow_id 重复 SET = ValueError（沙盒 failed 记账） |
+| FORESHADOWING_PAID | 目标 lifecycle ∈ {planted,hinted,due} → `paid` + `paid_chapter`；否则 ValueError（H9.2 先判） |
+| HINTS / READER_HINTED 联动 | 同批 fact 上 `planted → hinted`（刷新 source_event_id / last_updated_chapter） |
+
+### 6.5.3 CharacterGoalEntry（StoryState.character_goals）
+
+```python
+CharacterGoalEntry:
+  goal_id: str                   # goal_\d{6}
+  character_id: str
+  objective: str                 # 一句话目标（SOFT）
+  stakes: str = ""               # 失败代价（SOFT，Phase 1「有原因/有代价」归因锚）
+  status: Literal["active", "achieved", "failed", "abandoned"]
+  linked_fact_ids: List[str] = []  # 冲突网络挂点（P1，epoch_2 语义）
+  source_event_id: str
+  acquired_at_chapter: int
+  last_updated_chapter: int
+  epoch: str
+```
+
+epoch_1 只冻 schema，**无写入方**（事件族 `GOAL_*` 留 epoch_2）；`ArcProgress`（active_arc 结构化）同随冻结字段、语义路由 epoch_2（v0.12 裁定 6A）。
+
 ## 7. 一致性约束（Validator 使用，供 05 H2 引用）
 
 ```text

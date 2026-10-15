@@ -61,6 +61,8 @@ Scene Rewrite  Contract        Arc Replan
 
 - reader_*/hook markup 标注存在但规则通道未生成对应 Proposal
 
+- 伏笔回收料错：FORESHADOWING_PAID 无源 id / 对已 paid、expired 条目重复回收（H9.2，epoch_1）
+
 处理：
 
 - 回退 Stage 0，重跑抽取（调整 prompt / 更换模型 / 要求 Writer 补 markup）
@@ -80,9 +82,11 @@ Contract 合理，但 Draft 未实现
 
 出现 forbidden_event
 
+伏笔埋点长期无提示联动（H9.3 SOFT，epoch_1——writer 没写钩子）
+
 处理：
 
-重写 Scene（不整章重写）
+重写章节（v0.12 冻结会裁定 2A：四级诚实阶梯，scene 级一级删除——实测 scene 重写即整章重吐，阶梯是虚的）
 
 保留 Contract 不变
 
@@ -111,6 +115,12 @@ Arc 的 knowledge_gate 与角色当前状态矛盾
 Arc 的 turning_point 在本 Arc 内无法达成
 
 Arc 的 tension_curve 与故事进展不符
+
+must_change 的 Δ 在本章没有可实现的事件类型——derive 前置拦截抛 ArcConflict（04 D10，v0.12 裁定 1A 归属登记：这是 Arc 给错输入，不再允许烧满三轮修订以 H5.3 现形）
+
+伏笔限期与 gate 漂移（04 D11 单源破坏）
+
+伏笔逾期未回收（H9.1 HARD，epoch_1——欠的是弧线债）
 
 处理：
 
@@ -180,14 +190,18 @@ class RevisionPolicy(BaseModel):
     max_rounds: int = 3
     escalation: List[str] = [
         "rerun_extraction",       # v0.2 新增，置于最前
-        "rewrite_scene",
-        "rewrite_chapter",
+        "rewrite_chapter",        # v0.12 冻结会裁定 2A：rewrite_scene 一级删除，四级诚实降级
         "renegotiate_contract",
         "escalate_to_arc",
     ]
     oscillation_detection: bool = True
     cost_ceiling_per_chapter_usd: float = 0.5
     human_escalation_threshold: int = 3
+5.1 显式弃伏（epoch_1 新增，v0.12 裁定 5A）
+text
+expired 不由 reducer/validator 自发写入。人工介入环节可执行
+abandon_foreshadowing(foreshadow_id, chapter) 动作把伏笔写为 expired，账可溯（03 §6.5）。
+已 paid 条目不可弃（拒绝）；工作台按钮接线归 WP-0 集成面，本批只落内核。
 6. Revision 流程
 text
 1. 收到 ValidationResult
