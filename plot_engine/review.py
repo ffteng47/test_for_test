@@ -126,7 +126,14 @@ def render_review_text(sheet: dict) -> str:
     return "\n".join(lines)
 
 
-def _offline_dry_run(chapters: int, defects: Dict[int, str]) -> ExperimentReport:
+def _load_fx(name: str):
+    """夹具按名加载：experiment_10ch（环形十步）/ experiment_50ch（不回环五十步，WP-E）。"""
+    import importlib
+    return importlib.import_module(f"plot_engine.tests.fixtures.{name}")
+
+
+def _offline_dry_run(chapters: int, defects: Dict[int, str],
+                     fixture: str = "experiment_10ch") -> ExperimentReport:
     """离线演练：用确定性夹具源充当 Writer/抽取模型，走完整管道产出 Report（网络无关）。
 
     夹具在 `plot_engine/tests/fixtures/`（测试与开发命令共用同一份 arc 定义，避免二套假数据）。
@@ -135,7 +142,6 @@ def _offline_dry_run(chapters: int, defects: Dict[int, str]) -> ExperimentReport
     因此本演练只证明「阶梯/预算/振荡/trace」机制在跑；真实收敛率与 E3' 需接真实 Writer。
     """
     import dataclasses
-    import sys
     import tempfile
     from pathlib import Path
 
@@ -146,9 +152,7 @@ def _offline_dry_run(chapters: int, defects: Dict[int, str]) -> ExperimentReport
     from plot_engine.store import StateStore
     from plot_engine.writer import compose_chapter_draft
 
-    fixtures = Path(__file__).parent / "tests" / "fixtures"
-    sys.path.insert(0, str(fixtures))
-    import experiment_10ch as fx
+    fx = _load_fx(fixture)
 
     cfg = fx.make_config(chapters)
     tmp = Path(tempfile.mkdtemp(prefix="phase0-"))
@@ -292,7 +296,8 @@ def _write_chapter_dump(dump_dir, ch: int, rounds, out, trace) -> None:
 
 def _live_run(chapters: int, model_config: dict, *, client=None, cloud_client=None,
               dump_dir=None, arm: str = "beats", state_dir: Optional[str] = None,
-              fail_stop: bool = False, use_segmented: bool = False, lane: str = "local"):
+              fail_stop: bool = False, use_segmented: bool = False, lane: str = "local",
+              fixture: str = "experiment_10ch"):
     """真实模型实验：Writer/抽取换成本地端点，其余管道与离线演练完全一致。
 
     返回 `(report|None, 端点说明, 抽取诊断)`：端点不可达时不烧预算，实验中途端点失效时
@@ -332,7 +337,8 @@ def _live_run(chapters: int, model_config: dict, *, client=None, cloud_client=No
     from plot_engine.revision_actions import renegotiate_contract
     from plot_engine.store import StateStore
     from plot_engine.writer import compose_chapter_draft
-    from plot_engine.tests.fixtures import experiment_10ch as fx
+
+    fx = _load_fx(fixture)
 
     # 配置校验永远先于网络探针（E26：本地 Ollama 不在时，`cloud_client is None`
     # 的配置错误曾被 `check_reachable` 的网络报错盖住，人先修的是错的病）。
@@ -459,7 +465,8 @@ def count_dispositions(dump_dir) -> Dict[str, int]:
     return out
 
 
-def _rescue_batch(store, log, cfg, client, specs: List[str]) -> List[str]:
+def _rescue_batch(store, log, cfg, client, specs: List[str],
+                  fixture: str = "experiment_10ch") -> List[str]:
     """逐章走 T1b 闭环（`rescue_chapter`）：一次提交、不跑修订、判据不重议。
     抽取仍走真模型——人改的是正文，不是替模型抽事件。
     链尾守卫在 `rescue_chapter` 里 raise，这里逐条兜住：一条坏 spec 不带走其余。
@@ -468,7 +475,8 @@ def _rescue_batch(store, log, cfg, client, specs: List[str]) -> List[str]:
 
     from plot_engine.llm_extract import EXTRACTION_RULER, make_llm_channel
     from plot_engine.rescue import rescue_chapter
-    from plot_engine.tests.fixtures import experiment_10ch as fx
+
+    fx = _load_fx(fixture)
 
     lines = []
     for spec in specs:
@@ -493,22 +501,26 @@ def _rescue_batch(store, log, cfg, client, specs: List[str]) -> List[str]:
     return lines
 
 
-def _rescue_run(state_dir: str, model_config: dict, specs: List[str], *, client=None) -> List[str]:
-    """`--rescue` 的独立入口：不跑实验，只对盘上那条链做人工重入（要求 --state-dir）。"""
+def _rescue_run(state_dir: str, model_config: dict, specs: List[str], *, client=None,
+                fixture: str = "experiment_10ch", chapters: int = 10) -> List[str]:
+    """`--rescue` 的独立入口：不跑实验，只对盘上那条链做人工重入（要求 --state-dir）。
+    --fixture/--chapters 必须与当初那条链的跑法一致，否则契约对不上账。"""
     from pathlib import Path
 
     from plot_engine.eventlog import EventLog
     from plot_engine.live import build_client, check_reachable
     from plot_engine.store import StateStore
-    from plot_engine.tests.fixtures import experiment_10ch as fx
+
+    fx = _load_fx(fixture)
 
     client = client or build_client(model_config)
     ok, msg = check_reachable(client)
     if not ok:
         return [msg]
-    cfg = fx.make_config(10)
+    cfg = fx.make_config(chapters)
     return _rescue_batch(StateStore(str(Path(state_dir) / "state.db")),
-                         EventLog(str(Path(state_dir) / "event.db")), cfg, client, specs)
+                         EventLog(str(Path(state_dir) / "event.db")), cfg, client, specs,
+                         fixture)
 
 
 def main(argv: Optional[List[str]] = None) -> int:
@@ -518,6 +530,9 @@ def main(argv: Optional[List[str]] = None) -> int:
         prog="python -m plot_engine.review",
         description="Phase-0 实验 → 08 §6 失败分类 / §7 冻结闸 / §8 退出条件决策单（只读）")
     ap.add_argument("--chapters", type=int, default=10)
+    ap.add_argument("--fixture", default="experiment_10ch",
+                    help="实验夹具（plot_engine/tests/fixtures/ 模块名）：experiment_10ch（默认）/ "
+                         "experiment_50ch（ladder-v5 不回环，WP-E 五十章）；--rescue 时必须与原跑法一致")
     ap.add_argument("--defect", action="append", default=[], metavar="CH:KIND",
                     help="注入缺陷章，KIND ∈ {leak, dead, no_nail}；可重复。用于验证分类归因是否落对桶")
     ap.add_argument("--live", action="store_true",
@@ -586,7 +601,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             ap.error("--rescue 不与 --live 同一条命令：测量跑必须机器唯一。"
                      "先跑测量，再单独用 --rescue 对盘上那条链做人工重入")
         for line in _rescue_run(args.state_dir, _read_model_config(args.model_config),
-                                args.rescue):
+                                args.rescue, fixture=args.fixture, chapters=args.chapters):
             print(line)
         return 0
 
@@ -606,7 +621,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                                       dump_dir=args.dump_dir, arm=args.prompt,
                                       state_dir=args.state_dir, fail_stop=args.fail_stop,
                                       use_segmented=use_segmented, lane=lane,
-                                      cloud_client=cloud_client)
+                                      cloud_client=cloud_client, fixture=args.fixture)
         print(msg)
         if report is None:
             return 2
@@ -631,7 +646,8 @@ def main(argv: Optional[List[str]] = None) -> int:
         print(render_review_text(architecture_review(report)))
         return 0
 
-    print(render_review_text(architecture_review(_offline_dry_run(args.chapters, defects))))
+    print(render_review_text(architecture_review(
+        _offline_dry_run(args.chapters, defects, args.fixture))))
     return 0
 
 
