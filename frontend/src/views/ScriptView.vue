@@ -148,8 +148,16 @@ export default {
       immediate: true,
       handler(s) { this.draft = { text: s.text, instruct: s.instruct } }
     },
-    // 审听判定在底部播放条上跳段时，工作台跟着走
-    'store.transport.segId'(id) { if (this.segments.some((s) => s.id === id)) this.selected = id }
+    // 审听判定在底部播放条上跳段时，工作台跟着走并把当前段滚到正中。
+    // 本地点击（pick）触发的变化不抢滚动——点了哪儿就停在哪儿。
+    'store.transport.segId'(id) {
+      if (this.segments.some((s) => s.id === id)) this.selected = id
+      if (this._keepScroll) { this._keepScroll = false; return }
+      this.$nextTick(() => {
+        const el = this.$el.querySelector('.seg.sel')
+        if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' })
+      })
+    }
   },
   methods: {
     spkName(id) { return speakerOf(id).name },
@@ -170,7 +178,12 @@ export default {
       actions.generatePending()
     },
     stopGenerate() { actions.cancelAudio() },
-    pick(id) { this.selected = id; this.store.transport.segId = id },
+    // jumpEp 自带滚动，不需要抑制；只在「点行换段」时抑制 watch 的居中滚
+    pick(id) {
+      if (this.store.transport.segId !== id) this._keepScroll = true
+      this.selected = id
+      this.store.transport.segId = id
+    },
     epName(ep) {
       const e = (this.store.system.scriptMap && this.store.system.scriptMap.episodes || []).find(x => x.episode === ep)
       return e ? epTitle(e) : ''

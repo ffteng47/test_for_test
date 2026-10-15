@@ -6,7 +6,7 @@ import { applyProgress } from './progress.js'
 import { store as mockStore, fmtTime } from './mock.js'
 import { api } from '../api/client.js'
 
-const KNOWN_NAMES = { narrator: '旁白', chenmo: '陈默', linwan: '林晚', oldzhou: '老周', xiaoman: '小满' }
+const KNOWN_NAMES = { narrator: '旁白', chenmo: '陈默', linwan: '林晚', oldzhou: '老周', xiaoman: '小满', xiaoman2: '小满2' }
 const PALETTE = ['#7c6cff', '#e06fa8', '#f5b93f', '#34d6c6', '#ff8f6b', '#8fd14f', '#6fb3ff', '#d1f06f']
 const KEY_ALIASES = { laoqiang: 'oldzhou', laozhou: 'oldzhou', zhoubo: 'oldzhou' }
 
@@ -98,30 +98,28 @@ export async function loadChunks() {
   const chunks = await api.chunks()
   if (!Array.isArray(chunks) || !chunks.length) return false
   const lineCounts = {}
+  const prev = store.segments
   store.segments = chunks.map((c, i) => {
     const key = speakerKey(c.speaker)
     ensureSpeaker(key)
     lineCounts[key] = (lineCounts[key] || 0) + 1
-    return {
-      id: i + 1,
-      order: i + 1,
-      speaker: key,
-      kind: key === 'narrator' ? 'narration' : 'dialogue',
-      text: c.text,
-      instruct: c.instruct || '',
-      duration: 0,
-      status: c.status === 'done' ? 'done' : c.status === 'error' ? 'error' : c.status === 'generating' ? 'generating' : 'pending',
-      audioPath: c.audio_path ? (c.audio_path.startsWith('/') ? c.audio_path : '/' + c.audio_path.replace(/^\.?\//, '')) : null,
-      // 实际出声引擎与兜底标记：Kokoro 顶班时必须可见，不能冒充角色音色
-      engine: c.voice_engine || '',
-      fallback: !!c.voice_fallback,
-      qc: null,
-      qcErr: null,
-      listen: null,    // 审听判定：必须在此声明，事后挂到段上不被追踪，高亮不会跟着变
-      episode: null,   // 分集归属：同上，必须在字面量里声明（loadScriptMap 回填）
-      versions: 1,
-      chosen: i + 1
+    // 原地合并而非整表替换：episode/qc/listen 由各自 loader 异步回填，整表重建会让
+    // 分集分隔条与审听标记先消失一帧再出现——工作台每 15s「跳一下」的根因。
+    // ponytail: 以 text 为段身份代理；文本没变即复用旧对象（保留回填），变了才当新段清零。
+    const s = prev[i] && prev[i].text === c.text ? prev[i] : {
+      id: i + 1, order: i + 1, duration: 0, qc: null, qcErr: null,
+      listen: null, episode: null, versions: 1, chosen: i + 1
     }
+    s.speaker = key
+    s.kind = key === 'narrator' ? 'narration' : 'dialogue'
+    s.text = c.text
+    s.instruct = c.instruct || ''
+    s.status = c.status === 'done' ? 'done' : c.status === 'error' ? 'error' : c.status === 'generating' ? 'generating' : 'pending'
+    s.audioPath = c.audio_path ? (c.audio_path.startsWith('/') ? c.audio_path : '/' + c.audio_path.replace(/^\.?\//, '')) : null
+    // 实际出声引擎与兜底标记：Kokoro 顶班时必须可见，不能冒充角色音色
+    s.engine = c.voice_engine || ''
+    s.fallback = !!c.voice_fallback
+    return s
   })
   store._lineCounts = lineCounts
   store.chapters = [{

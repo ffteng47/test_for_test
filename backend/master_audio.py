@@ -34,7 +34,8 @@ import sys
 TARGET_I = -16.0        # 综合响度目标 LUFS
 TOL_I = 1.0             # 容差 LU
 TARGET_TP = -1.5        # 真峰值上限 dBTP
-TP_MARGIN_DB = 1.0      # 帧间余量，见模块注释 3
+TP_MARGIN_DB = 2.0      # 帧间余量，见模块注释 3。1.0 时实测（shuxue 全卷）ISP 过冲 +1.58 dB，
+                        # 采样天花板 −2.5 dBFS 被打成 −0.92 dBTP 顶穿 −1.5；2.0 → 预测 ≈ −1.92
 TARGET_LRA = 7.0        # 动态范围目标 LU
 SAMPLE_RATE = 44100
 MAX_DURATION_DRIFT_S = 0.5
