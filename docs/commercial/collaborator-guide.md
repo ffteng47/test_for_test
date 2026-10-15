@@ -25,7 +25,7 @@
 
 ## 3. 验证基线（改码前后都要绿）
 
-- 全链：`.venv/Scripts/python.exe -m pytest plot_engine/tests -q`（2026-10-15 现势 **531 passed**（#79 ladder-v5 夹具 +5；历次 525→526→528→撤→526→531））。
+- 全链：`.venv/Scripts/python.exe -m pytest plot_engine/tests -q`（2026-10-16 现势 **554 passed**（WP-A epoch_1 码批 +23；历次 525→526→528→撤→526→531→554））。
 - 每条新判据/lint 规则 **1 正 1 反**用例钉住（lint 纪律，roadmap L5）。
 - 纯离线工作（WP-C/WP-D/R7/WP-A 设计稿）不需要 GPU，也不得借口"测一下"占 213 车道。
 
