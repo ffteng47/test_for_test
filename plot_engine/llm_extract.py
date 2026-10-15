@@ -46,7 +46,14 @@ _ID_RE = re.compile(r"^(?:char|fact|item|loc|faction|realm|ability|region|rel)_\
 #        只活在夹具 docstring（experiment_10ch `_told`），提示词从未告诉模型 ⇒ 抽取器把
 #        说者记成 actor，两方 ledger 全记错、H2.2 双杀。补一行判据文。触碰尺面 ⇒ 读数离
 #        v3.5 表，重基线（v4e×3）必须在这行生效**之后**跑。
-EXTRACTION_RULER = "v3.6-is-told-actor"
+# v3.7 已由 #70 型别批烧掉（不复用）。
+# v3.8 = WP-A epoch_1 伏笔事件进抽取面（设计稿 §2.4、v0.12 裁定 4A）：PAYLOAD_SCHEMA 增
+#        FORESHADOWING_SET（foreshadow_id/fact_id/due_by_chapter/strength）与
+#        FORESHADOWING_PAID（foreshadow_id）⇒ _SCHEMA_HINT 提示词文本变更。键名 due_by_chapter
+#        为冻结会定稿，与 gate.must_reveal_by_chapter 的单源关系由 derive D11 把守。
+#        strength 不入 _FIXED_POINT_KEYS：缺省走 reducer 的 event.confidence 回退，
+#        不伪造显著度。触碰尺面 ⇒ 读数与 v3.6 分表，不并列。
+EXTRACTION_RULER = "v3.8-foreshadow-payload"
 
 # 本通道只承接 reducer 真能消费的 event_type，且键名逐一对齐 01 §4.1 的实际取用（reducer 里
 # 的 event.payload[...]）。缺键的产物放下去只会变成 MALFORMED_PROPOSAL 级联，归因反而更难。
@@ -65,6 +72,8 @@ PAYLOAD_SCHEMA: Dict[str, Tuple[str, ...]] = {
     "HINTS": ("fact_id", "audience"),
     "HAPPENS": (),
     "REVEALS": ("fact_id", "new_narrative_truth"),
+    "FORESHADOWING_SET": ("foreshadow_id", "fact_id", "due_by_chapter", "strength"),
+    "FORESHADOWING_PAID": ("foreshadow_id",),
 }
 # 提示词不能用 `TYPE:key` 形态 —— 实测模型会把它整段抄成 payload 里的 {"TYPE": "key"}。
 # 也不能用裸词 `type`——qwen2.5:14b 实测把「type OBSERVES 的 payload 只放 fact_id」

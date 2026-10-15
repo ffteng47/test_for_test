@@ -213,11 +213,12 @@ def test_w4b_ruler_stamp_bumped_and_flag_records_the_ruling():
     assert instr.W4B_TOUCHED is True
 
 
-def test_v36_ruler_stamp_records_the_is_told_actor_fix():
-    """v3.6 是尺面变更（(a) 归因面：IS_TOLD actor=听的人），必须与 v3.5 读数不同表。"""
+def test_v38_ruler_stamp_records_the_foreshadow_payload():
+    """v3.8 是尺面变更（WP-A：FORESHADOWING_SET/PAID 进 PAYLOAD_SCHEMA ⇒ 提示词文本变），
+    必须与 v3.6/v3.7 读数分表（v3.7 由 #70 型别批烧掉，本尺跳过不复用）。"""
     from plot_engine.llm_extract import EXTRACTION_RULER
-    assert EXTRACTION_RULER.startswith("v3.6")
-    assert EXTRACTION_RULER != "v3.5-schema-hint-no-bare-type"
+    assert EXTRACTION_RULER.startswith("v3.8")
+    assert EXTRACTION_RULER not in ("v3.6-is-told-actor", "v3.7-type-criteria")
 
 
 def test_v36_prompt_states_the_is_told_actor_convention():
@@ -401,3 +402,11 @@ def test_readout_waste_counts_only_chapter_level_failures(tmp_path):
         {"reason": "over_cap", "chapter": 3},
     ]), encoding="utf-8")
     assert _waste_rate(tmp_path / "r", dump) == "33%"   # 只 chapter_empty 计 1/3
+
+
+def test_v38_payload_schema_carves_foreshadow_keys():
+    """裁定 4A 定稿键名：due_by_chapter 进 SET payload（与 D11 单源校验同名）。"""
+    from plot_engine.llm_extract import PAYLOAD_SCHEMA
+    assert PAYLOAD_SCHEMA["FORESHADOWING_SET"] == (
+        "foreshadow_id", "fact_id", "due_by_chapter", "strength")
+    assert PAYLOAD_SCHEMA["FORESHADOWING_PAID"] == ("foreshadow_id",)
