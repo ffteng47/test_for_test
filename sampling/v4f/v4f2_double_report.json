@@ -1,0 +1,84 @@
+{
+  "instr": "instr-v2-local",
+  "chapters": 10,
+  "waste_chapters": [],
+  "waste_rate": 0.0,
+  "jaccard_med": 1.0,
+  "per_chapter": [
+    {
+      "chapter": "v4f2#1",
+      "jaccard": 1.0,
+      "n_a": 4,
+      "n_b": 4
+    },
+    {
+      "chapter": "v4f2#10",
+      "jaccard": 1.0,
+      "n_a": 20,
+      "n_b": 20
+    },
+    {
+      "chapter": "v4f2#2",
+      "jaccard": 1.0,
+      "n_a": 10,
+      "n_b": 10
+    },
+    {
+      "chapter": "v4f2#3",
+      "jaccard": 1.0,
+      "n_a": 12,
+      "n_b": 12
+    },
+    {
+      "chapter": "v4f2#4",
+      "jaccard": 0.2222222222222222,
+      "n_a": 18,
+      "n_b": 10
+    },
+    {
+      "chapter": "v4f2#5",
+      "jaccard": 1.0,
+      "n_a": 16,
+      "n_b": 16
+    },
+    {
+      "chapter": "v4f2#6",
+      "jaccard": 1.0,
+      "n_a": 18,
+      "n_b": 18
+    },
+    {
+      "chapter": "v4f2#7",
+      "jaccard": 0.68,
+      "n_a": 24,
+      "n_b": 21
+    },
+    {
+      "chapter": "v4f2#8",
+      "jaccard": 1.0,
+      "n_a": 12,
+      "n_b": 12
+    },
+    {
+      "chapter": "v4f2#9",
+      "jaccard": 1.0,
+      "n_a": 23,
+      "n_b": 23
+    }
+  ],
+  "believes_stable": true,
+  "believes_mismatch_chapters": [],
+  "thresholds": {
+    "waste_lt": 0.02,
+    "jaccard_med_ge": 0.85
+  },
+  "gate": {
+    "pass": true,
+    "waste_rate": 0.0,
+    "jaccard_med": 1.0,
+    "believes_stable": true,
+    "waste_ok": true,
+    "jaccard_ok": true
+  },
+  "upgrade_path": "pass:open_v4d_baseline"
+}

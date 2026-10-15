@@ -1,0 +1,2499 @@
+{
+ "chapters": {
+  "1": [
+   {
+    "type": "OBSERVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000003"
+    },
+    "source_ref": "para:2#seg:0"
+   },
+   {
+    "type": "BELIEVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000001",
+     "belief_strength": 3
+    },
+    "source_ref": "para:5#seg:0"
+   },
+   {
+    "type": "DOUBTS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000004"
+    },
+    "source_ref": "para:14#seg:0"
+   },
+   {
+    "type": "DOUBTS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000001"
+    },
+    "source_ref": "para:16#seg:1"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000003"
+     ]
+    },
+    "source_ref": "para:19#seg:1"
+   }
+  ],
+  "2": [
+   {
+    "type": "OBSERVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000005"
+    },
+    "source_ref": "para:4#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000005"
+     ]
+    },
+    "source_ref": "para:8#seg:0"
+   },
+   {
+    "type": "BELIEVES",
+    "actor": "char_000003",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000001",
+     "belief_strength": 5
+    },
+    "source_ref": "para:9#seg:0"
+   },
+   {
+    "type": "SUSPECTS",
+    "actor": "char_000001",
+    "target": "char_000003",
+    "payload": {
+     "fact_id": "fact_000002"
+    },
+    "source_ref": "para:10#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000003",
+     "evidence_fact_ids": [
+      "fact_000005"
+     ]
+    },
+    "source_ref": "para:15#seg:0"
+   },
+   {
+    "type": "OBSERVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000008"
+    },
+    "source_ref": "para:17#seg:0"
+   },
+   {
+    "type": "DOUBTS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000006"
+    },
+    "source_ref": "para:18#seg:0"
+   },
+   {
+    "type": "HINTS",
+    "actor": "char_000003",
+    "target": "char_000001",
+    "payload": {
+     "fact_id": "fact_000005",
+     "audience": "char_000001"
+    },
+    "source_ref": "para:22#seg:0"
+   },
+   {
+    "type": "IS_TOLD",
+    "actor": "char_000003",
+    "target": "char_000001",
+    "payload": {
+     "fact_id": "fact_000008",
+     "trust_level": 8,
+     "message_strength": 7
+    },
+    "source_ref": "para:28#seg:1"
+   },
+   {
+    "type": "IS_TOLD",
+    "actor": "char_000003",
+    "target": "char_000001",
+    "payload": {
+     "fact_id": "fact_000005",
+     "trust_level": 8,
+     "message_strength": 7
+    },
+    "source_ref": "para:31#seg:1"
+   },
+   {
+    "type": "SUSPECTS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000001"
+    },
+    "source_ref": "para:32#seg:1"
+   },
+   {
+    "type": "IS_TOLD",
+    "actor": "char_000003",
+    "target": "char_000001",
+    "payload": {
+     "fact_id": "fact_000001",
+     "trust_level": 6,
+     "message_strength": 7
+    },
+    "source_ref": "para:33#seg:1"
+   },
+   {
+    "type": "SUSPECTS",
+    "actor": "char_000003",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000001"
+    },
+    "source_ref": "para:33#seg:1"
+   }
+  ],
+  "3": [
+   {
+    "type": "OBSERVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000005"
+    },
+    "source_ref": "para:1#seg:0"
+   },
+   {
+    "type": "OBSERVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000006"
+    },
+    "source_ref": "para:2#seg:0"
+   },
+   {
+    "type": "IS_TOLD",
+    "actor": "char_000004",
+    "target": "char_000001",
+    "payload": {
+     "fact_id": "fact_000006",
+     "trust_level": 3,
+     "message_strength": 2
+    },
+    "source_ref": "para:3#seg:0"
+   },
+   {
+    "type": "IS_TOLD",
+    "actor": "char_000004",
+    "target": "char_000001",
+    "payload": {
+     "fact_id": "fact_000009",
+     "trust_level": 2,
+     "message_strength": 1
+    },
+    "source_ref": "para:4#seg:0"
+   },
+   {
+    "type": "DOUBTS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000009"
+    },
+    "source_ref": "para:5#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000005",
+      "fact_000006"
+     ]
+    },
+    "source_ref": "para:6#seg:0"
+   },
+   {
+    "type": "DOUBTS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000006"
+    },
+    "source_ref": "para:8#seg:0"
+   },
+   {
+    "type": "BELIEVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000001",
+     "belief_strength": 3
+    },
+    "source_ref": "para:11#seg:0"
+   },
+   {
+    "type": "IS_TOLD",
+    "actor": "char_000001",
+    "target": "char_000004",
+    "payload": {
+     "fact_id": "fact_000001",
+     "trust_level": 2,
+     "message_strength": 3
+    },
+    "source_ref": "para:19#seg:1"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000006"
+     ]
+    },
+    "source_ref": "para:20#seg:1"
+   }
+  ],
+  "4": [
+   {
+    "type": "OBSERVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000005"
+    },
+    "source_ref": "para:1#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000008",
+     "evidence_fact_ids": [
+      "fact_000008"
+     ]
+    },
+    "source_ref": "para:1#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000002",
+     "evidence_fact_ids": [
+      "fact_000001"
+     ]
+    },
+    "source_ref": "para:1#seg:0"
+   },
+   {
+    "type": "OBSERVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000007"
+    },
+    "source_ref": "para:2#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000007",
+     "evidence_fact_ids": [
+      "fact_000007"
+     ]
+    },
+    "source_ref": "para:4#seg:0"
+   },
+   {
+    "type": "STATES",
+    "actor": "char_000001",
+    "target": "char_000003",
+    "payload": {
+     "fact_id": "fact_000007",
+     "audience": "char_000003"
+    },
+    "source_ref": "para:5#seg:0"
+   },
+   {
+    "type": "DOUBTS",
+    "actor": "char_000003",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000007"
+    },
+    "source_ref": "para:6#seg:0"
+   },
+   {
+    "type": "OBSERVES",
+    "actor": "char_000002",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000005"
+    },
+    "source_ref": "para:12#seg:0"
+   },
+   {
+    "type": "STATES",
+    "actor": "char_000002",
+    "target": "char_000003",
+    "payload": {
+     "fact_id": "fact_000005",
+     "audience": "char_000003"
+    },
+    "source_ref": "para:13#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000003",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000005",
+     "evidence_fact_ids": [
+      "fact_000005"
+     ]
+    },
+    "source_ref": "para:14#seg:0"
+   },
+   {
+    "type": "STATES",
+    "actor": "char_000002",
+    "target": "char_000003",
+    "payload": {
+     "fact_id": "fact_000007",
+     "audience": "char_000003"
+    },
+    "source_ref": "para:15#seg:0"
+   },
+   {
+    "type": "STATES",
+    "actor": "char_000003",
+    "target": "char_000002",
+    "payload": {
+     "fact_id": "fact_000007",
+     "audience": "char_000002"
+    },
+    "source_ref": "para:19#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000002",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000002",
+     "evidence_fact_ids": [
+      "fact_000002"
+     ]
+    },
+    "source_ref": "para:20#seg:0"
+   },
+   {
+    "type": "IS_TOLD",
+    "actor": "char_000003",
+    "target": "char_000001",
+    "payload": {
+     "fact_id": "fact_000007",
+     "trust_level": 3,
+     "message_strength": 2
+    },
+    "source_ref": "para:26#seg:1"
+   },
+   {
+    "type": "OBSERVES",
+    "actor": "char_000002",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000007"
+    },
+    "source_ref": "para:27#seg:1"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000002",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000007",
+     "evidence_fact_ids": [
+      "fact_000007"
+     ]
+    },
+    "source_ref": "para:27#seg:1"
+   }
+  ],
+  "5": [
+   {
+    "type": "OBSERVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000009"
+    },
+    "source_ref": "para:3#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000003",
+      "fact_000005",
+      "fact_000006",
+      "fact_000007",
+      "fact_000008",
+      "fact_000009"
+     ]
+    },
+    "source_ref": "para:4#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000007",
+      "fact_000009"
+     ]
+    },
+    "source_ref": "para:6#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000005",
+      "fact_000006",
+      "fact_000007",
+      "fact_000008"
+     ]
+    },
+    "source_ref": "para:7#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000003",
+      "fact_000004",
+      "fact_000005",
+      "fact_000006",
+      "fact_000007",
+      "fact_000008"
+     ]
+    },
+    "source_ref": "para:8#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000009"
+     ]
+    },
+    "source_ref": "para:11#seg:0"
+   },
+   {
+    "type": "IS_TOLD",
+    "actor": "char_000001",
+    "target": "char_000002",
+    "payload": {
+     "fact_id": "fact_000009",
+     "trust_level": 3,
+     "message_strength": 2
+    },
+    "source_ref": "para:23#seg:1"
+   },
+   {
+    "type": "SUSPECTS",
+    "actor": "char_000001",
+    "target": "char_000002",
+    "payload": {
+     "fact_id": "fact_000001"
+    },
+    "source_ref": "para:25#seg:1"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000005",
+      "fact_000006",
+      "fact_000007"
+     ]
+    },
+    "source_ref": "para:26#seg:1"
+   }
+  ],
+  "6": [
+   {
+    "type": "OBSERVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000005"
+    },
+    "source_ref": "para:13#seg:0"
+   },
+   {
+    "type": "IS_TOLD",
+    "actor": "char_000004",
+    "target": "char_000001",
+    "payload": {
+     "fact_id": "fact_000010",
+     "trust_level": 5,
+     "message_strength": 4
+    },
+    "source_ref": "para:14#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000005",
+      "fact_000008",
+      "fact_000009"
+     ]
+    },
+    "source_ref": "para:17#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000002",
+     "evidence_fact_ids": [
+      "fact_000009"
+     ]
+    },
+    "source_ref": "para:18#seg:0"
+   },
+   {
+    "type": "BELIEVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000001",
+     "belief_strength": 4
+    },
+    "source_ref": "para:20#seg:0"
+   }
+  ],
+  "7": [
+   {
+    "type": "OBSERVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000005"
+    },
+    "source_ref": "para:2#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000005"
+     ]
+    },
+    "source_ref": "para:2#seg:0"
+   },
+   {
+    "type": "OBSERVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000008"
+    },
+    "source_ref": "para:8#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000008"
+     ]
+    },
+    "source_ref": "para:8#seg:0"
+   },
+   {
+    "type": "OBSERVES",
+    "actor": "char_000003",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000005"
+    },
+    "source_ref": "para:13#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000003",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000005"
+     ]
+    },
+    "source_ref": "para:13#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000003",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000011",
+     "evidence_fact_ids": [
+      "fact_000003"
+     ]
+    },
+    "source_ref": "para:11#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000003",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000011"
+     ]
+    },
+    "source_ref": "para:11#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000003",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000008"
+     ]
+    },
+    "source_ref": "para:10#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000003",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000004"
+     ]
+    },
+    "source_ref": "para:4#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000003",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000002"
+     ]
+    },
+    "source_ref": "para:12#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000003",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000012"
+     ]
+    },
+    "source_ref": "para:12#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000005",
+     "evidence_fact_ids": [
+      "fact_000003"
+     ]
+    },
+    "source_ref": "para:22#seg:1"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000003",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000005",
+     "evidence_fact_ids": [
+      "fact_000003"
+     ]
+    },
+    "source_ref": "para:22#seg:1"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000003",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000006",
+     "evidence_fact_ids": [
+      "fact_000005"
+     ]
+    },
+    "source_ref": "para:24#seg:1"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000006",
+     "evidence_fact_ids": [
+      "fact_000005"
+     ]
+    },
+    "source_ref": "para:24#seg:1"
+   }
+  ],
+  "8": [
+   {
+    "type": "OBSERVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000003"
+    },
+    "source_ref": "para:1#seg:0"
+   },
+   {
+    "type": "OBSERVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000005"
+    },
+    "source_ref": "para:20#seg:1"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000006",
+     "evidence_fact_ids": [
+      "fact_000005"
+     ]
+    },
+    "source_ref": "para:22#seg:1"
+   },
+   {
+    "type": "BELIEVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000003",
+     "belief_strength": 7
+    },
+    "source_ref": "para:21#seg:1"
+   }
+  ],
+  "9": [
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000007",
+     "evidence_fact_ids": [
+      "fact_000007"
+     ]
+    },
+    "source_ref": "para:1#seg:0"
+   },
+   {
+    "type": "SUSPECTS",
+    "actor": "char_000001",
+    "target": "char_000003",
+    "payload": {
+     "fact_id": "fact_000007"
+    },
+    "source_ref": "para:1#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000005",
+     "evidence_fact_ids": [
+      "fact_000005"
+     ]
+    },
+    "source_ref": "para:2#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000006",
+     "evidence_fact_ids": [
+      "fact_000006"
+     ]
+    },
+    "source_ref": "para:3#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000008",
+     "evidence_fact_ids": [
+      "fact_000008"
+     ]
+    },
+    "source_ref": "para:4#seg:0"
+   },
+   {
+    "type": "SUSPECTS",
+    "actor": "char_000001",
+    "target": "char_000004",
+    "payload": {
+     "fact_id": "fact_000006"
+    },
+    "source_ref": "para:4#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000009",
+     "evidence_fact_ids": [
+      "fact_000009"
+     ]
+    },
+    "source_ref": "para:5#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000012",
+     "evidence_fact_ids": [
+      "fact_000012"
+     ]
+    },
+    "source_ref": "para:8#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000010",
+     "evidence_fact_ids": [
+      "fact_000010"
+     ]
+    },
+    "source_ref": "para:9#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000003",
+     "evidence_fact_ids": [
+      "fact_000003"
+     ]
+    },
+    "source_ref": "para:10#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000004",
+     "evidence_fact_ids": [
+      "fact_000004"
+     ]
+    },
+    "source_ref": "para:11#seg:0"
+   },
+   {
+    "type": "SUSPECTS",
+    "actor": "char_000001",
+    "target": "char_000002",
+    "payload": {
+     "fact_id": "fact_000009"
+    },
+    "source_ref": "para:15#seg:0"
+   },
+   {
+    "type": "OBSERVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000003"
+    },
+    "source_ref": "para:18#seg:1"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000004",
+     "evidence_fact_ids": [
+      "fact_000006"
+     ]
+    },
+    "source_ref": "para:18#seg:1"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000009",
+     "evidence_fact_ids": [
+      "fact_000002"
+     ]
+    },
+    "source_ref": "para:19#seg:1"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000012",
+     "evidence_fact_ids": [
+      "fact_000002"
+     ]
+    },
+    "source_ref": "para:19#seg:1"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000010",
+     "evidence_fact_ids": [
+      "fact_000003"
+     ]
+    },
+    "source_ref": "para:20#seg:1"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000001",
+     "evidence_fact_ids": [
+      "fact_000003",
+      "fact_000004",
+      "fact_000005",
+      "fact_000006",
+      "fact_000008",
+      "fact_000009",
+      "fact_000010",
+      "fact_000011",
+      "fact_000012"
+     ]
+    },
+    "source_ref": "para:21#seg:1"
+   },
+   {
+    "type": "BELIEVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000001",
+     "belief_strength": 7
+    },
+    "source_ref": "para:22#seg:1"
+   }
+  ],
+  "10": [
+   {
+    "type": "OBSERVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000005"
+    },
+    "source_ref": "para:1#seg:0"
+   },
+   {
+    "type": "OBSERVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000008"
+    },
+    "source_ref": "para:1#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000002",
+     "evidence_fact_ids": [
+      "fact_000001",
+      "fact_000009"
+     ]
+    },
+    "source_ref": "para:5#seg:0"
+   },
+   {
+    "type": "SUSPECTS",
+    "actor": "char_000001",
+    "target": "char_000002",
+    "payload": {
+     "fact_id": "fact_000002"
+    },
+    "source_ref": "para:10#seg:0"
+   },
+   {
+    "type": "OBSERVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000007"
+    },
+    "source_ref": "para:11#seg:0"
+   },
+   {
+    "type": "SUSPECTS",
+    "actor": "char_000002",
+    "target": "char_000001",
+    "payload": {
+     "fact_id": "fact_000002"
+    },
+    "source_ref": "para:15#seg:0"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000002",
+     "evidence_fact_ids": [
+      "fact_000005",
+      "fact_000006",
+      "fact_000008"
+     ]
+    },
+    "source_ref": "para:21#seg:1"
+   },
+   {
+    "type": "INFERS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "conclusion_fact_id": "fact_000002",
+     "evidence_fact_ids": [
+      "fact_000009"
+     ]
+    },
+    "source_ref": "para:27#seg:1"
+   },
+   {
+    "type": "DOUBTS",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000002"
+    },
+    "source_ref": "para:29#seg:1"
+   },
+   {
+    "type": "BELIEVES",
+    "actor": "char_000001",
+    "target": null,
+    "payload": {
+     "fact_id": "fact_000002",
+     "belief_strength": 5
+    },
+    "source_ref": "para:31#seg:1"
+   }
+  ]
+ },
+ "by_run": {
+  "v4f3": {
+   "1": [
+    {
+     "type": "OBSERVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000003"
+     },
+     "source_ref": "para:2#seg:0"
+    },
+    {
+     "type": "BELIEVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000001",
+      "belief_strength": 3
+     },
+     "source_ref": "para:5#seg:0"
+    },
+    {
+     "type": "DOUBTS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000004"
+     },
+     "source_ref": "para:14#seg:0"
+    },
+    {
+     "type": "DOUBTS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000001"
+     },
+     "source_ref": "para:16#seg:1"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000003"
+      ]
+     },
+     "source_ref": "para:19#seg:1"
+    }
+   ],
+   "2": [
+    {
+     "type": "OBSERVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000005"
+     },
+     "source_ref": "para:4#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000005"
+      ]
+     },
+     "source_ref": "para:8#seg:0"
+    },
+    {
+     "type": "BELIEVES",
+     "actor": "char_000003",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000001",
+      "belief_strength": 5
+     },
+     "source_ref": "para:9#seg:0"
+    },
+    {
+     "type": "SUSPECTS",
+     "actor": "char_000001",
+     "target": "char_000003",
+     "payload": {
+      "fact_id": "fact_000002"
+     },
+     "source_ref": "para:10#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000003",
+      "evidence_fact_ids": [
+       "fact_000005"
+      ]
+     },
+     "source_ref": "para:15#seg:0"
+    },
+    {
+     "type": "OBSERVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000008"
+     },
+     "source_ref": "para:17#seg:0"
+    },
+    {
+     "type": "DOUBTS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000006"
+     },
+     "source_ref": "para:18#seg:0"
+    },
+    {
+     "type": "HINTS",
+     "actor": "char_000003",
+     "target": "char_000001",
+     "payload": {
+      "fact_id": "fact_000005",
+      "audience": "char_000001"
+     },
+     "source_ref": "para:22#seg:0"
+    },
+    {
+     "type": "IS_TOLD",
+     "actor": "char_000003",
+     "target": "char_000001",
+     "payload": {
+      "fact_id": "fact_000008",
+      "trust_level": 8,
+      "message_strength": 7
+     },
+     "source_ref": "para:28#seg:1"
+    },
+    {
+     "type": "IS_TOLD",
+     "actor": "char_000003",
+     "target": "char_000001",
+     "payload": {
+      "fact_id": "fact_000005",
+      "trust_level": 8,
+      "message_strength": 7
+     },
+     "source_ref": "para:31#seg:1"
+    },
+    {
+     "type": "SUSPECTS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000001"
+     },
+     "source_ref": "para:32#seg:1"
+    },
+    {
+     "type": "IS_TOLD",
+     "actor": "char_000003",
+     "target": "char_000001",
+     "payload": {
+      "fact_id": "fact_000001",
+      "trust_level": 6,
+      "message_strength": 7
+     },
+     "source_ref": "para:33#seg:1"
+    },
+    {
+     "type": "SUSPECTS",
+     "actor": "char_000003",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000001"
+     },
+     "source_ref": "para:33#seg:1"
+    }
+   ],
+   "3": [
+    {
+     "type": "OBSERVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000005"
+     },
+     "source_ref": "para:1#seg:0"
+    },
+    {
+     "type": "OBSERVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000006"
+     },
+     "source_ref": "para:2#seg:0"
+    },
+    {
+     "type": "IS_TOLD",
+     "actor": "char_000004",
+     "target": "char_000001",
+     "payload": {
+      "fact_id": "fact_000006",
+      "trust_level": 3,
+      "message_strength": 2
+     },
+     "source_ref": "para:3#seg:0"
+    },
+    {
+     "type": "IS_TOLD",
+     "actor": "char_000004",
+     "target": "char_000001",
+     "payload": {
+      "fact_id": "fact_000009",
+      "trust_level": 2,
+      "message_strength": 1
+     },
+     "source_ref": "para:4#seg:0"
+    },
+    {
+     "type": "DOUBTS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000009"
+     },
+     "source_ref": "para:5#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000005",
+       "fact_000006"
+      ]
+     },
+     "source_ref": "para:6#seg:0"
+    },
+    {
+     "type": "DOUBTS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000006"
+     },
+     "source_ref": "para:8#seg:0"
+    },
+    {
+     "type": "BELIEVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000001",
+      "belief_strength": 3
+     },
+     "source_ref": "para:11#seg:0"
+    },
+    {
+     "type": "IS_TOLD",
+     "actor": "char_000001",
+     "target": "char_000004",
+     "payload": {
+      "fact_id": "fact_000001",
+      "trust_level": 2,
+      "message_strength": 3
+     },
+     "source_ref": "para:19#seg:1"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000006"
+      ]
+     },
+     "source_ref": "para:20#seg:1"
+    }
+   ],
+   "4": [
+    {
+     "type": "OBSERVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000005"
+     },
+     "source_ref": "para:1#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000008",
+      "evidence_fact_ids": [
+       "fact_000008"
+      ]
+     },
+     "source_ref": "para:1#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000002",
+      "evidence_fact_ids": [
+       "fact_000001"
+      ]
+     },
+     "source_ref": "para:1#seg:0"
+    },
+    {
+     "type": "OBSERVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000007"
+     },
+     "source_ref": "para:2#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000007",
+      "evidence_fact_ids": [
+       "fact_000007"
+      ]
+     },
+     "source_ref": "para:4#seg:0"
+    },
+    {
+     "type": "STATES",
+     "actor": "char_000001",
+     "target": "char_000003",
+     "payload": {
+      "fact_id": "fact_000007",
+      "audience": "char_000003"
+     },
+     "source_ref": "para:5#seg:0"
+    },
+    {
+     "type": "DOUBTS",
+     "actor": "char_000003",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000007"
+     },
+     "source_ref": "para:6#seg:0"
+    },
+    {
+     "type": "OBSERVES",
+     "actor": "char_000002",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000005"
+     },
+     "source_ref": "para:12#seg:0"
+    },
+    {
+     "type": "STATES",
+     "actor": "char_000002",
+     "target": "char_000003",
+     "payload": {
+      "fact_id": "fact_000005",
+      "audience": "char_000003"
+     },
+     "source_ref": "para:13#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000003",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000005",
+      "evidence_fact_ids": [
+       "fact_000005"
+      ]
+     },
+     "source_ref": "para:14#seg:0"
+    },
+    {
+     "type": "STATES",
+     "actor": "char_000002",
+     "target": "char_000003",
+     "payload": {
+      "fact_id": "fact_000007",
+      "audience": "char_000003"
+     },
+     "source_ref": "para:15#seg:0"
+    },
+    {
+     "type": "STATES",
+     "actor": "char_000003",
+     "target": "char_000002",
+     "payload": {
+      "fact_id": "fact_000007",
+      "audience": "char_000002"
+     },
+     "source_ref": "para:19#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000002",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000002",
+      "evidence_fact_ids": [
+       "fact_000002"
+      ]
+     },
+     "source_ref": "para:20#seg:0"
+    },
+    {
+     "type": "IS_TOLD",
+     "actor": "char_000003",
+     "target": "char_000001",
+     "payload": {
+      "fact_id": "fact_000007",
+      "trust_level": 3,
+      "message_strength": 2
+     },
+     "source_ref": "para:26#seg:1"
+    },
+    {
+     "type": "OBSERVES",
+     "actor": "char_000002",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000007"
+     },
+     "source_ref": "para:27#seg:1"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000002",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000007",
+      "evidence_fact_ids": [
+       "fact_000007"
+      ]
+     },
+     "source_ref": "para:27#seg:1"
+    }
+   ],
+   "5": [
+    {
+     "type": "OBSERVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000009"
+     },
+     "source_ref": "para:3#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000003",
+       "fact_000005",
+       "fact_000006",
+       "fact_000007",
+       "fact_000008",
+       "fact_000009"
+      ]
+     },
+     "source_ref": "para:4#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000007",
+       "fact_000009"
+      ]
+     },
+     "source_ref": "para:6#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000005",
+       "fact_000006",
+       "fact_000007",
+       "fact_000008"
+      ]
+     },
+     "source_ref": "para:7#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000003",
+       "fact_000004",
+       "fact_000005",
+       "fact_000006",
+       "fact_000007",
+       "fact_000008"
+      ]
+     },
+     "source_ref": "para:8#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000009"
+      ]
+     },
+     "source_ref": "para:11#seg:0"
+    },
+    {
+     "type": "IS_TOLD",
+     "actor": "char_000001",
+     "target": "char_000002",
+     "payload": {
+      "fact_id": "fact_000009",
+      "trust_level": 3,
+      "message_strength": 2
+     },
+     "source_ref": "para:23#seg:1"
+    },
+    {
+     "type": "SUSPECTS",
+     "actor": "char_000001",
+     "target": "char_000002",
+     "payload": {
+      "fact_id": "fact_000001"
+     },
+     "source_ref": "para:25#seg:1"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000005",
+       "fact_000006",
+       "fact_000007"
+      ]
+     },
+     "source_ref": "para:26#seg:1"
+    }
+   ],
+   "6": [
+    {
+     "type": "OBSERVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000005"
+     },
+     "source_ref": "para:13#seg:0"
+    },
+    {
+     "type": "IS_TOLD",
+     "actor": "char_000004",
+     "target": "char_000001",
+     "payload": {
+      "fact_id": "fact_000010",
+      "trust_level": 5,
+      "message_strength": 4
+     },
+     "source_ref": "para:14#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000005",
+       "fact_000008",
+       "fact_000009"
+      ]
+     },
+     "source_ref": "para:17#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000002",
+      "evidence_fact_ids": [
+       "fact_000009"
+      ]
+     },
+     "source_ref": "para:18#seg:0"
+    },
+    {
+     "type": "BELIEVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000001",
+      "belief_strength": 4
+     },
+     "source_ref": "para:20#seg:0"
+    }
+   ],
+   "7": [
+    {
+     "type": "OBSERVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000005"
+     },
+     "source_ref": "para:2#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000005"
+      ]
+     },
+     "source_ref": "para:2#seg:0"
+    },
+    {
+     "type": "OBSERVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000008"
+     },
+     "source_ref": "para:8#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000008"
+      ]
+     },
+     "source_ref": "para:8#seg:0"
+    },
+    {
+     "type": "OBSERVES",
+     "actor": "char_000003",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000005"
+     },
+     "source_ref": "para:13#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000003",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000005"
+      ]
+     },
+     "source_ref": "para:13#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000003",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000011",
+      "evidence_fact_ids": [
+       "fact_000003"
+      ]
+     },
+     "source_ref": "para:11#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000003",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000011"
+      ]
+     },
+     "source_ref": "para:11#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000003",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000008"
+      ]
+     },
+     "source_ref": "para:10#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000003",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000004"
+      ]
+     },
+     "source_ref": "para:4#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000003",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000002"
+      ]
+     },
+     "source_ref": "para:12#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000003",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000012"
+      ]
+     },
+     "source_ref": "para:12#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000005",
+      "evidence_fact_ids": [
+       "fact_000003"
+      ]
+     },
+     "source_ref": "para:22#seg:1"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000003",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000005",
+      "evidence_fact_ids": [
+       "fact_000003"
+      ]
+     },
+     "source_ref": "para:22#seg:1"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000003",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000006",
+      "evidence_fact_ids": [
+       "fact_000005"
+      ]
+     },
+     "source_ref": "para:24#seg:1"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000006",
+      "evidence_fact_ids": [
+       "fact_000005"
+      ]
+     },
+     "source_ref": "para:24#seg:1"
+    }
+   ],
+   "8": [
+    {
+     "type": "OBSERVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000003"
+     },
+     "source_ref": "para:1#seg:0"
+    },
+    {
+     "type": "OBSERVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000005"
+     },
+     "source_ref": "para:20#seg:1"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000006",
+      "evidence_fact_ids": [
+       "fact_000005"
+      ]
+     },
+     "source_ref": "para:22#seg:1"
+    },
+    {
+     "type": "BELIEVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000003",
+      "belief_strength": 7
+     },
+     "source_ref": "para:21#seg:1"
+    }
+   ],
+   "9": [
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000007",
+      "evidence_fact_ids": [
+       "fact_000007"
+      ]
+     },
+     "source_ref": "para:1#seg:0"
+    },
+    {
+     "type": "SUSPECTS",
+     "actor": "char_000001",
+     "target": "char_000003",
+     "payload": {
+      "fact_id": "fact_000007"
+     },
+     "source_ref": "para:1#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000005",
+      "evidence_fact_ids": [
+       "fact_000005"
+      ]
+     },
+     "source_ref": "para:2#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000006",
+      "evidence_fact_ids": [
+       "fact_000006"
+      ]
+     },
+     "source_ref": "para:3#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000008",
+      "evidence_fact_ids": [
+       "fact_000008"
+      ]
+     },
+     "source_ref": "para:4#seg:0"
+    },
+    {
+     "type": "SUSPECTS",
+     "actor": "char_000001",
+     "target": "char_000004",
+     "payload": {
+      "fact_id": "fact_000006"
+     },
+     "source_ref": "para:4#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000009",
+      "evidence_fact_ids": [
+       "fact_000009"
+      ]
+     },
+     "source_ref": "para:5#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000012",
+      "evidence_fact_ids": [
+       "fact_000012"
+      ]
+     },
+     "source_ref": "para:8#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000010",
+      "evidence_fact_ids": [
+       "fact_000010"
+      ]
+     },
+     "source_ref": "para:9#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000003",
+      "evidence_fact_ids": [
+       "fact_000003"
+      ]
+     },
+     "source_ref": "para:10#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000004",
+      "evidence_fact_ids": [
+       "fact_000004"
+      ]
+     },
+     "source_ref": "para:11#seg:0"
+    },
+    {
+     "type": "SUSPECTS",
+     "actor": "char_000001",
+     "target": "char_000002",
+     "payload": {
+      "fact_id": "fact_000009"
+     },
+     "source_ref": "para:15#seg:0"
+    },
+    {
+     "type": "OBSERVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000003"
+     },
+     "source_ref": "para:18#seg:1"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000004",
+      "evidence_fact_ids": [
+       "fact_000006"
+      ]
+     },
+     "source_ref": "para:18#seg:1"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000009",
+      "evidence_fact_ids": [
+       "fact_000002"
+      ]
+     },
+     "source_ref": "para:19#seg:1"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000012",
+      "evidence_fact_ids": [
+       "fact_000002"
+      ]
+     },
+     "source_ref": "para:19#seg:1"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000010",
+      "evidence_fact_ids": [
+       "fact_000003"
+      ]
+     },
+     "source_ref": "para:20#seg:1"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000001",
+      "evidence_fact_ids": [
+       "fact_000003",
+       "fact_000004",
+       "fact_000005",
+       "fact_000006",
+       "fact_000008",
+       "fact_000009",
+       "fact_000010",
+       "fact_000011",
+       "fact_000012"
+      ]
+     },
+     "source_ref": "para:21#seg:1"
+    },
+    {
+     "type": "BELIEVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000001",
+      "belief_strength": 7
+     },
+     "source_ref": "para:22#seg:1"
+    }
+   ],
+   "10": [
+    {
+     "type": "OBSERVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000005"
+     },
+     "source_ref": "para:1#seg:0"
+    },
+    {
+     "type": "OBSERVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000008"
+     },
+     "source_ref": "para:1#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000002",
+      "evidence_fact_ids": [
+       "fact_000001",
+       "fact_000009"
+      ]
+     },
+     "source_ref": "para:5#seg:0"
+    },
+    {
+     "type": "SUSPECTS",
+     "actor": "char_000001",
+     "target": "char_000002",
+     "payload": {
+      "fact_id": "fact_000002"
+     },
+     "source_ref": "para:10#seg:0"
+    },
+    {
+     "type": "OBSERVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000007"
+     },
+     "source_ref": "para:11#seg:0"
+    },
+    {
+     "type": "SUSPECTS",
+     "actor": "char_000002",
+     "target": "char_000001",
+     "payload": {
+      "fact_id": "fact_000002"
+     },
+     "source_ref": "para:15#seg:0"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000002",
+      "evidence_fact_ids": [
+       "fact_000005",
+       "fact_000006",
+       "fact_000008"
+      ]
+     },
+     "source_ref": "para:21#seg:1"
+    },
+    {
+     "type": "INFERS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "conclusion_fact_id": "fact_000002",
+      "evidence_fact_ids": [
+       "fact_000009"
+      ]
+     },
+     "source_ref": "para:27#seg:1"
+    },
+    {
+     "type": "DOUBTS",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000002"
+     },
+     "source_ref": "para:29#seg:1"
+    },
+    {
+     "type": "BELIEVES",
+     "actor": "char_000001",
+     "target": null,
+     "payload": {
+      "fact_id": "fact_000002",
+      "belief_strength": 5
+     },
+     "source_ref": "para:31#seg:1"
+    }
+   ]
+  }
+ },
+ "malformed": [
+  {
+   "reason": "stripped_payload_key",
+   "item": "DOUBTS.belief_strength",
+   "chapter": 1,
+   "seg": 1,
+   "instr": "instr-v2-local"
+  },
+  {
+   "reason": "unknown_id",
+   "item": "IS_TOLD",
+   "chapter": 6,
+   "seg": 1,
+   "instr": "instr-v2-local"
+  },
+  {
+   "reason": "unknown_id",
+   "item": "INFERS",
+   "chapter": 6,
+   "seg": 1,
+   "instr": "instr-v2-local"
+  },
+  {
+   "reason": "unknown_id",
+   "item": "INFERS",
+   "chapter": 6,
+   "seg": 1,
+   "instr": "instr-v2-local"
+  },
+  {
+   "reason": "unknown_id",
+   "item": "OBSERVES",
+   "chapter": 8,
+   "seg": 0,
+   "instr": "instr-v2-local"
+  },
+  {
+   "reason": "unknown_id",
+   "item": "INFERS",
+   "chapter": 8,
+   "seg": 0,
+   "instr": "instr-v2-local"
+  },
+  {
+   "reason": "unknown_id",
+   "item": "INFERS",
+   "chapter": 8,
+   "seg": 0,
+   "instr": "instr-v2-local"
+  },
+  {
+   "reason": "unknown_id",
+   "item": "INFERS",
+   "chapter": 8,
+   "seg": 0,
+   "instr": "instr-v2-local"
+  },
+  {
+   "reason": "unknown_id",
+   "item": "IS_TOLD",
+   "chapter": 8,
+   "seg": 0,
+   "instr": "instr-v2-local"
+  },
+  {
+   "reason": "unknown_id",
+   "item": "INFERS",
+   "chapter": 8,
+   "seg": 0,
+   "instr": "instr-v2-local"
+  },
+  {
+   "reason": "unknown_id",
+   "item": "INFERS",
+   "chapter": 8,
+   "seg": 0,
+   "instr": "instr-v2-local"
+  },
+  {
+   "reason": "unknown_id",
+   "item": "INFERS",
+   "chapter": 8,
+   "seg": 0,
+   "instr": "instr-v2-local"
+  },
+  {
+   "reason": "unknown_id",
+   "item": "INFERS",
+   "chapter": 8,
+   "seg": 0,
+   "instr": "instr-v2-local"
+  }
+ ],
+ "tokens": 47429,
+ "recall": 0.0,
+ "instr": "instr-v2-local",
+ "ruler": "v3.6-is-told-actor",
+ "lane": "local",
+ "runs": [
+  "v4f3"
+ ],
+ "segment": {
+  "max_chars": 1800,
+  "overlap": 200
+ }
+}
