@@ -180,6 +180,7 @@
 | 沙盒环境跑测试产生假红（WinError 5） | 全部码批验收 | 验收跑批一律非沙盒或预配 TEMP，报告注明环境 |
 | 尺戳双占（v3.7 已被 #70 占用后撤销） | WP-A/R4 | 戳号已烧不复用；WP-A 钉死 v3.8；今后尺戳分配进 §4 批次登记 |
 | `docs/commercial/collaborator-guide.md` 基线数字滞后 | 全部 | 已四次刷新（525→526→528→撤→526→#79 后 531）；仲裁以 **531** 为准 |
+| 章内在场一致性盲区（WP-E ch50 实证三连穿帮机检全漏，`docs/phase0-50ch-stress.md` §6） | Level-3 / WP-F / epoch_2 | **backlog**：(a) level3_fn 判分线待 tff 定标；(b) 在场静态事实=T1 新事件型，赶 epoch_2/WP-F 双层追踪，WP-A 范围已冻结不动刀 |
 
 ---
 
