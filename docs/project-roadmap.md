@@ -1,8 +1,8 @@
 # 项目路线图（层 × 路线对照）
 
-> 版本：v0.6（2026-10-15 15:40 补时同步，配套 `docs/collaborator-guide.md` v1.0）
+> 版本：v0.10（2026-10-15 现势同步，配套 `docs/commercial/collaborator-guide.md` v1.0；指南已随商业研究迁入 `docs/commercial/`）
 > 性质：诊断级路线文档。所有"现状"条目均有代码/文档证据；"路线"条目为待审方案，确认后才进开发。
-> 冲突仲裁：纪律/禁区以 `docs/collaborator-guide.md` 为准；并行窗口以本文 §4 撞车矩阵为准。
+> 冲突仲裁：纪律/禁区以 `docs/commercial/collaborator-guide.md` 为准；并行窗口以本文 §4 撞车矩阵为准。
 > 单写者纪律：本文档由问题助手会话持有；其他会话改动须先批注声明（防文档面撞车，稽核建议 2026-10-15）。
 > v0.2→v0.3：全文补齐文件路径，新增 §6 关键文件索引。
 > v0.4→v0.5（现势同步，经 tff 授权补齐）：#69 已收口（§23：Jmed 三臂回 1.0、闸 1/3、H5.1 税 0）；#70 (b) 批已施加（尺戳 v3.7 入册 29774db，b3 同批，链验 528），三跑 v4g1..3 在跑；#78 判过（v4fL E2 20% 带内）；WP-E 排队条件收敛为 #70 收口；基线 526→528。
@@ -139,7 +139,7 @@
 
 ## 4. 撞车矩阵（并行窗口仲裁表，以本表为准）
 
-> 仲裁依据：`docs/collaborator-guide.md` §1 纪律包 / §2 禁区清单。"时间互斥"指与 GPU 生成批或他人批次的互斥。
+> 仲裁依据：`docs/commercial/collaborator-guide.md` §1 纪律包 / §2 禁区清单。"时间互斥"指与 GPU 生成批或他人批次的互斥。
 
 | 工作包 | 写集（路径） | 禁区碰撞 | 时间互斥 | 放行门控 | 并行窗口结论 |
 |---|---|---|---|---|---|
@@ -177,7 +177,7 @@
 | 他人脏面活跃（`frontend/`、`docs/usage-wiki.md`、`docs/ebooks-standard.md`、`deploy/patches/` 等在改） | WP-C/集成 | 禁区清单勿碰；commit 前 `git status` 对照指南 §2 |
 | 沙盒环境跑测试产生假红（WinError 5） | 全部码批验收 | 验收跑批一律非沙盒或预配 TEMP，报告注明环境 |
 | 尺戳双占（v3.7 已被 #70 占用后撤销） | WP-A/R4 | 戳号已烧不复用；WP-A 钉死 v3.8；今后尺戳分配进 §4 批次登记 |
-| `docs/collaborator-guide.md` 基线数字滞后 | 全部 | 已三次刷新（525→526→528→撤→526）；仲裁以 526 为准 |
+| `docs/commercial/collaborator-guide.md` 基线数字滞后 | 全部 | 已四次刷新（525→526→528→撤→526→#79 后 531）；仲裁以 **531** 为准 |
 
 ---
 
@@ -188,7 +188,7 @@
 | 路径 | 用途 |
 |---|---|
 | `docs/project-roadmap.md`（本文 v0.6） | 层 × 路线 + 撞车矩阵 + 在跑批次登记 |
-| `docs/collaborator-guide.md` v1.0 | 纪律包 + 禁区清单（冲突时纪律以它为准） |
+| `docs/commercial/collaborator-guide.md` v1.0 | 纪律包 + 禁区清单（冲突时纪律以它为准） |
 | `docs/epoch1-foreshadow-design.md` v0.2 | WP-A epoch_1 契约设计稿（待冻结；尺戳 v3.8，串行 #70/b3） |
 | `docs/wp-d-noveldb-mapping.md` v0.4 | WP-D 字段映射表 + §8 实施回填（已交付） |
 | `docs/migration-plan.md` | 轨道二 S0–S4 迁移总计划 |
