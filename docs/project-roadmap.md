@@ -147,7 +147,7 @@
 | WP-A 伏笔语义码批 | `plot_engine/models/ledger.py`、`models/state.py`、`models/event.py`、`reducers/plot.py`、`validator.py`（仅 H9 族）、`llm_extract.py`（仅 PAYLOAD_SCHEMA+尺戳，**串行 #70 后**）、`derive.py`（仅联动校验，**串行 b3 后**）、`revision.py`（仅 RULE_TO_LEVEL 登记）、`plot_engine/tests/`、`alexandria-spec-v0.2/`（01/03/04/05/09 + CHANGELOG） | 无 | **串行于 #70 三跑收口之后（已满足：#70 判负撤销 90ea95b）；尺戳用 v3.8** | 契约冻结（`docs/epoch1-foreshadow-design.md` v0.2）+ tff | 冻结后开放；设计稿已产出 |
 | WP-B guided decoding | `plot_engine/llm.py`、`plot_engine/tests/test_llm_client.py`、根目录 `router_*.json` | 无 | 跑批需独占 @213 车道 | 码批无门控；**跑批需 tff 放行** | 码批现在可并行；跑批排队 |
 | WP-C 文风 lint | `plot_engine/ai_flavor_lint.py` + `plot_engine/tests/` | **`plot_engine/ai_flavor_*.py` 是他人在做面（指南 §2）** | — | tff 协调归属 | **暂停** |
-| WP-D noveldb 导入 | `backend/plot_import.py` + `backend/tests/`（`plot_engine/` 零改动）；依据 `docs/wp-d-noveldb-mapping.md` v0.4 §8 | 无（禁区清单不含 `backend/`） | 无（纯离线，指南 §3 点名） | 无 | **已交付**：验收 6/6 + 链 531 零回归，主线独立复跑核过；六条实施偏差已回填 §8；**backend 代码尚未落库**（待开发助手 commit 或稽核放行） |
+| WP-D noveldb 导入 | `backend/plot_import.py` + `backend/tests/`（`plot_engine/` 零改动）；依据 `docs/wp-d-noveldb-mapping.md` v0.4 §8 | 无（禁区清单不含 `backend/`） | 无（纯离线，指南 §3 点名） | 无 | **已交付落库（9a00003，主线代）**：验收 6/6 + 链 531 零回归，主线独立复跑核过；六条实施偏差已回填 §8 |
 | WP-F oh-story 吸收 | `docs/`（方法论+需求拆解），如落地 lint 另批申报 | 量化去味条目与 WP-C 同面（禁区 `ai_flavor_*.py`） | 零 GPU；AGPL 件禁代码引入 | R8 入队序第 4–5 位 | 排队（R8） |
 | WP-E 50 章压测 | `sampling/<批次>/` + 新报告 `docs/phase0-50ch-stress.md` | 禁读 `docs/samples/blind-v2paired-key.md` | 独占 @213；跑批期间 `plot_engine/` 全冻结 | **已放行（tff 2026-10-15）**；锁 qwen2.5:14b；谱系=**暖**（与 v4 基线同谱系）；夹具=ladder-v5 | **在跑 `sampling/wpe50ch/`（#79 收口 de88d9e 后即起）** |
 
