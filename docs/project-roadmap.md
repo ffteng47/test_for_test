@@ -6,6 +6,7 @@
 > 单写者纪律：本文档由问题助手会话持有；其他会话改动须先批注声明（防文档面撞车，稽核建议 2026-10-15）。
 > v0.2→v0.3：全文补齐文件路径，新增 §6 关键文件索引。
 > v0.4→v0.5（现势同步，经 tff 授权补齐）：#69 已收口（§23：Jmed 三臂回 1.0、闸 1/3、H5.1 税 0）；#70 (b) 批已施加（尺戳 v3.7 入册 29774db，b3 同批，链验 528），三跑 v4g1..3 在跑；#78 判过（v4fL E2 20% 带内）；WP-E 排队条件收敛为 #70 收口；基线 526→528。
+> v0.9→v0.10（三线并行助手收口，2026-10-15）：①**稽核判定 WP-E 读数可采信**（de88d9e 写集核验过、尺面/仲裁面自 90ea95b 零改动、ladder-v5 不回环独立复算成立；纪律注记：**50 章 E2 不得与 10 章 ladder-v4 基线同表并列**——阶梯规模不可比；对标文档 6 处行数/路径陈旧留下轮文档批）；②**H8.x 九桶议题闭合**：08 §4 原文核对确认九项全是状态账、无抽取桶，c176dc6 口径 A（只记 by_rule）协议合法，CANON 兜底才是越权——冻结会仅追认 08 勘误回填（`docs/freeze-meeting-and-r8-briefs.md` 议程#3）；③ instr-v3 预注册文档落档（`docs/r4-guided-decoding-prereg.md`）；④ 冻结会 6 项议程 + R8 前两项澄清提纲落档（21f1736），其中确认闸"确认事件进 EventLog=触发 T1 升 epoch"一条**可能追进冻结会**。另：collaborator-guide 已实际移至 `docs/commercial/`（工作树移动未提交），roadmap 旧路径引用待随该移动一并勘误。
 > v0.8→v0.9（现势同步）：**#79 已收口**（de88d9e：ladder-v5 五十章不回环夹具 + `review --fixture` 接线，离线 50/50 全绿、0 修订轮、E1–E6 全 True，链 526→531）；**WP-E 已起跑**：`sampling/wpe50ch/`（@213 暖隧道 qwen2.5:14b，instr-v2 默认，五十字节 ladder-v5），跑批期间 `plot_engine/` 全冻结。
 > v0.7→v0.8（tff 裁定四则，2026-10-15）：①**商业姿态定案**——不进通用工具市场，纵深走垂直有声书交付（Phase 3 行更新）；②**R8 并入**为路线（§2 末），六项按 确认闸>爽点工程>量化去味>拆文库>扫榜>旧稿导入 入队；③**temp0 重复/刀锋失稳的前置 schema（grammar-constrained decoding）登记为 R4 后期补充**（L4 注）；④WP-E **放行**，硬前置 #79（50 章阶梯夹具）开工；oh-story（MIT）吸收通道 = WP-F 入矩阵。
 > v0.6→v0.7（撤销批同步，tff 确认）：#70 (b) 型别批**判负已撤销**（§24：双遍闸 1/3、两臂 Jmed~0.60、失稳由型别互翻扩为事件存在性抖动；revert 29774db=90ea95b，尺退 v3.6@`llm_extract.py:49`，b3 同撤，链验回 526）；#70 收口→WP-A/WP-E 串行条件满足；v4gL 本地臂 E2 10% 带外（v3.7 尺面判负旁证）。补记入 §24。
@@ -87,7 +88,7 @@
   1. extract 角色接 guided decoding（vLLM `guided_json`/`structured_outputs`，Ollama 降级 `format`）——配置面先行（根目录 `router_*.json`，如 `router_q25_14b.json`、`deepseek.router.json`），代码面小改（`llm.py`）；产出读数变化须按"一因一批 + 尺戳 bump + 新旧分表"（指南 §1.2，尺戳用例钉 `plot_engine/tests/test_instr.py`）。
   2. 模型 bakeoff 收敛：从根目录多份 `router_*.json` 收敛到生产双车道各一；qwen3 MoE 禁上尺（指南 §1.5）。
   3. Writer 表面按尺号制度迭代（`llm_writer.py` `WRITER_SURFACE` bump 纪律不变）。
-  4. **后期补充（tff 裁定登记 2026-10-15）**：temp0 贪心在刀锋章的重复/argmax 翻转失稳（§19–§20、§24 三连物证）的正解是**前置 schema**——grammar-constrained/guided decoding 从键名到型别全约束；本路线第 1 条即其入口，**不进当前测量靶批**，instr-v3 预注册在 backlog，基线定谳后另起一批。
+  4. **后期补充（tff 裁定登记 2026-10-15）**：temp0 贪心在刀锋章的重复/argmax 翻转失稳（§19–§20、§24 三连物证）的正解是**前置 schema**——grammar-constrained/guided decoding 从键名到型别全约束；本路线第 1 条即其入口，**不进当前测量靶批**，instr-v3 预注册在 backlog，基线定谳后另起一批。**预注册材料已落**：`docs/r4-guided-decoding-prereg.md`（Ollama 0.40.x 零码 extra_body 接入、grammar 不治面清单、maxItems 必写、后置校验不可撤）。
 - **验收**：guided 模式 `MALFORMED_PROPOSAL` 率对比报告（走 `instr_measure.py` 仪器，落 `sampling/<批次>/`）；新旧尺号读数分表不并列。
 
 ### R8 商业输入路线（tff 裁定并入，2026-10-15）
