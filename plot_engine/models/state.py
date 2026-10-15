@@ -19,7 +19,10 @@ from plot_engine.models.entity import (
 )
 from plot_engine.models.fact import Fact, FactRelation
 from plot_engine.models.ledger import (
+    ArcProgress,
     BeliefEntry,
+    CharacterGoalEntry,
+    ForeshadowingEntry,
     KnowledgeEntry,
     ReaderKnowledgeEntry,
 )
@@ -56,12 +59,13 @@ class StoryState(BaseModel):
     reader_ledger: List[ReaderKnowledgeEntry] = []
 
     # 剧情层（04）
-    active_arc: Optional[Any] = None
+    active_arc: Optional[ArcProgress] = None     # epoch_1 结构化（语义路由 epoch_2）
     active_chapter: Optional[Any] = None
+    character_goals: List[CharacterGoalEntry] = []   # epoch_1 冻 schema，本批无写入方
 
     # 结构层
     story_threads: List[str] = []
-    foreshadowing: List[str] = []
+    foreshadowing: List[ForeshadowingEntry] = []     # epoch_0 为 List[str] 占位且无写入方（存量空集）
 
     # 校验（05 §5.5 canonical 序列化）
     state_hash: str
