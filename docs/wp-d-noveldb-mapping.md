@@ -3,6 +3,7 @@
 > 版本：v0.3（2026-10-15 补齐，问题助手产出）
 > v0.1→v0.2 变更：开放问题①按稽核裁决关闭——正文等 S2 §2.3 `novel_chapters` 表，暂存 `state.text` 方案弃用；WP-D 即刻可开工。
 > v0.2→v0.3 变更：§3.4 scenes 补读侧数据源缺口注明（ScenePlan 无持久化通道）；行号校正 reading.py:21/:51；§4.1 查重口径对齐 noveldb.py:136。
+> v0.3→v0.4 变更：§8 实施回填（开发助手交付，2026-10-15：验收 6 passed + 基线 531 passed 零回归）。
 > 性质：纯离线工作包（collaborator-guide §3 点名），不需要 GPU，不占 @213 车道。
 > 写集纪律：**只写 backend/（新导入器模块 + 测试），plot_engine 侧零改动**；新文件创建前须经 tff 确认。
 > 读侧均为既有只读接口，本表字段逐一有代码证据。
@@ -107,6 +108,21 @@
 - 交开发助手：本文 + `backend/noveldb.py` + `plot_engine/store.py` + `plot_engine/reading.py` 四个文件即全部上下文；**开放问题①已关闭，即刻可开工**
 - 稽核点：新建文件确认、SQL 字段验证、幂等用例、真实 fixture 测试（禁 mock 数据充数）
 - 验收后回填：本表 v0.3 记录实施偏差（哪些字段实际不可用）
+
+## 8. 实施回填（2026-10-15，开发助手交付）
+
+**新文件**（tff 已授权新建）：`backend/plot_import.py`（导入器 + CLI）、`backend/tests/conftest.py`（最小基建，仿 `plot_engine/tests`）、`backend/tests/test_plot_import.py`（6 条验收用例）。
+
+**验收证据**：`pytest backend/tests -q` = 6 passed（0.49s，真实 fixture `sampling/bo_ctrl`，零 mock）；`pytest plot_engine/tests -q` = 531 passed 零回归；CLI 冒烟 `python -m backend.plot_import --run sampling/bo_ctrl --title ...` 三方对账一致（人物 2 / 事实 4 / 章 imported=[1,3,4,5,8]、skipped=5 章非 OK）。
+
+**实施偏差**（相对 §3 建议结构，逐条登记）：
+
+1. `characters_on_stage` / `locations`：快照按 snapshot_every=5 间隔落盘、非逐章——仅**精确快照章**（snapshot.chapter_no == no）给出真实值，其余章置 None。宁可标缺，绝不编造。
+2. `knowledge_delta_count`：改用末态 knowledge_ledger 按 acquired_at_chapter 计数（累计台账真实可得，无需逐章快照）。
+3. chapters.title 传 None（落 NULL；upsert 的 COALESCE 保旧值），与映射"无对应→NULL"一致；`backend/noveldb.py` 零改动。
+4. scenes 一期不导；`tension_to_real` 换算函数预留并由验收用例锁定语义（700→0.7）。
+5. story_id 发现：state.db 单 story 自动发现（只读 URI 打开）；多 story 报错，要求显式 `--story-id`（对应 §6 多 run 同源）。
+6. 幂等口径：projects 表主键列名是 `id`（非 project_id），验收计数按表调整——首跑即暴露，已修正。
 
 ---
 

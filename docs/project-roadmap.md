@@ -6,7 +6,7 @@
 > 单写者纪律：本文档由问题助手会话持有；其他会话改动须先批注声明（防文档面撞车，稽核建议 2026-10-15）。
 > v0.2→v0.3：全文补齐文件路径，新增 §6 关键文件索引。
 > v0.4→v0.5（现势同步，经 tff 授权补齐）：#69 已收口（§23：Jmed 三臂回 1.0、闸 1/3、H5.1 税 0）；#70 (b) 批已施加（尺戳 v3.7 入册 29774db，b3 同批，链验 528），三跑 v4g1..3 在跑；#78 判过（v4fL E2 20% 带内）；WP-E 排队条件收敛为 #70 收口；基线 526→528。
-> v0.9→v0.10（三线并行助手收口，2026-10-15）：①**稽核判定 WP-E 读数可采信**（de88d9e 写集核验过、尺面/仲裁面自 90ea95b 零改动、ladder-v5 不回环独立复算成立；纪律注记：**50 章 E2 不得与 10 章 ladder-v4 基线同表并列**——阶梯规模不可比；对标文档 6 处行数/路径陈旧留下轮文档批）；②**H8.x 九桶议题闭合**：08 §4 原文核对确认九项全是状态账、无抽取桶，c176dc6 口径 A（只记 by_rule）协议合法，CANON 兜底才是越权——冻结会仅追认 08 勘误回填（`docs/freeze-meeting-and-r8-briefs.md` 议程#3）；③ instr-v3 预注册文档落档（`docs/r4-guided-decoding-prereg.md`）；④ 冻结会 6 项议程 + R8 前两项澄清提纲落档（21f1736），其中确认闸"确认事件进 EventLog=触发 T1 升 epoch"一条**可能追进冻结会**。另：collaborator-guide 已实际移至 `docs/commercial/`（工作树移动未提交），roadmap 旧路径引用待随该移动一并勘误。
+> v0.9→v0.10（三线并行助手收口，2026-10-15）：①**稽核判定 WP-E 读数可采信**（de88d9e 写集核验过、尺面/仲裁面自 90ea95b 零改动、ladder-v5 不回环独立复算成立；纪律注记：**50 章 E2 不得与 10 章 ladder-v4 基线同表并列**——阶梯规模不可比；对标文档 6 处行数/路径陈旧留下轮文档批）；②**H8.x 九桶议题闭合**：08 §4 原文核对确认九项全是状态账、无抽取桶，c176dc6 口径 A（只记 by_rule）协议合法，CANON 兜底才是越权——冻结会仅追认 08 勘误回填（`docs/freeze-meeting-and-r8-briefs.md` 议程#3）；③ instr-v3 预注册文档落档（`docs/r4-guided-decoding-prereg.md`）；④ 冻结会 6 项议程 + R8 前两项澄清提纲落档（21f1736），其中确认闸"确认事件进 EventLog=触发 T1 升 epoch"一条**可能追进冻结会**。另：collaborator-guide 已实际移至 `docs/commercial/`（工作树移动未提交），roadmap 旧路径引用待随该移动一并勘误；⑤ **WP-D 已交付**（开发助手）：`docs/wp-d-noveldb-mapping.md` v0.4 §8 六条实施偏差回填，主线独立复跑验收 6/6 全绿（snapshot_every=5 非逐章宁缺勿造、末态台账计数、noveldb 零改动、tension_to_real 锁定、单 story 自动发现、projects 主键=id@noveldb.py:24），backend 代码待其落库。
 > v0.8→v0.9（现势同步）：**#79 已收口**（de88d9e：ladder-v5 五十章不回环夹具 + `review --fixture` 接线，离线 50/50 全绿、0 修订轮、E1–E6 全 True，链 526→531）；**WP-E 已起跑**：`sampling/wpe50ch/`（@213 暖隧道 qwen2.5:14b，instr-v2 默认，五十字节 ladder-v5），跑批期间 `plot_engine/` 全冻结。
 > v0.7→v0.8（tff 裁定四则，2026-10-15）：①**商业姿态定案**——不进通用工具市场，纵深走垂直有声书交付（Phase 3 行更新）；②**R8 并入**为路线（§2 末），六项按 确认闸>爽点工程>量化去味>拆文库>扫榜>旧稿导入 入队；③**temp0 重复/刀锋失稳的前置 schema（grammar-constrained decoding）登记为 R4 后期补充**（L4 注）；④WP-E **放行**，硬前置 #79（50 章阶梯夹具）开工；oh-story（MIT）吸收通道 = WP-F 入矩阵。
 > v0.6→v0.7（撤销批同步，tff 确认）：#70 (b) 型别批**判负已撤销**（§24：双遍闸 1/3、两臂 Jmed~0.60、失稳由型别互翻扩为事件存在性抖动；revert 29774db=90ea95b，尺退 v3.6@`llm_extract.py:49`，b3 同撤，链验回 526）；#70 收口→WP-A/WP-E 串行条件满足；v4gL 本地臂 E2 10% 带外（v3.7 尺面判负旁证）。补记入 §24。
@@ -130,7 +130,7 @@
 |---|---|---|---|---|
 | Phase 0 生产内核 | alexandria Phase 0 | L0–L3 + R5 压测 | 已建成，50 章证据缺 | **WP-E 已放行（tff 2026-10-15）**；#79 夹具已收口（de88d9e）；**在跑**：`sampling/wpe50ch/` |
 | Phase 1 剧情能力 | epoch_1 语义层（`docs/epoch1-foreshadow-design.md` v0.2） | R0→R1→R2→R3 | 设计稿已产出待冻结 | 契约冻结会 → WP-A 码批（串行条件已满足：#70 撤销收口） |
-| Phase 2 成品质量 | 测量/文风/生成约束 | R4 + R5 + R6 | 约半数超前开工 | WP-B 码批 / **WP-D 即刻开工**（`docs/wp-d-noveldb-mapping.md` v0.2） |
+| Phase 2 成品质量 | 测量/文风/生成约束 | R4 + R5 + R6 | 约半数超前开工 | WP-B 码批 / **WP-D 已交付**（`docs/wp-d-noveldb-mapping.md` v0.4 §8） |
 | Phase 3 商业验证 | 盲测→读者→付费 | R6 + R7 + 盲测 + **R8** | 工具已备，数据未启动 | **已定案：不进通用工具市场，纵深走垂直有声书交付**；50 章产物 → 盲评 → 接 R7 |
 
 **顺序律**：R0（契约冻结）是 R1/R2/R3 的硬前置；R4/R5/R6 与 R0–R3 可并行；R7 全程并行、在 R6 后汇合。
@@ -147,7 +147,7 @@
 | WP-A 伏笔语义码批 | `plot_engine/models/ledger.py`、`models/state.py`、`models/event.py`、`reducers/plot.py`、`validator.py`（仅 H9 族）、`llm_extract.py`（仅 PAYLOAD_SCHEMA+尺戳，**串行 #70 后**）、`derive.py`（仅联动校验，**串行 b3 后**）、`revision.py`（仅 RULE_TO_LEVEL 登记）、`plot_engine/tests/`、`alexandria-spec-v0.2/`（01/03/04/05/09 + CHANGELOG） | 无 | **串行于 #70 三跑收口之后（已满足：#70 判负撤销 90ea95b）；尺戳用 v3.8** | 契约冻结（`docs/epoch1-foreshadow-design.md` v0.2）+ tff | 冻结后开放；设计稿已产出 |
 | WP-B guided decoding | `plot_engine/llm.py`、`plot_engine/tests/test_llm_client.py`、根目录 `router_*.json` | 无 | 跑批需独占 @213 车道 | 码批无门控；**跑批需 tff 放行** | 码批现在可并行；跑批排队 |
 | WP-C 文风 lint | `plot_engine/ai_flavor_lint.py` + `plot_engine/tests/` | **`plot_engine/ai_flavor_*.py` 是他人在做面（指南 §2）** | — | tff 协调归属 | **暂停** |
-| WP-D noveldb 导入 | `backend/` 新导入器模块 + 测试（`plot_engine/` 零改动）；依据 `docs/wp-d-noveldb-mapping.md` v0.2 | 无（禁区清单不含 `backend/`） | 无（纯离线，指南 §3 点名） | 无（开放问题①已关闭） | **现在即可开工** |
+| WP-D noveldb 导入 | `backend/plot_import.py` + `backend/tests/`（`plot_engine/` 零改动）；依据 `docs/wp-d-noveldb-mapping.md` v0.4 §8 | 无（禁区清单不含 `backend/`） | 无（纯离线，指南 §3 点名） | 无 | **已交付**：验收 6/6 + 链 531 零回归，主线独立复跑核过；六条实施偏差已回填 §8；**backend 代码尚未落库**（待开发助手 commit 或稽核放行） |
 | WP-F oh-story 吸收 | `docs/`（方法论+需求拆解），如落地 lint 另批申报 | 量化去味条目与 WP-C 同面（禁区 `ai_flavor_*.py`） | 零 GPU；AGPL 件禁代码引入 | R8 入队序第 4–5 位 | 排队（R8） |
 | WP-E 50 章压测 | `sampling/<批次>/` + 新报告 `docs/phase0-50ch-stress.md` | 禁读 `docs/samples/blind-v2paired-key.md` | 独占 @213；跑批期间 `plot_engine/` 全冻结 | **已放行（tff 2026-10-15）**；锁 qwen2.5:14b；谱系=**暖**（与 v4 基线同谱系）；夹具=ladder-v5 | **在跑 `sampling/wpe50ch/`（#79 收口 de88d9e 后即起）** |
 
@@ -190,7 +190,7 @@
 | `docs/project-roadmap.md`（本文 v0.6） | 层 × 路线 + 撞车矩阵 + 在跑批次登记 |
 | `docs/collaborator-guide.md` v1.0 | 纪律包 + 禁区清单（冲突时纪律以它为准） |
 | `docs/epoch1-foreshadow-design.md` v0.2 | WP-A epoch_1 契约设计稿（待冻结；尺戳 v3.8，串行 #70/b3） |
-| `docs/wp-d-noveldb-mapping.md` v0.2 | WP-D 字段映射表（开发入场券，开放问题①已关闭） |
+| `docs/wp-d-noveldb-mapping.md` v0.4 | WP-D 字段映射表 + §8 实施回填（已交付） |
 | `docs/migration-plan.md` | 轨道二 S0–S4 迁移总计划 |
 | `alexandria-spec-v0.2/`（`00`–`10` + `CHANGELOG.md` + `README.md`） | 协议冻结基线 |
 
