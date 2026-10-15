@@ -49,6 +49,8 @@ RULE_TO_LEVEL: Dict[str, RootCauseLevel] = {
     # §4.2 Contract：must_change 的 Δ 在本章没有实现事件可兑现（W1）。归 writer 的话，
     # 阶梯要先烧满重写预算才轮到契约层，而重写永远变不出一条不存在的 Δ（批次 4 实测）。
     "H5.3": "contract",
+    # 伏笔 H9 族（WP-A 设计稿 §4）：逾期=弧线债，无源回收=抽取料错，长期无提示= writer 没写钩子
+    "H9.1": "arc", "H9.2": "extraction", "H9.3": "writer",
     # §4.7 State：replay 对不上账
     "REPLAY_INCONSISTENT": "state",
 }

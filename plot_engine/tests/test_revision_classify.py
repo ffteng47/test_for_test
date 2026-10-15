@@ -72,3 +72,10 @@ def test_non_auto_fixable_layers_have_no_action():
     # 06 §4.4/§4.5 走 epoch 升级、§4.6 即改协议 → 一律人工，绝不自动重写
     for level in ("fact", "event", "validator"):
         assert action_for(level, p) is None, level
+
+
+def test_h9_family_routing():
+    # WP-A 设计稿 §4：逾期=弧线债，无源回收=抽取料错，长期无提示=writer
+    assert classify_root_cause(_res("H9.1")).level == "arc"
+    assert classify_root_cause(_res("H9.2")).level == "extraction"
+    assert classify_root_cause(_res("H9.3")).level == "writer"

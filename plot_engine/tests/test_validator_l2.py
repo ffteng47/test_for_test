@@ -224,3 +224,72 @@ def test_signal_unhit_is_soft():
     c = _contract(reader_signals=[{"fact_id": "fact_000003", "target_state": "knows"}])
     f = [x for x in _l2([], c) if x.rule_id == "SIGNAL_UNHIT"]
     assert f and f[0].severity == "soft"
+
+
+# --- H9 伏笔生命周期（WP-A 设计稿 §4，一正一反）---
+from plot_engine.models.ledger import ForeshadowingEntry  # noqa: E402
+
+
+def _fs(**over):
+    base = dict(foreshadow_id="fsh_000001", fact_id="fact_000003", lifecycle="planted",
+                strength=600, planted_chapter=46, due_by_chapter=60,
+                source_event_id="evt_00000046_000", last_updated_chapter=46, epoch=EPOCH)
+    return ForeshadowingEntry(**{**base, **over})
+
+
+def _st_fs(*entries):
+    return _state().model_copy(update={"foreshadowing": list(entries)})
+
+
+def test_h9_1_overdue_hard():
+    f = _l2([], _contract(), state=_st_fs(_fs(due_by_chapter=46, last_updated_chapter=46)),)
+    # due=46 < ch=47 逾期；last_updated 同步设为 46 以免 H9.3（diff=1<5）串扰
+    assert "H9.1" in _codes(f)
+
+
+def test_h9_1_not_overdue_or_expired_no_fire():
+    st = _st_fs(_fs(due_by_chapter=47, planted_chapter=46))
+    assert "H9.1" not in _codes(_l2([], _contract(), state=st))
+    st2 = _st_fs(_fs(due_by_chapter=46, lifecycle="expired"))
+    assert "H9.1" not in _codes(_l2([], _contract(), state=st2))
+
+
+def test_h9_2_sourceless_paid_hard():
+    p = _p(proposed_event_type="FORESHADOWING_PAID", target=None,
+           payload={"foreshadow_id": "fsh_000009"})
+    assert "H9.2" in _codes(_l2([p], _contract(), state=_st_fs(_fs())))
+
+
+def test_h9_2_set_then_paid_in_batch_no_fire():
+    s = _p(proposed_event_type="FORESHADOWING_SET",
+           payload={"foreshadow_id": "fsh_000002", "fact_id": "fact_000003",
+                    "due_by_chapter": 60, "strength": 500})
+    pd = _p(seq=1, proposed_event_type="FORESHADOWING_PAID",
+            payload={"foreshadow_id": "fsh_000002"})
+    f = _l2([s, pd], _contract(), state=_st_fs())
+    assert "H9.2" not in _codes(f)
+
+
+def test_h9_3_stalled_planted_soft():
+    st = _st_fs(_fs(planted_chapter=41, last_updated_chapter=41, due_by_chapter=60))
+    f = [x for x in _l2([], _contract(), state=st) if x.rule_id == "H9.3"]
+    assert f and f[0].severity == "soft"
+
+
+def test_h9_3_fresh_or_hinted_no_fire():
+    st = _st_fs(_fs(planted_chapter=46, due_by_chapter=60))
+    assert "H9.3" not in _codes(_l2([], _contract(), state=st))
+    st2 = _st_fs(_fs(planted_chapter=41, due_by_chapter=60,
+                     lifecycle="hinted", last_updated_chapter=45))
+    assert "H9.3" not in _codes(_l2([], _contract(), state=st2))
+
+
+def test_h9_4_shallow_paid_observation():
+    st = _st_fs(_fs(planted_chapter=44, lifecycle="paid", paid_chapter=46))
+    f = [x for x in _l2([], _contract(), state=st) if x.rule_id == "H9.4"]
+    assert f and f[0].severity == "observation"
+
+
+def test_h9_4_deep_paid_no_fire():
+    st = _st_fs(_fs(planted_chapter=40, lifecycle="paid", paid_chapter=46))
+    assert "H9.4" not in _codes(_l2([], _contract(), state=st))

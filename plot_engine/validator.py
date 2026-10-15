@@ -539,11 +539,46 @@ def _hook_ok(markup, contract) -> bool:
     return in_last3 and strength_ok and kind_ok
 
 
+# --- 伏笔生命周期 H9 族（WP-A 设计稿 §4；05 epoch_1）---
+_H9_HINT_STALL_CH = 5   # H9.3 无 hint 联动章数阈值（设计稿建议入 RevisionPolicy，validator 暂无 policy 入参）
+_H9_SHALLOW_PAID_CH = 3  # H9.4 回收过浅章数
+
+
+def _l2_h9(sim: Simulation, state: StoryState, contract) -> List[Finding]:
+    findings: List[Finding] = []
+    ch = contract.chapter_no if contract is not None else sim.cur.chapter_no
+    for e in sim.cur.foreshadowing:
+        if e.lifecycle not in ("paid", "expired") and ch > e.due_by_chapter:
+            findings.append(_f("H9.1", "hard",
+                               f"伏笔 {e.foreshadow_id} 逾期 {ch - e.due_by_chapter} 章未回收"
+                               f"（due_by_chapter={e.due_by_chapter}）",
+                               evidence=e.foreshadow_id))
+        if (e.lifecycle == "planted"
+                and ch - e.planted_chapter >= _H9_HINT_STALL_CH
+                and e.last_updated_chapter == e.planted_chapter):
+            findings.append(_f("H9.3", "soft",
+                               f"伏笔 {e.foreshadow_id} 埋点后 {ch - e.planted_chapter} 章无任何 hint 联动",
+                               evidence=e.foreshadow_id))
+        if (e.lifecycle == "paid" and e.paid_chapter is not None
+                and e.paid_chapter - e.planted_chapter < _H9_SHALLOW_PAID_CH):
+            findings.append(_f("H9.4", "observation",
+                               f"伏笔 {e.foreshadow_id} 埋点后 {e.paid_chapter - e.planted_chapter} 章即回收（过浅）",
+                               evidence=e.foreshadow_id))
+    for p, reason in sim.failed:
+        if p.proposed_event_type == "FORESHADOWING_PAID" and reason.startswith("reducer_error"):
+            eid = proposal_event_id(p)
+            findings.append(_f("H9.2", "hard",
+                               f"FORESHADOWING_PAID 回收无效：无源伏笔 id 或重复/失效回收（{eid}）",
+                               evidence=eid))
+    return findings
+
+
 def _run_l2(sim: Simulation, state: StoryState, proposals: List[EventProposal],
             *, contract, markup) -> List[Finding]:
     findings: List[Finding] = []
     findings += _l2_h2(sim, state, proposals, contract, markup)
     findings += _l2_h5(sim, state, proposals, contract, markup)
+    findings += _l2_h9(sim, state, contract)
     return findings
 
 
