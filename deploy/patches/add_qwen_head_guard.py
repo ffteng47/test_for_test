@@ -34,7 +34,7 @@ HEAD_WIN_S = 0.6          # 正文起点只在前 600ms 内找
 BURST_FLOOR_DB = -40.0    # 头部“有能量”下限
 GAP_DB = -45.0            # 头/正文间的静音间隙上限
 ONSET_SUSTAIN = 3         # 连续 3 帧达标才算正文开始
-PRE_ROLL_S = 0.02         # 裁到正文起点前 20ms
+PRE_ROLL_S = 0.003        # 裁到正文起点前 3ms（原 20ms 会把噪底尾巴留在头上→可听"匝"）
 FADE_S = 0.005
 
 
@@ -90,6 +90,9 @@ if __name__ == "__main__":
                           1e-5 * np.ones(int(0.1 * sr), dtype=np.float32), speech])
     out = clean(bad, sr)
     assert len(out) < len(bad) - int(0.1 * sr), (len(bad), len(out))
+    # 1b) 预卷收紧：裁后首 10ms 必须已进语音（防 20ms 旧行为留静音/噪底尾巴）
+    r0 = np.sqrt((out[:int(0.01 * sr)] ** 2).mean())
+    assert 20 * np.log10(r0 + 1e-9) > -25.0, "预卷里还留着尾巴"
     # 2) 连续气声起音（无间隙）→ 不许裁
     soft = np.concatenate([np.linspace(0.001, 0.3, int(0.3 * sr)).astype(np.float32),
                            speech[:int(0.5 * sr)]])
