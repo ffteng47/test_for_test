@@ -46,10 +46,7 @@ _ID_RE = re.compile(r"^(?:char|fact|item|loc|faction|realm|ability|region|rel)_\
 #        只活在夹具 docstring（experiment_10ch `_told`），提示词从未告诉模型 ⇒ 抽取器把
 #        说者记成 actor，两方 ledger 全记错、H2.2 双杀。补一行判据文。触碰尺面 ⇒ 读数离
 #        v3.5 表，重基线（v4e×3）必须在这行生效**之后**跑。
-# v3.7 (b) 型别面（§16 缺失表 READS 7/BELIEVES 5/SUSPECTS 4 领衔 + §17 诊断「事实演员全对、
-#        类型并成 OBSERVES」；q30b 裁决：按 14b 同尺读数推进，30b 只作旁证）：判据行给
-#        READS/OBSERVES 立切分判据、BELIEVES/SUSPECTS 补落格触发词。触碰尺面 ⇒ 读数离 v3.6 表。
-EXTRACTION_RULER = "v3.7-type-criteria-reads-belief"
+EXTRACTION_RULER = "v3.6-is-told-actor"
 
 # 本通道只承接 reducer 真能消费的 event_type，且键名逐一对齐 01 §4.1 的实际取用（reducer 里
 # 的 event.payload[...]）。缺键的产物放下去只会变成 MALFORMED_PROPOSAL 级联，归因反而更难。
@@ -369,12 +366,10 @@ def extract_prompt(draft, scene_plan, contract, state) -> List[dict]:
         '"payload": object, "paragraph": 整数段号}。',
         "event_type 只能取（本阶段只承接这些，其余写了也没用）:",
         f"  {taxonomy}。",
-        "类型按「该事实如何进入人物内心」选：OBSERVES=亲眼注意到举动或场景；"
-        "READS=读到写着的文字（信、簿记、笔迹——账走文字进来的就是 READS，不是 OBSERVES）；"
+        "类型按「该事实如何进入人物内心」选：OBSERVES=在场亲眼注意到；READS=读到写着的文字；"
         "IS_TOLD=被人当面告知（actor 是**听到告知的人**，知识进他的账；说者不是 actor）；"
-        "INFERS=由已知证据推出；BELIEVES=人物内心确认某事为真（自语、暗自认定、被驳不倒"
-        "都算——正文显示他信，就落 BELIEVES）；SUSPECTS=起疑并把嫌疑指向某人/某事"
-        "（介于怀疑与确认之间；证据未足，只要疑心对象明确就算）；DOUBTS=明确怀疑或否定该事。",
+        "INFERS=由已知证据推出；BELIEVES=内心确认某事为真；"
+        "SUSPECTS=起疑并把嫌疑指向某人/某事；DOUBTS=明确怀疑或否定该事。",
         f"各事件 payload 的键如下: {_SCHEMA_HINT}。",
         "payload 的键名只能是上面列出的键名本身，绝不要把事件类型名（如 OBSERVES）写成键。",
         "fact_id / conclusion_fact_id / stated_fact_id / audience 这些键的值必须是下面词表里"
