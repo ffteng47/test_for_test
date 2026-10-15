@@ -85,7 +85,7 @@ class CharacterGoalEntry(BaseModel):
 | `CONTRACT_FULFILLED/VIOLATED` | 未定义 | 不变（本轮不动） |
 | `CASE_SOLVED` | 未定义 | 不变（本轮不动） |
 
-注意：`PAYLOAD_SCHEMA` 变更 = `llm_extract.py` 行为面变更 = **尺面变更**，按纪律 §1.2 同步 bump `EXTRACTION_RULER`（当前 v3.7 → **v3.8**；v3.7 已由在队 #70 型别批 `_patch_b12_typecriteria.diff:9-13` 占用，本批**串行于 #70 施加之后**，一因一批不双占）并钉进 `test_instr.py` 尺戳用例；新旧尺号读数分表。
+注意：`PAYLOAD_SCHEMA` 变更 = `llm_extract.py` 行为面变更 = **尺面变更**，按纪律 §1.2 同步 bump `EXTRACTION_RULER`（当前 v3.6 → **v3.8**（v3.7 已烧不复用）；v3.7 已由在队 #70 型别批 `_patch_b12_typecriteria.diff:9-13` 占用，本批**串行于 #70 施加之后**，一因一批不双占）并钉进 `test_instr.py` 尺戳用例；新旧尺号读数分表。
 
 ---
 

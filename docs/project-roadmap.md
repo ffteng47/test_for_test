@@ -1,11 +1,13 @@
 # 项目路线图（层 × 路线对照）
 
-> 版本：v0.5（2026-10-15 15:40 补时同步，配套 `docs/collaborator-guide.md` v1.0）
+> 版本：v0.6（2026-10-15 15:40 补时同步，配套 `docs/collaborator-guide.md` v1.0）
 > 性质：诊断级路线文档。所有"现状"条目均有代码/文档证据；"路线"条目为待审方案，确认后才进开发。
 > 冲突仲裁：纪律/禁区以 `docs/collaborator-guide.md` 为准；并行窗口以本文 §4 撞车矩阵为准。
 > 单写者纪律：本文档由问题助手会话持有；其他会话改动须先批注声明（防文档面撞车，稽核建议 2026-10-15）。
 > v0.2→v0.3：全文补齐文件路径，新增 §6 关键文件索引。
 > v0.4→v0.5（现势同步，经 tff 授权补齐）：#69 已收口（§23：Jmed 三臂回 1.0、闸 1/3、H5.1 税 0）；#70 (b) 批已施加（尺戳 v3.7 入册 29774db，b3 同批，链验 528），三跑 v4g1..3 在跑；#78 判过（v4fL E2 20% 带内）；WP-E 排队条件收敛为 #70 收口；基线 526→528。
+> v0.6→v0.7（撤销批同步，tff 确认）：#70 (b) 型别批**判负已撤销**（§24：双遍闸 1/3、两臂 Jmed~0.60、失稳由型别互翻扩为事件存在性抖动；revert 29774db=90ea95b，尺退 v3.6@`llm_extract.py:49`，b3 同撤，链验回 526）；#70 收口→WP-A/WP-E 串行条件满足；v4gL 本地臂 E2 10% 带外（v3.7 尺面判负旁证）。补记入 §24。
+> v0.5→v0.6（tff 指令，2026-10-15）：§6 新增"商业化分析文档"索引（docs/commercial/ 9 份 + refrence_projects/ 代码基线）
 > v0.3→v0.4（稽核修正）：① WP-A 尺戳改 v3.8 并串行于在队 #70 之后（v3.7 已被 `_patch_b12_typecriteria.diff:9-13` 占用）；② §4 删除错误的 WP-A/WP-B 互斥（WP-B 写集为 `llm.py`/router，不改 `llm_extract.py`）、补登在跑批次 #69/#70/b3/#78；③ WP-D 开放问题①关闭（等 S2 §2.3 `novel_chapters` 表）；④ WP-E 排队至 #69/#70/#78 收口后；⑤ 立单写者纪律；⑥ 指南基线 525→526 已代为刷新。
 
 ---
@@ -32,7 +34,7 @@
 | L1 状态内核 | `plot_engine/reducer.py`、`plot_engine/reducers/`、`store.py`、`eventlog.py`、`replay.py`、`commit.py`、`reduce.py`、`canonical.py`、`consistency.py` | 完整；`reducers/plot.py` 为 no-op | **R1 剧情语义路线**：伏笔生命周期、人物目标落账 | Phase 1 主线 |
 | L2 判定层 | `plot_engine/validator.py`、`derive.py`、`sceneplan.py`、`classify.py` | L1/L2 确定性判定完整 | **R2 判定扩展路线**：剧情规则族（H9.x）；L3 LLM 软判定预留 | Phase 1 伴随 |
 | L3 修订层 | `plot_engine/revision.py`、`revision_actions.py`、`rescue.py` | 归因阶梯 + 人工重入完整 | **R3 定向返工路线**：arc 级自动动作从"升级人工"走向"半自动" | Phase 1→2 |
-| L4 生成层 | `plot_engine/llm.py`、`llm_writer.py`、`llm_extract.py`、`extract.py`、`markup.py`、`markup_channel.py`、`writer.py`、`live.py` | 角色路由 + 后置校验完整；无前置约束；尺戳 v3.7 | **R4 生成约束路线**：guided decoding 接入；模型 bakeoff 收敛 | Phase 2 前置 |
+| L4 生成层 | `plot_engine/llm.py`、`llm_writer.py`、`llm_extract.py`、`extract.py`、`markup.py`、`markup_channel.py`、`writer.py`、`live.py` | 角色路由 + 后置校验完整；无前置约束；尺戳 v3.6 | **R4 生成约束路线**：guided decoding 接入；模型 bakeoff 收敛 | Phase 2 前置 |
 | L5 测量层 | `plot_engine/metrics.py`、`prose_audit.py`、`ai_flavor_lint.py`、`ai_flavor_baseline.py`、`instr.py`、`instr_cli.py`、`instr_measure.py`、`instr_replay.py`、`reanchor.py`、`counterfactual.py`、`diff_audit.py`、`fixture_audit.py`、`model_probe.py`、`experiment.py`、`review.py` | 体系最完整，尺号制度化 | **R5 测量运营路线**：50 章压测、lint 扩充、盲测运营 | 贯穿全程 |
 | L6 出口层 | `plot_engine/reading.py`、`sample.py`、`readout.py`、`viewer.py`、`blind_review.py` | 内部出口完整 | **R6 交付接线路线**：state.db → `backend/noveldb.py` 导入 → 有声书管线 | Phase 2→3 |
 | 轨道二 | `backend/`（`noveldb.py`、`asr_qc.py`、`context_manager.py`、`domain.py`、`emotion_map.py`、`master_audio.py`、`projects.py`、`rules.py`、`sync_state.py`） | S2 骨架阶段 | **R7 有声书管线路线**：`docs/migration-plan.md` S2→S3→S4 | 并行轨 |
@@ -78,7 +80,7 @@
 
 ### L4 生成层 → R4 生成约束路线
 
-- **现状**：后置校验链完整但无前置约束；`plot_engine/llm.py:40` `extra_body` 透传口已在；温度定点×1000（`llm.py:39`）；**尺/生成锁 qwen2.5:14b（指南 §1.5）**；`EXTRACTION_RULER` 当前 v3.7-type-criteria-reads-belief（`llm_extract.py:52`，#69/#70 已先后入册 f326660/29774db；**WP-A 用 v3.8**）。
+- **现状**：后置校验链完整但无前置约束；`plot_engine/llm.py:40` `extra_body` 透传口已在；温度定点×1000（`llm.py:39`）；**尺/生成锁 qwen2.5:14b（指南 §1.5）**；`EXTRACTION_RULER` 当前 v3.6-is-told-actor（`llm_extract.py:49`，#69 入册 f326660；#70 曾上 v3.7/29774db，判负撤销 90ea95b，戳号 v3.7 已烧不复用；**WP-A 用 v3.8**）。
 - **路线**：
   1. extract 角色接 guided decoding（vLLM `guided_json`/`structured_outputs`，Ollama 降级 `format`）——配置面先行（根目录 `router_*.json`，如 `router_q25_14b.json`、`deepseek.router.json`），代码面小改（`llm.py`）；产出读数变化须按"一因一批 + 尺戳 bump + 新旧分表"（指南 §1.2，尺戳用例钉 `plot_engine/tests/test_instr.py`）。
   2. 模型 bakeoff 收敛：从根目录多份 `router_*.json` 收敛到生产双车道各一；qwen3 MoE 禁上尺（指南 §1.5）。
@@ -87,7 +89,7 @@
 
 ### L5 测量层 → R5 测量运营路线
 
-- **现状**：体系最完整：决策桶/E2 率（`metrics.py`）、n-gram 复述（`prose_audit.py`）、AI 味 lint+基线（`ai_flavor_lint.py`、`ai_flavor_baseline.py`）、反事实（`counterfactual.py`）、重锚（`reanchor.py`）、instr 仪器（`instr*.py`）、尺号制度（v3.7）。
+- **现状**：体系最完整：决策桶/E2 率（`metrics.py`）、n-gram 复述（`prose_audit.py`）、AI 味 lint+基线（`ai_flavor_lint.py`、`ai_flavor_baseline.py`）、反事实（`counterfactual.py`）、重锚（`reanchor.py`）、instr 仪器（`instr*.py`）、尺号制度（v3.6）。
 - **路线**：
   1. **50 章压测**（Phase 0 验收证据化）：可追溯/发现违规/状态恢复三条逐条出证据；落盘纪律（指南 §1.1）：`sampling/<批次>/` + 可复现命令进报告（新文档 `docs/phase0-50ch-stress.md`，创建前确认）。
   2. lint 规则持续扩充（1 正 1 反纪律）——**当前暂停，见 §4 WP-C**。
@@ -115,8 +117,8 @@
 
 | 用户计划 | 项目映射 | 涉及路线 | 当前状态 | 下一步 |
 |---|---|---|---|---|
-| Phase 0 生产内核 | alexandria Phase 0 | L0–L3 + R5 压测 | 已建成，50 章证据缺 | WP-E 压测出证据（排队至 #70 三跑收口后；#69/#78 已收口） |
-| Phase 1 剧情能力 | epoch_1 语义层（`docs/epoch1-foreshadow-design.md` v0.2） | R0→R1→R2→R3 | 设计稿已产出待冻结 | 契约冻结会 → WP-A 码批（串行 #70 三跑收口后） |
+| Phase 0 生产内核 | alexandria Phase 0 | L0–L3 + R5 压测 | 已建成，50 章证据缺 | WP-E 压测出证据（#69/#70/#78 均已收口，排队条件满足，待 tff 放行） |
+| Phase 1 剧情能力 | epoch_1 语义层（`docs/epoch1-foreshadow-design.md` v0.2） | R0→R1→R2→R3 | 设计稿已产出待冻结 | 契约冻结会 → WP-A 码批（串行条件已满足：#70 撤销收口） |
 | Phase 2 成品质量 | 测量/文风/生成约束 | R4 + R5 + R6 | 约半数超前开工 | WP-B 码批 / **WP-D 即刻开工**（`docs/wp-d-noveldb-mapping.md` v0.2） |
 | Phase 3 商业验证 | 盲测→读者→付费 | R6 + R7 + 盲测 | 工具已备，数据未启动 | 50 章产物 → 盲评 → 接 R7 |
 
@@ -131,22 +133,22 @@
 | 工作包 | 写集（路径） | 禁区碰撞 | 时间互斥 | 放行门控 | 并行窗口结论 |
 |---|---|---|---|---|---|
 | WP-0 集成中枢 | `plot_engine/live.py`、`review.py`、`experiment.py` + `alexandria-spec-v0.2/CHANGELOG.md` | 无 | 批次在跑时勿改（指南 §2） | tff | 全程，跑批窗口内冻结 |
-| WP-A 伏笔语义码批 | `plot_engine/models/ledger.py`、`models/state.py`、`models/event.py`、`reducers/plot.py`、`validator.py`（仅 H9 族）、`llm_extract.py`（仅 PAYLOAD_SCHEMA+尺戳，**串行 #70 后**）、`derive.py`（仅联动校验，**串行 b3 后**）、`revision.py`（仅 RULE_TO_LEVEL 登记）、`plot_engine/tests/`、`alexandria-spec-v0.2/`（01/03/04/05/09 + CHANGELOG） | 无 | **串行于 #70 三跑收口之后（补丁已施加，读数在跑）；尺戳用 v3.8** | 契约冻结（`docs/epoch1-foreshadow-design.md` v0.2）+ tff | 冻结后开放；设计稿已产出 |
+| WP-A 伏笔语义码批 | `plot_engine/models/ledger.py`、`models/state.py`、`models/event.py`、`reducers/plot.py`、`validator.py`（仅 H9 族）、`llm_extract.py`（仅 PAYLOAD_SCHEMA+尺戳，**串行 #70 后**）、`derive.py`（仅联动校验，**串行 b3 后**）、`revision.py`（仅 RULE_TO_LEVEL 登记）、`plot_engine/tests/`、`alexandria-spec-v0.2/`（01/03/04/05/09 + CHANGELOG） | 无 | **串行于 #70 三跑收口之后（已满足：#70 判负撤销 90ea95b）；尺戳用 v3.8** | 契约冻结（`docs/epoch1-foreshadow-design.md` v0.2）+ tff | 冻结后开放；设计稿已产出 |
 | WP-B guided decoding | `plot_engine/llm.py`、`plot_engine/tests/test_llm_client.py`、根目录 `router_*.json` | 无 | 跑批需独占 @213 车道 | 码批无门控；**跑批需 tff 放行** | 码批现在可并行；跑批排队 |
 | WP-C 文风 lint | `plot_engine/ai_flavor_lint.py` + `plot_engine/tests/` | **`plot_engine/ai_flavor_*.py` 是他人在做面（指南 §2）** | — | tff 协调归属 | **暂停** |
 | WP-D noveldb 导入 | `backend/` 新导入器模块 + 测试（`plot_engine/` 零改动）；依据 `docs/wp-d-noveldb-mapping.md` v0.2 | 无（禁区清单不含 `backend/`） | 无（纯离线，指南 §3 点名） | 无（开放问题①已关闭） | **现在即可开工** |
-| WP-E 50 章压测 | `sampling/<批次>/` + 新报告 `docs/phase0-50ch-stress.md` | 禁读 `docs/samples/blind-v2paired-key.md` | 独占 @213；跑批期间 `plot_engine/` 全冻结 | **tff 显式"放行"；排队至 #70 三跑收口后**；锁 qwen2.5:14b；暖/冷谱系二选一（指南 §1.3） | 排队中 |
+| WP-E 50 章压测 | `sampling/<批次>/` + 新报告 `docs/phase0-50ch-stress.md` | 禁读 `docs/samples/blind-v2paired-key.md` | 独占 @213；跑批期间 `plot_engine/` 全冻结 | **tff 显式"放行"；排队条件已满足（#70 收口）**；锁 qwen2.5:14b；暖/冷谱系二选一（指南 §1.3） | 排队中 |
 
 **在跑/在队批次登记（时间互斥的真实来源，2026-10-15 稽核实测）**：
 
 | 批次 | 内容 | 触碰面 | 状态 |
 |---|---|---|---|
 | #69 (a) 归因判据批 | IS_TOLD actor 判据入尺，尺戳 v3.6 | `plot_engine/llm_extract.py` + `plot_engine/tests/test_instr.py` | **已收口**（f326660；读数 §23：Jmed 1.0×3、闸 1/3、H5.1 税 0/0/0） |
-| #70 (b) 型别批 | READS/BELIEVES/SUSPECTS 型别判据，尺戳 **v3.7** | `plot_engine/llm_extract.py:52` + `plot_engine/tests/test_instr.py`（`_patch_b12_typecriteria.diff`） | **已施加**（29774db）；三跑 v4g1..3 在跑（ba8oj07h3） |
-| b3 合法性修正批 | dead/unborn 不进 mental 事件候选 actor 集 | `plot_engine/derive.py:154-169` + `plot_engine/tests/test_derive_contract.py`（`_patch_b3_deadfilter.diff`） | **已施加**（随 29774db） |
+| #70 (b) 型别批 | READS/BELIEVES/SUSPECTS 型别判据，尺戳 **v3.7** | `plot_engine/llm_extract.py:52` + `plot_engine/tests/test_instr.py`（`_patch_b12_typecriteria.diff`） | **判负已撤销**（三跑 v4g1..3 闸 1/3，§24；revert=90ea95b，尺退 v3.6） |
+| b3 合法性修正批 | dead/unborn 不进 mental 事件候选 actor 集 | `plot_engine/derive.py:154-169` + `plot_engine/tests/test_derive_contract.py`（`_patch_b3_deadfilter.diff`） | **已撤销**（随 90ea95b；dead/unborn 过滤回到原实现） |
 | #78 闸 | 生成批跨机可移植性 | 全生成面 | **已判过**（v4fL E2 20% 带内，§23；生成批默认车道仍 @213） |
 
-**验证基线（改码前后都要绿）**：`.venv/Scripts/python.exe -m pytest plot_engine/tests -q` = **528 passed**（2026-10-15 #70 施加后复测 3.81s；注：沙盒内跑会因 WinError 5 临时目录权限产生 87 errors 假象，须非沙盒或先配置可用 TEMP）。
+**验证基线（改码前后都要绿）**：`.venv/Scripts/python.exe -m pytest plot_engine/tests -q` = **526 passed**（2026-10-15 撤销批后复测；历次 525→526→528→撤→526；注：沙盒内跑会因 WinError 5 临时目录权限产生 87 errors 假象，须非沙盒或先配置可用 TEMP）。
 
 ---
 
@@ -161,8 +163,8 @@
 | 读者验证样本不足 | Phase 3 | 盲测下限纪律已内置（`plot_engine/blind_review.py`） |
 | 他人脏面活跃（`frontend/`、`docs/usage-wiki.md`、`docs/ebooks-standard.md`、`deploy/patches/` 等在改） | WP-C/集成 | 禁区清单勿碰；commit 前 `git status` 对照指南 §2 |
 | 沙盒环境跑测试产生假红（WinError 5） | 全部码批验收 | 验收跑批一律非沙盒或预配 TEMP，报告注明环境 |
-| 尺戳双占（v3.7 已被 #70 占用） | WP-A/R4 | WP-A 钉死 v3.8 并串行 #70 之后；今后尺戳分配进 §4 批次登记 |
-| `docs/collaborator-guide.md` 基线数字滞后 | 全部 | 已两次刷新（525→526→528，随 #69/#70 入册）；仲裁以 528 为准 |
+| 尺戳双占（v3.7 已被 #70 占用后撤销） | WP-A/R4 | 戳号已烧不复用；WP-A 钉死 v3.8；今后尺戳分配进 §4 批次登记 |
+| `docs/collaborator-guide.md` 基线数字滞后 | 全部 | 已三次刷新（525→526→528→撤→526）；仲裁以 526 为准 |
 
 ---
 
@@ -172,18 +174,31 @@
 
 | 路径 | 用途 |
 |---|---|
-| `docs/project-roadmap.md`（本文 v0.4） | 层 × 路线 + 撞车矩阵 + 在跑批次登记 |
+| `docs/project-roadmap.md`（本文 v0.6） | 层 × 路线 + 撞车矩阵 + 在跑批次登记 |
 | `docs/collaborator-guide.md` v1.0 | 纪律包 + 禁区清单（冲突时纪律以它为准） |
 | `docs/epoch1-foreshadow-design.md` v0.2 | WP-A epoch_1 契约设计稿（待冻结；尺戳 v3.8，串行 #70/b3） |
 | `docs/wp-d-noveldb-mapping.md` v0.2 | WP-D 字段映射表（开发入场券，开放问题①已关闭） |
 | `docs/migration-plan.md` | 轨道二 S0–S4 迁移总计划 |
 | `alexandria-spec-v0.2/`（`00`–`10` + `CHANGELOG.md` + `README.md`） | 协议冻结基线 |
 
+### 商业化分析文档（docs/commercial/，2026-10-15 引入）
+
+| 路径 | 用途 |
+|---|---|
+| `docs/commercial/r8-commercial-input-requirements-v1.0.md` | R8 商业化输入路线需求规格（tff 五项裁决已确认；6 项缺陷优先级与验收） |
+| `docs/commercial/oh-story-architecture-and-commercial-analysis-v1.0.md` | Oh Story 架构与商业化分析 |
+| `docs/commercial/ai-novel-writing-assistant-comparison-v1.0.md`（v1.1） | AI-NWA 对标评估（研究稿对账 + 三点修正 + 开放决策支持） |
+| `docs/commercial/refrence/README.md` | 参考项目索引 + 四方对照矩阵 + 机制参考总表 |
+| `docs/commercial/refrence/comparison.md` | 四方 vs 我方对比总文档（互证/差距/反方证据/开放决策支持） |
+| `docs/commercial/refrence/ai-novel-writing-assistant.md`、`inkos.md`、`oh-story.md`、`sillytavern.md` | 分项目架构/商业/业务流/代码流（本地代码核实） |
+
+对应代码基线：`refrence_projects/`（AI-Novel-Writing-Assistant / inkos / oh-story-claudecode / SillyTavern 四个克隆，仅作分析素材）。
+
 ### 在队补丁（未施加，撞车源）
 
 | 路径 | 用途 |
 |---|---|
-| `_patch_b12_typecriteria.diff` | #70 型别批（尺戳 v3.7，改 `llm_extract.py` + `test_instr.py`） |
+| `_patch_b12_typecriteria.diff` | #70 型别批（尺戳 v3.7；判负已撤销 90ea95b，留档待 (b') 重划靶） |
 | `_patch_b3_deadfilter.diff` | b3 合法性批（改 `derive.py:154-169` + `test_derive_contract.py`） |
 | `_patch_a_attribution.diff` | a 归因相关补丁（状态待确认） |
 
@@ -199,7 +214,7 @@
 | `plot_engine/llm.py`、`llm_writer.py`、`llm_extract.py`、`writer.py`、`live.py` | 生成层 |
 | `plot_engine/reading.py`、`sample.py`、`readout.py`、`viewer.py`、`blind_review.py` | 出口层 |
 | `plot_engine/metrics.py`、`prose_audit.py`、`ai_flavor_lint.py`、`instr*.py`、`reanchor.py`、`counterfactual.py` | 测量层 |
-| `plot_engine/tests/`（80+ 测试文件） | 验证基线 528 passed |
+| `plot_engine/tests/`（80+ 测试文件） | 验证基线 526 passed |
 
 ### 交付侧核心代码（backend/）
 
