@@ -1,0 +1,21 @@
+{
+  "_comment": "§19 裁定②：容量假设改用同世代稠密大杯验证——qwen2.5:32b 上尺闸@213。与 router_w5_frozen.json 逐字段同（同世代非思考⇒保留 reasoning_effort:none + max_tokens 2400，保持尺配方同一，唯一变量=模型参数量），只 model 改 qwen2.5:32b。闸判据同 W5：30 草稿双遍 J med ≥0.85、废卷 <2%、钉测章 2/3/9 稳定。过闸⇒容量档+1，可议 v4e 换杯；判负⇒容量假设否证（§18 裁定二的悬念收口）。仅零生成回放，不用于采样臂。排队位：#67 v4d 回放之后（213 单车道）。",
+  "writer": {
+    "base_url": "http://192.168.31.213:11434/v1",
+    "model": "qwen2.5:32b",
+    "timeout_s": 600,
+    "extra_body": {
+      "reasoning_effort": "none"
+    }
+  },
+  "extract": {
+    "base_url": "http://192.168.31.213:11434/v1",
+    "model": "qwen2.5:32b",
+    "max_tokens": 2400,
+    "temperature": 0,
+    "timeout_s": 600,
+    "extra_body": {
+      "reasoning_effort": "none"
+    }
+  }
+}
