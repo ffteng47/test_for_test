@@ -9,6 +9,7 @@ from typing import Dict, List
 from plot_engine.models.event import Event
 from plot_engine.models.ledger import ReaderKnowledgeEntry
 from plot_engine.models.state import StoryState, with_state_hash
+from plot_engine.reducers.plot import hint_foreshadows
 
 # reader_state 序：unaware < hinted/deceived < knows
 _STATE_RANK: Dict[str, int] = {"unaware": 0, "hinted": 1, "deceived": 1, "knows": 2}
@@ -59,4 +60,9 @@ def reduce_reader(event: Event, state: StoryState) -> StoryState:
     else:  # pragma: no cover - 分派表外类型不应进入本 reducer
         raise ValueError(f"reduce_reader 收到非读者层事件: {et}")
 
-    return with_state_hash(state.model_copy(update={"reader_ledger": ledger}))
+    update: Dict[str, object] = {"reader_ledger": ledger}
+    if et == "READER_HINTED" and state.foreshadowing:
+        # 伏笔联动：planted→hinted（WP-A 设计稿 §3）
+        update["foreshadowing"] = hint_foreshadows(
+            state.foreshadowing, fact_id, event.event_id, event.chapter)
+    return with_state_hash(state.model_copy(update=update))

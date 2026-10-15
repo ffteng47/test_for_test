@@ -10,6 +10,7 @@ from typing import Dict, List
 from plot_engine.models.event import Event
 from plot_engine.models.ledger import BeliefEntry
 from plot_engine.models.state import StoryState, with_state_hash
+from plot_engine.reducers.plot import hint_foreshadows
 
 # belief 序：doubts < suspects < believes
 _STATE_RANK: Dict[str, int] = {"doubts": 0, "suspects": 1, "believes": 2}
@@ -76,4 +77,10 @@ def reduce_belief(event: Event, state: StoryState) -> StoryState:
     else:  # pragma: no cover - 分派表外类型不应进入本 reducer
         raise ValueError(f"reduce_belief 收到非信念/陈述类事件: {et}")
 
-    return with_state_hash(state.model_copy(update={"belief_ledger": ledger}))
+    update: Dict[str, object] = {"belief_ledger": ledger}
+    if et == "HINTS" and state.foreshadowing:
+        # 伏笔联动：planted→hinted（WP-A 设计稿 §3）
+        update["foreshadowing"] = hint_foreshadows(
+            state.foreshadowing, event.payload["fact_id"],
+            event.event_id, event.chapter)
+    return with_state_hash(state.model_copy(update=update))

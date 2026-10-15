@@ -37,10 +37,14 @@ def test_dispatch_routes_observes_to_knowledge_ledger():
     assert len(out.knowledge_ledger) == 1
 
 
-def test_dispatch_routes_foreshadowing_as_noop_restamp():
+def test_dispatch_routes_foreshadowing_to_plot_ledger():
+    # epoch_1（WP-A §3）：SET 不再是 no-op，经分派表落伏笔台账
     s = _st()
-    out = Reducer().apply(_ev("FORESHADOWING_SET", {"fact_id": "fact_000003"}), s)
-    assert out.model_dump(exclude={"state_hash"}) == s.model_dump(exclude={"state_hash"})
+    out = Reducer().apply(_ev("FORESHADOWING_SET", {
+        "foreshadow_id": "fsh_000001", "fact_id": "fact_000003",
+        "due_by_chapter": 48, "strength": 600}), s)
+    assert len(out.foreshadowing) == 1
+    assert out.foreshadowing[0].lifecycle == "planted"
 
 
 def test_dispatch_table_covers_all_26_types():
