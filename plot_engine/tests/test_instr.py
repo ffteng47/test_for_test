@@ -213,21 +213,35 @@ def test_w4b_ruler_stamp_bumped_and_flag_records_the_ruling():
     assert instr.W4B_TOUCHED is True
 
 
-def test_v36_ruler_stamp_records_the_is_told_actor_fix():
-    """v3.6 是尺面变更（(a) 归因面：IS_TOLD actor=听的人），必须与 v3.5 读数不同表。"""
+def test_v37_ruler_stamp_records_the_type_criteria_fix():
+    """v3.7 是尺面变更（(b) 型别面：READS/OBSERVES 切分 + BELIEVES/SUSPECTS 落格），
+    必须与 v3.6 读数不同表。"""
     from plot_engine.llm_extract import EXTRACTION_RULER
-    assert EXTRACTION_RULER.startswith("v3.6")
-    assert EXTRACTION_RULER != "v3.5-schema-hint-no-bare-type"
+    assert EXTRACTION_RULER.startswith("v3.7")
+    assert EXTRACTION_RULER != "v3.6-is-told-actor"
+
+
+def _prompt_text():
+    from types import SimpleNamespace
+    from plot_engine.llm_extract import extract_prompt
+    return extract_prompt("正文一段。", None, SimpleNamespace(knowledge_forbidden=[]),
+                          None)[0]["content"]
 
 
 def test_v36_prompt_states_the_is_told_actor_convention():
     """(a) 判据文（§16 ch06 解剖）：actor=听的人此前只活在夹具 docstring，提示词从未
     告诉模型——ch06 不是模型错，是尺没把话说全。判据必须出现在抽取提示词里。"""
-    from types import SimpleNamespace
-    from plot_engine.llm_extract import extract_prompt
-    content = extract_prompt("正文一段。", None, SimpleNamespace(knowledge_forbidden=[]),
-                             None)[0]["content"]
+    content = _prompt_text()
     assert "听到告知的人" in content and "说者不是 actor" in content
+
+
+def test_v37_prompt_separates_reads_and_triggers_believes():
+    """(b) 判据钉：§17 解剖=「事实演员全对、类型并成 OBSERVES」⇒ 切分判据必须进尺；
+    BELIEVES 5 缺席 ⇒ 「正文显示他信就落 BELIEVES」的触发句必须进尺。"""
+    content = _prompt_text()
+    assert "不是 OBSERVES" in content          # READS/OBSERVES 切分
+    assert "就落 BELIEVES" in content          # BELIEVES 落格触发
+    assert "疑心对象明确就算" in content        # SUSPECTS 中间态
 
 
 def test_v35_schema_hint_has_no_bare_word_the_model_could_echo():

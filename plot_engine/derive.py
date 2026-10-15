@@ -154,6 +154,16 @@ def derive_chapter_contract(arc: ArcContract, chapter_no: int, state: StoryState
             description=f"揭示 {gate.fact_id}（{arc.arc_id} gate 限期 {gate.must_reveal_by_chapter}）",
             actors_involved=actors))
 
+    # (b)③ 合法性修正（tff 裁定 2026-10-14）：dead/unborn 不进 mental 事件的候选 actor 集。
+    # H1.1 在提交处反正会拒——派生层把必死候选递上去，烧的是修订轮次，换回的还是同一条
+    # H1.1。不是新门禁：H1.1 仍是兜底闸，这里只是不再供给注定失败的候选。
+    dead = {cid for cid, c in state.characters.items() if c.status in ("dead", "unborn")}
+    if dead:
+        mental = FIELD_EVENT_TYPES["knowledge"] | FIELD_EVENT_TYPES["belief"]
+        events = [e.model_copy(update={"actors_involved":
+                                        [a for a in e.actors_involved if a not in dead]})
+                  if e.event_type in mental else e for e in events]
+
     # 06 §4.3：Arc 给的约束互相排斥 → 不静默取舍，交给 Arc 层
     if allowed & forbidden:
         raise ArcConflict(f"{arc.arc_id} 第 {chapter_no} 章事实同时 allowed/forbidden："

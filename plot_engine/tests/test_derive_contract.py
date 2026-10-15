@@ -246,3 +246,21 @@ def test_turning_point_event_also_implements_the_change():
                      "required_event_types": ["OBSERVES"]}],
                beats=[_intent(1, required_events=[])])
     assert derive_chapter_contract(arc, 1, _state(), created_at=NOW).required_events
+
+
+def test_dead_unborn_stripped_from_mental_candidates_but_not_others():
+    """(b)③ tff 裁定 2026-10-14：已故人/未生成者不进 mental 事件候选 actor 集——
+    合法性修正非新门禁（H1.1 兜底闸原样不动），非 mental 类型不受影响。"""
+    st = _state()
+    st.characters["char_000009"] = Character(character_id="char_000009", name="旧主",
+                                             status="dead", introduced_at_chapter=1,
+                                             epoch=EPOCH)
+    arc = _arc(beats=[_intent(3, required_events=[
+        {"event_type": "OBSERVES", "description": "o", "actors_involved": [CAST, "char_000009"]},
+        {"event_type": "CHANGES", "description": "遗物归属", "actors_involved": ["char_000009"]},
+    ])])
+    c = derive_chapter_contract(arc, 3, st, created_at=NOW)
+    obs = next(e for e in c.required_events if e.event_type == "OBSERVES")
+    assert obs.actors_involved == [CAST]          # mental：必死候选剥掉，活人不动
+    chg = next(e for e in c.required_events if e.event_type == "CHANGES")
+    assert chg.actors_involved == ["char_000009"]  # 非 mental：派生层不插手
