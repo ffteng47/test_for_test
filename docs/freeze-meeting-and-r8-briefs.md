@@ -49,4 +49,20 @@
 
 ---
 
+## 拍板记录（2026-10-15，tff 确认主线建议，散会即生效）
+
+| # | 悬项 | 裁定 |
+|---|---|---|
+| 1 | must_change 系失败归属 | **A**：04 §4.3 补 D10「结果要求必须有动作实现」+ derive 前置 ArcConflict 拦截；06 §4 正式登记归属；追认 `revision.py:49-51` 既有补丁。WP-E 实据：H5.3×110、§6 契约/Arc 面 74:20、16 章烧满三轮修复率 0.18 |
+| 2 | rewrite 名义阶梯 | **A**：诚实降级——06 §5 删一级，阶梯四级，协议承认 Phase 0/1 无场景级返工；场景级重写归 R3 路线 |
+| 3 | H8.x 九桶 | **照单追认** c176dc6 口径（只记 by_rule 不进九桶），回填 08 勘误 + spec CHANGELOG，关闭 `RULE_TO_METRIC` 缺口遗留 |
+| 4 | must_reveal_by ↔ due_by | **A**：derive 单源（gate→due 派生，两处不得独立漂移）+ 04 补 D 规则。**v3.8 尺面键名由此定稿**：`due_by_chapter` 入 FORESHADOWING_SET payload |
+| 5 | expired 写通道 | **A**：新增 `abandon_foreshadowing` 动作入 06 §5 阶梯/人工路径，与 1/2 同批（`revision.py` 一因一批） |
+| 6 | ArcProgress | **A**：随 epoch_1 只冻字段（语义留 epoch_2），迁移断言进 V3/V6 |
+| 追认 | 确认闸落点 | **backend jobs 表，不进 EventLog**（人审卡点=产品闸非故事状态，不触发 T1 升 epoch）；交付侧审听工位四类判定为第二道闸既有事实不变 |
+
+后续：WP-A v3.8 码批即刻开工（roadmap §4 WP-A 行写集），尺戳 v3.6→v3.8 bump + 链验。
+
+---
+
 *索引：材料一 = 冻结会 6 项（must_change 归属 / rewrite 阶梯 / H8.x 追认 / due 统一 / expired 通道 / ArcProgress）；材料二 = 确认闸 5 问 + 爽点工程 6 问。全部坐标经当日打开文件核对。*
