@@ -24,8 +24,9 @@ class RootCause(BaseModel):
 class RevisionPolicy(BaseModel):
     """收敛策略（06 §5 verbatim 默认值）。"""
     max_rounds: int = 3
+    # 06 §5 四级诚实阶梯（v0.12 裁定 2A：rewrite_scene 一级删除，writer 直接章级重写）
     escalation: List[str] = Field(default_factory=lambda: [
-        "rerun_extraction", "rewrite_scene", "rewrite_chapter",
+        "rerun_extraction", "rewrite_chapter",
         "renegotiate_contract", "escalate_to_arc"])
     oscillation_detection: bool = True
     cost_ceiling_per_chapter_usd: float = 0.5

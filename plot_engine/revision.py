@@ -62,7 +62,7 @@ _LEVEL_PRIORITY: Sequence[RootCauseLevel] = (
 # §4 层级 → 阶梯动作名（§5 escalation）。fact/event/validator 无自动动作（要嘛改协议要嘛 epoch 升级）。
 _LEVEL_TO_ACTION: Dict[str, str] = {
     "extraction": "rerun_extraction",
-    "writer": "rewrite_scene",
+    "writer": "rewrite_chapter",   # 裁定 2A：四级阶梯，writer 直接章级重写（rewrite_scene 一级已删）
     "contract": "renegotiate_contract",
     "arc": "escalate_to_arc",
 }

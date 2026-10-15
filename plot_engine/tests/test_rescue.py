@@ -22,7 +22,7 @@ NOW = fixture.NOW
 
 def _setup(tmp_path, chapters=2, defects=None):
     """跑一个真有 NEEDS_HUMAN 章的实验：抽取里多写一条本章禁止的知识（H5.7），
-    Writer 层的 `rewrite_scene` 没注册 ⇒ 循环判「要人接」并把它交出去。"""
+    Writer 层的 `rewrite_chapter` 没注册 ⇒ 循环判「要人接」并把它交出去。"""
     cfg = fixture.make_config(chapters)
     store, log = StateStore(str(tmp_path / "s.db")), EventLog(str(tmp_path / "e.db"))
     store.init_genesis(cfg.story_id, cfg.initial_state)

@@ -62,7 +62,7 @@ def test_no_hard_violation_yields_no_root_cause():
 def test_level_selects_action_within_policy_ladder():
     p = RevisionPolicy()
     assert action_for("extraction", p) == "rerun_extraction"
-    assert action_for("writer", p) == "rewrite_scene"
+    assert action_for("writer", p) == "rewrite_chapter"
     assert action_for("contract", p) == "renegotiate_contract"
     assert action_for("arc", p) == "escalate_to_arc"
 
