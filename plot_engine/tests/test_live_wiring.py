@@ -232,7 +232,8 @@ def test_live_run_note_carries_the_instrument_stamp_separate_from_the_ruler(
                                   state_dir=str(tmp_path),
                                   dump_dir=str(tmp_path / "dump"))
     assert report is not None
-    assert "抽取尺=v3.5-schema-hint-no-bare-type" in msg   # 尺戳已 bump（v3.5 措辞修复后）
+    from plot_engine.llm_extract import EXTRACTION_RULER
+    assert f"抽取尺={EXTRACTION_RULER}" in msg              # 尺戳随 bump（v3.6 归因面）
     assert "仪器=instr-v2-local" in msg                   # 仪器戳新增
     assert diag["instr"]["instr"] == "instr-v2-local"
     assert diag["instr"]["segments_run"] >= 1

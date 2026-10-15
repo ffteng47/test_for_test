@@ -213,11 +213,21 @@ def test_w4b_ruler_stamp_bumped_and_flag_records_the_ruling():
     assert instr.W4B_TOUCHED is True
 
 
-def test_v35_ruler_stamp_records_the_schema_hint_fix():
-    """v3.5 是尺面变更（schema 提示措辞），必须与 v3.4 读数不同表。"""
+def test_v36_ruler_stamp_records_the_is_told_actor_fix():
+    """v3.6 是尺面变更（(a) 归因面：IS_TOLD actor=听的人），必须与 v3.5 读数不同表。"""
     from plot_engine.llm_extract import EXTRACTION_RULER
-    assert EXTRACTION_RULER.startswith("v3.5")
-    assert EXTRACTION_RULER != "v3.4-default-700-removed"
+    assert EXTRACTION_RULER.startswith("v3.6")
+    assert EXTRACTION_RULER != "v3.5-schema-hint-no-bare-type"
+
+
+def test_v36_prompt_states_the_is_told_actor_convention():
+    """(a) 判据文（§16 ch06 解剖）：actor=听的人此前只活在夹具 docstring，提示词从未
+    告诉模型——ch06 不是模型错，是尺没把话说全。判据必须出现在抽取提示词里。"""
+    from types import SimpleNamespace
+    from plot_engine.llm_extract import extract_prompt
+    content = extract_prompt("正文一段。", None, SimpleNamespace(knowledge_forbidden=[]),
+                             None)[0]["content"]
+    assert "听到告知的人" in content and "说者不是 actor" in content
 
 
 def test_v35_schema_hint_has_no_bare_word_the_model_could_echo():

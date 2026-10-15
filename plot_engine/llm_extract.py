@@ -42,7 +42,11 @@ _ID_RE = re.compile(r"^(?:char|fact|item|loc|faction|realm|ability|region|rel)_\
 #        应包含 X」，且不用"只放"——它同样可能被抄成键。触碰尺面 ⇒ 与 v3.4 读数不同表。
 #        同时 missing_payload_keys 坏料补记 gave（模型实际给的键），把「没写」与「改名」
 #        在废卷筐里分开——此前两者同形，只能人肉看 raw 才发现（取证缺陷）。
-EXTRACTION_RULER = "v3.5-schema-hint-no-bare-type"
+# v3.6 (a) 归因面（tff 裁定 2026-10-14，§16 ch06 解剖）：IS_TOLD 的 actor=听的人这个约定
+#        只活在夹具 docstring（experiment_10ch `_told`），提示词从未告诉模型 ⇒ 抽取器把
+#        说者记成 actor，两方 ledger 全记错、H2.2 双杀。补一行判据文。触碰尺面 ⇒ 读数离
+#        v3.5 表，重基线（v4e×3）必须在这行生效**之后**跑。
+EXTRACTION_RULER = "v3.6-is-told-actor"
 
 # 本通道只承接 reducer 真能消费的 event_type，且键名逐一对齐 01 §4.1 的实际取用（reducer 里
 # 的 event.payload[...]）。缺键的产物放下去只会变成 MALFORMED_PROPOSAL 级联，归因反而更难。
@@ -363,7 +367,8 @@ def extract_prompt(draft, scene_plan, contract, state) -> List[dict]:
         "event_type 只能取（本阶段只承接这些，其余写了也没用）:",
         f"  {taxonomy}。",
         "类型按「该事实如何进入人物内心」选：OBSERVES=在场亲眼注意到；READS=读到写着的文字；"
-        "IS_TOLD=被人当面告知；INFERS=由已知证据推出；BELIEVES=内心确认某事为真；"
+        "IS_TOLD=被人当面告知（actor 是**听到告知的人**，知识进他的账；说者不是 actor）；"
+        "INFERS=由已知证据推出；BELIEVES=内心确认某事为真；"
         "SUSPECTS=起疑并把嫌疑指向某人/某事；DOUBTS=明确怀疑或否定该事。",
         f"各事件 payload 的键如下: {_SCHEMA_HINT}。",
         "payload 的键名只能是上面列出的键名本身，绝不要把事件类型名（如 OBSERVES）写成键。",

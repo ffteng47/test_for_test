@@ -51,7 +51,8 @@ def test_replay_writes_a_contract_instr_cli_can_consume(tmp_path):
     for k in ("chapters", "malformed", "tokens", "recall", "instr", "ruler", "lane"):
         assert k in data, k
     assert data["instr"] == "instr-v2-local"
-    assert data["ruler"].startswith("v3.5")
+    from plot_engine.llm_extract import EXTRACTION_RULER
+    assert data["ruler"] == EXTRACTION_RULER      # 带当前尺戳，不钉版本字面量（每次 bump 免改）
 
     out = write_run(data, tmp_path / "r1.json")
     loaded = load_run(out)

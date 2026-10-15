@@ -178,7 +178,9 @@ def _proposal_lines(props) -> List[str]:
 # 指引文本的刻度号（与 `EXTRACTION_RULER` 同族）：FIX_GUIDE 也是尺面文本——它喂给修订环/写手，
 # 改任何一条措辞都可能改变读数。g2 = 补上 SUSPECTS 写法判据（E18：漏讲导致 ch07 按指引改不出）。
 # 历史 run.log 没有这一栏 ⇒ 无指引戳的跑法一律算 g1（H5.1 缺 SUSPECTS 的那版）。
-GUIDE_VERSION = "g2-suspects-added"
+# g3 = H5.1 补「读戏别被修稿改写」一句（§17 诊断：v4d1 ch02 修订环把已有的读戏整场换掉，
+#      补写型指引被当成了替换授权）。
+GUIDE_VERSION = "g3-keep-reading-scenes"
 FIX_GUIDE: Dict[str, str] = {
     "H1.1": "死人不能行动：把这条行动换成在场活人来做，或先写清楚他其实还没死",
     "I7": "同 H1.1（可见性一致性）：已死角色不能是事件 actor",
@@ -186,7 +188,7 @@ FIX_GUIDE: Dict[str, str] = {
     "H5.1": "缺一个必需类型的事件，把它写成看得见的动作——INFERS=由已知证据推出结论；"
             "READS=读到写着的文字；IS_TOLD=有人当面告知；OBSERVES=在场亲眼注意到；"
             "BELIEVES=内心确认某事；SUSPECTS=起疑并把嫌疑指向某人/某事（介于怀疑与确认之间的中间态）；"
-            "DOUBTS=明确起疑",
+            "DOUBTS=明确起疑。注意：补写缺的戏，不要把已有的「读/看见/被告知」戏删掉或替换没",
     "H5.3": "must_change 没实现：让那个字段真被对应动作改掉——"
             "belief→Believes/Suspects/Doubts，knowledge→Observes/Reads/Is_told/Infers",
     "H5.4": "must_not_change 被动了：本章别让那个字段发生任何变化",
