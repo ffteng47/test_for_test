@@ -180,6 +180,16 @@ def derive_chapter_contract(arc: ArcContract, chapter_no: int, state: StoryState
         raise ArcConflict(f"{arc.arc_id} 第 {chapter_no} 章的 must_change 没有可实现它的"
                           f"事件类型（现有 {sorted(implementable)}）：{unmet}")
 
+    # D11（v0.12 裁定 4A）：due_by_chapter 单源=gate.must_reveal_by_chapter。
+    # 台账条目与 gate 限期漂移说明抽取/写入侧自己发明了第二个期限 → 回 Arc 层修账。
+    due_by_fact = {g.fact_id: g.must_reveal_by_chapter for g in arc.knowledge_gates
+                   if g.must_reveal_by_chapter is not None}
+    drift = [f"{e.foreshadow_id}: due={e.due_by_chapter} vs gate={due_by_fact[e.fact_id]}"
+             for e in state.foreshadowing
+             if e.fact_id in due_by_fact and e.due_by_chapter != due_by_fact[e.fact_id]]
+    if drift:
+        raise ArcConflict(f"{arc.arc_id} 第 {chapter_no} 章伏笔限期与 gate 漂移（D11 单源破坏）：{drift}")
+
     # D9：只有到期 gate 才能产生读者信号，未到期的 fact 绝不标 knows。
     # v4.0（E25）：已到目标态的 fact 不再产出信号——否则 gate 一旦成熟就每章逼读者重锚同一事实。
     reached: Dict[str, int] = {}

@@ -246,3 +246,33 @@ def test_turning_point_event_also_implements_the_change():
                      "required_event_types": ["OBSERVES"]}],
                beats=[_intent(1, required_events=[])])
     assert derive_chapter_contract(arc, 1, _state(), created_at=NOW).required_events
+
+
+# --- D11 伏笔限期单源（v0.12 裁定 4A）---
+from plot_engine.models.ledger import ForeshadowingEntry  # noqa: E402
+
+
+def _fsh(due, fid="fact_000003"):
+    return ForeshadowingEntry(
+        foreshadow_id="fsh_000001", fact_id=fid, lifecycle="planted", strength=600,
+        planted_chapter=1, due_by_chapter=due, source_event_id="evt_00000001_000",
+        last_updated_chapter=1, epoch=EPOCH)
+
+
+def _arc_g3():
+    return _arc(gates=[{"fact_id": "fact_000003", "allowed_after_chapter": 1,
+                        "must_reveal_by_chapter": 6, "reveal_stage_target": "confirmed"}])
+
+
+def test_d11_due_drift_raises_arcconflict():
+    st = _state().model_copy(update={"foreshadowing": [_fsh(due=5)]})
+    with pytest.raises(ArcConflict, match="D11"):
+        derive_chapter_contract(_arc_g3(), 3, st, created_at=NOW)
+
+
+def test_d11_aligned_or_ungated_no_drift():
+    st_ok = _state().model_copy(update={"foreshadowing": [_fsh(due=6)]})
+    assert derive_chapter_contract(_arc_g3(), 3, st_ok, created_at=NOW)
+    st_free = _state().model_copy(update={"foreshadowing": [
+        _fsh(due=5, fid="fact_000002")]})   # gate 限期只管同名 fact，其余不归 D11 管
+    assert derive_chapter_contract(_arc_g3(), 3, st_free, created_at=NOW)
