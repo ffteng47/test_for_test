@@ -263,6 +263,32 @@ def test_rank_reachable_delta_passes_the_guard():
     assert derive_chapter_contract(arc, 1, _state(), created_at=NOW)
 
 
+# --- D10 越界钉拦截（3A）：禁知/hidden 档 fact 钉成「看见/读到」是结构不可满足 ---
+def test_hidden_fact_nailed_as_observes_is_arc_error():
+    """反例＝ch10 旧形态（43 章裁定 ① 族）：hidden 档身份事实要求「亲眼看见」，
+    Writer 怎么写都缺读者可见性这一味——契约生成时就拦，别再送进修订环。"""
+    arc = _arc(gates=[{"fact_id": "fact_000003", "allowed_after_chapter": 1,
+                       "reveal_stage_target": "hidden"}],
+               beats=[_intent(1, required_events=[
+                   {"event_type": "OBSERVES", "description": "OBSERVES fact_000003"}])])
+    with pytest.raises(ArcConflict, match="越界钉"):
+        derive_chapter_contract(arc, 1, _state(), created_at=NOW)
+
+
+def test_hearsay_nail_on_hidden_fact_passes():
+    """对照正例：只拦「看见/读到」——IS_TOLD 转述进角色的 believed 账，不依赖读者可见性
+    （ch10 新钉形态，ladder-v5b）。"""
+    arc = _arc(gates=[{"fact_id": "fact_000003", "allowed_after_chapter": 1,
+                       "reveal_stage_target": "hidden"}],
+               beats=[_intent(
+                   1, must_change=[{"character_id": CAST, "field": "knowledge",
+                                    "operation": "add", "target": "fact_000003",
+                                    "expected_value": "believed"}],
+                   required_events=[{"event_type": "IS_TOLD",
+                                     "description": "IS_TOLD fact_000003"}])])
+    assert derive_chapter_contract(arc, 1, _state(), created_at=NOW)
+
+
 def test_turning_point_event_also_implements_the_change():
     """D3 补进来的拐点事件同样是实现事件，守卫看的是最终 required_events。"""
     arc = _arc(tps=[{"chapter": 1, "type": "revelation", "description": "d",

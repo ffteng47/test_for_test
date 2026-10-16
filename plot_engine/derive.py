@@ -15,6 +15,7 @@ knowledge_allowed/forbidden、到期未揭示的 gate 必须变成 REVEALS 硬�
 """
 from __future__ import annotations
 
+import re
 from typing import Dict, List, Literal, Optional, Sequence, Set
 
 from pydantic import BaseModel, ValidationError
@@ -196,6 +197,20 @@ def derive_chapter_contract(arc: ArcContract, chapter_no: int, state: StoryState
     if rank_unmet:
         raise ArcConflict(f"{arc.arc_id} 第 {chapter_no} 章 knowledge Δ 超出钉死事件的"
                           f"档位上限（D10 强化/1A）：{rank_unmet}")
+
+    # D10 越界钉拦截（3A，材料三 #3 裁定）：把「本章禁知」或「hidden 档」的 fact 钉成
+    # OBSERVES/READS＝要求读者至今看不见的东西被主角亲眼看见/读到——结构不可满足
+    # （43 章裁定 ① 族的 ch10 教训：Writer 纯 ① 只剩这一章，判负主力是钉不是模型）。
+    # 只拦「看见/读到」两型：IS_TOLD/INFERS 是 hearsay/派生，hidden 事实可以被转述。
+    out_of_bounds = forbidden | {g.fact_id for g in arc.knowledge_gates
+                                 if g.reveal_stage_target == "hidden"}
+    over_nails = sorted({f"{e.event_type}[{fid}]" for e in events
+                         if e.event_type in ("OBSERVES", "READS")
+                         for fid in re.findall(r"fact_\d{6}", e.description)
+                         if fid in out_of_bounds})
+    if over_nails:
+        raise ArcConflict(f"{arc.arc_id} 第 {chapter_no} 章把禁知/hidden 档事实钉成了"
+                          f"「看见/读到」（D10 越界钉拦截/3A）：{over_nails}")
 
     # D11（v0.12 裁定 4A）：due_by_chapter 单源=gate.must_reveal_by_chapter。
     # 台账条目与 gate 限期漂移说明抽取/写入侧自己发明了第二个期限 → 回 Arc 层修账。

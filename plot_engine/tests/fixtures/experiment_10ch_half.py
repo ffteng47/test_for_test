@@ -27,7 +27,7 @@ from plot_engine.tests.fixtures.experiment_10ch import (
 
 EPOCH = base.EPOCH
 NOW = base.NOW
-LADDER_VERSION = "ladder-v4-halfdensity"
+LADDER_VERSION = "ladder-v5b-halfdensity"   # base 进 v5b（ch06 补钉+ch10 改钉）⇒ 本桩随动，v4 读数作废
 
 # 半密度阶梯：非 TP 章 must_change/mandatory 各留 1（注释标保留的是哪条跃迁）。
 # 与 base._STEPS 的 (ch, 三元组) 对应关系只删不加，唯一性/不回环性质自动继承。
@@ -52,7 +52,7 @@ _STEPS: List[Dict[str, Any]] = [
     base._STEPS[7],                                   # ch8 空推进：原样
     base._STEPS[8],                                   # ch9 TP：原样
     {"events": base._STEPS[9]["events"],
-     "mandatory": [base._STEPS[9]["events"][0]],      # 留张三 OBSERVES F2，削李四 DOUBTS 钉
+     "mandatory": [base._STEPS[9]["events"][0]],      # 留张三听李四当面否认（IS_TOLD，v5b 改钉）
      "must_change": [base._STEPS[9]["must_change"][0]],
      "must_not_change": []},                          # 解禁 F2 与基线同
 ]

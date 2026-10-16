@@ -51,9 +51,11 @@ NOW = "2026-10-09T00:00:00Z"
 # ladder-v3：唯一一处改动＝ch09 的类型钉（§3.2 首笔，一次一个因）。
 # ladder-v4：§3.1 规模（4 人物/12 fact/3 地/2 物/2 关系/1 门派）+ §3.2 收尾（ch08 式纯再锚钉
 # 清零、每钉都是叙事模态）+ 逐章三元组唯一不回环。六臂 lv3 读数见 docs/phase1-rebaseline-v33.md §7。
-# ladder-v5：码批 v3.9 夹具侧首笔——ch06 补钉「赵六亲眼看见」（Δ 期望 known 而 IS_TOLD 上限
-# believed，D10 rank 守卫要求钉自己够得着）。ch10 解禁改钉与 3A 同批时再 bump（ladder-v5b）。
-LADDER_VERSION = "ladder-v5-rankcap"
+# ladder-v5：码批 v3.9 夹具侧——ch06 补钉「赵六亲眼看见」（Δ 期望 known，IS_TOLD 上限 believed，
+# D10 rank 守卫要求钉自己够得着）。
+# ladder-v5b：ch10 解禁改钉 OBSERVES→IS_TOLD（hidden 身份不能「亲眼看见」——3A 拦截旧形态，
+# 同批 3B），Δ 期望随降 believed。lv4 及更早读数与新尺分表。
+LADDER_VERSION = "ladder-v5b-ch10istold"
 _ACTOR = "char_000001"          # 张三（调查者）
 _LI = "char_000002"             # 李四（嫌疑人，objective_truth=False 的 F2 本体）
 _WANG = "char_000003"           # 王五（守阁人）
@@ -147,10 +149,12 @@ _STEPS: List[Dict[str, Any]] = [
      # 两钉都是本章的叙事模态：把线串起来＝INFERS，内心确认＝BELIEVES。
      # derive 04 §4.2 守卫要求的 belief 族覆盖由 BELIEVES 钉自己满足（同 lv3 裁定）。
      "must_change": [_knows("add", _F4, "suspected"), _holds("add", _F4, "believes")]},
-    {"events": [_obs(_F2), _belief("DOUBTS", _F1, 400, _LI)],
-     "must_change": [_knows("add", _F2, "known"),
+    {"events": [_told(_F2, by=_LI), _belief("DOUBTS", _F1, 400, _LI)],
+     # 第 10 步解禁 fact_000002——但解禁形态是**听当事人当面否认**（IS_TOLD，上限 believed）：
+     # hidden 档身份事实钉成「亲眼看见」是越界钉（3A 拦截的就是这个旧形态，ch10 教训）。
+     "must_change": [_knows("add", _F2, "believed"),
                      _holds("add", _F1, "doubts", _LI)],
-     "must_not_change": []},                        # 第 10 步解禁 fact_000002
+     "must_not_change": []},
 ]
 # turning point 挂在阶梯上真的有对应强制事件的第 1/5/9 步（事件类型由那一步的钉给出）。
 _TURNS = {1: ("revelation", "印章是伪造的"), 5: ("escalation", "矛头指向内部"),
