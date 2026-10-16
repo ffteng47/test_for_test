@@ -100,11 +100,12 @@ def _fake_live_client():
                      transport=transport)
 
 
-def test_cli_live_reports_unreachable_endpoint_and_exits_2(monkeypatch, capsys):
+def test_cli_live_reports_unreachable_endpoint_and_exits_2(tmp_path, monkeypatch, capsys):
     import plot_engine.live as live
+    from plot_engine.tests.gate import confirmed_gate
     monkeypatch.setattr(live, "check_reachable", lambda c: (False, "模型端点不可达：boom"))
     monkeypatch.setattr(live, "build_client", lambda cfg: _fake_live_client())
-    assert review_main(["--live", "--chapters", "1"]) == 2
+    assert review_main(["--live", "--chapters", "1", *confirmed_gate(tmp_path, 1)]) == 2
     assert "不可达" in capsys.readouterr().out
 
 
@@ -113,6 +114,7 @@ def test_mid_run_model_failure_is_one_readable_line_not_a_stack(tmp_path, monkey
     也必须给人一句话 + 已落盘的快照目录，而不是把 traceback 撒在 30 分钟的输出后面。"""
     import plot_engine.live as live
     from plot_engine.llm import LlmUnavailable
+    from plot_engine.tests.gate import confirmed_gate
 
     def boom(url, payload, headers, timeout_s):
         raise LlmUnavailable(f"{url} → HTTP 500: llama-server binary not found")
@@ -122,16 +124,18 @@ def test_mid_run_model_failure_is_one_readable_line_not_a_stack(tmp_path, monkey
     monkeypatch.setattr(live, "check_reachable", lambda c: (True, "ok"))
     monkeypatch.setattr(live, "build_client", lambda cfg: client)
     dumps = tmp_path / "d"
-    assert review_main(["--live", "--chapters", "2", "--dump-dir", str(dumps)]) == 2
+    assert review_main(["--live", "--chapters", "2", "--dump-dir", str(dumps),
+                        *confirmed_gate(tmp_path, 2)]) == 2
     out = capsys.readouterr().out
     assert "中途" in out and "Traceback" not in out and "HTTP 500" in out
 
 
-def test_cli_live_prints_decision_sheet_with_real_token_accounting(monkeypatch, capsys):
+def test_cli_live_prints_decision_sheet_with_real_token_accounting(tmp_path, monkeypatch, capsys):
     import plot_engine.live as live
+    from plot_engine.tests.gate import confirmed_gate
     monkeypatch.setattr(live, "check_reachable", lambda c: (True, "可用模型: m"))
     monkeypatch.setattr(live, "build_client", lambda cfg: _fake_live_client())
-    assert review_main(["--live", "--chapters", "2"]) == 0
+    assert review_main(["--live", "--chapters", "2", *confirmed_gate(tmp_path, 2)]) == 0
     out = capsys.readouterr().out
     assert "可用模型: m" in out and "§8 退出条件" in out
     assert "生成 2 /" in out
@@ -141,15 +145,19 @@ def test_cli_live_prints_decision_sheet_with_real_token_accounting(monkeypatch, 
 def test_cli_live_dumps_drafts_and_proposals_for_triage(tmp_path, monkeypatch):
     """失败章不进 State：唯一能区分「模型没写」与「抽取漏了」的证据就是这份逐章快照。"""
     import plot_engine.live as live
+    from plot_engine.tests.gate import confirmed_gate
     monkeypatch.setattr(live, "check_reachable", lambda c: (True, "ok"))
     monkeypatch.setattr(live, "build_client", lambda cfg: _fake_live_client())
-    assert review_main(["--live", "--chapters", "2", "--dump-dir", str(tmp_path)]) == 0
+    assert review_main(["--live", "--chapters", "2", "--dump-dir", str(tmp_path),
+                        *confirmed_gate(tmp_path, 2)]) == 0
     assert sorted(p.name for p in tmp_path.glob("ch*.md")) == ["ch01.md", "ch02.md"]
     text = (tmp_path / "ch01.md").read_text(encoding="utf-8")
     assert "status=" in text and "## Draft" in text and "## Proposals" in text
     assert "OBSERVES" in text
     # 06 §4.2 的重议只能从这份快照看出来（08 §3 报告字段是逐字表，不许加字段）
     assert "contract_version=1" in text
+    # R8 §4.2 可追溯：过闸戳进 run.log，归档自证是哪张确认单放的行
+    assert "确认闸=job#" in (tmp_path / "run.log").read_text(encoding="utf-8")
 
 
 def test_cli_live_persists_the_chain_and_prints_dispositions(tmp_path, monkeypatch, capsys):
@@ -157,16 +165,48 @@ def test_cli_live_persists_the_chain_and_prints_dispositions(tmp_path, monkeypat
     端点说明那一行还要带终态分布——人工处置率唯一的可数来源。
     同一目录再跑一批 = 两批读数并成一条账，必须拒掉。"""
     import plot_engine.live as live
+    from plot_engine.tests.gate import confirmed_gate
 
     monkeypatch.setattr(live, "check_reachable", lambda c: (True, "ok"))
     monkeypatch.setattr(live, "build_client", lambda cfg: _fake_live_client())
     state, dumps = tmp_path / "chain", tmp_path / "d"
+    gate = confirmed_gate(tmp_path, 2)
     assert review_main(["--live", "--chapters", "2", "--state-dir", str(state),
-                        "--dump-dir", str(dumps)]) == 0
+                        "--dump-dir", str(dumps), *gate]) == 0
     assert (state / "state.db").exists() and (state / "event.db").exists()
     assert "终态 " in capsys.readouterr().out
-    assert review_main(["--live", "--chapters", "2", "--state-dir", str(state)]) == 2
+    assert review_main(["--live", "--chapters", "2", "--state-dir", str(state), *gate]) == 2
     assert "已经有一条链" in capsys.readouterr().out
+
+
+# —— R8 #1 确认闸（docs/confirmation-gate-design.md v1.0 Q3-A）：确定性拦截，非提示性
+def test_cli_live_gate_refuses_missing_project(capsys):
+    assert review_main(["--live", "--chapters", "1"]) == 4
+    err = capsys.readouterr().err
+    assert "确认闸拦截" in err and "--gate-project" in err
+
+
+def test_cli_live_gate_refuses_unconfirmed_job(tmp_path, capsys):
+    from backend.noveldb import CONFIRM_TASK, Db, open_db
+    from plot_engine.review import _load_fx, plan_sha256
+
+    cfg = _load_fx("experiment_10ch").make_config(1)
+    db_path = tmp_path / "gate.db"
+    db = Db(open_db(str(db_path)))
+    pid = db.upsert_project("确认闸 fixture")
+    db.add_confirm_job(pid, CONFIRM_TASK, "开书规划",
+                       {"plan_sha256": plan_sha256(cfg, "experiment_10ch")})
+    assert review_main(["--live", "--chapters", "1", "--gate-project", str(pid),
+                        "--gate-db", str(db_path)]) == 4
+    assert "状态=queued" in capsys.readouterr().err
+
+
+def test_cli_live_gate_plan_change_invalidates_confirmation(tmp_path, capsys):
+    from plot_engine.tests.gate import confirmed_gate
+    gate = confirmed_gate(tmp_path, 2)          # 按 2 章规划确认
+    assert review_main(["--live", "--chapters", "3", *gate]) == 4   # 改规划再跑
+    err = capsys.readouterr().err
+    assert "确认失效" in err and "当前=" in err   # 拦截原因带新哈希，确认照它重提
 
 
 def test_cli_rescue_refuses_without_the_chain_on_disk():

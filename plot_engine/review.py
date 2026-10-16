@@ -297,7 +297,7 @@ def _write_chapter_dump(dump_dir, ch: int, rounds, out, trace) -> None:
 def _live_run(chapters: int, model_config: dict, *, client=None, cloud_client=None,
               dump_dir=None, arm: str = "beats", state_dir: Optional[str] = None,
               fail_stop: bool = False, use_segmented: bool = False, lane: str = "local",
-              fixture: str = "experiment_10ch"):
+              fixture: str = "experiment_10ch", gate_note: Optional[str] = None):
     """真实模型实验：Writer/抽取换成本地端点，其余管道与离线演练完全一致。
 
     返回 `(report|None, 端点说明, 抽取诊断)`：端点不可达时不烧预算，实验中途端点失效时
@@ -409,6 +409,8 @@ def _live_run(chapters: int, model_config: dict, *, client=None, cloud_client=No
         return None, f"模型在实验中途不可用，本报告作废。{where}\n原因：{e}", None
     note = (f"{msg}｜prompt={prompt_version(arm)}｜抽取尺={EXTRACTION_RULER}"
             f"｜指引={GUIDE_VERSION}｜夹具={fx.LADDER_VERSION}｜Writer面={WRITER_SURFACE}")
+    if gate_note:
+        note += f"｜{gate_note}"   # 归档自证过闸（R8 §4.2 确认动作可追溯）
     cap = getattr(client, "router", None)
     if cap is not None and "extract" in cap.endpoints:
         note += f"｜抽取上限={cap.endpoints['extract'].max_tokens}"
@@ -566,6 +568,11 @@ def main(argv: Optional[List[str]] = None) -> int:
                           "两条车道共用同一套分段/修复/别名/默认值，只有模型不同。"
                           "--lane cloud 隐含 --instr v2，且必须给 --cloud-config；"
                           "切换默认车道 = 仪器戳升档（instr-v2-local → instr-v2-cloud）")
+    ap.add_argument("--gate-project", type=int, default=None, metavar="ID",
+                    help="R8 #1 开书确认闸：backend jobs 的 project id（--live 必填）。"
+                         "放行条件=该项目最新 plan_confirm job 为 confirmed 且 payload.plan_sha256==当前规划哈希")
+    ap.add_argument("--gate-db", metavar="PATH", default=None,
+                    help="noveldb 路径（默认 backend 工作区约定 novelaudio.db）；仅 --live 生效")
     ap.add_argument("--cloud-config", metavar="JSON", default=None,
                      help='云端抽取路由 JSON 或 @文件路径，例：{"extract":{"base_url":"https://api.<供应商>/v1",'
                           '"model":"<型号>","api_key_env":"MY_KEY","max_tokens":800,"temperature":200,'
@@ -606,6 +613,11 @@ def main(argv: Optional[List[str]] = None) -> int:
         return 0
 
     if args.live:
+        reason, gate_note = _confirm_gate(args.gate_project, args.gate_db,
+                                          args.fixture, args.chapters)
+        if reason:
+            print(f"确认闸拦截：{reason}", file=sys.stderr)
+            return 4
         from plot_engine.live import build_client
         # 车道语义（任务单 W6）：--lane cloud 隐含 --instr v2——两条车道跑的是
         # **同一套** 分段/修复/别名/默认值管道，只有模型不同，否则归因不干净。
@@ -621,7 +633,8 @@ def main(argv: Optional[List[str]] = None) -> int:
                                       dump_dir=args.dump_dir, arm=args.prompt,
                                       state_dir=args.state_dir, fail_stop=args.fail_stop,
                                       use_segmented=use_segmented, lane=lane,
-                                      cloud_client=cloud_client, fixture=args.fixture)
+                                      cloud_client=cloud_client, fixture=args.fixture,
+                                      gate_note=gate_note)
         print(msg)
         if report is None:
             return 2
@@ -663,6 +676,57 @@ def _read_model_config(spec: Optional[str]) -> dict:
     if not isinstance(loaded, dict):
         raise ValueError("--model-config 必须是 {role: {字段覆盖}} 的 JSON 对象")
     return loaded
+
+
+def plan_sha256(cfg, fixture_name: str) -> str:
+    """开书规划快照哈希（确认闸的确认对象）：fixture+ladder+story_id+章数+ArcContract 规范化 JSON。
+
+    规划内容任何一字变了哈希就变，旧确认自动失效（设计稿 v1.0 §2 可追溯条）。
+    """
+    import hashlib
+    import json
+
+    fx = _load_fx(fixture_name)
+    canon = json.dumps({"fixture": fixture_name, "ladder": fx.LADDER_VERSION,
+                        "story_id": cfg.story_id, "chapters": cfg.chapters,
+                        "arc": json.loads(cfg.arc_contract.model_dump_json())},
+                       sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(canon.encode("utf-8")).hexdigest()
+
+
+def _confirm_gate(gate_project, gate_db, fixture: str, chapters: int):
+    """R8 #1 开书确认闸（设计稿 v1.0 Q3-A）：`--live` 启动的确定性前置检查。
+
+    返回 `(拦截原因|None, 放行戳|None)`。放行戳进 run.log：归档自证过闸，不靠人回忆。
+    拒绝路径绝不静默回落——R8 原文要的是"确定性拦截，非提示性"。
+    """
+    import json
+    import os
+
+    from backend.noveldb import CONFIRM_TASK, Db, open_db
+
+    if gate_project is None:
+        return ("--live 需要 --gate-project <backend jobs project id>："
+                "生成批必须由开书确认放行（Q5 豁免只指闸前存量归档，新跑一律过闸）"), None
+    if gate_db is None:
+        from backend.domain import workspace_paths
+        gate_db = workspace_paths()["db"]
+    if not os.path.exists(gate_db):
+        return f"确认闸数据库不存在：{gate_db}（用 --gate-db 指定）", None
+    plan = plan_sha256(_load_fx(fixture).make_config(chapters), fixture)
+    db = Db(open_db(gate_db))
+    row = db.latest_job(gate_project, CONFIRM_TASK)
+    if row is None:
+        return (f"project {gate_project} 无 '{CONFIRM_TASK}' 确认任务；"
+                f"当前规划哈希={plan}"), None
+    if row["status"] != "confirmed":
+        return (f"确认 job #{row['id']} 状态={row['status']}，须 confirmed 才放行；"
+                f"当前规划哈希={plan}"), None
+    stored = json.loads(row["payload"] or "{}").get("plan_sha256")
+    if stored != plan:
+        return (f"规划已变更，确认失效：job #{row['id']} 哈希={stored} ≠ 当前={plan}"), None
+    return None, f"确认闸=job#{row['id']} project={gate_project}"
+
 
 
 if __name__ == "__main__":

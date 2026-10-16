@@ -206,17 +206,18 @@ def test_cli_lane_cloud_requires_cloud_config(capsys):
     assert "cloud-config" in capsys.readouterr().err
 
 
-def test_cli_instr_v2_reaches_the_live_run(monkeypatch, capsys):
+def test_cli_instr_v2_reaches_the_live_run(tmp_path, monkeypatch, capsys):
     """接线缺口回归：--instr v2 必须真的换通道，而不是只能从测试调到。"""
     from plot_engine.review import main
     from plot_engine import review
+    from plot_engine.tests.gate import confirmed_gate
     seen = {}
 
     def stub(chapters, model_config, **kw):
         seen.update(kw)
         return None, "端点说明", None
     monkeypatch.setattr(review, "_live_run", stub)
-    assert main(["--live", "--instr", "v2"]) == 2
+    assert main(["--live", "--instr", "v2", *confirmed_gate(tmp_path, 10)]) == 2
     assert seen["use_segmented"] is True and seen["lane"] == "local"
     assert seen["cloud_client"] is None
     assert "端点说明" in capsys.readouterr().out
