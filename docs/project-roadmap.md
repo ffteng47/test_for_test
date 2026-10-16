@@ -1,11 +1,12 @@
 # 项目路线图（层 × 路线对照）
 
-> 版本：v0.14（2026-10-16 现势同步，配套 `docs/commercial/collaborator-guide.md` v1.0；指南已随商业研究迁入 `docs/commercial/`）
+> 版本：v0.15（2026-10-16 现势同步，配套 `docs/commercial/collaborator-guide.md` v1.0；指南已随商业研究迁入 `docs/commercial/`）
 > 性质：诊断级路线文档。所有"现状"条目均有代码/文档证据；"路线"条目为待审方案，确认后才进开发。
 > 冲突仲裁：纪律/禁区以 `docs/commercial/collaborator-guide.md` 为准；并行窗口以本文 §4 撞车矩阵为准。
 > 单写者纪律：本文档由问题助手会话持有；其他会话改动须先批注声明（防文档面撞车，稽核建议 2026-10-15）。
 > v0.2→v0.3：全文补齐文件路径，新增 §6 关键文件索引。
 > v0.4→v0.5（现势同步，经 tff 授权补齐）：#69 已收口（§23：Jmed 三臂回 1.0、闸 1/3、H5.1 税 0）；#70 (b) 批已施加（尺戳 v3.7 入册 29774db，b3 同批，链验 528），三跑 v4g1..3 在跑；#78 判过（v4fL E2 20% 带内）；WP-E 排队条件收敛为 #70 收口；基线 526→528。
+> v0.14→v0.15（**v3.8 冻结面三采样判负落锤 + 确认闸首战实弹**，2026-10-16）：同模型同规划三跑（`sampling/ep1v38-r1..r3`，@213）读数一致——OK 率 30/20/30%，E2/E3 三批同假，失败主体三批同谱系 Contract/Arc 类（H5.3 领衔）；**十章规模在 v3.8 契约面修订后仍判否**，与 WP-E 五十章判负同向（缺陷在契约/Arc 语义层，非夹具）。本地 3090 跨硬件横批（`sampling/ep1v38-l1`，方案 A）读数同分布——测量面跨机器稳定；效率 213:3090≈1:2.6。G1 命中，08 §7 允许讨论改架构（候选=Level-3 在场一致性/WP-F/must_change 归属空白）。**确认闸首用**：闸单 jobs#1（plan_sha256=8c085a8a…606d2，confirmed_by=tff），四批 run.log 全带过闸戳。读数表+复现：`docs/phase0-live-run-10ch.md` §9（v3.8 尺表；fix-1/wpe50ch 旧尺对照分表不并列）。
 > v0.13→v0.14（**R8 #1 确认闸码批收口**，2026-10-16）：设计稿 `docs/confirmation-gate-design.md` v1.0 冻结（tff 拍板 Q1–Q5 全按推荐；Q3=A `review.py` 入口 preflight，WP-0 写集例外亲批）；批1 `backend/noveldb.py` jobs 闸账四函数（add_confirm_job/get_job/latest_job/set_job_status CAS，状态机 queued→confirmed／queued→rejected→queued 代码层枚举，**SQL 零迁移**）；批2 `review --live` 前置检查——无 confirmed job/规划 sha256 不符→退出码 4+stderr 拦截原因含当前哈希，过闸戳进 run.log（归档自证）；--live 调用者全带 `--gate-project`（离线/救援不过闸）；验收 §4 四项全绿，链验 plot_engine **554→557**（+3 拦截态用例）、backend **6→10**（CAS 并发单赢等 4 用例）。Q5：闸前存量归档（wpe50ch/bo_ctrl）豁免，闸只卡新跑。
 > v0.12→v0.13（**WP-A v3.8 码批收口**，2026-10-16）：epoch_1 八批全落库（A models／B plot reducer+联动钩子+abandon 内核／C validator H9 族+RULE_TO_LEVEL／D derive D11 单源漂移拦截／E 抽取尺 bump **v3.6→v3.8-foreshadow-payload**（v3.7 烧号不复用纪律兑现）／F 裁定 2A 阶梯四级化／G 协议文本 01/03/04/05/06/08/09+CHANGELOG 入册／H 全链复验）。链验 **531→554**（+23 用例，一正一反纪律达标）。**尺面纪律**：v3.8 起读数与 v3.6 分表，禁并列。fixture 层 EPOCH 字符串暂留 epoch_0（生效记录=09 §3.1+CHANGELOG，数据面首条 epoch_1 事件写入时按 09 §5 走）。弃伏工作台接线留 WP-0（5A 内核已落）。
 > v0.11→v0.12（冻结会散会，2026-10-15，tff 照单拍板）：六项裁定 1A（04 补 D10 + derive 前置拦截 + 06 §4 登记归属）/ 2A（06 §5 阶梯删一级，四级）/ 3 追认（H8.x 只记 by_rule，08 勘误回填）/ 4A（derive 单源 gate→due，**v3.8 键名定稿 `due_by_chapter` 入 FORESHADOWING_SET payload**）/ 5A（新增 `abandon_foreshadowing` 动作入阶梯）/ 6A（ArcProgress 随 epoch_1 只冻字段，V3/V6 迁移断言）；确认闸落点追认 = **backend jobs 表不进 EventLog（不触发 T1）**。拍板记录：`docs/freeze-meeting-and-r8-briefs.md` 末节。**WP-A v3.8 码批即刻开工**；`docs/commercial/project-roadmap.md` 加陈旧快照注记（正典单一写者不变）。
@@ -133,7 +134,7 @@
 | 用户计划 | 项目映射 | 涉及路线 | 当前状态 | 下一步 |
 |---|---|---|---|---|
 | Phase 0 生产内核 | alexandria Phase 0 | L0–L3 + R5 压测 | 已建成，50 章证据**已补（判负）** | **WP-E 已收口**：`sampling/wpe50ch/` 读数 `docs/phase0-50ch-stress.md`——处置率 74%，E2/E3 False，当前冻结面下 50 章规模不成立 |
-| Phase 1 剧情能力 | epoch_1 语义层（`docs/epoch1-foreshadow-design.md` v0.2） | R0→R1→R2→R3 | **契约已冻结（v0.12 六项裁定）** | **WP-A v3.8 码批已收口落库（v0.13）**——伏笔账本/H9/D11/四级阶梯/v3.8 尺全绿；Live 读数待下一次 10 章采样（旧尺对照=fix-1/wpe50ch） |
+| Phase 1 剧情能力 | epoch_1 语义层（`docs/epoch1-foreshadow-design.md` v0.2） | R0→R1→R2→R3 | **契约已冻结（v0.12 六项裁定）** | **WP-A v3.8 码批已收口落库（v0.13）**——伏笔账本/H9/D11/四级阶梯/v3.8 尺全绿；**Live 三采样已判负（v0.15，`docs/phase0-live-run-10ch.md` §9）**——读数一致、规模不成立；下一步=冻结闸议程（G1 已命中） |
 | Phase 2 成品质量 | 测量/文风/生成约束 | R4 + R5 + R6 | 约半数超前开工 | WP-B 码批 / **WP-D 已交付**（`docs/wp-d-noveldb-mapping.md` v0.4 §8） |
 | Phase 3 商业验证 | 盲测→读者→付费 | R6 + R7 + 盲测 + **R8** | 工具已备，数据未启动 | **已定案：不进通用工具市场，纵深走垂直有声书交付**；50 章产物 → 盲评 → 接 R7 |
 

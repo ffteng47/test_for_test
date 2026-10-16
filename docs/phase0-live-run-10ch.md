@@ -126,3 +126,44 @@ Writer 没有写出来，任何规模的模型都抽不出来。§6 把这些失
 - 未改任何协议/HARD/架构（08 §7 冻结）。
 - 未改服务器配置（keep-alive、端口暴露）。
 - 未接 `Arc → ChapterContract → ScenePlan` 生成器——需要产品决策（生成什么故事），不是接线工作。
+
+## 9. v3.8 冻结面三采样 + 本地跨硬件横批（2026-10-16，epoch_1/WP-A 收口后首采）
+
+**采样设计**：WP-A v3.8 码批（契约面修订：逐章意图 must_change + D10/D11 前置拦截 + H9 族）落地后，
+按 §7 条 6 的自欠（"退出条件需要重复采样"）跑 **同模型（qwen2.5:14b）同规划（ladder-v4 十章）三次**，
+判据只按"三次是否一致"下，不再取单次作数。另起**本地 3090 第四批**作跨硬件对照（tff 裁定方案 A：
+主三批不动，横批分表）。首批过 R8 #1 确认闸：**闸单 jobs#1**（project 1，
+`plan_sha256=8c085a8a1b49b6460db69efe2a10085529ba84eb2153b10348fccdfa23d606d2`，confirmed_by=tff）。
+
+**尺戳纪律**：本表全部为 **v3.8-foreshadow-payload** 尺面读数；§4 的 8/10（fix-1，严格协议读 5/10）
+与 `docs/phase0-50ch-stress.md`（wpe50ch）均为**旧尺（v3.6）对照，分表不并列**。
+
+| 批 | 车道 | 终态（OK/NH/ARC） | 需修章/最多轮/修复率 | §6：Writer 类 : Contract/Arc 类 | E1–E6 | tokens/用时 |
+|---|---|---|---|---|---|---|
+| r1 | 213 | 3 / 7 / 0 | 7 章 / 3 轮 / 0.00 | 12 : 17（H5.1,H5.3,H5.4,H5.6） | T **F F** T T T | 165,652 / 1,448s |
+| r2 | 213 | 2 / 7 / 1 | 8 章 / 3 轮 / 0.12 | 8 : 12（ARC,H5.3,H5.4,H5.6） | T **F F** T T T | 203,382 / 1,580s |
+| r3 | 213 | 3 / 7 / 0 | 10 章 / 3 轮 / 0.30 | 12 : 16（H5.1,H5.3,H5.4,H5.6） | T **F F** T T T | 228,325 / 1,811s |
+| l1 | 3090 本地 | 3 / 6 / 1 | 8 章 / 3 轮 / 0.14 | 9 : 14（ARC,H5.1,H5.3,H5.4,H5.6） | T **F F** T T T | 166,641 / 3,726s |
+
+**一致性判定（主三批）**：
+- OK 率 30/20/30%，E1/E4/E5/E6 三批同真、**E2（提交率≥70%）与 E3（≥90%）三批同假**——读数稳定，不是单次方差假象。
+- 失败主体三批一致落在 **Contract/Arc 类**（17/12/16 居首，H5.3 must_change 未实现领衔），Writer 类（H2.2/H5.7）为次。
+- **结论：契约面修订（ladder-v4 逐章意图 + D10/D11 拦截）不改变判负——"十章规模成立"在 v3.8 冻结面下判否**。
+  这与 WP-E 五十章判负（处置率 74%，同谱系 H5.3×110）同向：缺陷在契约/Arc 语义层本身，不在夹具写法。
+- G1（同类 failure ≥3）命中 → 08 §7 冻结闸**允许讨论**改架构（非自动改）。议程候选=既有挂账：Level-3 在场一致性/WP-F
+  方法论吸收（`docs/project-roadmap.md` WP-E  backlog 行）+ must_change 归属空白（06 §4）。
+
+**跨硬件对照（l1 分表）**：本地 3090 同模型同参（extract 上限 2400/温度 200，路由逐字段镜像仅换 base_url）
+读数 OK=3/10、E2/E3 同假、失败同谱系——**尺读数不依赖 213 硬件，测量面跨机器稳定**。
+效率面：213 单章均速 ~2.5 min（r2 十章 25 min），3090 ~6.6 min（十章 ~62 min），慢 ~2.6 倍；
+适合对照批不适合主采样车道（且与主三批并行不占隧道）。
+
+**复现（§13 落盘）**：
+```
+.venv/Scripts/python.exe -m plot_engine.review --live --chapters 10 \
+  --model-config @router_q25_14b.json --gate-project 1 --dump-dir sampling/ep1v38-rN   # N=1,2,3（@213 隧道 11500）
+.venv/Scripts/python.exe -m plot_engine.review --live --chapters 10 \
+  --model-config @router_local_q25_14b.json --gate-project 1 --dump-dir sampling/ep1v38-l1  # 本地 Ollama 11434
+```
+归档：`sampling/ep1v38-r1/ r2/ r3/ l1/`（各含 ch01–10.md、run.log、_junk.json、state/{state.db,event.db}）+ 同名 `.log` 控制台。
+坏料合计 r1=21 / r2=69 / r3=44 / l1=36 条（`_junk.json` 逐条可数；大头 `stripped_payload_key` 与 `id_value_not_id`，instr-v2 修复环后仍能出稿的部分未计入失败）。
