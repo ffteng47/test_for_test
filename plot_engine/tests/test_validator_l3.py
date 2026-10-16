@@ -1,4 +1,4 @@
-# Level-3 注入缝：只在 L1/L2 全通过时运行，且永不产 HARD（05 §7 L3, §9 I1）
+# Level-3 注入缝：L1/L2 判完即运行（不要求通过；05 §7 闸序 2026-10-17 修订批），且永不产 HARD（§9 I1）
 from plot_engine.canonical import canonical_json
 from plot_engine.models.contract import ChapterContract, ChapterHook
 from plot_engine.models.state import StoryState
@@ -59,7 +59,7 @@ def test_level3_hard_is_downgraded_to_observation():
     assert "L3_DOWNGRADED" in res.observations[0].message
 
 
-def test_level3_runs_only_when_l1_l2_clean():
+def test_level3_runs_even_with_l1_l2_hard():
     calls = {"n": 0}
 
     def counting(draft, state, contract):
@@ -67,13 +67,15 @@ def test_level3_runs_only_when_l1_l2_clean():
         return [Finding(rule_id="x", severity="soft", message="m")]
 
     v = Validator()
-    # required_events 未满足 → L2 产 H5.1 HARD → L3 不应被调用
+    # required_events 未满足 → L2 产 H5.1 HARD → L3 仍被调用（人审排序读数），
+    # 但 L3 的 SOFT 不解除 HARD：Commit 仍被拒（05 §9 I1/I2 不变）
     contract = _clean_contract(required_events=[
         {"event_type": "OBSERVES", "description": "d"}])
     res = v.validate(_CLEAN_DRAFT, [], contract, _clean_state(), level3_fn=counting)
+    assert calls["n"] == 1
     assert not res.can_commit()
     assert any(f.rule_id == "H5.1" for f in res.hard_violations)
-    assert calls["n"] == 0
+    assert [f.rule_id for f in res.soft_warnings] == ["x"]
 
 
 def test_level3_state_untouched():

@@ -807,9 +807,11 @@ class Validator:
         返回判定与沙盒 `Simulation`（供 `reduce_commit` 复用同一条 reduce 路径，零漂移）。
         H8.1 整批短路时不产生模拟，返回 sim=None。
 
-        Level-3（05 §7/§9 I1）：仅当 L1/L2 无 HARD 时对沙盒 `sim.cur` 调用 `level3_fn`；
+        Level-3（05 §7/§9 I1，闸序 2026-10-17 修订）：L1/L2 判完即对沙盒 `sim.cur` 调用
+        `level3_fn`（不再要求 L1/L2 通过——带 HARD 章同样出 SOFT/OBS 读数供人审排序）；
         其返回的 `severity=="hard"` 一律降级为 observation（前缀 L3_DOWNGRADED），
-        L3 永不产 HARD、永不改真实 State（只读沙盒投影）。`level3_fn=None` 完全跳过。
+        L3 永不产 HARD、永不改真实 State、永不解除 HARD 阻断（I1/I2 不变）。
+        `level3_fn=None` 完全跳过。
         """
         markup = parse_markup(draft)
         active, h8_findings = _h8_gate(proposals, state)
@@ -825,7 +827,7 @@ class Validator:
                             committed_event_ids=committed_event_ids)
         findings += _run_l2(sim, state, merged, contract=contract, markup=markup)
         findings += dedupe_obs
-        if level3_fn is not None and not _bucket(findings).hard_violations:
+        if level3_fn is not None:                              # 05 §7 闸序修订 2026-10-17：判完即跑，不要求通过
             findings += _demote_l3(level3_fn(draft, sim.cur, contract))
         return _bucket(findings), sim
 

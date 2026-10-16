@@ -85,6 +85,23 @@
 
 ---
 
+## 闸序修订批生效记录（2026-10-17 tff 拍板 level3_fn「先修闸序」→ 05 §7 L3 条款）
+
+> 驱动：`docs/level3-fn-calibration-pack.md`——ch50 型带 HARD 章永远轮不到 L3 供料，
+> 在场穿帮机检全漏连人审排序读数都不产出。闸序不是代码偏差而是**协议原文**
+> （§7「仅在 Level 1/2 通过后运行」）⇒ 本批=协议文本修订 + 码触发条件单点同步。
+> 协议正文变更：05 §7 L3 第一条改「在 Level 1/2 判定完成后运行（不要求 L1/L2 通过）」。
+> 不变量零动：§9 I1（L3 永不产 HARD，返回的 HARD 一律降级 observation）、I2（SOFT/OBS 不阻断
+> Commit）一字未改；HARD 集合零增删 ⇒ 不触发 T5/I5，不升 epoch；`_review`/`validate` 签名零动、
+> 其他层零动（分层纪律：单模块改动不波及架构）。
+> 码批落盘：validator `_review` L3 触发条件去掉零-HARD 前置；用例反转
+> `test_level3_runs_even_with_l1_l2_hard`（带 HARD 章 L3 仍被调、其 SOFT 不解除 HARD 阻断）。
+> 读数影响：live 管道现无 level3_fn 传入方（空插槽实证）⇒ today 行为零影响；本批是注入缝落地，
+> L3 判分候选 A/B/C 在修后闸序面上重谈（候选 B 的 R1 抽取尺红线独立拍板不变）。
+> 基线：plot_engine 585（用例反转不增数）、backend 10 不变。
+
+---
+
 ## §A 变更草案（修改 1~10）
 
 ### 修改 1：新增 10_world_state_protocol.md

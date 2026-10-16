@@ -175,7 +175,7 @@ text
 - 覆盖 H2 / H5 / H9（H9 为 epoch_1 伏笔族，台账只读判定）
 Level 3：LLM-as-validator
 text
-- 仅在 Level 1/2 通过后运行
+- 在 Level 1/2 判定完成后运行（不要求 L1/L2 通过；闸序修订 2026-10-17，tff 拍板，见 CHANGELOG）
 - 必须返回结构化 evidence（引原文段落）+ confidence
 - confidence 低于阈值 → 不裁定，转人工
 - 只覆盖 SOFT 和 OBSERVATION（含 H8.3 转人工复核建议，不产 HARD，见 §9 I1）
