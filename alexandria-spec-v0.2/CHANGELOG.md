@@ -67,6 +67,22 @@
 > 尺面纪律：EXTRACTION_RULER 维持 v3.9（抽取通道一字未动）；批前/批后读数按修订环戳分表。
 > 基线：plot_engine 573→581（分诊 4 / Writer 清单 2 / 全键 1 / dump 仪表 1）、backend 10 不变。
 
+## 清单具名化批生效记录（2026-10-16 #98 指令面 → 修订环 patch-v1→v2）
+
+> 归因驱动：§13 patch-v1 三采样——稳定死章 4/4 三批 item 键逐字一致，三分型共性=
+> **型别模型会写、绑定在裸编号清单面上系统性串位**（actor 错绑/事实错绑/档位顶错）。
+> 非结构不可写，是指令面欠明确 ⇒ 先走这条比 S 批（云端强模型）更便宜的指令面梯级。
+> 协议正文变更：06 §4.2（补写清单**具名形态**下发：actor 用角色名、target 用事实命题、
+> 档位可达型别从 KNOWLEDGE_RANK_CAP/FIELD_EVENT_TYPES 单源表筛出并点名排除不可达型别；
+> 失败升非契约层时清单必空 ⇒ 落回该层默认动作、patch_write 不空挂开火）+
+> 06 §4.3（判死 ArcConflict 必须携带已跑轮次 trace，dump `## Revision` 段可核对补写开火=S 批条件①）。
+> 码批落盘：review.render_patch_directive 具名化 + 单源表 import、revision run_chapter
+> 抛点挂 trace + Writer 层空清单不回头补写（`action==patch_write and rc.level!="contract"` → action_for）、
+> experiment quarantine 收 `exc.trace`、run.log 戳「修订环=patch-v2」。
+> 尺面纪律：items 全编号键 + EXTRACTION_RULER v3.9 一字未动；具名化改的是喂 Writer 的指令文本 ⇒
+> 修订环戳 v1→v2，与 patch-v1（`sampling/ep1v39p-rN`）分表，禁与批前/批后混读。
+> 基线：plot_engine 581→585（trace 携带 1 / 空清单不空挂 1 / directive 具名 1 / state 缺席兜底 1）、backend 10 不变。
+
 ---
 
 ## §A 变更草案（修改 1~10）

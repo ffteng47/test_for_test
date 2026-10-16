@@ -179,12 +179,20 @@ class RevisionLoop:
                 items = _patch_items(outcome.validation)
                 refail = sorted(i for i in items if i.startswith("H5.3|") and i in patched)
                 if refail:
-                    raise ArcConflict("needs_arc_replan：定向补写一轮后同条 must_change "
+                    # 带上已跑的 trace：判死那一轮不记（它没动作），但前几轮（含补写那一轮）
+                    # 必须交给 dump——「补写确实开过火」是 S 批条件①的证据，不能随异常丢。
+                    exc = ArcConflict("needs_arc_replan：定向补写一轮后同条 must_change "
                                       f"仍未实现，修订层无法兑现，请作者重开弧线：{refail}")
+                    exc.trace = trace
+                    raise exc
                 if items and not set(items) <= patched:
                     action = "patch_write"
                     patched |= set(items)
 
+            if action == "patch_write" and rc.level != "contract":
+                # 补写只治契约层缺失；升到 Writer/Extraction 层后清单必空，
+                # 再挂 patch_write 空开火 = 功能≈rewrite_chapter 却遮蔽真实动作（r1 ch05 round 2）。
+                action = action_for(rc.level, self.policy)
             if action is None:
                 action = action_for(rc.level, self.policy)
             elif self.policy.oscillation_detection and is_oscillating(prev_violations, violations):

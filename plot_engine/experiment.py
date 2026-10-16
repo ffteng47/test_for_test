@@ -125,7 +125,9 @@ def run_experiment(config: ExperimentConfig, *, store: StateStore, log: EventLog
                 # 轮数照样入账（致命那一轮不落账 ⇒ len(captured)-1，与逐章快照头部同口径）。
                 # 漏了这一笔，`len(rounds)==generated` 就不成立，E3 与「修订跑没跑」一起被假降级。
                 rounds_by_chapter[ch] = max(len(captured) - 1, 0)
-                if quarantine(ch, exc, captured):
+                # run_chapter 判死时把已跑轮次的 trace 挂在异常上（补写开火证据必须进 dump）；
+                # 开工前判死的 ArcConflict 没这个属性 ⇒ None，dump 照旧无 Revision 段（那本就没跑过轮）。
+                if quarantine(ch, exc, captured, getattr(exc, "trace", None)):
                     break
                 continue
             rounds_by_chapter[ch] = trace.rounds

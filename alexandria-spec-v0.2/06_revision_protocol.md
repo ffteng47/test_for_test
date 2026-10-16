@@ -101,7 +101,7 @@ Contract 的 tension_target 与 arc.tension_curve 冲突
 
 处理：
 
-定向补写 patch_write（v0.13 材料四裁定：契约层根因的第一轮回退是带缺失清单的定向补写请求，不是直接重议）——把缺失条目清单（H5.3 未实现的 must_change 条目 ∪ H5.1 未满足的事件类型）随补写请求下发给 Writer，只重写本章正文；同条 H5.3 补写后再失败 → 判为「正文写不出该 Δ」= 作者输入错误，走 4.3 needs_arc_replan 出口；H5.1 条目补写后再失败 → 按 §7 振荡升级轮到 renegotiate_contract
+定向补写 patch_write（v0.13 材料四裁定：契约层根因的第一轮回退是带缺失清单的定向补写请求，不是直接重议）——把缺失条目清单（H5.3 未实现的 must_change 条目 ∪ H5.1 未满足的事件类型）随补写请求下发给 Writer，只重写本章正文；同条 H5.3 补写后再失败 → 判为「正文写不出该 Δ」= 作者输入错误，走 4.3 needs_arc_replan 出口；H5.1 条目补写后再失败 → 按 §7 振荡升级轮到 renegotiate_contract。清单以**具名形态**下发（v0.13 #98：actor 用角色名、target 用事实命题，档位可达型别从 KNOWLEDGE_RANK_CAP/FIELD_EVENT_TYPES 单源表筛出，不可达型别点名排除）——§13 三分型的共性是型别会写、裸编号清单上 actor/事实串位，具名化把绑定的活儿从模型手里收回；items 键本身仍是全编号（dump 仪表与 needs_arc_replan 消息不受措辞影响）。失败升到非契约层（Writer/Extraction）时清单必空 ⇒ 该层落回自己的默认动作，patch_write 不空挂开火。run.log 戳记 `修订环=patch-v2`（v1→v2=具名化，喂给 Writer 的指令文本变 ⇒ 读数分表）
 
 重议 Chapter Contract
 
@@ -128,7 +128,7 @@ required_event 把本章禁知或 gate=hidden 的 fact 钉成 OBSERVES/READS（�
 
 伏笔逾期未回收（H9.1 HARD，epoch_1——欠的是弧线债）
 
-must_change 的 Δ 补写后再失败（v0.13 材料四裁定 1）：同一条 H5.3 条目在 patch_write 一轮后仍未实现 ⇒ 抛 ArcConflict（needs_arc_replan 出口）。fail-fast 不再是「开工即判死」——本章先获得一轮带清单的定向补写，补写后仍失败才作废本章（ARC_CONFLICT 桶落作者桌面）；重议路径撞上 Arc 强制项时同样先补写一轮再判死（裁定 2）。needs_arc_replan 作废的章不计入修复率分母（裁定 3：那是作者输入的债，不是修订机的失位）。
+must_change 的 Δ 补写后再失败（v0.13 材料四裁定 1）：同一条 H5.3 条目在 patch_write 一轮后仍未实现 ⇒ 抛 ArcConflict（needs_arc_replan 出口）。fail-fast 不再是「开工即判死」——本章先获得一轮带清单的定向补写，补写后仍失败才作废本章（ARC_CONFLICT 桶落作者桌面）；重议路径撞上 Arc 强制项时同样先补写一轮再判死（裁定 2）。needs_arc_replan 作废的章不计入修复率分母（裁定 3：那是作者输入的债，不是修订机的失位）。判死的 ArcConflict 必须携带已跑轮次的 RevisionTrace（v0.13 #98 仪表微修：patch-v1 时代 quarantine 只收 message，dump 无 `## Revision` 段，「补写确实开过火」= S 批条件①只能靠消息文本间接证；带上 trace 后逐轮动作/清单落快照）。
 
 处理：
 

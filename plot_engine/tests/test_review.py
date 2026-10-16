@@ -300,6 +300,40 @@ def test_patch_round_renders_its_item_list(tmp_path):
     assert "items=H5.3|char_000001|knowledge|fact_000001|known" in text
 
 
+def test_patch_directive_names_actors_and_prunes_unreachable_event_types():
+    """#98 具名化：§13 三分型的共性=型别会写、裸编号清单上 actor/事实串位。
+    directive 必须把 actor、事实命题具名，并把 knowledge 档位不可达的型别筛掉——
+    expected=known 时 INFERS（上限 suspected）不该出现在候选里，否则 Writer 会照错的方向写。"""
+    import types
+
+    from plot_engine.review import render_patch_directive
+
+    char = types.SimpleNamespace(name="张三")
+    fact = types.SimpleNamespace(proposition="叛徒是李四")
+    state = types.SimpleNamespace(characters={"char_000001": char},
+                                  facts={"fact_000001": fact},
+                                  locations={}, items={})
+    ctx = types.SimpleNamespace(state=state, missing_requirements=[
+        "H5.3|char_000001|knowledge|fact_000001|known"])
+    d = render_patch_directive(ctx)
+    assert "张三" in d and "叛徒是李四" in d
+    assert "actor 必须是前者本人" in d
+    assert "OBSERVES" in d and "READS" in d          # 可达该档的实现事件
+    assert "INFERS 只到 suspected" in d               # 顶不到 known，点名排除
+
+
+def test_patch_directive_survives_missing_state():
+    """state 缺席（判死章开工前通道）不能抛——退回裸编号，补写请求仍发得出。"""
+    import types
+
+    from plot_engine.review import render_patch_directive
+
+    ctx = types.SimpleNamespace(state=None, missing_requirements=[
+        "H5.3|char_000001|belief|fact_000001|believes"])
+    d = render_patch_directive(ctx)
+    assert "char_000001" in d and "BELIEVES" in d
+
+
 def test_render_lists_per_chapter_revision_rounds(tmp_path):
     """聚合值（需修几章 / 最多几轮）盖住了「修订烧在哪一章」，Review 会要的是逐章那一行。"""
     rep = _report(tmp_path, {}).model_copy(

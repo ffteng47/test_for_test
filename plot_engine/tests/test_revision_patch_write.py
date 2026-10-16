@@ -77,6 +77,39 @@ def test_same_h53_refail_after_patch_raises_needs_arc_replan():
             "s1", 47, _ctx(), lambda ctx: bad)
 
 
+def test_needs_arc_replan_carries_the_rounds_it_burned():
+    """#98 仪表微修（§13 入册）：判死异常必须带着已跑轮次的 trace——patch-v1 时代
+    quarantine 只收 message，dump 里没有 `## Revision` 段，「补写确实开过火」
+    （S 批条件①）只能靠消息文本间接证。"""
+    bad = _outcome("FAIL", hard=[_finding("H5.3", KEY53)])
+    with pytest.raises(ArcConflict) as ei:
+        _loop(patch_write=lambda c: c,
+              renegotiate_contract=lambda c: c).run_chapter(
+            "s1", 47, _ctx(), lambda ctx: bad)
+    assert [s.action for s in ei.value.trace.steps] == ["patch_write"]
+
+
+def test_writer_level_after_patch_rewrites_not_an_empty_list_patch():
+    """反例（r1 ch05 round 2 实弹）：契约层补写后失败升到 Writer 层——清单必空，
+    patch_write 不许空挂开火（功能≈rewrite_chapter 却遮蔽真实动作），
+    必须落回该层默认动作。"""
+    bad53 = _outcome("FAIL", hard=[_finding("H5.3", KEY53)])
+    bad57 = _outcome("FAIL", hard=[_finding("H5.7", None)])
+    ok = _outcome("OK")
+    outs = iter([bad53, bad57, ok])
+    seen_items = []
+
+    def rewrite(ctx):
+        seen_items.append(list(ctx.missing_requirements))
+        return ctx
+
+    trace, out = _loop(patch_write=lambda c: c, rewrite_chapter=rewrite,
+                       renegotiate_contract=lambda c: c).run_chapter(
+        "s1", 47, _ctx(), lambda ctx: next(outs))
+    assert [s.action for s in trace.steps] == ["patch_write", "rewrite_chapter"]
+    assert seen_items == [[]]                                   # 补写载荷只带真清单
+
+
 def test_h51_refail_after_patch_escalates_to_renegotiate_not_second_patch():
     """H5.1 补写后再失败：不是作者债（事件类型可放宽），按 §7 振荡升级到重议——
     重议在 patch_write 之后的阶梯位上，同轮清单不再触发第二次补写。"""

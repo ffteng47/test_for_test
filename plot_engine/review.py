@@ -11,6 +11,8 @@ from typing import Dict, List, Optional
 
 from plot_engine.experiment import evaluate_exit_conditions
 from plot_engine.llm_writer import ARMS
+from plot_engine.models.contract import (FIELD_EVENT_TYPES, K_RANK,
+                                         KNOWLEDGE_RANK_CAP)
 from plot_engine.models.experiment import ExperimentReport
 
 # 08 §6 结论类
@@ -208,6 +210,53 @@ FIX_GUIDE: Dict[str, str] = {
 _EXTRACT_BLIND = ("INFERS", "BELIEVES")   # T8 铲 1 认定的跨模型漏抽类型
 
 
+def render_patch_directive(ctx) -> str:
+    """#98 具名化批：§13 归因三分型的共性=**事件型别模型会写、绑定在裸编号清单面上系统性
+    串位**（actor 错绑/事实错绑/档位顶错）。裸 id 清单（`char_000003|belief|fact_000008|believes`）
+    把绑定的活儿留给了模型猜——这里从 ctx.state 取角色名/事实命题，档位上限提示从
+    KNOWLEDGE_RANK_CAP/FIELD_EVENT_TYPES 单源表导出（与 derive D10、validator H5.3 同一把尺，
+    不是第二套标准）。items 键本身不改：dump 仪表与 needs_arc_replan 消息仍记全键。"""
+    state = getattr(ctx, "state", None)
+
+    def named(ident: str) -> str:
+        if state is None:
+            return ident
+        for coll in (state.characters, state.facts, state.locations, state.items):
+            obj = coll.get(ident)
+            if obj is not None:
+                label = getattr(obj, "name", None) or getattr(obj, "proposition", None)
+                if label:
+                    return f"{label}（{ident}）"
+        return ident
+
+    lines = []
+    for it in ctx.missing_requirements:
+        rule, _, key = it.partition("|")
+        if rule == "H5.3":
+            parts = key.split("|")
+            if len(parts) == 4:
+                actor, field, target, expected = parts
+                line = (f"{named(actor)} 的「{field}」必须真变成「{named(target)}」= {expected}"
+                        f"——事件 actor 必须是前者本人，事件绑定必须指向后者，不许错绑到"
+                        f"其他角色/事实")
+                types = sorted(FIELD_EVENT_TYPES.get(field, set()))
+                if field == "knowledge" and expected in K_RANK:
+                    feas = sorted(t for t in types
+                                  if K_RANK.get(KNOWLEDGE_RANK_CAP.get(t, ""), 0)
+                                  >= K_RANK[expected])
+                    line += f"；可达该档的实现事件只有 {'/'.join(feas) or '（无）'}"
+                    if "INFERS" in types and "INFERS" not in feas:
+                        line += "（INFERS 只到 suspected，顶不了这档）"
+                elif types:
+                    line += f"；实现事件型别：{'/'.join(types)}"
+                lines.append(f"- {line}")
+                continue
+        hint = FIX_GUIDE.get(rule, "")
+        lines.append(f"- {key}：{hint}" if hint else f"- {key}")
+    return ("定向补写（只补下面缺的戏，不要删或替换已写好的内容；"
+            "括号内是系统编号，正文里让被点名的角色亲自做这件事）：\n" + "\n".join(lines))
+
+
 def _fix_guide_lines(final_status: str, validation) -> List[str]:
     """路由给人的章要附「改哪里」，只给 rule_id 的那半程是人替机器读协议。
 
@@ -386,12 +435,7 @@ def _live_run(chapters: int, model_config: dict, *, client=None, cloud_client=No
         return dataclasses.replace(ctx, draft=asm.draft)
 
     def patch_directive(ctx):
-        lines = []
-        for it in ctx.missing_requirements:
-            rule, _, key = it.partition("|")
-            hint = FIX_GUIDE.get(rule, "")
-            lines.append(f"- {key}：{hint}" if hint else f"- {key}")
-        return "定向补写（只补下面缺的戏，不要删或替换已写好的内容）：\n" + "\n".join(lines)
+        return render_patch_directive(ctx)
 
     def patch_write(ctx):
         # 06 §4.2：契约层第一动作。清单进提示词（scene_prompt.directive），只重写 Draft、
@@ -433,7 +477,7 @@ def _live_run(chapters: int, model_config: dict, *, client=None, cloud_client=No
         return None, f"模型在实验中途不可用，本报告作废。{where}\n原因：{e}", None
     note = (f"{msg}｜prompt={prompt_version(arm)}｜抽取尺={EXTRACTION_RULER}"
             f"｜指引={GUIDE_VERSION}｜夹具={fx.LADDER_VERSION}｜Writer面={WRITER_SURFACE}"
-            f"｜修订环=patch-v1")
+            f"｜修订环=patch-v2")
     if gate_note:
         note += f"｜{gate_note}"   # 归档自证过闸（R8 §4.2 确认动作可追溯）
     cap = getattr(client, "router", None)
