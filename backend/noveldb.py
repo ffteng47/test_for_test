@@ -101,6 +101,10 @@ CREATE TABLE IF NOT EXISTS jobs(
   payload TEXT DEFAULT '{}',
   created_at TEXT DEFAULT (datetime('now')));
 """
+CONFIRM_TASK = 'plan_confirm'   # R8 #1 开书确认闸的唯一 task 值（docs/confirmation-gate-design.md v1.0）
+# 状态机（设计稿 §2，代码层枚举，SQL 不动）：queued→confirmed / queued→rejected / rejected→queued
+_JOB_TRANSITIONS = {('queued', 'confirmed'), ('queued', 'rejected'), ('rejected', 'queued')}
+_JOB_STATUSES = frozenset(s for pair in _JOB_TRANSITIONS for s in pair)
 
 
 def _j(value: Any) -> str:
@@ -254,6 +258,30 @@ class Db:
                                (project_id, task, name, status, _j(payload or {})))
         self.con.commit()
         return cur.lastrowid
+
+    def add_confirm_job(self, project_id: Optional[int], task: str, name: str,
+                        payload: dict) -> int:
+        """确认闸入册：状态恒从 queued 起步，推进只走 set_job_status。"""
+        return self.add_job(project_id, task, name=name, status='queued', payload=payload)
+
+    def get_job(self, job_id: int) -> Optional[sqlite3.Row]:
+        return self.con.execute('SELECT * FROM jobs WHERE id=?', (job_id,)).fetchone()
+
+    def latest_job(self, project_id: int, task: str) -> Optional[sqlite3.Row]:
+        return self.con.execute(
+            'SELECT * FROM jobs WHERE project_id=? AND task=? ORDER BY id DESC LIMIT 1',
+            (project_id, task)).fetchone()
+
+    def set_job_status(self, job_id: int, status: str, expected_status: str) -> bool:
+        """CAS 推进：当前状态==expected 才写，返回是否抢到（防并发双确认）。状态机外组合直接报错。"""
+        if status not in _JOB_STATUSES or expected_status not in _JOB_STATUSES:
+            raise ValueError(f"非法状态: {expected_status}→{status}")
+        if (expected_status, status) not in _JOB_TRANSITIONS:
+            raise ValueError(f"非法迁移: {expected_status}→{status}，允许 {sorted(_JOB_TRANSITIONS)}")
+        cur = self.con.execute('UPDATE jobs SET status=? WHERE id=? AND status=?',
+                               (status, job_id, expected_status))
+        self.con.commit()
+        return cur.rowcount == 1
 
     def summary(self, project_id: int) -> dict:
         counts = {}
