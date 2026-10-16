@@ -21,7 +21,7 @@ from pydantic import BaseModel, ValidationError
 
 from plot_engine.models.contract import (
     ArcContract, ChapterContract, ChapterHook, CharacterChange, FIELD_EVENT_TYPES,
-    ForbiddenEvent, KnowledgeGate, ReaderSignal, RequiredEvent,
+    ForbiddenEvent, K_RANK, KNOWLEDGE_RANK_CAP, KnowledgeGate, ReaderSignal, RequiredEvent,
 )
 from plot_engine.models.sceneplan import Beat, Scene, ScenePlan
 from plot_engine.models.state import StoryState
@@ -179,6 +179,23 @@ def derive_chapter_contract(arc: ArcContract, chapter_no: int, state: StoryState
     if unmet:
         raise ArcConflict(f"{arc.arc_id} 第 {chapter_no} 章的 must_change 没有可实现它的"
                           f"事件类型（现有 {sorted(implementable)}）：{unmet}")
+
+    # D10 强化（1A，材料三 #1 裁定）：类型在表还不够，档位必须够得着——expected known
+    # 的 Δ 靠 IS_TOLD/INFERS 永远兑不了（上限表 KNOWLEDGE_RANK_CAP，即 reducer 逐条
+    # 封顶）。43 章裁定 ③ 族的 rank-cap 章就是从这里漏进契约、被烧三轮修订的。
+    rank_unmet = []
+    for c in intent.must_change:
+        want = K_RANK.get(str(c.expected_value)) if c.field == "knowledge" else None
+        if want is None:
+            continue                        # belief Δ / 无档位期望值不归本守卫
+        if not any(K_RANK[KNOWLEDGE_RANK_CAP[t]] >= want
+                   for t in implementable & FIELD_EVENT_TYPES["knowledge"]):
+            rank_unmet.append(f"{c.character_id}.knowledge→{c.target}"
+                              f"(期望 {c.expected_value}，本章 knowledge 事件 "
+                              f"{sorted(implementable & FIELD_EVENT_TYPES['knowledge'])} 上限不够)")
+    if rank_unmet:
+        raise ArcConflict(f"{arc.arc_id} 第 {chapter_no} 章 knowledge Δ 超出钉死事件的"
+                          f"档位上限（D10 强化/1A）：{rank_unmet}")
 
     # D11（v0.12 裁定 4A）：due_by_chapter 单源=gate.must_reveal_by_chapter。
     # 台账条目与 gate 限期漂移说明抽取/写入侧自己发明了第二个期限 → 回 Arc 层修账。

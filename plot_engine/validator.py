@@ -14,7 +14,7 @@ from typing import Literal, get_args
 
 from pydantic import BaseModel, Field, ValidationError
 
-from plot_engine.models.contract import FIELD_EVENT_TYPES
+from plot_engine.models.contract import FIELD_EVENT_TYPES, K_RANK
 from plot_engine.models.event import Event, EventType
 from plot_engine.models.proposal import EventProposal, proposal_event_id, to_event
 from plot_engine.models.state import StoryState
@@ -350,8 +350,7 @@ def _run_l1(sim: Simulation, state: StoryState, proposals: List[EventProposal],
 
 
 # --- Level 2：结构化检查（H2 / H5 + markup M-rules），05 §7 Level 2 ---
-_K_RANK: Dict[str, int] = {"unknown": 0, "suspected": 1, "believed": 2,
-                           "known": 3, "confirmed": 4}
+_K_RANK = K_RANK   # 档位序单源在 models.contract（derive D10 与 H5.3/H2.2 用同一把尺）
 _READING_KINDS = {"READER_LEARNS": "learns", "READER_HINTED": "hinted",
                   "READER_DECEIVED": "deceived"}
 _SIGNAL_TO_READER = {"knows": "READER_LEARNS", "hinted": "READER_HINTED",
@@ -452,7 +451,7 @@ def _l2_h5(sim: Simulation, state: StoryState, proposals: List[EventProposal],
     for ch in getattr(contract, "must_change", []):
         if not _change_implemented(sim, ch):
             findings.append(_f("H5.3", "hard",
-                               f"must_change {ch.character_id}.{ch.field} 无实现事件（W1）",
+                               f"must_change {ch.character_id}.{ch.field} 未实现（W1：无实现事件或终态未达档）",
                                evidence=ch.field))
 
     # H5.4 must_not_change 被违反（W2）
@@ -502,10 +501,16 @@ def _change_implemented(sim: Simulation, ch) -> bool:
     if implementers is None:
         return True
     if ch.field in ("knowledge", "belief"):
-        return any(ev.event_type in implementers
-                   and (_referenced_fact(ev) == ch.target)
-                   and (ev.actor == ch.character_id)
-                   for ev in sim.applied)
+        has_impl = any(ev.event_type in implementers
+                       and (_referenced_fact(ev) == ch.target)
+                       and (ev.actor == ch.character_id)
+                       for ev in sim.applied)
+        if ch.field == "belief" or not has_impl:
+            return has_impl
+        # 1B（材料三 #1 裁定）：knowledge 的实现判 = 本章有实现事件 **且** 终态达档
+        # （H2.2 同谓词）。旧判只看类型+actor+fact，IS_TOLD/INFERS 能「实现」expected
+        # known 的 Δ——H5.3 绿、H2.2 红，43 章裁定 ③ 族的 rank-cap 6 章就是这个尺缝。
+        return _knowledge_meets(sim.cur, ch.character_id, ch.target, ch.expected_value)
     if ch.field in _SIMPLE_FIELDS:
         return any(ev.event_type == "CHANGES" and ev.payload.get("field") == ch.field
                    and ev.actor == ch.character_id for ev in sim.applied)

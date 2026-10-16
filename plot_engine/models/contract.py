@@ -71,6 +71,17 @@ FIELD_EVENT_TYPES: Dict[str, set] = {
     "inventory": {"ITEM_ACQUIRED", "ITEM_CONSUMED"},
 }
 
+# Reducer 的档位上限（03 §4.3/§5.1，`reducers/knowledge.py:71-85` 逐条兑现）：
+# 每种 knowledge 事件最多把 ledger 推到哪一档。43 章裁定 ③ 族（rank-cap 6 章）
+# 就是「类型在表里、档位够不着」的 Δ——D10 光查类型交集放它进契约，
+# H5.3（类型判）绿、H2.2（档位判）红，两把尺互斥。三处共用这张表：
+# derive D10（生成时排除档位不可达的 Δ）、validator H5.3（实现判=终态达档，与 H2.2
+# 同谓词）、夹具（expected_value ≤ 钉事件上限）。
+K_RANK: Dict[str, int] = {"unknown": 0, "suspected": 1, "believed": 2,
+                          "known": 3, "confirmed": 4}
+KNOWLEDGE_RANK_CAP: Dict[str, str] = {"OBSERVES": "known", "READS": "known",
+                                      "IS_TOLD": "believed", "INFERS": "suspected"}
+
 
 class RequiredEvent(BaseModel):
     event_type: str                             # ∈ 01 §3 Taxonomy

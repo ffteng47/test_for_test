@@ -142,6 +142,35 @@ def test_h5_3_knowledge_still_implemented_by_observes():
     assert "H5.3" not in _codes(_l2([_p()], _contract(must_change=[_KN])))
 
 
+# --- 1B：knowledge 的实现判与 H2.2 同谓词（有实现事件且终态达档）---
+def test_h5_3_and_h2_2_no_longer_mutually_exclusive():
+    """反例：IS_TOLD 在旧类型表里「实现」了 expected known 的 Δ（H5.3 绿），
+    终态却只有 believed（H2.2 红）——43 章裁定 ③ 族 rank-cap 章的互斥两尺。
+    对齐后同一失败两把尺同判。"""
+    told = _p(proposed_event_type="IS_TOLD", payload={
+        "fact_id": "fact_000001", "trust_level": 900, "message_strength": 900})
+    codes = _codes(_l2([told], _contract(must_change=[_KN])))
+    assert "H5.3" in codes and "H2.2" in codes
+
+
+def test_h5_3_is_told_implements_believed_delta():
+    """正例：IS_TOLD 上限 believed，believed 的 Δ 达档 ⇒ H5.3 不再报。"""
+    kn = {**_KN, "expected_value": "believed"}
+    told = _p(proposed_event_type="IS_TOLD", payload={
+        "fact_id": "fact_000001", "trust_level": 900, "message_strength": 900})
+    codes = _codes(_l2([told], _contract(must_change=[kn])))
+    assert "H5.3" not in codes and "H2.2" not in codes
+
+
+def test_h5_3_belief_branch_untouched_by_rank_rule():
+    """rank 对齐只管 knowledge：belief Δ 仍按类型+actor+fact 判（DOUBTS 兑现 doubts）。"""
+    bl = {"character_id": "char_000001", "field": "belief", "operation": "add",
+          "target": "fact_000001", "expected_value": "doubts"}
+    p = _p(proposed_event_type="DOUBTS", payload={"fact_id": "fact_000001",
+                                                  "belief_strength": 400})
+    assert "H5.3" not in _codes(_l2([p], _contract(must_change=[bl])))
+
+
 def test_h5_7_keeps_wide_establish_set():
     """H5.7 用宽集合是对的（BELIEVES 一个 forbidden fact 确实算建立），分表不得动它。"""
     c = _contract(knowledge_forbidden=["fact_000001"])

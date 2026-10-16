@@ -34,7 +34,9 @@ def _arc(authored=("INFERS",), tp_types=("OBSERVES",),
                        "ending": {"type": "cliffhanger", "strength": 800, "description": "d"},
                        "must_change": [{"character_id": CAST, "field": "knowledge",
                                         "operation": "add", "target": "fact_000003",
-                                        "expected_value": "known"}],
+                                        # 档位要够得着 authored 钉（默认只有 INFERS，上限
+                                        # suspected——D10 rank 守卫/1A 会拦 known）
+                                        "expected_value": "suspected"}],
                        "required_events": [{"event_type": t, "description": f"{t} 一次"}
                                            for t in authored]}],
         created_at=NOW)

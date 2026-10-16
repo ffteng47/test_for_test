@@ -51,7 +51,9 @@ NOW = "2026-10-09T00:00:00Z"
 # ladder-v3：唯一一处改动＝ch09 的类型钉（§3.2 首笔，一次一个因）。
 # ladder-v4：§3.1 规模（4 人物/12 fact/3 地/2 物/2 关系/1 门派）+ §3.2 收尾（ch08 式纯再锚钉
 # 清零、每钉都是叙事模态）+ 逐章三元组唯一不回环。六臂 lv3 读数见 docs/phase1-rebaseline-v33.md §7。
-LADDER_VERSION = "ladder-v4-multi-scene"
+# ladder-v5：码批 v3.9 夹具侧首笔——ch06 补钉「赵六亲眼看见」（Δ 期望 known 而 IS_TOLD 上限
+# believed，D10 rank 守卫要求钉自己够得着）。ch10 解禁改钉与 3A 同批时再 bump（ladder-v5b）。
+LADDER_VERSION = "ladder-v5-rankcap"
 _ACTOR = "char_000001"          # 张三（调查者）
 _LI = "char_000002"             # 李四（嫌疑人，objective_truth=False 的 F2 本体）
 _WANG = "char_000003"           # 王五（守阁人）
@@ -132,7 +134,9 @@ _STEPS: List[Dict[str, Any]] = [
     {"events": [_obs(_F9), _belief("SUSPECTS", _F1, 500)],
      "must_change": [_knows("add", _F9, "known"), _holds("add", _F1, "suspects")]},
     {"events": [_obs(_F10, _ZHAO), _told(_F10, by=_ZHAO)],
-     "mandatory": [_told(_F10, by=_ZHAO)],         # 钉「下山来报」；赵六的观测不钉、自由 roll
+     # 两钉都进 Arc 强制项：赵六的 Δ 期望 known，IS_TOLD 上限只有 believed——
+     # 钉「亲眼看见」才让 D10 rank 守卫（1A）看得到 reachable 的实现事件。
+     "mandatory": [_told(_F10, by=_ZHAO), _obs(_F10, _ZHAO)],
      "must_change": [_knows("add", _F10, "known", _ZHAO), _knows("add", _F10, "believed")]},
     {"events": [_reads(_F11), _belief("BELIEVES", _F3, 600, _WANG)],
      "must_change": [_knows("add", _F11, "known"),

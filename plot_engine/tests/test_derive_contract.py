@@ -240,6 +240,29 @@ def test_guard_uses_the_per_field_implementer_table():
         derive_chapter_contract(_arc(beats=[belief_only]), 1, _state(), created_at=NOW)
 
 
+# --- D10 强化（1A）：类型在表还不够，档位必须够得着（KNOWLEDGE_RANK_CAP=reducer 上限）---
+def test_rank_unreachable_knowledge_delta_is_arc_error():
+    """反例＝43 章裁定 ③ 族 r2ch6 形状：钉只有 IS_TOLD（上限 believed），Δ 却期望 known。
+    旧守卫看类型交集放行，契约带着永远兑不了的 Δ 烧三轮修订——现在生成时就响亮失败。"""
+    arc = _arc(beats=[_intent(1, required_events=[
+        {"event_type": "IS_TOLD", "description": "被人告知"}])])
+    with pytest.raises(ArcConflict, match="档位上限"):
+        derive_chapter_contract(arc, 1, _state(), created_at=NOW)
+
+
+def test_rank_reachable_delta_passes_the_guard():
+    """正例：INFERS（上限 suspected）对 suspected 的 Δ 够得着；belief Δ 不占 rank 守卫。"""
+    arc = _arc(beats=[_intent(
+        1,
+        must_change=[{"character_id": CAST, "field": "knowledge", "operation": "add",
+                      "target": "fact_000003", "expected_value": "suspected"},
+                     {"character_id": CAST, "field": "belief", "operation": "add",
+                      "target": "fact_000003", "expected_value": "believes"}],
+        required_events=[{"event_type": "INFERS", "description": "推出结论"},
+                         {"event_type": "BELIEVES", "description": "内心确认"}])])
+    assert derive_chapter_contract(arc, 1, _state(), created_at=NOW)
+
+
 def test_turning_point_event_also_implements_the_change():
     """D3 补进来的拐点事件同样是实现事件，守卫看的是最终 required_events。"""
     arc = _arc(tps=[{"chapter": 1, "type": "revelation", "description": "d",
