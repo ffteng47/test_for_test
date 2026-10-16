@@ -1,6 +1,6 @@
 # 契约冻结会议程草案 + R8 前两项需求澄清提纲
 
-> 产出：需求澄清助手，2026-10-15。纸面材料，不落任何代码承诺。
+> 产出：需求澄清助手，2026-10-15。纸面材料，不落任何代码承诺。材料三由主线会话 2026-10-16 追加（§11 取证产物，同样纸面待拍板）。
 > 前提纪律：WP-E（`sampling/wpe50ch/`）在跑，`plot_engine/` 全冻结（`docs/project-roadmap.md:151`，下称 roadmap）；本文所有 `文件:行号` 均当日打开核对，与 roadmap 内旧坐标不一致处以本文为准（例：backlog #2 坐标 `review.py:245` 已漂移到 `plot_engine/review.py:169,382`，见 `docs/phase0-closing-report-and-v3-plan.md:271`）。
 > 链接勘误：roadmap 多处引用的 `docs/collaborator-guide.md` 实际不存在，协作者须知 v1.0 现位于 `docs/commercial/collaborator-guide.md`（单写者同步即可，非议题）。
 
@@ -65,4 +65,24 @@
 
 ---
 
-*索引：材料一 = 冻结会 6 项（must_change 归属 / rewrite 阶梯 / H8.x 追认 / due 统一 / expired 通道 / ArcProgress）；材料二 = 确认闸 5 问 + 爽点工程 6 问。全部坐标经当日打开文件核对。*
+## 材料三：第二次冻结会议程草案（尺面修订批，2026-10-16）
+
+**会议定位**：§9 G1 命中（三采样同谱系判负）+ §11 取证把「钉判模态错位」下钻成三个具名机制——
+本次只裁**尺/契约面**，Writer/模型面不动（§10 已双双出局）。触发条件：H5.3 判据改动=协议变更
+（10 §4.3 映射表语义；第一次会 Q1 三连证先例），凡本会拍板项按须知 §1.2 一因一批、尺戳
+v3.8→v3.9 bump、新旧尺号读数分表不并列。**建议拍板顺序：1→2 同批落码后重跑 10 章三采样，采样结果出来前不动议程 4。**
+
+| # | 悬项（争议一句话） | 证据坐标（2026-10-16 当日打开核对） | 候选口径 | 主线建议 |
+|---|---|---|---|---|
+| 1 | **H5.3↔H2.2 rank 互斥面**（Δ③ 弱动词家族 6 章实锤）：H5.3 按类型表判「已实现」，H2.2 按 rank 卡期望——IS_TOLD 上限 believed、INFERS 上限 suspected，Δ 期望 known 时同一把尺两问自相矛盾，「抽取全对仍FAIL」 | reducer 上限 `plot_engine/reducers/knowledge.py:66-85`（OBSERVES/READS→known、IS_TOLD→believed、INFERS→suspected）；H5.3 `plot_engine/validator.py:500-512`（`_change_implemented` 用 `FIELD_EVENT_TYPES` 表 `plot_engine/models/contract.py:65-74`，无 rank 检查）；H2.2 `validator.py:378-384,394`（`_knowledge_meets` rank≥）；**derive D10 只查类型交集不查 rank 可达** `plot_engine/derive.py:174-180`；判决明细 `docs/phase0-live-run-10ch.md` §11 | A：D10 强化为 **Δ rank 可达性**——本章可实现的实现类事件（∩`FIELD_EVENT_TYPES`）的 rank 上限必须 ≥ `expected_value`，否则 derive 前置 ArcConflict（输入错误回 Arc 层，D10 同族语义）；B：H5.3 与 H2.2 对齐（`_change_implemented` 加同条 rank 检查），弱动词章改由 H5.3 判未实现；C：derive 自动把 `expected_value` 降到本章可达上限 | **A+B 同批**（尺面自洽：A 拦新生、B 消双标）；**C 否决**——自动降期望=「把通过标准改成模型刚好达得到」，与 `revision_actions.py` 拒绝洗空 required_events 同一纪律 |
+| 2 | **IS_TOLD actor 约定翻转**（Δ③ 13 章 + 钉③≈9，ch06 全系）：约定 actor=听者（reducer 只给 actor 加分，说者永不入账），抽取按语义把说者填进 actor | 约定文本 `plot_engine/llm_extract.py:45,379`；reducer `reducers/knowledge.py:75-77`；翻转判决 §11 表；**模型面已排除**：M 批 32B 仍翻（§11 ③ actor 翻转 M2/M4）；**提示词面已被 #70 判死路**（roadmap v0.6 补记：「temp0 提示词面修型别已封死，仅剩结构面/模型面两路」） | A：抽取后处理**结构面确定性修复**——`llm_extract` 产出后按 markup 台词归属检测 actor 是否该句说者，是则改判听者（或整条降级丢弃），尺戳 bump；B：判钉侧宽容（`_change_implemented`/H2.2 匹配 actor∈{说者,听者}）——需 payload 增 speaker 键=协议变更；C：只加 prompt 强调句 | **A**（唯一未封死的路；B 动 01 payload 面=epoch 级，收益不匹配）。C 预期无效，列此仅供追认排除 |
+| 3 | **越界钉：隐藏身份类 OBSERVES 钉结构上写不出**（钉面① 大头：ch10「OBSERVES 李四是叛徒」；ch07 钉2 王五确认戏缺） | §11 钉面表；F2 属 `knowledge_gates` forbidden（`docs/phase0-live-run-10ch.md` §4 夹具设定）；derive 现有拦截族只查 overdue-forbidden 与类型交集（`derive.py:168-180`），**不查钉型与该 fact 类的可达性** | A：derive 新增拦截——required_event 为 OBSERVES/READS 且该 fact 在 forbidden gate 内 → ArcConflict（作者改钉，输入错误响亮失败）；B：不动码，夹具层作者把 ch10 钉改 IS_TOLD/BELIEVES 类，作为作者侧勘误；C：validator 侧把此类钉降 SOFT | **A+B 并行**：A 是 D10 家族的通用守卫（防未来 Arc 再犯），B 是本次夹具的具体修复（作者输入本来就归作者）。C 否决——降 SOFT=尺面放行写不出的要求 |
+| 4 | **Revision 对 must_change 类无动作**（06 §4 空白；§10 修复率 0.14/0.00）——是否现在补动作 | §10 剩余解释位②；D1（第一次会裁定 1A）已给 renegotiate 入口但 rank/约定缺陷下重议必然空转（§11：19+18 章次死因在尺不在 Writer） | A：缓议——先落 1/2/3，新尺三采样后再看残余 must_change 失败率，决定是否还有「动作缺失」这回事；B：现在给 renegotiate 加 rank 感知放宽（只降非 Arc 强制 Δ） | **A**。尺修好后若残余≈0，「Revision 动作缺失」就是错尺幻影；现在补动作=给即将消失的失败造机器 |
+
+**会上禁重问**：模型面/结构面解释位已由 §10 双批出局；Writer 纯失位已由 §11 压缩到 ①1 章次+越界钉两类；50 章 E2 不与 10 章带同表并列（纪律不变）。
+
+**落地次序承诺（拍板后）**：议程 1+2+3A 一个码批（尺戳 v3.8→v3.9，链验 +每拦截一型补一正一反用例）→ 夹具 3B 作者改钉 → 离线夹具全绿 → 10 章三采样（新尺号，同模型同隧道）→ 采样读数回写本报告 §12 → 议程 4 复议。
+
+---
+
+*索引：材料一 = 冻结会 6 项（must_change 归属 / rewrite 阶梯 / H8.x 追认 / due 统一 / expired 通道 / ArcProgress，已散会）；材料二 = 确认闸 5 问 + 爽点工程 6 问（确认闸已收口，爽点工程排队）；材料三 = 第二次冻结会 4 项（rank 互斥 / actor 约定 / 越界钉 / Revision 缓议）。全部坐标经当日打开文件核对。*
