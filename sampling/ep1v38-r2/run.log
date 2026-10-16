@@ -1,0 +1,1 @@
+http://127.0.0.1:11500/v1/models 可用模型: gemma4:31b, qwen2.5:32b, qwen2.5:14b, qwen3:30b, qwen3.5:27b, qwen3:14b, deepseek-r1:32b, qwen3:8b｜prompt=v0-beats｜抽取尺=v3.8-foreshadow-payload｜指引=g3-keep-reading-scenes｜夹具=ladder-v4-multi-scene｜Writer面=w4-scene700-1000+ledger｜确认闸=job#1 project=1｜抽取上限=2400｜终态 ARC_CONFLICT=1 NEEDS_HUMAN=7 OK=2｜仪器=instr-v2-local｜车道=local
