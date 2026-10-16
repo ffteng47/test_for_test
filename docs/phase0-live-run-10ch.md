@@ -369,3 +369,64 @@ PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe -m plot_engine.review --live --c
 ```
 归档 `sampling/ep1v39p-r1/ r2/ r3/`（各含 ch01–10.md、run.log、_junk.json、state/{state.db,event.db}）
 + 同名 `.console.log`。
+
+## 14. patch-v2 具名化冻结面三采样（2026-10-16，#98 指令面批落盘后首采）
+
+冻结面唯一变量=**修订环 patch-v2**（06 §4.2：补写清单具名形态——actor 角色名/target 事实命题/
+档位可达型别从单源表筛出并点名排除不可达；+判死 ArcConflict 携带 trace；+非契约层空清单不空挂）。
+尺 v3.9、夹具 ladder-v5b、闸单 job#4 原样。**patch-v1（§13）/批前（§12）/本批三表并列、只按一致性下结论。**
+
+**读数（三批并列）**：
+
+| 批 | OK 率 | 终态 | 修复率 | E2/E3 |
+|---|---|---|---|---|
+| r1 | 20% | ARC=6 / NH=2 / OK=2 | 9 需修 / 0.33 | 否 / 否 |
+| r2 | 30% | ARC=6 / NH=1 / OK=3 | 8 需修 / 0.50 | 否 / 否 |
+| r3 | 40% | ARC=5 / NH=1 / OK=4 | 9 需修 / 0.75 | 否 / 否 |
+
+OK 2/3/4（均值 30%，vs patch-v1 均值 33.3%、批前 33%）——**E2 三批同否，规模仍不成立**；
+具名化没抬起 OK 率，**但它改了失败的结构**（下节）。G1/G3=True、G2=False 同判。
+
+**逐章一致性**：
+
+- 死章面高度稳定：ch02/03/04/06/10 **三批全 ARC_CONFLICT**（v1 时代 ch03/06 还是漂移章），
+  ch01/08 三批恒 OK。判死消息 10/10/10 条全部 needs_arc_replan、格式良构。
+- **ch07 死项迁移**：v1 三批恒死 `003|belief|f3|believes`；v2 的 r2 Proposals 里
+  `BELIEVES actor=char_000003 → fact_000003` **已正确绑定出现**（该死项消失），
+  r2 改死 `001|knowledge|f11|known`、r3 转 NEEDS_HUMAN。具名化修复错绑的**单点实证**。
+- **ch05 两批转 OK**（v1 三批恒 NH 的 Writer 层章）——具名 directive 顺带救活。
+- ch09 依旧漂（NH/NH/OK），与两代读数同谱系。
+
+**归因谱系转移（三批交叉机检，稳定死项 vs 终轮 Proposals）**：
+
+| 章·死项 | r1 | r2 | r3 |
+|---|---|---|---|
+| ch02 `003\|belief\|f8→believes` | 没写+疑错绑 | 同 | 同 |
+| ch03 `001\|knowledge\|f6→believed` | 没写 | INFERS 偷懒×3 | 没写 |
+| ch04 `003\|knowledge\|f7→known` | INFERS 偷懒 | 没写+疑错绑 | INFERS 偷懒 |
+| ch06 `004\|knowledge\|f10→known` | IS_TOLD+INFERS 偷懒 | IS_TOLD 偷懒 | IS_TOLD 偷懒 |
+| ch10 `001\|knowledge\|f2→believed` | INFERS 偷懒 | 没写 | INFERS 偷懒×2 |
+
+v1 谱系=「型别对但绑错 actor/事实」领衔；**v2 谱系=「actor/事实绑对了、但写低档型别偷懒」领衔**
+（INFERS 顶 OBSERVES/READS、IS_TOLD 顶 known 档）——directive 明写「可达该档只有 OBSERVES/READS，
+INFERS 只到 suspected」，模型照旧走捷径。**型别偷懒在清单里是被点名禁止的**，这三批是
+「指令已到、已到面、仍不服从」的最干净标本。残余一型：ch02 `003|belief|f8` 三批整场没写+疑错绑，
+两代六批同判死项逐字一致——全场最硬的单章残留。
+
+**仪表核验（#98 微修兑现）**：死章 dump 已带 `## Revision` 段（r1 ch02 round 1
+`action=patch_write items=H5.1|BELIEVES;H5.1|READS;H5.3|…` 直读「清单到过 Writer」=
+S 批条件①从此快照可证）；空清单 patch_write 三批 0 次复现（非契约层全落 rewrite_chapter）。
+
+**结论**：E2 三批同否；具名化的净效果是**归因收敛**（错绑大幅消退、残余集中在型别偷懒
++ch02 整场没写），不是 OK 率。**S 批（#97）三条件读数**：①已过（dump 直证）；②残余=
+「写得出清单所指的人/事、不写清单禁止的低档型别」——非尺债（D10 保证可达才入契约）非夹具债
+（同项六批逐字同判）⇒ 属模型服从面；③本地 3 批复现（ch04/06/10 型别偷懒、ch02 没写）。
+**三条件齐**——是否开 S 批云端对照（只换 model、尺/夹具/清单不动、单独分表）请 tff 拍板。
+
+**复现**：
+```
+PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe -m plot_engine.review --live --chapters 10 \
+  --model-config @router_q25_14b.json --gate-project 1 --dump-dir sampling/ep1v39pv2-rN  # N=1,2,3
+```
+归档 `sampling/ep1v39pv2-r1/ r2/ r3/`（各含 ch01–10.md、run.log、_junk.json、state/{state.db,event.db}）
++ 同名 `.console.log`。
