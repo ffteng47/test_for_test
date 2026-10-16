@@ -209,3 +209,59 @@ preflight 读回 `json.loads(payload)` 得 str → AttributeError 拦截，批�
 归档：`sampling/attr_m32b_r1/`、`sampling/attr_half_r1/`（各含 ch01–10.md、run.log、_junk.json、state/）+ 同名 `.log` 控制台。
 测试基线：本批夹具+4 钉 ⇒ plot_engine **557→561**；backend **10** 不动。
 下一步：冻结会读 §9+§10——改架构议程从「结构面 vs 模型面」收敛为「**钉判模态错位（尺/Writer 面）vs Revision 动作缺失（06）**」二选一或并列。
+
+## 11. 取证裁决：43 个未决章次全量机检（2026-10-16，双口径判决）
+
+§10 出局两个候选面后，剩余解释位靠人工逐章读正文不可规模化。本节改为**重放机检**：
+pre-state = 夹具 genesis + 该批 `state/event.db` 里 `chapter<ch` 事件重放（`apply_events`）；
+终轮契约 = dump 头部（`contract_version` + `required_events` 类型）套现算 `contract_for`；
+提案 = `## Proposals` 段重建（conf=700，全 LLM 通道）；复跑 `Validator._review`。
+**43/43 章次的复现 rule 集与 dump Findings 一致**，例外仅 ch09 三连（r2/l1/M）——dump Findings
+为空是**契约开工前判死/重议中途判死**（M ch09 终态 ARC_CONFLICT，run.log 实证），复现出的
+H5.1/H5.3 属假设面、不入判决。判决口径：**①** 正文没写钉；**②** 戏在正文、抽取没给/型漂移；
+**③** 抽到了但判钉不认（actor 翻转，或族内弱动词撞 rank 上限=「全对仍FAIL」）；**④** 泄漏族
+（H5.7，另按终稿有无文本依据分真漏/误报）；伴生=H5.6；漏驱动=H5.4。
+
+**Δ 面（43 章次，章级最差判决）**：① 1 · ② 18 · ③ 19 · ④ 4 · ARC 判死 1。
+
+| 类 | 章次 | 定死证据（句/账级） |
+|---|---|---|
+| ① | M ch07 | 终稿「笔迹/密信」零出现，王五只怀疑赵六夜值——F07 信念戏真没写 |
+| ②（18） | H2,H3,H9 · M1,M6,M10 · r1 ch2,ch5,ch9 · r2 ch1,ch4,ch9 · r3 ch2,ch4,ch6,ch9 · l1 ch2,ch9 | 提案类型∉实现表（BELIEVES/DOUBTS/STATES/HINTS/OBSERVES 撞 knowledge/belief 表）、型漂移（READS→OBSERVES/INFERS）、正文有戏无提案（l1ch10 会饮段、r3ch6 商号段） |
+| ③（19） | 翻转 13：M2,M4 · r1 ch4,ch6,ch10 · r2 ch2,ch7,ch10 · r3 ch7,ch10 · l1 ch4,ch6,ch7 | 钉在甲名下、提案全在乙名下（IS_TOLD actor 约定+信念归属互翻） |
+| ③（续） | rank 互斥 6：r1 ch7 · r2 ch6 · l1 ch10 · H4,H7,H10 | 「抽取全对仍FAIL」= 族内弱动词撞上限：IS_TOLD cap=believed、INFERS cap=suspected，Δ 期望 known——H5.3 判「已实现」、H2.2 判「未取得」 |
+| ④（4） | H8 · l1 ch3 · r2 ch5 · r3 ch5 | 章内主死因=禁止知识整批建立（H5.7/H5.4 漏驱动），非钉失败 |
+| ARC | M ch9 | 契约开工前判死，run.log 终态 ARC_CONFLICT=1 |
+
+**钉面（逐条钉，采纳稽核助手表 + l1ch10 补核）**：①≈21 · ②≈16（含 R0 有→终轮丢的抽取漂移）· ③≈9。
+①里两类是**结构性写不出**：ch10 钉「OBSERVES 李四是叛徒」——隐藏身份不能被"亲眼看见"；
+ch07 钉2「王五确认 F03」戏缺。l1ch10 补核终：李四否认台词在场（目标句「有人否认听说过叛徒」
+兑现），钉①（无身份确证）与 Δ③（actor 翻转）并存。**结论：钉面①大头不是 Writer 偷懒，是钉本身越界。**
+
+**H5.7 泄漏族 24 条（12 个 章×fact 去重）逐处对终稿**：**误报仅 4**——r1ch04-F12 / r3ch02-F06 /
+l1ch04-F12 / halfch08-F02（终稿零文本依据）；**真漏 8**——r1ch05、r1ch09、r2ch05、r3ch05、r3ch09、
+l1ch03、l1ch04(F02)、m32ch06（均有句，如 r1ch05「他越来越相信，李四很可能就是那名背叛宗门的叛徒」）。
+
+**更正记录（双口径互查产出的三处翻案）**：
+1. **halfch08 我方翻案**：先前判「Writer 真漏（正文写了'找出真正的叛徒'）」——该句在 dump 第 94 行
+   `## Round 0` 段内，终稿（16–66 行）「叛」零出现 ⇒ 改判**抽取幻觉**。教训入册：关键词扫描必须
+   圈定 `^## Draft` 段，dump 段序 Findings→修稿指引→Draft→Proposals→Round 0 是陷阱。
+2. **m32ch06 稽核方翻案**：稽核列入误报清单，终稿含 ≥4 句叛徒（「这件事与门派内的叛徒是否有关」等）⇒ **真漏**。
+3. **稽核「H5.7 误报 10 处」缩水为 4**；「H5.4 vs must_change 契约自冲突」否决——H5.4 的 F2 是
+   must_not_change 目标，只在泄漏提案把 F2 rank 动了账后才触发，定性=**漏驱动**伴生，非自冲突。
+
+**三大机制（把 §10 的「钉判模态错位」下钻成可修的三件）**：
+① **H5.3↔H2.2 互斥面**（Δ③ rank 家族 6 章）：H5.3 实现表按类型放行、H2.2 按 rank 卡死，同一把尺
+   自己跟自己不一致——**冻结会头号议程**（尺/契约面修订批）。
+② **IS_TOLD actor 约定翻转**（Δ③ 13 章 + 钉③≈9）：约定 actor=听者、reducer 只给 actor 加分，
+   说者永不入账 ⇒ 抽取按语义给说者、判钉按约定要听者。② 属抽取 prompt 面（backlog 既定优先序）。
+③ **越界钉**（钉①大头）：隐藏身份类 OBSERVES 钉结构上不可满足——derive 层拦截候选（D10/D11 同族）。
+
+**复现（§13 落盘）**：
+```
+PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe sampling/_forensics/adjudicate.py
+```
+脚本归档 `sampling/_forensics/adjudicate.py`（判决口径写进 docstring；①? 残余两章按上表人工定死）。
+本节**零码改**——测试基线 plot_engine 561 / backend 10 不动。
+下一步：冻结会议程 #1 = H5.3↔H2.2 一致性修订（尺面）；议程 #2 = IS_TOLD actor 约定入抽取 prompt；
+「Revision 动作缺失（06 §4）」与 Δ② 抽取面并案讨论——③19+②18 的判负主力已被证实为**尺与约定**问题，Writer 纯失位（①）仅 1 章次+2 类越界钉。
