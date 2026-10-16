@@ -9,7 +9,7 @@ from plot_engine.models.revision import (
 def test_policy_defaults_are_verbatim_from_06_s5():
     p = RevisionPolicy()
     assert p.max_rounds == 3
-    assert p.escalation == ["rerun_extraction", "rewrite_chapter",
+    assert p.escalation == ["rerun_extraction", "rewrite_chapter", "patch_write",
                             "renegotiate_contract", "escalate_to_arc"]
     assert p.oscillation_detection is True
     assert p.cost_ceiling_per_chapter_usd == 0.5

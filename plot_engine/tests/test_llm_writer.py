@@ -189,3 +189,20 @@ def test_ledger_lists_established_cognition_and_respects_forbidden():
     assert "已建立认知（勿重复锚定，写新的推进）" in joined
     assert "fact_000001=known(600)" in joined and "fact_000001~believes(700)" in joined
     assert "fact_000002" not in joined                   # forbidden 的 ledger 条目同样抹除
+
+
+def test_directive_lands_only_on_the_patch_round():
+    """06 §4.2 尺面纪律正反例：正——补写清单进 user 提示词；反——常规轮（directive 缺省/空串）
+    与改动前逐字节一致（实跑除补写轮外的提示词不许变，否则批前/批后读数不可比）。"""
+    msgs = scene_prompt(_scene(), _contract(), _state(),
+                        directive="定向补写：\n- fact_000001 缺一场读戏")
+    assert "定向补写" in msgs[-1]["content"]
+    assert scene_prompt(_scene(), _contract(), _state()) == \
+        scene_prompt(_scene(), _contract(), _state(), directive="")
+
+
+def test_directive_is_scrubbed_for_forbidden_facts():
+    """清单由缺失条目拼成，可能点到 forbidden id——与正文同一道抹除闸，不得走后门。"""
+    joined = "\n".join(m["content"] for m in scene_prompt(
+        _scene(), _contract(), _state(), directive="必须建立 fact_000002"))
+    assert "fact_000002" not in joined

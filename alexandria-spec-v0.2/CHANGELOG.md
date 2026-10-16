@@ -48,6 +48,25 @@
 > 尺面纪律：v3.9 起读数与 v3.6/v3.7/v3.8 分表，不并列；v3.7 已由 #70 烧号，永不复用。
 > 基线：plot_engine 561→573（#87 +5 / #88 +5 / #89 +2）、backend 10 不变。
 
+## 材料四码批生效记录（2026-10-16 材料四裁定 1/2/3 → 修订环 patch_write 落盘）
+
+> 设计依据：`docs/freeze-meeting-and-r8-briefs.md` 材料四（串联分诊：定向补写优先，
+> 同条再失败才升级/判死）。
+> 协议正文变更：06 §4.2（契约层第一动作 = 带缺失清单的定向补写 patch_write，先补写后重议）/
+> 06 §4.3（needs_arc_replan 出口：同条 must_change 补写后再失败 ⇒ ArcConflict 作废本章，
+> 落作者桌面；裁定 2：fail-fast/Arc 强制项章也先获得一轮补写；裁定 3：判死章不计修复率分母）/
+> 06 §5（escalation 插入 patch_write，位于 renegotiate 之前）/ 06 §9（RevisionTrace 随轮记 items）。
+> 代码：validator H5.3 evidence 升级条目全键（character|field|target|expected，
+> 分诊靠它认出「同一条补写后再失败」）；models/revision（阶梯默认 + RevisionStep.items）、
+> revision `_patch_items` 分诊态机（H5.3 补写后再失败 → raise ArcConflict；H5.1 后再失败 →
+> 振荡升级重议；宿主未注入 patch_write 整体隐身 = 向后兼容）、
+> llm_writer scene_prompt/make_scene_writer 可选 directive（常规轮提示词逐字节不变，有回归用例；
+> 清单同过 forbidden 抹除闸）、review 双接线（离线注册确定性 writer 只走分诊机 /
+> 实跑按 FIX_GUIDE 拼清单造补写 writer）、dump Revision 行 items 仪表、
+> metrics._REWRITE 并 patch_write、run.log 加戳「修订环=patch-v1」。
+> 尺面纪律：EXTRACTION_RULER 维持 v3.9（抽取通道一字未动）；批前/批后读数按修订环戳分表。
+> 基线：plot_engine 573→581（分诊 4 / Writer 清单 2 / 全键 1 / dump 仪表 1）、backend 10 不变。
+
 ---
 
 ## §A 变更草案（修改 1~10）

@@ -450,9 +450,11 @@ def _l2_h5(sim: Simulation, state: StoryState, proposals: List[EventProposal],
     # H5.3 must_change 无对应实现事件（W1）
     for ch in getattr(contract, "must_change", []):
         if not _change_implemented(sim, ch):
+            # evidence = 条目全键（06 §4.2 patch_write 分诊靠它认出「同一条补写后再失败」，
+            # field 粒度会把同 field 的两条 Δ 混成一笔债）。
             findings.append(_f("H5.3", "hard",
                                f"must_change {ch.character_id}.{ch.field} 未实现（W1：无实现事件或终态未达档）",
-                               evidence=ch.field))
+                               evidence=f"{ch.character_id}|{ch.field}|{ch.target}|{ch.expected_value}"))
 
     # H5.4 must_not_change 被违反（W2）
     for ch in getattr(contract, "must_not_change", []):

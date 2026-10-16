@@ -101,11 +101,13 @@ Contract 的 tension_target 与 arc.tension_curve 冲突
 
 处理：
 
+定向补写 patch_write（v0.13 材料四裁定：契约层根因的第一轮回退是带缺失清单的定向补写请求，不是直接重议）——把缺失条目清单（H5.3 未实现的 must_change 条目 ∪ H5.1 未满足的事件类型）随补写请求下发给 Writer，只重写本章正文；同条 H5.3 补写后再失败 → 判为「正文写不出该 Δ」= 作者输入错误，走 4.3 needs_arc_replan 出口；H5.1 条目补写后再失败 → 按 §7 振荡升级轮到 renegotiate_contract
+
 重议 Chapter Contract
 
 触发 Chapter Contract 重新生成
 
-不重写 Draft
+不重写 Draft（指重议路径；patch_write 路径重写的是 Draft、不动 Contract）
 
 4.3 Arc Error
 症状：
@@ -126,6 +128,8 @@ required_event 把本章禁知或 gate=hidden 的 fact 钉成 OBSERVES/READS（�
 
 伏笔逾期未回收（H9.1 HARD，epoch_1——欠的是弧线债）
 
+must_change 的 Δ 补写后再失败（v0.13 材料四裁定 1）：同一条 H5.3 条目在 patch_write 一轮后仍未实现 ⇒ 抛 ArcConflict（needs_arc_replan 出口）。fail-fast 不再是「开工即判死」——本章先获得一轮带清单的定向补写，补写后仍失败才作废本章（ARC_CONFLICT 桶落作者桌面）；重议路径撞上 Arc 强制项时同样先补写一轮再判死（裁定 2）。needs_arc_replan 作废的章不计入修复率分母（裁定 3：那是作者输入的债，不是修订机的失位）。
+
 处理：
 
 回退到 Arc 层重规划
@@ -133,6 +137,8 @@ required_event 把本章禁知或 gate=hidden 的 fact 钉成 OBSERVES/READS（�
 重生成 Arc Contract
 
 重生成受影响的 Chapter Contract
+
+needs_arc_replan 判死的章不计入修订修复率分母（v0.13 材料三裁定 3：交不出章不是修订机失位，是作者输入债；ARC_CONFLICT 桶照记）
 
 4.4 Fact Error
 症状：
@@ -195,6 +201,7 @@ class RevisionPolicy(BaseModel):
     escalation: List[str] = [
         "rerun_extraction",       # v0.2 新增，置于最前
         "rewrite_chapter",        # v0.12 冻结会裁定 2A：rewrite_scene 一级删除，四级诚实降级
+        "patch_write",            # v0.13 材料四：契约层第一动作（带缺失清单的定向补写）；宿主未注入该动作时契约层直接走重议（向后兼容）
         "renegotiate_contract",
         "escalate_to_arc",
     ]
@@ -242,6 +249,7 @@ class RevisionTrace(BaseModel):
     round: int
     root_cause: RootCause
     action: str
+    items: Optional[List[str]]    # v0.13 材料四裁定 3：patch_write 行随轮记录缺失清单摘要（dump 可渲染「补写请求写了哪几条」）
     result: Literal["OK", "FAIL", "ESCALATED"]
 
     tokens_used: int

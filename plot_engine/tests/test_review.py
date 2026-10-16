@@ -275,6 +275,31 @@ def test_dispositions_are_countable_from_the_dump_dir(tmp_path):
     assert count_dispositions(tmp_path) == {"ARC_CONFLICT": 1, "NEEDS_HUMAN": 1, "OK": 1}
 
 
+def test_patch_round_renders_its_item_list(tmp_path):
+    """材料四裁定 3：dump 里补写轮必须渲染「这一轮请求补了哪几条」——
+    只有 action=patch_write 没有清单，这条仪表就不可核对。非补写轮不加 items 栏。"""
+    import types
+
+    from plot_engine.models.revision import RevisionStep, RevisionTrace, RootCause
+    from plot_engine.review import _write_chapter_dump
+
+    ctx = types.SimpleNamespace(draft="d", contract=types.SimpleNamespace(
+        version=1, required_events=[]))
+    out = types.SimpleNamespace(status="FAIL", message="FAIL", validation=None,
+                                consistency=[])
+    step = RevisionStep(round_no=1, action="patch_write",
+                        root_cause=RootCause(level="contract", evidence="e",
+                                             violated_rule_id="H5.3"),
+                        violations=["H5.3"],
+                        items=["H5.3|char_000001|knowledge|fact_000001|known"])
+    _write_chapter_dump(tmp_path, 5, [(ctx, [])], out,
+                        RevisionTrace(story_id="s1", chapter_no=5, steps=[step],
+                                      rounds=1, final_status="FAIL"))
+    text = (tmp_path / "ch05.md").read_text(encoding="utf-8")
+    assert "action=patch_write" in text
+    assert "items=H5.3|char_000001|knowledge|fact_000001|known" in text
+
+
 def test_render_lists_per_chapter_revision_rounds(tmp_path):
     """聚合值（需修几章 / 最多几轮）盖住了「修订烧在哪一章」，Review 会要的是逐章那一行。"""
     rep = _report(tmp_path, {}).model_copy(

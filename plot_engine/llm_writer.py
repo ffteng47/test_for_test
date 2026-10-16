@@ -126,7 +126,8 @@ def prompt_version(arm: str) -> str:
 
 def scene_prompt(scene: Scene, contract: ChapterContract,
                  state: Optional[StoryState] = None, *, min_chars: int = 700,
-                 max_chars: int = 1000, arm: str = "beats") -> List[dict]:
+                 max_chars: int = 1000, arm: str = "beats",
+                 directive: str = "") -> List[dict]:
     forbidden = set(contract.knowledge_forbidden)
     rules = [
         "你是悬疑长篇正文写手。只写本 Scene 的叙事文本。",
@@ -144,6 +145,9 @@ def scene_prompt(scene: Scene, contract: ChapterContract,
         lines = _told_lines(contract)
         if lines:
             body += "\n" + "\n".join(lines)
+    if directive:
+        # 06 §4.2 patch_write：缺失清单随补写轮下发（只在补写请求里出现，常规轮提示词一字不动）。
+        body += "\n\n" + directive
     # 兜底：任何禁条 id 都不该出现在提示里（命题已被上面过滤，这里连 id 一起抹）
     for fid in forbidden:
         rules = [r.replace(fid, "（封锁）") for r in rules]
@@ -166,12 +170,14 @@ def _clean(raw: str, max_chars: int) -> str:
 
 
 def make_scene_writer(client: LlmClient, *, min_chars: int = 700, max_chars: int = 1000,
-                      role: str = "writer", arm: str = "beats") -> SceneWriter:
+                      role: str = "writer", arm: str = "beats",
+                      directive: str = "") -> SceneWriter:
     def write_scene(scene: Scene, contract: ChapterContract,
                     state: Optional[StoryState] = None) -> str:
         text, _usage = client.complete(role, scene_prompt(scene, contract, state,
                                                           min_chars=min_chars,
-                                                          max_chars=max_chars, arm=arm))
+                                                          max_chars=max_chars, arm=arm,
+                                                          directive=directive))
         draft = _clean(text or "", max_chars)
         if not draft:
             raise WriterError(f"scene {scene.scene_id} 无可用正文（模型返回空或被剥空）")

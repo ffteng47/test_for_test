@@ -167,6 +167,9 @@ def _offline_dry_run(chapters: int, defects: Dict[int, str],
 
     loop = RevisionLoop(actions={"rerun_extraction": lambda ctx: ctx,
                                  "rewrite_scene": rewrite, "rewrite_chapter": rewrite,
+                                 # 夹具 Writer 是确定性的，补写清单改变不了它的 Draft；注册它
+                                 # 只为让 06 §4.2 分诊机在离线跑里真走一遍（补写→再失败→升级/判死）。
+                                 "patch_write": rewrite,
                                  "renegotiate_contract": renegotiate_contract(
                                      cfg.arc_contract, created_at=fx.NOW)})
     return run_experiment(cfg, store=store, log=log,
@@ -265,9 +268,13 @@ def _write_chapter_dump(dump_dir, ch: int, rounds, out, trace) -> None:
              ""]
     if trace is not None and trace.steps:
         lines.append("## Revision")
-        lines += [f"- round {s.round_no} level={s.root_cause.level} "
-                  f"rules={','.join(s.violations) or '—'} action={s.action} "
-                  f"committed={s.committed}" for s in trace.steps]
+        for s in trace.steps:
+            line = (f"- round {s.round_no} level={s.root_cause.level} "
+                    f"rules={','.join(s.violations) or '—'} action={s.action} "
+                    f"committed={s.committed}")
+            if s.items:   # 06 §9 材料四裁定 3：补写轮记录「这一轮请求写了哪几条」
+                line += f" items={';'.join(s.items)}"
+            lines.append(line)
         lines.append("")
     if validation is not None:
         lines.append("## Findings")
@@ -378,8 +385,25 @@ def _live_run(chapters: int, model_config: dict, *, client=None, cloud_client=No
                                     store.load_latest(cfg.story_id).state, writer)
         return dataclasses.replace(ctx, draft=asm.draft)
 
+    def patch_directive(ctx):
+        lines = []
+        for it in ctx.missing_requirements:
+            rule, _, key = it.partition("|")
+            hint = FIX_GUIDE.get(rule, "")
+            lines.append(f"- {key}：{hint}" if hint else f"- {key}")
+        return "定向补写（只补下面缺的戏，不要删或替换已写好的内容）：\n" + "\n".join(lines)
+
+    def patch_write(ctx):
+        # 06 §4.2：契约层第一动作。清单进提示词（scene_prompt.directive），只重写 Draft、
+        # 不动 Contract——补写后同条 H5.3 再失败由 RevisionLoop 分诊判 needs_arc_replan。
+        w = make_scene_writer(client, arm=arm, directive=patch_directive(ctx))
+        asm = compose_chapter_draft(ctx.scene_plan, ctx.contract,
+                                    store.load_latest(cfg.story_id).state, w)
+        return dataclasses.replace(ctx, draft=asm.draft)
+
     loop = RevisionLoop(actions={"rerun_extraction": lambda ctx: ctx,
                                  "rewrite_scene": rewrite, "rewrite_chapter": rewrite,
+                                 "patch_write": patch_write,
                                  "renegotiate_contract": renegotiate_contract(
                                      cfg.arc_contract, created_at=fx.NOW)})
     # 逐章契约/场景对**当前** State 派生：Arc 只有一份，约束必须一章一个样（backlog #1）。
@@ -408,7 +432,8 @@ def _live_run(chapters: int, model_config: dict, *, client=None, cloud_client=No
         where = f"已落盘的逐章快照：{dump_dir}" if dump_dir else "（未传 --dump-dir，逐章快照没落盘）"
         return None, f"模型在实验中途不可用，本报告作废。{where}\n原因：{e}", None
     note = (f"{msg}｜prompt={prompt_version(arm)}｜抽取尺={EXTRACTION_RULER}"
-            f"｜指引={GUIDE_VERSION}｜夹具={fx.LADDER_VERSION}｜Writer面={WRITER_SURFACE}")
+            f"｜指引={GUIDE_VERSION}｜夹具={fx.LADDER_VERSION}｜Writer面={WRITER_SURFACE}"
+            f"｜修订环=patch-v1")
     if gate_note:
         note += f"｜{gate_note}"   # 归档自证过闸（R8 §4.2 确认动作可追溯）
     cap = getattr(client, "router", None)

@@ -24,9 +24,11 @@ class RootCause(BaseModel):
 class RevisionPolicy(BaseModel):
     """收敛策略（06 §5 verbatim 默认值）。"""
     max_rounds: int = 3
-    # 06 §5 四级诚实阶梯（v0.12 裁定 2A：rewrite_scene 一级删除，writer 直接章级重写）
+    # 06 §5 四级诚实阶梯（v0.12 裁定 2A：rewrite_scene 一级删除，writer 直接章级重写）；
+    # v0.13 材料四：patch_write 插在重议之前——契约层第一动作是带清单的定向补写，
+    # 宿主未注入该动作时阶梯自动跳过它（向后兼容，契约层直接走重议）。
     escalation: List[str] = Field(default_factory=lambda: [
-        "rerun_extraction", "rewrite_chapter",
+        "rerun_extraction", "rewrite_chapter", "patch_write",
         "renegotiate_contract", "escalate_to_arc"])
     oscillation_detection: bool = True
     cost_ceiling_per_chapter_usd: float = 0.5
@@ -39,6 +41,9 @@ class RevisionStep(BaseModel):
     root_cause: RootCause
     action: str
     violations: List[str] = Field(default_factory=list)
+    # 06 §9（v0.13 材料四裁定 3）：patch_write 行随轮记录缺失清单，dump 才能渲染
+    # 「这一轮补写请求写了哪几条」。
+    items: List[str] = Field(default_factory=list)
     committed: bool = False
 
 

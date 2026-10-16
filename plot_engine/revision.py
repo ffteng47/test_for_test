@@ -10,6 +10,7 @@ from __future__ import annotations
 import dataclasses
 from typing import Callable, Dict, List, Mapping, Optional, Sequence, Set, Tuple
 
+from plot_engine.derive import ArcConflict
 from plot_engine.models.commit import CommitOutcome
 from plot_engine.models.contract import ChapterContract
 from plot_engine.models.revision import (
@@ -26,9 +27,12 @@ class ChapterContext:
     scene_plan: Optional[ScenePlan] = None
     draft: str = ""
     # 动作需要的上下文：`state` = 本章开工时的已提交状态（重议契约要对它求解），
-    # `unsatisfied_event_types` = 循环在调用动作前填进来的 H5.1 evidence（事件类型，非中文消息）。
+    # `unsatisfied_event_types` = 循环在调用动作前填进来的 H5.1 evidence（事件类型，非中文消息），
+    # `missing_requirements` = 循环填进来的当前缺失清单（06 §4.2 patch_write 的补写条目，
+    # 形如 "H5.3|char|field|target|expected" / "H5.1|BELIEVES"；非契约层为空）。
     state: Optional[StoryState] = None
     unsatisfied_event_types: List[str] = dataclasses.field(default_factory=list)
+    missing_requirements: List[str] = dataclasses.field(default_factory=list)
 
 
 Action = Callable[[ChapterContext], ChapterContext]
@@ -109,6 +113,13 @@ def _unsatisfied_types(result: ValidationResult) -> List[str]:
                    if f.rule_id == "H5.1" and f.evidence})
 
 
+def _patch_items(result: ValidationResult) -> List[str]:
+    """契约层当前缺失清单（06 §4.2 patch_write 的载荷）：H5.3 的 must_change 条目全键
+    ∪ H5.1 的落空事件类型，rule 前缀入键——分诊靠它认出「同一条补写后再失败」。"""
+    return sorted({f"{f.rule_id}|{f.evidence}" for f in result.hard_violations
+                   if f.rule_id in ("H5.1", "H5.3") and f.evidence})
+
+
 class RevisionLoop:
     """单章修订循环（06 §6 七步）。`actions` 里没提供的动作一律视为不可执行 → 转人工。"""
 
@@ -136,6 +147,7 @@ class RevisionLoop:
 
         action: Optional[str] = None
         prev_violations: List[str] = []
+        patched: Set[str] = set()
         while True:
             if outcome.status == "REPLAY_INCONSISTENT":       # §4.7：停 pipeline，不再重试
                 trace.halt = True
@@ -157,6 +169,22 @@ class RevisionLoop:
                                                 committed=False))
                 return trace, outcome
 
+            # 06 §4.2/§4.3（v0.13 材料四）契约层分诊：第一动作 = 带缺失清单的定向补写；
+            # 同一条 H5.3 条目补写后再失败 = 正文写不出这个 Δ ⇒ needs_arc_replan，
+            # 抛 ArcConflict 交 experiment 的 Arc 通道作废本章（作者输入债，不是模型失败）。
+            # 守门 `action in (None, "patch_write")`：已升到重议及更高层后不再回头补写。
+            items: List[str] = []
+            if (rc.level == "contract" and "patch_write" in self.actions
+                    and action in (None, "patch_write")):
+                items = _patch_items(outcome.validation)
+                refail = sorted(i for i in items if i.startswith("H5.3|") and i in patched)
+                if refail:
+                    raise ArcConflict("needs_arc_replan：定向补写一轮后同条 must_change "
+                                      f"仍未实现，修订层无法兑现，请作者重开弧线：{refail}")
+                if items and not set(items) <= patched:
+                    action = "patch_write"
+                    patched |= set(items)
+
             if action is None:
                 action = action_for(rc.level, self.policy)
             elif self.policy.oscillation_detection and is_oscillating(prev_violations, violations):
@@ -167,11 +195,13 @@ class RevisionLoop:
                 return trace, outcome
 
             ctx = self.actions[action](dataclasses.replace(
-                ctx, unsatisfied_event_types=_unsatisfied_types(outcome.validation)))
+                ctx, unsatisfied_event_types=_unsatisfied_types(outcome.validation),
+                missing_requirements=items))
             trace.rounds += 1
             outcome = recommit(ctx)
             trace.steps.append(RevisionStep(round_no=trace.rounds, root_cause=rc,
                                             action=action, violations=violations,
+                                            items=items,
                                             committed=outcome.status == "OK"))
             prev_violations = violations
 

@@ -14,7 +14,7 @@ from typing import Dict, List
 _ROUNDS_RE = re.compile(r"rounds=(\d+)")
 _STATUS_RE = re.compile(r"status=(\w+)")
 _ACTION_RE = re.compile(r"action=(\w+)")
-_REWRITE = {"rewrite_scene", "rewrite_chapter"}
+_REWRITE = {"rewrite_scene", "rewrite_chapter", "patch_write"}
 
 
 @dataclasses.dataclass

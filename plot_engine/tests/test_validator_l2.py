@@ -322,3 +322,12 @@ def test_h9_4_shallow_paid_observation():
 def test_h9_4_deep_paid_no_fire():
     st = _st_fs(_fs(planted_chapter=40, lifecycle="paid", paid_chapter=46))
     assert "H9.4" not in _codes(_l2([], _contract(), state=st))
+
+
+def test_h53_evidence_is_full_item_key():
+    """06 §4.2 分诊靠条目全键认出「同一条 must_change 补写后再失败」（材料四）：
+    field 粒度会把同 field 两条 Δ 混成同一笔债。"""
+    c = _contract(must_change=[{"character_id": "char_000001", "field": "knowledge",
+        "operation": "add", "target": "fact_000001", "expected_value": "known"}])
+    f = [x for x in _l2([], c) if x.rule_id == "H5.3"][0]
+    assert f.evidence == "char_000001|knowledge|fact_000001|known"
