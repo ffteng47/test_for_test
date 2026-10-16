@@ -4,6 +4,9 @@
 > 数字来源：`docs/phase0-live-run-10ch.md` §13/§14、归档 `sampling/ep1v39p-r1..3`、
 > `sampling/ep1v39pv2-r1..3`（各含 ch01–10.md、run.log、_junk.json、state/{state.db,event.db}）。
 > 生成：2026-10-16，mainline @ v0.24（commits d6f1db3 / 93b0bc3 已推送）。
+> **后记（2026-10-17）**：tff 裁定「入库+开 S 批」已执行；云端三采样读数与判决见
+> `docs/phase0-live-run-10ch.md` §15（要点：OK 均值 60%、E2 首判是 r2=9/10、
+> 本地恒死 ch02/07 换眼即活、ch10 两车道恒死=纯作者债标本、三批云端成本 <$0.10）。
 
 ## 1. 材料谱系（这条证据链是怎么走到今天的）
 

@@ -707,9 +707,14 @@ def main(argv: Optional[List[str]] = None) -> int:
         print(msg)
         if report is None:
             return 2
-        print(f"tokens={report.total_tokens} cost=${report.total_cost_usd:.4f} "
+        # 成本证据（S 批纪律）：report 的 totals 只盖 Writer 车道 client（experiment.py:191），
+        # 云端抽取用量挂在 cloud_client 上——分列打印，总行=两道之和。
+        _ct = getattr(cloud_client, "total_tokens", 0)
+        _cc = getattr(cloud_client, "total_cost_usd", 0.0)
+        print(f"tokens={report.total_tokens + _ct} cost=${report.total_cost_usd + _cc:.4f} "
               f"用时={report.total_duration_ms / 1000:.0f}s｜"
-              f"抽取产出 {diag['proposals']} 条（规则提升 {diag['promoted']}）"
+              + (f"其中云端抽取 tokens={_ct} cost=${_cc:.4f}｜" if cloud_client else "")
+              + f"抽取产出 {diag['proposals']} 条（规则提升 {diag['promoted']}）"
               f" / 坏料 {diag['malformed'] or '无'}")
         _ins = diag.get("instr") or {}
         if _ins.get("segments_run"):

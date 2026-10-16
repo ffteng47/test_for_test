@@ -433,3 +433,63 @@ PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe -m plot_engine.review --live --c
 ```
 归档 `sampling/ep1v39pv2-r1/ r2/ r3/`（各含 ch01–10.md、run.log、_junk.json、state/{state.db,event.db}）
 + 同名 `.console.log`。
+
+## 15. S 批云端抽取对照三采样（2026-10-17，tff 拍板开批）
+
+冻结面唯一变量=**抽取车道 local→cloud**（`--lane cloud --cloud-config @deepseek.router.json`，
+deepseek-flash @ api.deepseek.com）。Writer 仍=本地 qwen2.5:14b、尺 v3.9 prompt 文本、
+夹具 ladder-v5b、具名清单 patch-v2、闸单 job#4 全部原样；仪器戳 `instr-v2-cloud`。
+批前教训采纳：`deepseek.router.json` 顶层 `_comment` 键会炸 `from_config`（每键当 role 解析），
+发射前已移出该键；r1 的云端 tokens/cost 未入收口行（成本仪表缺口），r2 起 review.py
+收口行加云端分列（纯打印，判读面不动，链验 585 复绿后发射）。
+
+**读数（三批并列）**：
+
+| 批 | OK 率 | 终态 | 修复率 | E2/E3 | 云端 tokens | 云端成本 |
+|---|---|---|---|---|---|---|
+| r1 | 50% | ARC=2 / NH=3 / OK=5 | 7 需修 / 0.40 | 否 / 否 | 未计量（仪表缺口） | $0.0000* |
+| r2 | 90% | ARC=1 / NH=0 / OK=9 | 4 需修 / 1.00 | **是 / 是** | 65,321 | $0.0268 |
+| r3 | 40% | ARC=3 / NH=3 / OK=4 | 7 需修 / 0.25 | 否 / 否 | 115,302 | $0.0473 |
+
+\* r1 云端段实际发生但未被打印行覆盖；按 r2/r3 同规模折算 ≈6–12 万 tokens、$0.03–0.05。
+三批云端合计 **<$0.10**（本地 Writer 走隧道不计费）。G1/G3：r1、r3 True / r2 False（OK=9 时
+未committed章只剩 1，G3 语义=≥2 未提交）。E4：r2 独 False，r1/r3 True。
+
+**vs 本地两代六批（均值 30%、E2 六批同否）**：云端均值 60%、E2 首次判是（r2 9/10）。
+**方差同样巨大（4/5/9），三批一致性不成立 ⇒ 按「只按一致性下结论」纪律，E2 不能判「翻是」；
+但 r2=9 整只落在本地六批分布（2–4）之外，这是单变量对照能给出的最强形态。**
+
+**逐章判决（本地恒死章在云端的车道表现）**：
+
+- **ch02**：六批逐字死项 `H5.3|003|belief|f8|believes`——云端 r1 NH、**r2 OK（round 1
+  patch_write items 即该键、committed=True，具名清单一次兑现）**、r3 复死 ARC。
+  两车道同判的「整场没写+疑错绑」在云端眼里有 2/3 批被读出 ⇒ 该章死因含**抽取侧漏读**，
+  不再是纯作者债标本。
+- **ch07**：本地 v1 恒死/v2 转活漂移；云端 r1 ARC、**r2 OK（patch round 1 即该 belief 键
+  committed=True）**、r3 NH。同谱系：换眼即活大半。
+- **ch06**：云端 r1/r2 OK（r1 rounds=1 修复），r3 ARC（死项 `H5.3|004|knowledge|f10` 复现）。
+- **ch10**：云端 **3/3 恒 ARC**，死键族 `001|knowledge|f2|believed + 002|belief|f1|doubts`
+  与本地两代六批同构——**全场唯一在强眼下面仍死的章**，needs_arc_replan 语义坐实：
+  正文写不出该 Δ=作者输入债，与抽取模型无关。
+- ch01/08 两车道恒 OK；ch04/ch05 云端 NH/NH（本地 v2 时代 ch05 已转活）——Writer 面 H5.7 型
+  失败不随抽取车道移动。
+
+**归因判决（本批的全部意义）**：同一批本地 Writer 正文、同一把尺的文本、只换抽取执行模型 ⇒
+OK 率 30%→60%、六批恒死 ch02 一轮补写即活——**本地 14B 抽取的系统性漏读是此前判负面的
+领衔成分**；「型别偷懒」谱系须改判：相当部分是**抽取把达档事件误标成低档型**，Writer 未必没写。
+纯 Writer/Arc 债的收束标本只剩 **ch10**（两车道八批恒死、同键族、强眼补写后再失败）。
+止损条款在 S 批口径下部分兑现：「夹具 Arc 需作者重开」按章收窄至 ch10，管线整体不翻。
+
+**Phase 1 候选（入册待议，不擅动）**：抽取车道升云（deepseek-flash ≈$0.03–0.05/10 章，
+COGS 量级可行）+ Writer 保本地；云方差大 ⇒ 上线前需自有夹具上 ≥5 批复现。
+`usd_per_1k_tokens=0.00041` 已在路由文件内、成本行已随 console.log 归档。
+
+**复现**：
+```
+PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe -m plot_engine.review --live --chapters 10 \
+  --model-config @router_q25_14b.json --lane cloud --cloud-config @deepseek.router.json \
+  --gate-project 1 --dump-dir sampling/ep1v39pv2c-rN  # N=1,2,3
+```
+归档 `sampling/ep1v39pv2c-r1/ r2/ r3/`（各含 ch01–10.md、run.log、_junk.json、state/{state.db,event.db}）
++ 同名 `.console.log`。**注意：本组命令会真实调用云端计费端点（密钥走 ALEXANDRIA_CLOUD_API_KEY），
+非经 tff 授权不得复跑。**
