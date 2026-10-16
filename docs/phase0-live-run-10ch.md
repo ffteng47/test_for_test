@@ -167,3 +167,45 @@ Writer 没有写出来，任何规模的模型都抽不出来。§6 把这些失
 ```
 归档：`sampling/ep1v38-r1/ r2/ r3/ l1/`（各含 ch01–10.md、run.log、_junk.json、state/{state.db,event.db}）+ 同名 `.log` 控制台。
 坏料合计 r1=21 / r2=69 / r3=44 / l1=36 条（`_junk.json` 逐条可数；大头 `stripped_payload_key` 与 `id_value_not_id`，instr-v2 修复环后仍能出稿的部分未计入失败）。
+
+## 10. 归因双批：模型面 × 结构面（2026-10-16，判负后的单变量取证）
+
+§9 判负的归因问题：**Contract/Arc 类失败（H5.3 领衔）是「任务单过重」还是「模型做不到」？**
+两批各只动一个变量，读数都按 v3.8 尺（同抽取尺、同 Writer 面、同指引）：
+
+- **M 批（模型面）**：213 车道，写手+抽取从 qwen2.5:14b 升**同族 32B**（deepseek-r1:32b 会掺推理模态、弃用）。
+  契约/夹具/规划哈希全同基线 ⇒ 复用闸单 **jobs#1**。`sampling/attr_m32b_r1/`。
+- **H 批（结构面）**：本地 3090 车道 14b（硬件对照已由 l1 背书），换新夹具
+  `experiment_10ch_half`（ladder-v4-halfdensity）：非 turning point 章 must_change/强制事件**各减半**
+  （全局 18→12 / 16→11），TP 章 1/5/9 与空推进章 8 逐字同基线。新规划哈希 `f7deae69b073…` ⇒
+  新闸单 **jobs#3**。`sampling/attr_half_r1/`。夹具验收：离线 E1–E6 全绿 + `test_fixture_half_density.py` 4 钉。
+
+| 批 | 变量 | 终态（OK/NH/ARC） | 需修章/最多轮/修复率 | §6：Writer : Contract/Arc | E1–E6 | tokens/用时 | 坏料 |
+|---|---|---|---|---|---|---|---|
+| 基线 r1/r2/r3 | —（14b 全密度@213） | 3/7/0 · 2/7/1 · 3/7/0 | 0.00 / 0.12 / 0.30 | 12:17 · 8:12 · 12:16 | T **F F** T T T | 165k–228k / 1448–1811s | 21/69/44 |
+| **M** | 模型 ×2.3（32B） | **3/7/1** | 7 章 / 3 轮 / **0.14** | 5 : **13** | T **F F** T T T | 142,725 / 3,502s | **9** |
+| **H** | 契约 ÷2（半密度） | **3/7/0** | 7 章 / 3 轮 / **0.00** | 5 : **11** | T **F F** T T T | 167,446 / 4,065s | 62 |
+
+**归因判定：两个候选主因都被排除在解释位之外。**
+1. **模型面无效**：32B 落在 14b 基线带内（OK 仍 3/10、E2/E3 同假、谱系同）；且 32B 抽取**坏料少一个量级**
+   （9 条 vs 21–69）仍不换来提交率——抽取清洁度不是提交率的约束。规模 ×2.3 只买到更慢（3,502s）与更干净的废料堆。
+2. **结构面（任务单过重）不成立**：契约负载减半后未决章数不变（7 章）、修复率 **0.00**、Contract/Arc 类失败
+   只是等比缩小（13→11 含 H5.1/H5.3/H5.6）——模型**连一条钉都没稳写作**，不是「钉太多写不完」。
+3. **剩余解释位**：① 尺面钉判 vs Writer「场景化写作」的模态错位（H5.1/H5.3 按事件类型+actor 匹配，正文可能真写了
+   但抽取/判钉不认——Level-3 在场一致性挂账同谱系）；② **Revision 循环对 must_change 类失败无修复动作**
+   （两批修复率 0.14/0.00 实证 06 §4「must_change 归属空白」backlog——3 轮预算空转）。
+
+**确认闸事故记录（fail-closed 有效）**：首张 H 批闸单 jobs#2 以 `json.dumps` 字符串作 payload 入账（双重编码），
+preflight 读回 `json.loads(payload)` 得 str → AttributeError 拦截，批次未启动、无预算烧失。处置：#2 作废留痕、
+#3 以 dict payload 替身过闸。教训：`add_confirm_job` 的 payload **必须传 dict**（noveldb 层会再序列化）。
+
+**复现（§13 落盘）**：
+```
+.venv/Scripts/python.exe -m plot_engine.review --live --chapters 10 \
+  --model-config @router_q25_32b.json --gate-project 1 --dump-dir sampling/attr_m32b_r1      # @213 隧道 11500
+.venv/Scripts/python.exe -m plot_engine.review --live --chapters 10 --fixture experiment_10ch_half \
+  --model-config @router_local_q25_14b.json --gate-project 1 --dump-dir sampling/attr_half_r1  # 本地 11434
+```
+归档：`sampling/attr_m32b_r1/`、`sampling/attr_half_r1/`（各含 ch01–10.md、run.log、_junk.json、state/）+ 同名 `.log` 控制台。
+测试基线：本批夹具+4 钉 ⇒ plot_engine **557→561**；backend **10** 不动。
+下一步：冻结会读 §9+§10——改架构议程从「结构面 vs 模型面」收敛为「**钉判模态错位（尺/Writer 面）vs Revision 动作缺失（06）**」二选一或并列。
