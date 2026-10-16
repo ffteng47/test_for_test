@@ -58,3 +58,8 @@ tools/
 
 # ---- 编辑器/Agent worktree（独立检出，不入库）----
 .qoder/worktrees/
+
+# 确认闸 backend 约定库（R8 #1，运行时数据不入库）
+/novelaudio.db
+/novelaudio.db-wal
+/novelaudio.db-shm
