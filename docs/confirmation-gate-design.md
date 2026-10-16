@@ -1,6 +1,6 @@
 # 确认闸设计稿（R8 #1，待冻结）
 
-> 版本：v0.1（2026-10-16，问题助手主线会话产出；**冻结前不写码**，协议同 WP-A 设计稿模式）
+> 版本：**v1.0 已冻结**（2026-10-16 tff 拍板：Q1–Q5 全按推荐；Q3=A——`review.py` 入口 preflight 的 WP-0 写集例外**已亲批**。v0.1 待冻结版协议同 WP-A 设计稿模式）
 > 需求原文：`docs/commercial/r8-commercial-input-requirements-v1.0.md` §4.2（开书前置确认闸）。
 > 已有裁定（不问）：确认账落 **backend jobs 表，不进 EventLog，不触发 T1 升 epoch**（v0.12 冻结会追认，`docs/freeze-meeting-and-r8-briefs.md` 拍板表）。
 > 澄清提纲（五问）：同文 §①——本稿逐问给推荐+备选，供 tff 拍板。
