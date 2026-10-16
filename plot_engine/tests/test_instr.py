@@ -213,12 +213,14 @@ def test_w4b_ruler_stamp_bumped_and_flag_records_the_ruling():
     assert instr.W4B_TOUCHED is True
 
 
-def test_v38_ruler_stamp_records_the_foreshadow_payload():
-    """v3.8 是尺面变更（WP-A：FORESHADOWING_SET/PAID 进 PAYLOAD_SCHEMA ⇒ 提示词文本变），
-    必须与 v3.6/v3.7 读数分表（v3.7 由 #70 型别批烧掉，本尺跳过不复用）。"""
+def test_v39_ruler_stamp_records_the_is_told_reattach():
+    """v3.9 = 2A 结构面纠偏（`_reattribute_is_told`）：同一模型产物通道输出变了 ⇒ 尺面变更。
+    前代：v3.8（WP-A 伏笔 payload 键面）、v3.7（#70 烧掉不复用）、v3.6（IS_TOLD 约定进提示词）
+    ——读数各表分列，不并列。"""
     from plot_engine.llm_extract import EXTRACTION_RULER
-    assert EXTRACTION_RULER.startswith("v3.8")
-    assert EXTRACTION_RULER not in ("v3.6-is-told-actor", "v3.7-type-criteria")
+    assert EXTRACTION_RULER.startswith("v3.9")
+    assert EXTRACTION_RULER not in ("v3.6-is-told-actor", "v3.7-type-criteria",
+                                    "v3.8-foreshadow-payload")
 
 
 def test_v36_prompt_states_the_is_told_actor_convention():

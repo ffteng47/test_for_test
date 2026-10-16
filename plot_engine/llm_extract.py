@@ -53,7 +53,12 @@ _ID_RE = re.compile(r"^(?:char|fact|item|loc|faction|realm|ability|region|rel)_\
 #        为冻结会定稿，与 gate.must_reveal_by_chapter 的单源关系由 derive D11 把守。
 #        strength 不入 _FIXED_POINT_KEYS：缺省走 reducer 的 event.confidence 回退，
 #        不伪造显著度。触碰尺面 ⇒ 读数与 v3.6 分表，不并列。
-EXTRACTION_RULER = "v3.8-foreshadow-payload"
+# v3.9 = 码批 v3.9 裁定 2A（材料三 #2）：IS_TOLD actor=听的人的约定 v3.6 起写进提示词，
+#        但 43 章裁定 actor 翻转 13 章证明提示词面拦不住（#70 同型教训：temp0 下措辞
+#        修不了行为）。加**结构面**兜底 `_reattribute_is_told`：段内说者判据命中且听者
+#        唯一时把 actor 换回听的人，记 `is_told_reattributed` 账；判据不满足一律不动。
+#        通道输出对同一模型产物变了 ⇒ 尺面变更，读数与 v3.8 分表，不并列。
+EXTRACTION_RULER = "v3.9-is-told-reattach"
 
 # 本通道只承接 reducer 真能消费的 event_type，且键名逐一对齐 01 §4.1 的实际取用（reducer 里
 # 的 event.payload[...]）。缺键的产物放下去只会变成 MALFORMED_PROPOSAL 级联，归因反而更难。
@@ -450,6 +455,50 @@ def _promote_infers(props: List[EventProposal], draft: str) -> List[EventProposa
     return []
 
 
+def _paragraph_of(source_ref: Optional[str], paras: List[str]) -> Optional[str]:
+    m = re.match(r"para:(\d+)", source_ref or "")
+    if not m:
+        return None
+    i = int(m.group(1)) - 1
+    return paras[i] if 0 <= i < len(paras) else None
+
+
+_TOLD_SPEAK = "说|告诉|告知|提醒"          # 说者判据（ponytail: 窄动词表——「王五道：」这类
+_TOLD_LISTEN = "告诉|对|向|跟"            # 只带道字的措辞会漏修；漏修好过误修，升级路径=动词表）
+
+
+def _reattribute_is_told(props: List[EventProposal], draft: str,
+                         state: StoryState) -> Tuple[List[EventProposal], List[dict]]:
+    """2A 结构面兜底：IS_TOLD 的 actor=听的人（尺面约定见 v3.6/v3.9 尺史注释）。
+
+    提示词面拦不住——43 章裁定 actor 翻转 13 章（#70 同型教训：temp0 下措辞修不了行为）。
+    段内判据：actor 名字被认成说者、且**听者唯一** ⇒ 换 actor 记 `is_told_reattributed` 账；
+    段号解不出 / 判据不命中 / 听者歧义 ⇒ 一律不动。这是纠偏不是猜测。
+    """
+    paras = [p.strip() for p in re.split(r"\n\s*\n", (draft or "").strip()) if p.strip()]
+    name_of = {cid: c.name for cid, c in state.characters.items() if c.name}
+    out: List[EventProposal] = []
+    notes: List[dict] = []
+    for p in props:
+        text = (_paragraph_of(p.source_ref, paras)
+                if p.proposed_event_type == "IS_TOLD" and p.actor else None)
+        name = name_of.get(p.actor) if text else None
+        if name and re.search(re.escape(name) + r"(?!听|问|想|看|点|摇)"
+                              + r"[^，。；\s]{0,4}(?:" + _TOLD_SPEAK + r")", text):
+            heard = {cid for cid, nm in name_of.items()
+                     if cid != p.actor and (
+                         re.search("(?:" + _TOLD_LISTEN + r")\s*" + re.escape(nm), text)
+                         or re.search(re.escape(nm) + r"听", text))}
+            if len(heard) == 1:
+                new_actor = heard.pop()
+                notes.append({"reason": "is_told_reattributed", "chapter": p.chapter,
+                              "from": p.actor, "to": new_actor, "item": p.target})
+                out.append(p.model_copy(update={"actor": new_actor}))
+                continue
+        out.append(p)
+    return out, notes
+
+
 def make_llm_channel(client: LlmClient, *, max_items: int = 24,                     extract_role: str = "extract"):
     """产出 `stage0_extract(..., llm_channel=)` 需要的通道：(draft, scene_plan, contract, state) -> Proposal。"""
     def channel(draft, scene_plan, contract, state) -> List[EventProposal]:
@@ -461,10 +510,11 @@ def make_llm_channel(client: LlmClient, *, max_items: int = 24,                 
         if len(props) > max_items:
             bad.append({"reason": "over_cap", "item": len(props)})
             props = props[:max_items]
+        props, reatt = _reattribute_is_told(props, _strip_markup(draft), state)
         promoted = _promote_infers(props, _strip_markup(draft))
         # 坏料记章号：只按 reason 聚总的话，dump 里说不清哪章丢了什么（§3.5 取证缺口）
         ch = getattr(contract, "chapter_no", 0)
-        channel.malformed.extend([{**b, "chapter": ch} for b in bad])
+        channel.malformed.extend([{**b, "chapter": ch} for b in bad + reatt])
         channel.produced += len(props) + len(promoted)
         channel.promoted += len(promoted)
         return props + promoted
@@ -565,9 +615,10 @@ def make_segmented_llm_channel(client: LlmClient, *,
             if len(props) > max_items:
                 bad.append({"reason": "over_cap", "item": len(props)})
                 props = props[:max_items]
+            props, reatt = _reattribute_is_told(props, stripped, state)
             promoted = _promote_infers(props, stripped)
             channel.malformed.extend([{**b, "chapter": ch, "instr": instr_version}
-                                      for b in bad])
+                                      for b in bad + reatt])
             channel.produced += len(props) + len(promoted)
             channel.promoted += len(promoted)
             channel.segments_run += 1
@@ -636,6 +687,9 @@ def make_segmented_llm_channel(client: LlmClient, *,
                                       "item": len(merged), "instr": instr_version})
             merged = merged[:max_items]
             merged = [p.model_copy(update={"seq": i}) for i, p in enumerate(merged)]
+        merged, reatt = _reattribute_is_told(merged, stripped, state)
+        channel.malformed.extend([{**b, "chapter": ch, "instr": instr_version}
+                                  for b in reatt])
         promoted = _promote_infers(merged, stripped)
         channel.produced += len(merged) + len(promoted)
         channel.promoted += len(promoted)

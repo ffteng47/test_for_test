@@ -99,3 +99,62 @@ def test_conclusion_must_differ_from_the_evidence():
                      " {\"event_type\": \"FACT_CONTRADICTED\", \"actor\": \"char_000001\", "
                      "\"payload\": {\"fact_id\": \"fact_000001\"}}]")
     assert ch.promoted == 0 and len(props) == 2
+
+
+# --- 2A：IS_TOLD actor 结构面纠偏（尺 v3.9；提示词面拦不住，43 章裁定翻转 13 章）---
+from plot_engine.llm_extract import _reattribute_is_told          # noqa: E402
+from plot_engine.models.proposal import EventProposal             # noqa: E402
+
+
+def _two_state():
+    st = _state()
+    return st.model_copy(update={"characters": {
+        **st.characters,
+        "char_000002": Character(character_id="char_000002", name="李四", status="alive",
+                                 introduced_at_chapter=1, epoch=EPOCH),
+        "char_000003": Character(character_id="char_000003", name="王五", status="alive",
+                                 introduced_at_chapter=1, epoch=EPOCH)}})
+
+
+def _told_prop(actor, ref="para:1"):
+    return EventProposal(proposed_event_type="IS_TOLD", actor=actor, target="fact_000001",
+                         chapter=47, seq=0, payload={"fact_id": "fact_000001",
+                         "trust_level": 900, "message_strength": 900},
+                         source_ref=ref, extraction_method="llm", extraction_confidence=1000)
+
+
+def test_speaker_actor_swapped_to_unique_listener():
+    props, notes = _reattribute_is_told([_told_prop("char_000001")],
+                                        "张三告诉李四，钥匙没有少。", _two_state())
+    assert props[0].actor == "char_000002"          # 知识落在听的人 ledger（03 §4.3）
+    assert notes == [{"reason": "is_told_reattributed", "chapter": 47,
+                      "from": "char_000001", "to": "char_000002", "item": "fact_000001"}]
+
+
+def test_correct_listener_actor_untouched():
+    props, notes = _reattribute_is_told([_told_prop("char_000002")],
+                                        "李四听张三说，钥匙没有少。", _two_state())
+    assert props[0].actor == "char_000002" and notes == []
+
+
+def test_ambiguous_listener_not_guessed():
+    props, notes = _reattribute_is_told([_told_prop("char_000001")],
+                                        "张三对李四说了一遍，又对王五说了一遍。", _two_state())
+    assert props[0].actor == "char_000001" and notes == []   # 听者歧义 ⇒ 不动
+
+
+def test_unresolvable_paragraph_never_swaps():
+    props, notes = _reattribute_is_told([_told_prop("char_000001", ref="x")],
+                                        "张三告诉李四，钥匙没有少。", _two_state())
+    assert props[0].actor == "char_000001" and notes == []
+
+
+def test_channel_golden_reattribution_is_on_the_books():
+    """整条通道验收：模型把说者写成 actor，出口是听的人，且 `is_told_reattributed` 进台账。"""
+    reply = ("[{\"event_type\": \"IS_TOLD\", \"actor\": \"char_000001\", "
+             "\"payload\": {\"fact_id\": \"fact_000001\", \"trust_level\": 900, "
+             "\"message_strength\": 900}, \"paragraph\": 1}]")
+    ch = _channel(reply)
+    props = ch("张三告诉李四，钥匙没有少。", None, _contract(), _two_state())
+    assert props[0].actor == "char_000002"
+    assert any(b["reason"] == "is_told_reattributed" for b in ch.malformed)
