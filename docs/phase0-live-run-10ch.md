@@ -416,6 +416,9 @@ INFERS 只到 suspected」，模型照旧走捷径。**型别偷懒在清单里�
 **仪表核验（#98 微修兑现）**：死章 dump 已带 `## Revision` 段（r1 ch02 round 1
 `action=patch_write items=H5.1|BELIEVES;H5.1|READS;H5.3|…` 直读「清单到过 Writer」=
 S 批条件①从此快照可证）；空清单 patch_write 三批 0 次复现（非契约层全落 rewrite_chapter）。
+> **勘误（2026-10-17 稽核更正）**：上句「0 次」读错，实为三批共 **1 次**（r1 ch05 round 3，
+> Writer 层振荡升级经 `_ladder_next` 换名落入 patch_write，`revision.py:198-199` 在守门之后）。
+> 明细与微修定性见 `docs/s-batch-evidence-review.md` §4.1；不影响条件①②③任何一格。
 
 **结论**：E2 三批同否；具名化的净效果是**归因收敛**（错绑大幅消退、残余集中在型别偷懒
 +ch02 整场没写），不是 OK 率。**S 批（#97）三条件读数**：①已过（dump 直证）；②残余=
