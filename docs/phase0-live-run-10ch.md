@@ -318,3 +318,54 @@ BELIEVES 强制事件，renegotiate 不再静默减 Arc 强制项，1 轮内直�
 ```
 归档 `sampling/ep1v39-r1/ r2/ r3/`（各含 ch01–10.md、run.log、_junk.json、state/{state.db,event.db}）
 + 同名 `.console.log`。
+
+## 13. patch-v1 冻结面三采样（2026-10-16，材料四修订动作批落盘后首采）
+
+冻结面唯一变量=**修订环 patch-v1**（patch_write 串联分诊 + needs_arc_replan 出口，06 §4.2/§4.3）；
+尺 v3.9-is-told-reattach、夹具 ladder-v5b、prompt/Writer 面、确认闸 job#4 全部原样。
+批前 `sampling/ep1v39-rN` 与批后 `sampling/ep1v39p-rN` 分表，不做同表混读。
+
+**读数（三批并列）**：
+
+| 批 | OK 率 | 终态 | 修复率 | E2/E3 |
+|---|---|---|---|---|
+| r1 | 30% | ARC=6 / NH=1 / OK=3 | 8 需修 / 0.50 | 否 / 否 |
+| r2 | 40% | ARC=4 / NH=2 / OK=4 | 7 需修 / 0.33 | 否 / 否 |
+| r3 | 30% | ARC=6 / NH=1 / OK=3 | 8 需修 / 0.50 | 否 / 否 |
+
+G1/G3=True、G2=False（与 §12 同判）。**E2 三批同否**，均值 33.3% vs 批前 33%——
+patch_write 没有把 10 章规模的 OK 率抬起来；它改变的是**判负形态**（见下）。
+
+**逐章一致性（r1/r2/r3）**：
+
+- **稳定死章 4/4 三批同章同 item 键逐字一致**：ch02 `003|belief|fact_000008`、
+  ch04 `003|knowledge|fact_000007`、ch07 `003|belief|fact_000003`、
+  ch10 `001|knowledge|fact_000002 + 002|belief|fact_000001`。全部 needs_arc_replan
+  （补写一轮后同条再失败），6/6/6 条判死消息零误触发、零静默吞。
+- **ch05 三批恒 NEEDS_HUMAN**（H5.7/Writer 层，非 patch 可补型）——判负**未收敛为纯
+  needs_arc_replan**，止损条款（Phase 0 结论改「管线成立、夹具 Arc 需作者重开」）**不触发**。
+- 漂移章：ch03（ARC/OK/ARC）、ch06（ARC/NH/OK）、ch09（OK/OK/ARC，r3 新死项
+  `001|belief|fact_000004`）。ch09 两批转 OK = 裁定 2「BELIEVES 未必写不出」实证
+  （rounds=0 时代从未给过 Writer 带清单的机会）；r3 判死同样是补写一轮之后。
+
+**归因三分型（r1 全量 + r2 复核，稳定死章口径）**：型别偷懒（INFERS 顶 IS_TOLD/档位欠，
+ch03/04/06/10）、actor 错绑（对型事件绑错角色，ch03/04/06；r2 另见绑错事实 ch07
+BELIEVES→fact_000001）、整场没写（双 actor 零命中，ch02/07/10）。共性：**型别模型会写，
+绑定在编号清单面上系统性串位**——这不是结构不可写，是指令面欠明确 ⇒ #98 具名化批的靶。
+
+**仪表缺口与 artifact（入册不动码，批内码面冻结）**：
+
+- ArcConflict 判死章 dump **无 `## Revision` 段**（`experiment.py` quarantine 传 trace=None，
+  raise 不带部分轨迹）⇒ S 批条件①目前只能以消息文本 + rounds≥1 + Round0/终稿 diff 证；
+  待批后微批修。
+- Writer 层根因在无 items 时仍挂 `action=patch_write` 空清单开火（r1 ch05 round 2 可见），
+  功能≈rewrite_chapter；无害但读数时按 items 空/非空区分。
+- 可见 patch 轮仅存于活章（r1 ch05、r2 ch03、r3 ch06）；死章的补写证据=判死消息本身。
+
+**复现**：
+```
+PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe -m plot_engine.review --live --chapters 10 \
+  --model-config @router_q25_14b.json --gate-project 1 --dump-dir sampling/ep1v39p-rN  # N=1,2,3
+```
+归档 `sampling/ep1v39p-r1/ r2/ r3/`（各含 ch01–10.md、run.log、_junk.json、state/{state.db,event.db}）
++ 同名 `.console.log`。
