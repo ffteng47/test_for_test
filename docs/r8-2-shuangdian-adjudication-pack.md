@@ -192,3 +192,11 @@
   - 题6B 首版钉阈值 = 重提条件=第一批真实曲线读数落地；题6C 双通道各定线 = 保留待 R6/R7 接线。
 - 验收线照 r8:62「可输出+可追溯」，不钉阈值数值；样本用归档
   `sampling/ep1v39pv2c-r2` + `sampling/wpe50ch` 存量，**不开新 GPU 批**。
+
+**首期兑现（2026-10-17，commit af7e923）**：读数表已落 `plot_engine/metrics.py`（`thrill_table`/`r3r6_flags`）
++ `plot_engine/readout.py --thrill` 出口；写集=packs 承诺的 metrics+readout+tests，零新文件（读数模块内联 metrics）、
+零尺零契约零门禁、只读消费夹具公开派生面（replay 归档 state/event.db 重建 pre-state，不可得章记「-」不入分母）。
+复现：`PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe -m plot_engine.readout sampling/ep1v39pv2c-r2 --thrill`
+（50ch 加 `--fixture=experiment_50ch`）。首跑读数：S 批 r2 钩 10/10、strength [500..900]、
+规划↔契约偏差恒 0（derive 单源所致，符合预期）；wpe50ch 钩 46/46 可判章、R3'@ch11-50/R4'/R6' 观察行——
+阶梯夹具曲线本身即单调梯（伪定量行如实反映夹具形态，不作判据）。链验 585→587/backend 10。
