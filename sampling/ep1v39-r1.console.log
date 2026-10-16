@@ -1,0 +1,27 @@
+http://127.0.0.1:11500/v1/models 可用模型: gemma4:31b, qwen2.5:32b, qwen2.5:14b, qwen3:30b, qwen3.5:27b, qwen3:14b, deepseek-r1:32b, qwen3:8b｜prompt=v0-beats｜抽取尺=v3.9-is-told-reattach｜指引=g3-keep-reading-scenes｜夹具=ladder-v5b-ch10istold｜Writer面=w4-scene700-1000+ledger｜确认闸=job#4 project=1｜抽取上限=2400｜终态 ARC_CONFLICT=1 NEEDS_HUMAN=5 OK=4｜仪器=instr-v2-local｜车道=local
+tokens=183966 cost=$0.0000 用时=1564s｜抽取产出 321 条（规则提升 0） / 坏料 {'truncated_segment': 5, 'alias_unknown': 1, 'stripped_payload_key': 5}
+仪器：分段 50 段｜修复 5 次｜合并去重 168 条｜别名映射 0 条（多义 0）｜代码补默认 0 处｜段级废卷 0 段
+接线：调用 86 次｜可疑 5 次：[extract qwen2.5:14b finish=length 正文=5501 思考=0 上限=2400] [extract qwen2.5:14b finish=length 正文=6045 思考=0 上限=2400] [extract qwen2.5:14b finish=length 正文=6007 思考=0 上限=2400] [extract qwen2.5:14b finish=length 正文=5474 思考=0 上限=2400] [extract qwen2.5:14b finish=length 正文=6026 思考=0 上限=2400]
+# Architecture Review — exp-s1-42
+生成 10 / 提交 4 / 未决 [2, 4, 5, 7, 9, 10] / replay一致 True
+Revision：需修 6 章 / 最多 3 轮 / 修复率 0.17
+逐章轮数：1:0 2:3 3:3 4:3 5:2 6:0 7:2 8:0 9:0 10:2
+
+## §6 失败分类
+- Writer / Validator 问题: 8  (H2.2, H5.7)
+- Contract / Arc 问题: 13  (ARC_CONFLICT, H5.1, H5.3, H5.4, H5.6)
+
+## §7 架构冻结闸
+- G1_same_class_ge_3: True
+- G2_architecture_blocker: False
+- G3_ge_2_chapters_uncommitted: True
+- G4_state_inconsistent: False
+- 可讨论改架构: True
+
+## §8 退出条件（Phase 0 → Phase 1）
+- E1: True
+- E2: False
+- E3: False
+- E4: True
+- E5: True
+- E6: True

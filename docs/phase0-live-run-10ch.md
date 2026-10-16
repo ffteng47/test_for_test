@@ -265,3 +265,56 @@ PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe sampling/_forensics/adjudicate.p
 本节**零码改**——测试基线 plot_engine 561 / backend 10 不动。
 下一步：冻结会议程 #1 = H5.3↔H2.2 一致性修订（尺面）；议程 #2 = IS_TOLD actor 约定入抽取 prompt；
 「Revision 动作缺失（06 §4）」与 Δ② 抽取面并案讨论——③19+②18 的判负主力已被证实为**尺与约定**问题，Writer 纯失位（①）仅 1 章次+2 类越界钉。
+
+## 12. v3.9 冻结面三采样（2026-10-16，材料三裁定码批收口后首采）
+
+**采样设计**：码批 v3.9（尺戳 `v3.9-is-told-reattach` + 夹具 `ladder-v5b-ch10istold`：1A rank 可达性
+拦截 / 1B H5.3 双判据 / 2A IS_TOLD 结构纠偏 / 3A 越界钉拦截 / 3B ch10 改钉）冻结后，
+同模型三次（qwen2.5:14b @213 隧道，三次同模型才有可比性=Q4 裁定），
+只按"三次是否一致"下结论。**v3.9 尺表，与 §9 v3.8、§11 旧尺对照分表不并列**。
+确认闸=**job#4**（project 1，plan_sha256=`3a2ce082dbb0fbeba6aaf819c17ae91ff0cbe8b0804c2f8db7c2850a7e64a666`，
+confirmed_by=tff）。
+
+| 读数 | r1 | r2 | r3 |
+|---|---|---|---|
+| 提交 OK | 4 | 4 | 2 |
+| 未决 NEEDS_HUMAN | 5 | 5 | 7 |
+| ARC_CONFLICT | 1（ch09） | 1（ch09） | 1（ch09） |
+| 修复率（≤3 轮） | 0.17 | 0.29 | 0.00 |
+| §6 Contract/Arc | 13 | 13 | 16 |
+| §6 Writer/Validator | 8 | 7 | 9 |
+| 坏料 `_junk.json` | 11 | 52 | 85 |
+| tokens / 用时 | 183,966 / 1564s | 195,934 / 1559s | 168,491 / 1369s |
+| E1/E2/E3/E4/E5/E6 | T/**F**/**F**/TTT | T/**F**/**F**/TTT | T/**F**/**F**/TTT |
+| G1/G2/G3/G4 | T/F/T/F | T/F/T/F | T/F/T/F |
+
+**rule 计数（章×轮累计，非章数）**：三批同谱系——H5.3 领衔（26/24/26），H5.7（21/17/17）、
+H5.1（13/12/11）、H2.2（10/16/15）、H5.6（10/16/15）、H5.4（5/6/5）。
+抽取面两仪表零触发：**规则提升 0、`is_told_reattributed` 0**——2A 兜底在本模型本夹具面未开火
+（actor 翻转谱系在 §11 已定性为尺/约定问题，三批采样面未见复发）。
+
+**章级稳定性（核心发现）**：10 章中 **6 章三批定性完全一致**——ch01/08 恒 OK、
+ch04/05/07/10 恒 FAIL、**ch09 恒 ARC_CONFLICT**；仅 ch02/03/06 随批漂移（OK↔FAIL 互换）。
+即错尺修正后，判负面主体不是模型抖动，而是**契约-模型失配的确定性章**（6/10）。
+
+**ARC_CONFLICT=ch09（三批同章同因）**：`arc_003 第 9 章落空的事件类型是 Arc 强制项，
+契约层无权放宽：['BELIEVES']`——批④ fail-fast 路由实弹首现：Writer 三轮写不出/抽不出
+BELIEVES 强制事件，renegotiate 不再静默减 Arc 强制项，1 轮内直接判死（rounds 0/0/1，
+对比 v3.8 时代同类失败烧满 3 轮以 H5.3 现形）。**4A「Revision 动作缺失」缓议的复议材料已到位：
+残余 ≠0——三批各 1 章被该路径判死，属结构缺口而非错尺幻影。**
+
+**结论（三次一致口径）**：
+- OK 率 40/40/20%，E2（≥70%）三批同判**否**；E3 同否。v3.9 尺面修正方向为正
+  （均值 33% vs v3.8 26.7%），**规模仍不成立**，与 §9/§10/WP-E 五十章同向。
+- 判负主力收敛为两型：**确定性失配章**（ch04/05/07/10，H5.3 领衔的真未实现）与
+  **Arc 强制项 fail-fast**（ch09 BELIEVES）。
+- G1/G3=True、G2=False——08 §7 继续允许讨论改架构。冻结会 **#4 议程（Revision 动作缺失）解除缓议**，
+  材料=本节；候选动作面：给 must_change 类失败配 Writer 定向补写动作 vs Arc 层重规划（06 §4 空白）。
+
+**复现（§13 落盘）**：
+```
+.venv/Scripts/python.exe -m plot_engine.review --live --chapters 10 \
+  --model-config @router_q25_14b.json --gate-project 1 --dump-dir sampling/ep1v39-rN   # N=1,2,3
+```
+归档 `sampling/ep1v39-r1/ r2/ r3/`（各含 ch01–10.md、run.log、_junk.json、state/{state.db,event.db}）
++ 同名 `.console.log`。
