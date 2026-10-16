@@ -202,7 +202,8 @@ class ChapterContract(BaseModel):
 | D7 | must_change / must_not_change 必须显式声明 derived_from |
 | D8 | ending.type 必须与 story_goal_type 兼容（§4.4） |
 | D9 | v0.2：reader_signals 引用的 fact_id 必须存在；target_state 与 gate 不冲突（未到期 gate 的 fact 不得标 knows） |
-| D10 | **epoch_1 补记（v0.12 裁定 1A）**：每条 must_change 必须存在可兑现其 Δ 的 required_event（field→事件映射 10 §4.3）。derive 阶段前置拦截：不满足 → `ArcConflict`（06 §4.3 归属登记——Arc 输入错误，不是重写可修）；不许让它烧满三轮修订才以 H5.3 现形 |
+| D10 | **epoch_1 补记（v0.12 裁定 1A）**：每条 must_change 必须存在可兑现其 Δ 的 required_event（field→事件映射 10 §4.3）。derive 阶段前置拦截：不满足 → `ArcConflict`（06 §4.3 归属登记——Arc 输入错误，不是重写可修）；不许让它烧满三轮修订才以 H5.3 现形。**v3.9 码批强化（材料三 #1 裁定 1A，43 章取证）**：类型在映射表内还不够——knowledge Δ 的 `expected_value` 必须落在本章钉死事件类型的档位上限内（OBSERVES/READS→known、IS_TOLD→believed、INFERS→suspected；档位序 unknown<suspected<believed<known<confirmed；上限即 03 §4.3/§5.1 reducer 逐条封顶，唯一表 `KNOWLEDGE_RANK_CAP` 在实现侧与 validator 共用）。不可达 → 同样 `ArcConflict`，不再放行进契约 |
+| D12 | **v3.9 码批新增（材料三 #3 裁定 3A）**：本章禁知（`knowledge_forbidden`）或 gate 档位为 hidden 的 fact，不得被钉成 OBSERVES/READS 型 required_event——「读者至今看不见的东西被主角亲眼看见/读到」是结构不可满足的钉（hidden 身份不能目击，①族 ch10 教训）。只拦「看见/读到」两型：IS_TOLD/INFERS 是转述/派生，进角色账不依赖读者可见性。derive 前置拦截 → `ArcConflict` |
 | D11 | **epoch_1 新增（v0.12 裁定 4A）**：伏笔限期单源——`ForeshadowingEntry.due_by_chapter` 必须等于同名 fact 的 `gate.must_reveal_by_chapter`；漂移 → derive 抛 `ArcConflict`（回 Arc 层修账，抽取侧不得发明第二个期限） |
 
 ### 4.4 story_goal_type 与 ending.type 兼容矩阵

@@ -72,6 +72,11 @@ text
 H5.1 required_event 未出现
 H5.2 forbidden_event 出现
 H5.3 must_change 未实现
+      knowledge 字段判据（v3.9 码批/材料三 1B 对齐）：本章存在
+      type+actor+fact 三项吻合的实现事件，且角色在该 fact 上的终态
+      达到 expected_value 档位——与 H2.2 同谓词，超限事件（如 IS_TOLD
+      顶 known）不再判实现。rank 序与事件档位上限表单源 04 D10。
+      belief 字段维持纯实现事件判据（belief 无有序 rank 阶）。
 H5.4 must_not_change 被违反
 H5.5 ending.type 不匹配（v0.2 修订为可判定信号）
       判定依据：Draft 末尾最后 3 段内必须含

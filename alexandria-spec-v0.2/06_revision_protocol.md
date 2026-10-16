@@ -118,6 +118,10 @@ Arc 的 tension_curve 与故事进展不符
 
 must_change 的 Δ 在本章没有可实现的事件类型——derive 前置拦截抛 ArcConflict（04 D10，v0.12 裁定 1A 归属登记：这是 Arc 给错输入，不再允许烧满三轮修订以 H5.3 现形）
 
+must_change 的 knowledge Δ 超出本章钉死事件的档位上限（如 IS_TOLD 上限 believed 却钉 expected_value=known）——derive 前置拦截抛 ArcConflict（04 D10 rank 可达性强化，v3.9 码批/材料三 1A；与 H2.2 同表 KNOWLEDGE_RANK_CAP）
+
+required_event 把本章禁知或 gate=hidden 的 fact 钉成 OBSERVES/READS（越界钉）——derive 前置拦截抛 ArcConflict（04 D12，v3.9 码批/材料三 3A；IS_TOLD/INFERS 豁免——转述不要求读者可见）
+
 伏笔限期与 gate 漂移（04 D11 单源破坏）
 
 伏笔逾期未回收（H9.1 HARD，epoch_1——欠的是弧线债）

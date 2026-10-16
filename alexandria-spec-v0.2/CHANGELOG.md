@@ -29,6 +29,27 @@
 
 ---
 
+## v3.9 码批生效记录（2026-10-16 二次冻结会材料三裁定 1A+1B / 2A / 3A+3B → 码批落盘）
+
+> 设计依据：`docs/freeze-meeting-and-r8-briefs.md` 材料三拍板记录（四项裁定，4A 缓议）。
+> 协议正文变更：04 §4.3（D10 扩展 rank 可达性 + 新增 D12 越界钉拦截）/
+> 05 §4（H5.3 knowledge 分支双判据注记，与 H2.2 同谓词）/
+> 06 §4（Arc 归属登记补 rank 超限与 D12 越界钉两行）。
+> 代码：models/contract（K_RANK、KNOWLEDGE_RANK_CAP 单源表单消费者=derive D10/validator H5.3/fixture）、
+> derive（D10 rank 可达性前置拦截/1A、D12 越界钉拦截/3A）、
+> validator `_change_implemented` knowledge 分支实现事件∧终态达档（1B，belief 分支与 H5.7 宽集合不动）、
+> llm_extract `_reattribute_is_told`（2A 结构兜底：说话人段落判定+唯一听者换挂，`is_told_reattributed` 记账入 malformed，
+> 三漏斗位与 `_promote_infers` 同点接线）、
+> EXTRACTION_RULER v3.8→**v3.9-is-told-reattach**。
+> fixture：ch06 补证人钉（OBSERVES）、ch10 改钉 IS_TOLD Δ known→believed（3B，作者裁定）；
+> LADDER_VERSION 基线/半密度 → ladder-v5b-*（50ch 文件经 import 继承，未动）。
+> 背景裁定链：#70 教训"temp0 提示词面修不了行为型别"⇒ 2A 走结构面；
+> ③族 rank-cap 穿帮 6 章 ⇒ 1B 从结构上消灭 H5.3-green/H2.2-red 互斥。
+> 尺面纪律：v3.9 起读数与 v3.6/v3.7/v3.8 分表，不并列；v3.7 已由 #70 烧号，永不复用。
+> 基线：plot_engine 561→573（#87 +5 / #88 +5 / #89 +2）、backend 10 不变。
+
+---
+
 ## §A 变更草案（修改 1~10）
 
 ### 修改 1：新增 10_world_state_protocol.md
