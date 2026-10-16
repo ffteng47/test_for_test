@@ -1,11 +1,12 @@
 # 项目路线图（层 × 路线对照）
 
-> 版本：v0.13（2026-10-16 现势同步，配套 `docs/commercial/collaborator-guide.md` v1.0；指南已随商业研究迁入 `docs/commercial/`）
+> 版本：v0.14（2026-10-16 现势同步，配套 `docs/commercial/collaborator-guide.md` v1.0；指南已随商业研究迁入 `docs/commercial/`）
 > 性质：诊断级路线文档。所有"现状"条目均有代码/文档证据；"路线"条目为待审方案，确认后才进开发。
 > 冲突仲裁：纪律/禁区以 `docs/commercial/collaborator-guide.md` 为准；并行窗口以本文 §4 撞车矩阵为准。
 > 单写者纪律：本文档由问题助手会话持有；其他会话改动须先批注声明（防文档面撞车，稽核建议 2026-10-15）。
 > v0.2→v0.3：全文补齐文件路径，新增 §6 关键文件索引。
 > v0.4→v0.5（现势同步，经 tff 授权补齐）：#69 已收口（§23：Jmed 三臂回 1.0、闸 1/3、H5.1 税 0）；#70 (b) 批已施加（尺戳 v3.7 入册 29774db，b3 同批，链验 528），三跑 v4g1..3 在跑；#78 判过（v4fL E2 20% 带内）；WP-E 排队条件收敛为 #70 收口；基线 526→528。
+> v0.13→v0.14（**R8 #1 确认闸码批收口**，2026-10-16）：设计稿 `docs/confirmation-gate-design.md` v1.0 冻结（tff 拍板 Q1–Q5 全按推荐；Q3=A `review.py` 入口 preflight，WP-0 写集例外亲批）；批1 `backend/noveldb.py` jobs 闸账四函数（add_confirm_job/get_job/latest_job/set_job_status CAS，状态机 queued→confirmed／queued→rejected→queued 代码层枚举，**SQL 零迁移**）；批2 `review --live` 前置检查——无 confirmed job/规划 sha256 不符→退出码 4+stderr 拦截原因含当前哈希，过闸戳进 run.log（归档自证）；--live 调用者全带 `--gate-project`（离线/救援不过闸）；验收 §4 四项全绿，链验 plot_engine **554→557**（+3 拦截态用例）、backend **6→10**（CAS 并发单赢等 4 用例）。Q5：闸前存量归档（wpe50ch/bo_ctrl）豁免，闸只卡新跑。
 > v0.12→v0.13（**WP-A v3.8 码批收口**，2026-10-16）：epoch_1 八批全落库（A models／B plot reducer+联动钩子+abandon 内核／C validator H9 族+RULE_TO_LEVEL／D derive D11 单源漂移拦截／E 抽取尺 bump **v3.6→v3.8-foreshadow-payload**（v3.7 烧号不复用纪律兑现）／F 裁定 2A 阶梯四级化／G 协议文本 01/03/04/05/06/08/09+CHANGELOG 入册／H 全链复验）。链验 **531→554**（+23 用例，一正一反纪律达标）。**尺面纪律**：v3.8 起读数与 v3.6 分表，禁并列。fixture 层 EPOCH 字符串暂留 epoch_0（生效记录=09 §3.1+CHANGELOG，数据面首条 epoch_1 事件写入时按 09 §5 走）。弃伏工作台接线留 WP-0（5A 内核已落）。
 > v0.11→v0.12（冻结会散会，2026-10-15，tff 照单拍板）：六项裁定 1A（04 补 D10 + derive 前置拦截 + 06 §4 登记归属）/ 2A（06 §5 阶梯删一级，四级）/ 3 追认（H8.x 只记 by_rule，08 勘误回填）/ 4A（derive 单源 gate→due，**v3.8 键名定稿 `due_by_chapter` 入 FORESHADOWING_SET payload**）/ 5A（新增 `abandon_foreshadowing` 动作入阶梯）/ 6A（ArcProgress 随 epoch_1 只冻字段，V3/V6 迁移断言）；确认闸落点追认 = **backend jobs 表不进 EventLog（不触发 T1）**。拍板记录：`docs/freeze-meeting-and-r8-briefs.md` 末节。**WP-A v3.8 码批即刻开工**；`docs/commercial/project-roadmap.md` 加陈旧快照注记（正典单一写者不变）。
 > v0.10→v0.11（WP-E 收口，2026-10-15）：**50 章压测跑完并判负**——终态 OK 13／NEEDS_HUMAN 36／ARC_CONFLICT 1（ch09），处置率 74%，干净口径 E2 20%（§8 名义提交率 26%），E2/E3 退出闸 False；失败主体在契约/Arc 面（§6：74 对 20，H5.3×110 居首）= 冻结会议程 #1 must_change 归属空白的实据；**ladder-v5 夹具验证通过**（构造级不可达章：无；后 40 章 OK 率 27.5% 不劣于前 10 章 20%）；判死章位漂移（v4gL=ch05 vs wpe=ch09）入 temp0 自洽失稳同谱系；finish=length 可疑 8 次（上限 2400 vs 实出 ~5600–6000）对表 instr-v3 预注册。读数与复现：`docs/phase0-50ch-stress.md`；归档 `sampling/wpe50ch/`。**并表禁照旧**：50 章读数不与 v4 十章带 [20,40] 同表。
@@ -97,7 +98,7 @@
 ### R8 商业输入路线（tff 裁定并入，2026-10-15）
 
 - **依据**：`docs/commercial/r8-commercial-input-requirements-v1.0.md`（六项 A 类缺陷）+ 四项目深研（许可证红线：AI-NWA＝AGPL+CLA 双许可且 SaaS 商用须授权、SillyTavern/inkos＝AGPL-3.0——三家**只读思路禁代码引入**；oh-story＝MIT 唯一可吸收件）。
-- **入队序（已裁定）**：确认闸 > 爽点工程 > 量化去味 > 拆文库 > 扫榜 > 旧稿导入。
+- **入队序（已裁定）**：确认闸（**已收口 v0.14**：设计 v1.0 冻结+码批两批落库，`docs/confirmation-gate-design.md`）> 爽点工程 > 量化去味 > 拆文库 > 扫榜 > 旧稿导入。
 - **承接映射**：确认闸→R3+R5 审听出口（`review.py`/`viewer.py` 面）；爽点工程→WP-A（R1 语义层是地基，不另起炉灶）；量化去味→WP-C（暂停中，归属裁定后激活，写集仍是禁区面）；拆文库/扫榜→**WP-F**（oh-story MIT 吸收通道：拆榜/爆款方法论、双层追踪记录〔作者真相 vs 读者已知〕、门禁脚本参考）；旧稿导入→R6/WP-D 相邻面（bible 通道已有）。
 - **姿态**：垂直有声书交付，不与 AI-NWA/inkos 拼通用工具广度；护城河=确定性尺+盲测仪+事件溯源内核（inkos 同构 reducer 印证方向、无质量语义尺=差距所在）。
 
@@ -164,7 +165,7 @@
 | #79 五十章阶梯夹具 | 10 步循环夹具在 ch11+ 重复 add=压测伪影；新阶梯+review 夹具接线 | `plot_engine/tests/fixtures/`、`review.py` | **已收口（de88d9e）**：ladder-v5（20 对×2 章不回环），离线 50/50 全绿，链 526→531 |
 | #78 闸 | 生成批跨机可移植性 | 全生成面 | **已判过**（v4fL E2 20% 带内，§23；生成批默认车道仍 @213） |
 
-**验证基线（改码前后都要绿）**：`.venv/Scripts/python.exe -m pytest plot_engine/tests -q` = **554 passed**（2026-10-16 WP-A 收口复测；历次 525→526→528→撤→526→531→WP-A +23→554；注：沙盒内跑会因 WinError 5 临时目录权限产生 87 errors 假象，须非沙盒或先配置可用 TEMP）。
+**验证基线（改码前后都要绿）**：`.venv/Scripts/python.exe -m pytest plot_engine/tests -q` = **557 passed**（2026-10-16 确认闸批复测；历次 525→526→528→撤→526→531→WP-A +23→554→确认闸 +3→557；注：沙盒内跑会因 WinError 5 临时目录权限产生 87 errors 假象，须非沙盒或先配置可用 TEMP）。
 
 ---
 
@@ -180,7 +181,7 @@
 | 他人脏面活跃（`frontend/`、`docs/usage-wiki.md`、`docs/ebooks-standard.md`、`deploy/patches/` 等在改） | WP-C/集成 | 禁区清单勿碰；commit 前 `git status` 对照指南 §2 |
 | 沙盒环境跑测试产生假红（WinError 5） | 全部码批验收 | 验收跑批一律非沙盒或预配 TEMP，报告注明环境 |
 | 尺戳双占（v3.7 已被 #70 占用后撤销） | WP-A/R4 | 戳号已烧不复用；WP-A 钉死 v3.8；今后尺戳分配进 §4 批次登记 |
-| `docs/commercial/collaborator-guide.md` 基线数字滞后 | 全部 | 已五次刷新（525→526→528→撤→526→531→WP-A 后 554）；仲裁以 **554** 为准 |
+| `docs/commercial/collaborator-guide.md` 基线数字滞后 | 全部 | 已六次刷新（525→526→528→撤→526→531→WP-A 后 554→确认闸后 557）；仲裁以 **557** 为准 |
 | 章内在场一致性盲区（WP-E ch50 实证三连穿帮机检全漏，`docs/phase0-50ch-stress.md` §6） | Level-3 / WP-F / epoch_2 | **backlog**：(a) level3_fn 判分线待 tff 定标；(b) 在场静态事实=T1 新事件型，赶 epoch_2/WP-F 双层追踪，WP-A 范围已冻结不动刀 |
 
 ---
@@ -231,7 +232,7 @@
 | `plot_engine/llm.py`、`llm_writer.py`、`llm_extract.py`、`writer.py`、`live.py` | 生成层 |
 | `plot_engine/reading.py`、`sample.py`、`readout.py`、`viewer.py`、`blind_review.py` | 出口层 |
 | `plot_engine/metrics.py`、`prose_audit.py`、`ai_flavor_lint.py`、`instr*.py`、`reanchor.py`、`counterfactual.py` | 测量层 |
-| `plot_engine/tests/`（80+ 测试文件） | 验证基线 554 passed |
+| `plot_engine/tests/`（80+ 测试文件） | 验证基线 557 passed |
 
 ### 交付侧核心代码（backend/）
 
