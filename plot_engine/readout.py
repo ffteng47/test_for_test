@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Dict, List
 
 from plot_engine.fixture_audit import revision_loop_chapters, unreachable_by_construction
-from plot_engine.metrics import metrics_from_dump
+from plot_engine.metrics import metrics_from_dump, thrill_table
 from plot_engine.models.contract import FIELD_EVENT_TYPES
 from plot_engine.prose_audit import audit, chapter_texts_from
 
@@ -171,8 +171,15 @@ def md(rows: List[Dict[str, str]], columns: List[str]) -> str:
 def main(argv: List[str]) -> int:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
-    matrix_mode = "--matrix" in argv
     runs = [a for a in argv if not a.startswith("--")]
+    if "--thrill" in argv:            # 爽点工程读数表（R8 #2 全-A：纯派生离线，不进闸不写账）
+        fixture = next((a.split("=", 1)[1] for a in argv if a.startswith("--fixture")),
+                       "experiment_10ch")
+        for r in runs:
+            d = Path(r) / "dump" if (Path(r) / "dump").exists() else Path(r)
+            print(thrill_table(d, fixture=fixture), "\n")
+        return 0
+    matrix_mode = "--matrix" in argv
     if matrix_mode:
         print(md(matrix(runs), ["跑法"] + [str(i) for i in range(1, 11)]))
     else:
