@@ -154,3 +154,20 @@
 ---
 
 *索引：题1 词表（3 选项）·题2 进闸（3）·题3 命中率（3）·题4 承接位（3）·题5 派生vs抽取（3，红线单列）·题6 双通道（3）。坐标全部 2026-10-17 当日打开核对，漂移项见 §0。确认闸（R8 #1）已收口不入本题；材料一~四既有裁定不重问。*
+
+---
+
+## 稽核验证记录（2026-10-17，随审查报告修正回写）
+
+1. **「全库零写入方」取证命令与结果**：
+   ```
+   grep -rn "tension_actual" plot_engine/ backend/ --include="*.py"
+   ```
+   全库仅 1 处命中=定义行 `plot_engine/models/ledger.py:103`（字段默认值 `List[int] = []`，含注释
+   「R8 爽点工程承接位」）；排除定义/注释后的写方检索为空 ⇒ **零写入方成立（含 tests 与 backend）**。
+2. **证据引用勘误**（稽核严重项）：收口播报曾把三处抽查写成一行括号列举，读起来像
+   `ledger.py:103` 兼证 MIT——更正为两条独立证据：
+   - `plot_engine/models/ledger.py:103` = tension_actual 承接位 + 全库零写入方；
+   - `refrence_projects/oh-story-claudecode/LICENSE:1`（"MIT License"，独立文件）= WP-F 许可证核实。
+3. **链验现跑**（稽核⚠项补实）：plot_engine **585 passed**、backend **10 passed**（2026-10-17，
+   本包落库后无码改，纯文档修正不影响基线）。
