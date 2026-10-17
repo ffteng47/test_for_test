@@ -1,0 +1,27 @@
+http://127.0.0.1:11500/v1/models 可用模型: gemma4:31b, qwen2.5:32b, qwen2.5:14b, qwen3:30b, qwen3.5:27b, qwen3:14b, deepseek-r1:32b, qwen3:8b｜云端抽取：https://api.deepseek.com/models 可用模型: deepseek-flash, deepseek-v4-pro｜prompt=v0-beats｜抽取尺=v3.9-is-told-reattach｜指引=g3-keep-reading-scenes｜夹具=ladder-v5b-ch10istold｜Writer面=w4-scene700-1000+ledger｜修订环=patch-v2｜确认闸=job#4 project=1｜抽取上限=2400｜终态 FAIL=3 NEEDS_HUMAN=1 OK=6｜仪器=instr-v2-cloud｜车道=cloud
+tokens=183616 cost=$0.0340 用时=890s｜其中云端抽取 tokens=82937 cost=$0.0340｜抽取产出 296 条（规则提升 6） / 坏料 {'id_value_not_id': 10}
+仪器：分段 35 段｜修复 0 次｜合并去重 112 条｜别名映射 0 条（多义 0）｜代码补默认 0 处｜段级废卷 0 段
+接线：调用 57 次｜接线正常（无空正文、无截断）
+# Architecture Review — exp-s1-42
+生成 10 / 提交 6 / 未决 [2, 5, 7, 10] / replay一致 True
+Revision：需修 6 章 / 最多 3 轮 / 修复率 0.67
+逐章轮数：1:0 2:2 3:0 4:1 5:3 6:1 7:1 8:0 9:0 10:1
+
+## §6 失败分类
+- Writer / Validator 问题: 2  (H2.2, H5.7)
+- Contract / Arc 问题: 6  (ARC_CONFLICT, H5.1, H5.3, H5.6)
+
+## §7 架构冻结闸
+- G1_same_class_ge_3: True
+- G2_architecture_blocker: False
+- G3_ge_2_chapters_uncommitted: True
+- G4_state_inconsistent: False
+- 可讨论改架构: True
+
+## §8 退出条件（Phase 0 → Phase 1）
+- E1: True
+- E2: False
+- E3: False
+- E4: True
+- E5: True
+- E6: True
