@@ -102,6 +102,8 @@ CREATE TABLE IF NOT EXISTS jobs(
   created_at TEXT DEFAULT (datetime('now')));
 """
 CONFIRM_TASK = 'plan_confirm'   # R8 #1 开书确认闸的唯一 task 值（docs/confirmation-gate-design.md v1.0）
+CHAPTER_DECISION_TASK = 'chapter_decision'  # WP-F B5 章闭环裁决账（tff「1确认开」）：同 jobs 表同状态机，不进 EventLog、不进 E2
+CHAPTER_ACTIONS = frozenset({'accept_current', 'arc_replan', 'contract_edit', 'manual_rewrite'})
 # 状态机（设计稿 §2，代码层枚举，SQL 不动）：queued→confirmed / queued→rejected / rejected→queued
 _JOB_TRANSITIONS = {('queued', 'confirmed'), ('queued', 'rejected'), ('rejected', 'queued')}
 _JOB_STATUSES = frozenset(s for pair in _JOB_TRANSITIONS for s in pair)
@@ -271,6 +273,22 @@ class Db:
         return self.con.execute(
             'SELECT * FROM jobs WHERE project_id=? AND task=? ORDER BY id DESC LIMIT 1',
             (project_id, task)).fetchone()
+
+    def latest_chapter_decision(self, project_id: int, chapter_no: int) -> Optional[sqlite3.Row]:
+        """B5 查账：该章最新一条裁决（name=chNN 定章）；无=未裁过。"""
+        return self.con.execute(
+            'SELECT * FROM jobs WHERE project_id=? AND task=? AND name=? ORDER BY id DESC LIMIT 1',
+            (project_id, CHAPTER_DECISION_TASK, f'ch{chapter_no:02d}')).fetchone()
+
+    def decide_chapter(self, project_id: int, chapter_no: int, action: str) -> int:
+        """B5 人工裁决一步入账：queued→confirmed（裁决即确认），复用确认闸的 CAS 状态机。"""
+        if action not in CHAPTER_ACTIONS:
+            raise ValueError(f"非法裁决动作: {action}，允许 {sorted(CHAPTER_ACTIONS)}")
+        job_id = self.add_confirm_job(project_id, CHAPTER_DECISION_TASK,
+                                      f'ch{chapter_no:02d}',
+                                      {"chapter_no": chapter_no, "action": action})
+        self.set_job_status(job_id, 'confirmed', 'queued')
+        return job_id
 
     def set_job_status(self, job_id: int, status: str, expected_status: str) -> bool:
         """CAS 推进：当前状态==expected 才写，返回是否抢到（防并发双确认）。状态机外组合直接报错。"""

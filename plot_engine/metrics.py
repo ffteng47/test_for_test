@@ -281,6 +281,39 @@ def reader_card(dump_dir, chapter: int = 0, story_id: str = "s1") -> str:
     return render_reader_card(store.load_latest(story_id).state, story_id)
 
 
+# ---- 章闭环裁决菜单（WP-F B5 #107，2026-10-17 tff「1确认开」：派生参考面，不进 E2、管线不消费）----
+_ADJ_ACTIONS = {
+    "ARC_CONFLICT": ("accept_current", "arc_replan", "manual_rewrite"),
+    "_default": ("accept_current", "contract_edit", "manual_rewrite"),
+}
+ADJ_ALL_ACTIONS = frozenset(sum(_ADJ_ACTIONS.values(), ()))
+
+
+def adjudication_table(dump_dir) -> List[dict]:
+    """committed 章=ready；处置章（判死/待人工）=needs_decision+候选动作菜单。
+
+    对标 storyctl `chapter check` 形态：一眼分清「能提交」与「要人定」。
+    判死族按**抬头**分：dump 里 ch10 类章 `status=ARC_CONFLICT` 而 `trace_status=FAIL`
+    （两行本不同源，§16 五批读数走抬头），needs_arc_replan 章给 arc_replan 出口。
+    裁决落账走 backend jobs（与开书确认闸同表同状态机），读数面本身零写。
+    """
+    d = Path(dump_dir)
+    rows = []
+    for r in metrics_from_dump(d).reads:
+        if r.bucket != "disposition":
+            rows.append({"chapter_no": r.chapter_no, "status": "ready",
+                         "trace_status": r.trace_status, "actions": []})
+            continue
+        head = "\n".join((d / f"ch{r.chapter_no:02d}.md")
+                         .read_text(encoding="utf-8", errors="replace").splitlines()[:4])
+        arc = "status=ARC_CONFLICT" in head or "needs_arc_replan" in head
+        rows.append({"chapter_no": r.chapter_no, "status": "needs_decision",
+                     "trace_status": "ARC_CONFLICT" if arc else r.trace_status,
+                     "actions": list(_ADJ_ACTIONS["ARC_CONFLICT"] if arc
+                                     else _ADJ_ACTIONS["_default"])})
+    return rows
+
+
 if __name__ == "__main__":
     import sys
 

@@ -177,6 +177,19 @@ B 档 7 条 = 维持「码批另申报」不变；C 档 6 条 = 全部搁置保�
 测试 `plot_engine/tests/test_reader_card.py` 抓到实 bug（facts 是 Dict 迭代出键非 Fact）。
 链验 **588**（587+1）/backend **10** 全绿。零尺零契约零门禁、不回写上游，与裁定形态一致；
 复现：`.venv/Scripts/python.exe -m plot_engine.readout sampling/ep1v39pv2c-r5 --reader-card`。
+
+**B5 兑现（2026-10-17，tff「1确认开」，码批收口）**：章闭环裁决状态机进确认闸面——
+`plot_engine/metrics.py:adjudication_table`（committed=ready / 处置章=needs_decision+候选动作
+`accept_current|arc_replan|contract_edit|manual_rewrite`，判死族按 **dump 抬头** `status=ARC_CONFLICT`/
+`needs_arc_replan` 认——r4/r5 实证 ch10 抬头 ARC 而 trace_status=FAIL 两行不同源，按 trace 分会把
+大纲债章错开改契约出口）；`backend/noveldb.py` 复用 jobs 表+确认闸同一 CAS 状态机
+（`CHAPTER_DECISION_TASK`/`decide_chapter` 裁决即确认一步入账/`latest_chapter_decision` 按章查账，零迁移）；
+`plot_engine/readout.py` 接 `--adjudicate [--project=N --db=…]`（菜单+已裁标记）与
+`--decide=章:动作 --project=N`（非法动作拒、project 不存在拒，非提示性）。
+真数据验证：r4 菜单=ready 6/needs_decision 4（ch02/07/10 ARC 出口 arc_replan、ch05 NH 出口 contract_edit）；
+临时库端到端=入账 job#1→菜单显示「已裁」→复裁取最新。E2/处置率判据线零改动、管线不消费此账（接线另批）。
+链验 **590**（+2）/backend **13**（+3）全绿。
+复现：`.venv/Scripts/python.exe -m plot_engine.readout sampling/ep1v39pv2c-r4 --adjudicate`。
 - A 档兑现指针：`docs/wp-f-a-docs-absorption.md` v0.1（commit 70eb7f6，roadmap v0.28）。
 
 *本文档为 WP-F 唯一交付件；未修改 `refrence_projects/` 任何文件、未动 plot_engine/、未改 roadmap、未做任何 git 操作。*

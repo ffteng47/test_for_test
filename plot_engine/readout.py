@@ -17,7 +17,8 @@ from pathlib import Path
 from typing import Dict, List
 
 from plot_engine.fixture_audit import revision_loop_chapters, unreachable_by_construction
-from plot_engine.metrics import metrics_from_dump, reader_card, thrill_table
+from plot_engine.metrics import (adjudication_table, metrics_from_dump, reader_card,
+                                 thrill_table)
 from plot_engine.models.contract import FIELD_EVENT_TYPES
 from plot_engine.prose_audit import audit, chapter_texts_from
 
@@ -184,6 +185,42 @@ def main(argv: List[str]) -> int:
         for r in runs:
             d = Path(r) / "dump" if (Path(r) / "dump").exists() else Path(r)
             print(reader_card(d, chapter=ch), "\n")
+        return 0
+    if "--adjudicate" in argv:          # 章闭环裁决菜单（WP-F B5 #107：派生参考面，不进 E2）
+        import json
+        from backend.noveldb import Db, open_db
+        from backend.domain import workspace_paths
+        pid = next((int(a.split("=", 1)[1]) for a in argv if a.startswith("--project")), None)
+        db = Db(open_db(next((a.split("=", 1)[1] for a in argv if a.startswith("--db"))
+                            or workspace_paths()["db"]))) if pid else None
+        for r in runs:
+            d = Path(r) / "dump" if (Path(r) / "dump").exists() else Path(r)
+            rows = adjudication_table(d)
+            need = [x for x in rows if x["status"] == "needs_decision"]
+            print(f"章闭环裁决菜单（{Path(r).name}｜ready {len(rows) - len(need)} / "
+                  f"needs_decision {len(need)}｜参考菜单不改判据，裁决落账走 jobs 表）")
+            for x in need:
+                done = db.latest_chapter_decision(pid, x["chapter_no"]) if db else None
+                mark = (f"已裁 job#{done['id']}={json.loads(done['payload'])['action']}"
+                        if done is not None and done["status"] == "confirmed" else
+                        " → " + "/".join(x["actions"]))
+                print(f"  ch{x['chapter_no']:02d} [{x['trace_status']}]{mark}")
+        return 0
+    dec = next((a.split("=", 1)[1] for a in argv if a.startswith("--decide")), None)
+    if dec:                             # 裁决一步入账（裁决即确认；B5 操作台写入面）
+        from backend.domain import workspace_paths
+        from backend.noveldb import Db, open_db
+        ch_s, action = dec.split(":", 1)
+        pid = int(next(a.split("=", 1)[1] for a in argv if a.startswith("--project")))
+        db = next((a.split("=", 1)[1] for a in argv if a.startswith("--db")),
+                  workspace_paths()["db"])
+        dbc = Db(open_db(db))
+        if dbc.con.execute('SELECT 1 FROM projects WHERE id=?', (pid,)).fetchone() is None:
+            print(f"裁决入账被拒：project {pid} 不存在（jobs 外键）——裁决必须挂在已开书项目上",
+                  file=sys.stderr)
+            return 2
+        jid = dbc.decide_chapter(pid, int(ch_s), action)
+        print(f"裁决入账 job#{jid} project={pid} ch{int(ch_s):02d} action={action}")
         return 0
     matrix_mode = "--matrix" in argv
     if matrix_mode:
