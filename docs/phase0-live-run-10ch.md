@@ -496,3 +496,11 @@ PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe -m plot_engine.review --live --c
 **授权记录（2026-10-17，tff「3B」）**：授权续跑 r4/r5 凑 ≥5 批复现验证，预算上限 $0.25；
 N=1..5 同命令同冻结面（尺 v3.9/patch-v2/闸 job#4/Writer 本地 qwen2.5:14b/抽取 cloud deepseek-flash），
 读数收口只按「五批是否一致」下结论，成本行逐批随 console.log 归档。
+
+**发射事故与纪律（2026-10-17，r4 首发射）**：驱动逻辑内嵌 `bash -c "…$r…"` 长命令，外层双引号把循环变量
+提前展开为空 ⇒ 输出目录错写为 `sampling/ep1v39pv2c-`，云端半批（约 5 章，估 $0.015–0.025，计入 $0.25 预算）
+真实计费后被停。残片整目录隔离为 `sampling/_badlaunch_132347`（未删除）；失误之处二：停进程前先把该半批
+console.log `rm -f` 了，违反「成本证据随 console.log 归档」纪律，精确 token 行只能按章数外推（本节即补记）。
+**固化教训：一切多步/循环发射一律落脚本文件再执行（本次起=`sampling/_rep5_driver.sh`，r4/r5 复用即读该文件），
+禁止在 `bash -c`/命令行内嵌引号里写变量展开；清理动作先隔离（rename）后处置，日志与产物同批隔离。**
+重发的 r4/r5 与 r1–3 逐字同参，冻结面未受影响。
