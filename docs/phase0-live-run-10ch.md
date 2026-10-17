@@ -493,3 +493,6 @@ PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe -m plot_engine.review --live --c
 归档 `sampling/ep1v39pv2c-r1/ r2/ r3/`（各含 ch01–10.md、run.log、_junk.json、state/{state.db,event.db}）
 + 同名 `.console.log`。**注意：本组命令会真实调用云端计费端点（密钥走 ALEXANDRIA_CLOUD_API_KEY），
 非经 tff 授权不得复跑。**
+**授权记录（2026-10-17，tff「3B」）**：授权续跑 r4/r5 凑 ≥5 批复现验证，预算上限 $0.25；
+N=1..5 同命令同冻结面（尺 v3.9/patch-v2/闸 job#4/Writer 本地 qwen2.5:14b/抽取 cloud deepseek-flash），
+读数收口只按「五批是否一致」下结论，成本行逐批随 console.log 归档。
