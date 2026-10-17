@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Dict, List
 
 from plot_engine.fixture_audit import revision_loop_chapters, unreachable_by_construction
-from plot_engine.metrics import metrics_from_dump, thrill_table
+from plot_engine.metrics import metrics_from_dump, reader_card, thrill_table
 from plot_engine.models.contract import FIELD_EVENT_TYPES
 from plot_engine.prose_audit import audit, chapter_texts_from
 
@@ -178,6 +178,12 @@ def main(argv: List[str]) -> int:
         for r in runs:
             d = Path(r) / "dump" if (Path(r) / "dump").exists() else Path(r)
             print(thrill_table(d, fixture=fixture), "\n")
+        return 0
+    if "--reader-card" in argv:        # 读者已知阅读卡（WP-F B2 #105：纯派生离线，不进闸不写账）
+        ch = next((int(a.split("=", 1)[1]) for a in argv if a.startswith("--ch")), 0)
+        for r in runs:
+            d = Path(r) / "dump" if (Path(r) / "dump").exists() else Path(r)
+            print(reader_card(d, chapter=ch), "\n")
         return 0
     matrix_mode = "--matrix" in argv
     if matrix_mode:

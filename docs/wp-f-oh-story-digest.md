@@ -168,6 +168,15 @@ B 档 7 条 = 维持「码批另申报」不变；C 档 6 条 = 全部搁置保�
   - B4 写前门物完备性机检：① 试点确认需要「进场无源/回卷」写前防护时提醒（新判定面，独立拍板）；
   - B3 真相候选动作槽：Revision 面 needs_arc_replan 存量增长（ch10 标本族扩大）时提醒；
   - B7 榜单/拆文离线管道：R8 商业线要求消费拆文资产时提醒（与 C1 联动，另叠加反爬/版权风险再申报）。
+
+**B2 兑现（2026-10-17，码批收口）**：`plot_engine/metrics.py` 落 `render_reader_card`/`reader_card`
+（reader_ledger→截至章纯派生投影，账外 fact 一律记「未感知」，卡面自标「不进闸」），
+`plot_engine/readout.py` 接 `--reader-card [--ch=N]`（N>0 走 replay，replay 不可得直接抛不兜假账）。
+验证读数：`sampling/ep1v39pv2c-r5` 终态卡=已知1/示意9/未感知2（12 fact 全投影）；
+`sampling/wpe50ch --ch=25` replay 中点卡同分布（截至 ch23=最后 committed 章，投影随快照走）。
+测试 `plot_engine/tests/test_reader_card.py` 抓到实 bug（facts 是 Dict 迭代出键非 Fact）。
+链验 **588**（587+1）/backend **10** 全绿。零尺零契约零门禁、不回写上游，与裁定形态一致；
+复现：`.venv/Scripts/python.exe -m plot_engine.readout sampling/ep1v39pv2c-r5 --reader-card`。
 - A 档兑现指针：`docs/wp-f-a-docs-absorption.md` v0.1（commit 70eb7f6，roadmap v0.28）。
 
 *本文档为 WP-F 唯一交付件；未修改 `refrence_projects/` 任何文件、未动 plot_engine/、未改 roadmap、未做任何 git 操作。*

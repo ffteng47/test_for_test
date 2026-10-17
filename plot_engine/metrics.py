@@ -245,6 +245,42 @@ def thrill_table(dump_dir, fixture: str = "experiment_10ch") -> str:
                       head, *rows, "", *agg])
 
 
+# ---- 读者已知阅读卡（WP-F B2 #105，2026-10-17：纯派生、离线、只读，不进判据）----
+
+_READER_ZH = {"knows": "已知", "hinted": "示意", "deceived": "误导", "unaware": "未感知"}
+
+
+def render_reader_card(state, story_id: str) -> str:
+    """把 reader_ledger 投影成阅读卡；不在账的 fact 一律标「未感知」——没记≠知道。"""
+    led = {e.fact_id: e for e in state.reader_ledger}
+    rows, cnt = [], {}
+    for f in sorted(state.facts.values(), key=lambda f: f.fact_id):
+        e = led.get(f.fact_id)
+        st = e.reader_state if e else "unaware"
+        cnt[st] = cnt.get(st, 0) + 1
+        rows.append(f"| {f.fact_id} | {_READER_ZH[st]} | "
+                    f"{e.reader_strength if e else '-'} | "
+                    f"{f'{e.established_at_chapter}→{e.last_updated_chapter}' if e else '-'} | "
+                    f"{f.reveal_stage} | {f.proposition} |")
+    agg = " ".join(f"{_READER_ZH[k]}={cnt[k]}" for k in ("knows", "hinted", "deceived", "unaware") if cnt.get(k))
+    head = ("| fact | 读者态 | 强度(×1000) | 建立→更新章 | reveal_stage | 命题 |\n|---|---|---|---|---|---|")
+    return "\n".join([f"读者已知阅读卡（story={story_id}｜截至 ch{state.chapter_no}｜纯派生只读，不进闸）",
+                      head, *rows, "", f"分布：{agg or '无'}｜账外 fact 记「未感知」（reader_ledger 无条目）"])
+
+
+def reader_card(dump_dir, chapter: int = 0, story_id: str = "s1") -> str:
+    """从归档 state/ 重建截至章 N 的状态（0=终态快照）；replay 不可得直接抛（读数不兜假账）。"""
+    d = Path(dump_dir) / "state"
+    from plot_engine.eventlog import EventLog
+    from plot_engine.reducer import Reducer
+    from plot_engine.replay import replay_to_chapter
+    from plot_engine.store import StateStore
+    store, log, reducer = StateStore(str(d / "state.db")), EventLog(str(d / "event.db")), Reducer()
+    if chapter:
+        return render_reader_card(replay_to_chapter(store, log, reducer, story_id, chapter), story_id)
+    return render_reader_card(store.load_latest(story_id).state, story_id)
+
+
 if __name__ == "__main__":
     import sys
 
