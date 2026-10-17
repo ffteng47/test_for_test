@@ -44,7 +44,7 @@ def verify(log):
             continue
         s = ln.strip()
         m = re.match(r"^[ABC]\|", s)
-        if not m or cur is None or len(s) >= 160:
+        if not m or cur is None or len(s) == 160:      # ==160=旧 pilot f[:160] 截断伪影；>160 的完整长行（v0.4 回填）保留
             continue
         parts = s.split("|")
         if len(parts) < 3:
@@ -60,7 +60,8 @@ def verify(log):
 
 
 for log in (Path(__file__).parent / "level3-pilot.console.log",
-            Path(__file__).parent / "level3-pilot-v03.console.log"):
+            Path(__file__).parent / "level3-pilot-v03.console.log",
+            Path(__file__).parent / "level3-pilot-v04.console.log"):
     print(f"\n== {log.name} ==")
     agg = verify(log)
     tot = {}
