@@ -263,3 +263,31 @@ class TestExtractorV22:
         # ②退役核验：C 域谓词白名单只剩 key_count/key_custody。
         cands = run_light(1, ["今晚藏宝阁由赵六值守。", "他想起那晚其实是张三守夜。"])
         assert all("night_watch" not in c.detail for c in cands if c.family == "C")
+
+
+class TestExtractorV23:
+    """v2.3 小批（tff 裁定＝稽核 F1+F3+F4 先行，F2 挂中批）。每规则一条。"""
+
+    def test_f1_memory_line_not_departure(self):
+        # F1 作用域：行级拒绝从在场扩到到达/离开（稽核 ch40 L17「他记得自己离开时…」）。
+        frames = build_scene_index(1, ["书房内张三坐在案前，翻着旧文档。",
+                                       "他记得自己离开时，门是盖得严丝合缝的。"])
+        assert all("张三" not in fr.departed for fr in frames)
+
+    def test_f1_negated_departure_not_counted(self):
+        # F1 否定守卫（稽核 ch40 L2「然而他并未离开藏宝阁一步」）。
+        frames = build_scene_index(1, ["藏宝阁内赵六坐在木椅上。",
+                                       "然而他并未离开藏宝阁一步。"])
+        assert all(not fr.departed for fr in frames)
+
+    def test_f3_come_arrival_words(self):
+        # F3 到达词表补「前来/赶来/过来」（稽核 ch26 L6「赵六匆匆前来」）。
+        frames = build_scene_index(1, ["藏宝阁内只剩王五一人守着灯火。",
+                                       "赵六匆匆前来，两人对坐无言。"])
+        assert any("赵六" in fr.arrived for fr in frames)
+
+    def test_f4_pointed_hearsay_not_presence(self):
+        # F4 转述漏网（稽核 ch15 L10「…那就是李四在山下与一个陌生人会饮」）。
+        frames = build_scene_index(1, ["书房内张三翻查着卷宗。",
+                                       "他发现了新的线索，那就是李四在山下与一个陌生人会饮。"])
+        assert all("李四" not in fr.present for fr in frames)
