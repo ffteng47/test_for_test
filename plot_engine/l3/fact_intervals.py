@@ -24,10 +24,15 @@ _COUNT_DEIXIS = "另这那每各其"          # 紧跟数词前=逐指代称，�
 _COUNT_LOSS_RE = re.compile(r"(消失|失踪|丢失|丢了|少|偷|被拿走)了?\s*$")
 _CUSTODY_VERB = re.compile(r"(保管|持有|掌握|拿着|在[^。]{0,4}手里|随身携带)")
 _WATCH_RE = re.compile(r"(守夜|值守|守阁|值夜)")
+# v2.1 修复②：值守处于询问语境=问事实不是陈述事实（ch42「值夜班的是谁吗？」、
+# ch32「你昨晚值守藏宝阁？」被抽成在场 predicate=试探问句入配对，修复②只堵了在场侧）。
+_WATCH_ASK_RE = re.compile(r"(是谁|谁的|哪几|谁值|谁在)|(值守|守夜|值夜|守阁)[^。？]*[？?]")
 _SPEECH_RE = re.compile(r"(说|道|问|答|低声|笑道|喊道|开口|回道|答道|问道)")
 _SPEC_RE = re.compile(r"(觉得|感觉|似乎|好像|心中|暗想|琢磨|怀疑|隐约|猜测|想来)")
-# v2 修复④「陈述时点字段」：事后/回忆语境（非当晚在场）
-_AFTERMATH_RE = re.compile(r"(事后|后来|之前|先前|早前|上次|当初|曾经|回忆|想起|记得|那晚|昨晚|那天)")
+# v2 修复④「陈述时点字段」：事后/回忆语境（非当晚在场）；v2.1③ 补白日在场词
+# （ch45 L17「阳光透过窗户…并肩站在门口」=次日白日在场被当值守配对，词表缺口）。
+_AFTERMATH_RE = re.compile(r"(事后|后来|之前|先前|早前|上次|当初|曾经|回忆|想起|记得|那晚|昨晚|那天"
+                           r"|阳光|白日|白天|清晨|早晨|上午|中午|午后)")
 
 
 def _epistemic(line: str) -> str:
@@ -82,7 +87,7 @@ def extract_statements(chapter: int, body: Sequence[str],
                 out.append(Statement(chapter=chapter, predicate="key_custody",
                                      value="+".join(names + extra), raw=ln.strip()[:60],
                                      line_start=i, line_end=i, epistemic=ep, tense=tn))
-        if _WATCH_RE.search(ln):
+        if _WATCH_RE.search(ln) and not _WATCH_ASK_RE.search(ln):
             names = _names_in(ln, entities)
             if names:
                 out.append(Statement(chapter=chapter, predicate="night_watch",

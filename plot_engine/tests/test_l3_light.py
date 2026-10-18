@@ -214,3 +214,27 @@ class TestSceneReplay:
         e = find_scene_replay(50, strip_comments(body)[0], build_scene_index(50, body))
         assert [c.evidence_refs for c in e if c.family == "E"] == [["1-8", "9-20", "22-30"]], \
             "ch50 三段重演（001-008/009-021/022-030）校准未命中"
+
+
+class TestExtractorV21:
+    """v2.1 三笔残余漏洞（judge-v1.1 预核呈堂，tff 2026-10-18「程序漏洞要修补」）。"""
+
+    def test_seek_target_not_presence(self):
+        # ①ch27 型：叙述「去找X」=移动意图目标提及，被找者不在本场景在场。
+        body = ["藏宝阁内，张三翻找记录，王五则去找李四询问。"]
+        frames = build_scene_index(1, body)
+        assert "李四" not in frames[0].present
+        assert "张三" in frames[0].present and "王五" in frames[0].present
+
+    def test_watch_question_not_statement(self):
+        # ②ch42/ch32 型：值守询问句不进 night_watch predicate，陈述句照抽。
+        assert extract_statements(1, ["张三问：「昨晚在这里值夜班的是谁吗？」"]) == []
+        assert extract_statements(1, ["「你昨晚值守藏宝阁？」王五摇头。"]) == []
+        yes = extract_statements(1, ["赵六说：「我昨晚值夜班的时候，一切如常。」"])
+        assert any(s.predicate == "night_watch" for s in yes)
+
+    def test_day_scene_watch_cross_tense_paired_out(self):
+        # ③ch45 型：深夜值守陈述 ↔ 次日白日在场行（阳光词），tense 不同不配对。
+        body = ["赵六在藏宝阁深夜守夜，月光洒在地板上。",
+                "阳光透过窗户，张三和赵六并肩站在门口，守阁的差事无人再提。"]
+        assert find_statement_conflicts(extract_statements(1, body)) == []

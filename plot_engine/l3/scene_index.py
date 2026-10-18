@@ -31,6 +31,9 @@ _COMMENT_RE = re.compile(r"^\s*<!--.*-->\s*$")
 # 抽取层 v2 修复①：剥离引号内台词内容——「台词提及行不造在场场景帧」。
 # 角色嘴里提到某人/某地（如 ch50「李四那晚却在山下与外客饮酒」）≠ 叙述层真在场/真切换地点。
 _QUOTED_RE = re.compile(r"[「『“‘].*?[」』”’]", re.S)
+# v2.1 修复①姊妹面：叙述行「去找X/去寻X/询问X」=移动意图的目标提及，被找者不在现场
+# （ch27-A「王五则去找李四询问」=去找型造帧，与台词提及同族、行级语用未分）。
+_SEEK_TARGET_RE = re.compile(r"(去找|去寻|去找寻|询问)[^，。；]{0,4}(张三|王五|李四|赵六)")
 
 
 def _narration(line: str) -> str:
@@ -106,6 +109,7 @@ def build_scene_index(chapter: int, body: Sequence[str],
         present_line: dict = {}
         for g, ln in seg:
             n = _narration(ln)  # v2 修复①②：在场=叙述行口径，台词提及不算在场
+            n = _SEEK_TARGET_RE.sub("", n)  # v2.1①：「去找X」目标不算本场景在场
             for e in entities:
                 if e in n:
                     present_line.setdefault(e, g)
