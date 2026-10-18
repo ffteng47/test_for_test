@@ -14,24 +14,28 @@ from plot_engine.l3.models import ConsistencyCandidate, SceneFrame
 
 
 def find_entry_without_source(frames: Sequence[SceneFrame]) -> List[ConsistencyCandidate]:
-    """A：实体在非章首场景首次在场，且此前无到达记录、此前各场景均未在场。"""
+    """A：实体在非开场首行首次在场（叙述行口径），且此前无到达记录。
+
+    v2 修复②：章首豁免收窄到「场景0 首行在场=开场设定」，实体在场景0 内后段凭空
+    出现（ch50 锚①赵六独守→第9行张三在场）照算 A；在场取首次叙述行号=证据行。"""
     out: List[ConsistencyCandidate] = []
-    seen: Dict[str, int] = {}
+    seen: set = set()
     arrived_before: Dict[str, int] = {}
     for fr in frames:
         for e in fr.arrived:
             arrived_before.setdefault(e, fr.scene_seq)
-        for e in fr.present:
-            if fr.scene_seq == 0:
-                seen.setdefault(e, fr.scene_seq)  # 章首豁免：开场在场=场景设定
+        for e, pline in sorted(fr.present_line.items(), key=lambda kv: kv[1]):
+            if e in seen:
                 continue
-            if e not in seen and e not in arrived_before:
+            seen.add(e)
+            if fr.scene_seq == 0 and pline == fr.line_start:
+                continue  # 章首豁免：开场首行在场=场景设定
+            if e not in arrived_before:
                 out.append(ConsistencyCandidate(
                     family="A", chapter=fr.chapter, rule_id="entry_without_source",
-                    evidence_refs=[f"{fr.line_start}-{fr.line_end}"],
-                    detail=f"{e} 在场景{fr.scene_seq}（{fr.location_text}）首次在场，"
-                           f"此前无到达叙述"))
-            seen.setdefault(e, fr.scene_seq)
+                    evidence_refs=[f"{pline}-{pline}"],
+                    detail=f"{e} 在场景{fr.scene_seq}（{fr.location_text}）第{pline}行"
+                           f"首次在场，此前无到达叙述"))
     return out
 
 

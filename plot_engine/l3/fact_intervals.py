@@ -1,7 +1,7 @@
 ﻿"""有效区间事实视图（第一层，纯派生）：章正文 → 认识论分层陈述 → 跨章区间投影。
 
 C 族结构化抽取=把"找对子"从模型手里拿走（丁批归因鉴别实验本体）：
-- 陈述抽取=确定性模式（数量/保管/值守三 predicate 白名单=尺面戳 l3-v0.1）；
+- 陈述抽取=确定性模式（数量/保管/值守三 predicate 白名单=尺面戳 l3-v0.2）；
 - 认识论分层（丁批 C 族口径）：narrator=叙述者事实 / dialogue=角色台词 / speculation=角色猜测；
 - 区间投影（InkOS applyFactOps 互证）：只有 narrator 陈述建权威区间，expire 不删行；
   dialogue/speculation 是 claim，不顶替权威事实（角色可以说谎，世界状态不被台词改写）。
@@ -16,12 +16,18 @@ from plot_engine.l3.scene_index import DEFAULT_ENTITIES, strip_comments
 
 _NUM = {"一": "1", "二": "2", "两": "2", "三": "3", "四": "4", "几": "?"}
 
-_COUNT_RE = re.compile(r"钥匙[^。，]{0,12}(?:一共|总共|只有|仅有|共有|正好)?[^。，]{0,4}([一二两三四几])把"
-                       r"|([一二两三四几])把钥匙")
+# v2 修复③「代称不抽数」：key_count 仍认总数（含合法裸形「钥匙…N把」），但逐指代称
+# （另一把/这把）与丢失语境（失踪了一把钥匙）不算总数断言，匹配后按数词前窗过滤。
+_COUNT_TOPIC_RE = re.compile(r"钥匙[^。，]{0,10}?([一二两三四几])把")
+_COUNT_KEY_RE = re.compile(r"([一二两三四几])把钥匙")
+_COUNT_DEIXIS = "另这那每各其"          # 紧跟数词前=逐指代称，非总数
+_COUNT_LOSS_RE = re.compile(r"(消失|失踪|丢失|丢了|少|偷|被拿走)了?\s*$")
 _CUSTODY_VERB = re.compile(r"(保管|持有|掌握|拿着|在[^。]{0,4}手里|随身携带)")
 _WATCH_RE = re.compile(r"(守夜|值守|守阁|值夜)")
 _SPEECH_RE = re.compile(r"(说|道|问|答|低声|笑道|喊道|开口|回道|答道|问道)")
 _SPEC_RE = re.compile(r"(觉得|感觉|似乎|好像|心中|暗想|琢磨|怀疑|隐约|猜测|想来)")
+# v2 修复④「陈述时点字段」：事后/回忆语境（非当晚在场）
+_AFTERMATH_RE = re.compile(r"(事后|后来|之前|先前|早前|上次|当初|曾经|回忆|想起|记得|那晚|昨晚|那天)")
 
 
 def _epistemic(line: str) -> str:
@@ -33,8 +39,25 @@ def _epistemic(line: str) -> str:
     return "narrator"
 
 
+def _tense(line: str) -> str:
+    return "aftermath" if _AFTERMATH_RE.search(line) else "on_scene"
+
+
 def _names_in(line: str, entities: Sequence[str]) -> List[str]:
     return sorted({e for e in entities if e in line})
+
+
+def _count_value(ln: str) -> Optional[str]:
+    """key_count 规范化取值；逐指代称/丢失语境不抽数（v2 修复③）。"""
+    for m in _COUNT_TOPIC_RE.finditer(ln):
+        if ln[max(0, m.start(1) - 1):m.start(1)] not in _COUNT_DEIXIS \
+                and not _COUNT_LOSS_RE.search(ln[:m.start(1)][-4:]):
+            return _NUM[m.group(1)]
+    for m in _COUNT_KEY_RE.finditer(ln):
+        if ln[max(0, m.start(1) - 1):m.start(1)] not in _COUNT_DEIXIS \
+                and not _COUNT_LOSS_RE.search(ln[:m.start(1)][-4:]):
+            return _NUM[m.group(1)]
+    return None
 
 
 def extract_statements(chapter: int, body: Sequence[str],
@@ -46,25 +69,25 @@ def extract_statements(chapter: int, body: Sequence[str],
         if "钥匙" not in ln and not _WATCH_RE.search(ln):
             continue
         ep = _epistemic(ln)
-        m = _COUNT_RE.search(ln)
-        if m:
-            n = _NUM[m.group(1) or m.group(2)]
+        tn = _tense(ln)
+        n = _count_value(ln)
+        if n:
             out.append(Statement(chapter=chapter, predicate="key_count",
                                  value=f"{n}把", raw=ln.strip()[:60],
-                                 line_start=i, line_end=i, epistemic=ep))
+                                 line_start=i, line_end=i, epistemic=ep, tense=tn))
         if "钥匙" in ln and _CUSTODY_VERB.search(ln):
             names = _names_in(ln, entities)
             extra = [w for w in ("长老", "阁主", "守阁人", "守夜人", "门主", "宗主", "高层") if w in ln]
             if names or extra:
                 out.append(Statement(chapter=chapter, predicate="key_custody",
                                      value="+".join(names + extra), raw=ln.strip()[:60],
-                                     line_start=i, line_end=i, epistemic=ep))
+                                     line_start=i, line_end=i, epistemic=ep, tense=tn))
         if _WATCH_RE.search(ln):
             names = _names_in(ln, entities)
             if names:
                 out.append(Statement(chapter=chapter, predicate="night_watch",
                                      value="+".join(names), raw=ln.strip()[:60],
-                                     line_start=i, line_end=i, epistemic=ep))
+                                     line_start=i, line_end=i, epistemic=ep, tense=tn))
     return out
 
 

@@ -11,7 +11,7 @@ from typing import List, Sequence
 
 from plot_engine.l3.models import SceneFrame
 
-# ---- 词表（尺面戳 l3-v0.1：变更=读数变更，须带戳） ----
+# ---- 词表（尺面戳 l3-v0.2：变更=读数变更，须带戳） ----
 DEFAULT_ENTITIES = ["张三", "王五", "李四", "赵六"]
 DEFAULT_LOCATIONS = ["藏宝阁", "书房", "后院", "山下", "门主府", "掌门府",
                      "走廊", "阁楼", "住处"]
@@ -28,6 +28,14 @@ DEPART_RE = re.compile(r"(转身离开|离开了?|离去|先走了|告辞|告别
 DEPART_INTENT_RE = re.compile(r"(准备离开|打算离开|想要离开|决定离开|计划离开|准备前往|打算前往|决定前往)")
 
 _COMMENT_RE = re.compile(r"^\s*<!--.*-->\s*$")
+# 抽取层 v2 修复①：剥离引号内台词内容——「台词提及行不造在场场景帧」。
+# 角色嘴里提到某人/某地（如 ch50「李四那晚却在山下与外客饮酒」）≠ 叙述层真在场/真切换地点。
+_QUOTED_RE = re.compile(r"[「『“‘].*?[」』”’]", re.S)
+
+
+def _narration(line: str) -> str:
+    """去掉引号内台词后的叙述部分（在场/地点判定只认叙述行）。"""
+    return _QUOTED_RE.sub("", line)
 
 
 def strip_comments(body: Sequence[str]) -> List[str]:
@@ -73,13 +81,14 @@ def build_scene_index(chapter: int, body: Sequence[str],
         return ""
 
     for i, ln in enumerate(lines, 1):
-        hit = _loc_of(ln)
+        narr = _narration(ln)
+        hit = _loc_of(narr)
         if i == 1:
             cur_loc = hit or "-"  # 首行初始化，不产幽灵空帧（章首豁免的命根）
         is_new = False
         if hit and hit != cur_loc:
             is_new = True
-        elif any(t in ln for t in TIME_MARKERS) and frames and i > cur_start:
+        elif any(t in narr for t in TIME_MARKERS) and frames and i > cur_start:
             is_new = True  # 时间标记开新场（地点沿用）
         if is_new:
             frames.append(SceneFrame(chapter=chapter, scene_seq=len(frames),
@@ -93,10 +102,17 @@ def build_scene_index(chapter: int, body: Sequence[str],
 
     last_entity = ""
     for fr in frames:
-        seg = lines[fr.line_start - 1:fr.line_end]
-        fr.present = sorted({e for ln in seg for e in entities if e in ln})
+        seg = list(enumerate(lines[fr.line_start - 1:fr.line_end], fr.line_start))
+        present_line: dict = {}
+        for g, ln in seg:
+            n = _narration(ln)  # v2 修复①②：在场=叙述行口径，台词提及不算在场
+            for e in entities:
+                if e in n:
+                    present_line.setdefault(e, g)
+        fr.present = sorted(present_line)
+        fr.present_line = present_line
         arr, dep = set(), set()
-        for ln in seg:
+        for _, ln in seg:
             for m in ARRIVE_RE.finditer(ln):
                 s = _subject_near(ln, m.span(), entities, last_entity)
                 if s:

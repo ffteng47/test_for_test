@@ -143,3 +143,51 @@ class TestCh50Regression:
     def test_no_dup_false_fire(self):
         cands = run_light(50, self._body())
         assert not [c for c in cands if c.family == "D"]
+
+
+class TestExtractorV2:
+    """抽取层 v2 四条修复（tff 2026-10-18 立项规格）。"""
+
+    def test_dialogue_mention_not_presence(self):
+        # 修复①：台词提及行不造在场帧——李四型提及不算在场，不产 A 候选。
+        body = ["藏宝阁内，赵六独坐。", "张三皱眉：「可是李四那晚却在山下与外客饮酒？」"]
+        frames = build_scene_index(1, body)
+        assert all("李四" not in fr.present for fr in frames)
+        assert not [c for c in find_entry_without_source(frames) if "李四" in c.detail]
+
+    def test_mid_scene_entry_backfilled(self):
+        # 修复②：章首豁免收窄到首行；场景内后段凭空在场（张三型）照算 A，证据=在场行。
+        body = ["藏宝阁内只剩赵六一人，他守着灯火。", "烛影摇动。",
+                "张三和赵六坐在藏宝阁内，四周静悄悄的。"]
+        cands = find_entry_without_source(build_scene_index(1, body))
+        zs = [c for c in cands if "张三" in c.detail]
+        assert len(zs) == 1 and zs[0].evidence_refs == ["3-3"]
+
+    def test_deixis_and_loss_not_counted(self):
+        # 修复③：代称/丢失不抽数；合法裸形「钥匙…N把」仍抽。
+        assert extract_statements(1, ["张三望着另一把钥匙，没有说话。"]) == []
+        assert extract_statements(1, ["库房里失踪了一把钥匙。"]) == []
+        ks = extract_statements(1, ["藏宝阁的钥匙一共有两把。"])
+        assert any(s.predicate == "key_count" and s.value == "2把" for s in ks)
+
+    def test_statement_has_tense_field(self):
+        # 修复④：陈述时点字段（当晚=on_scene / 事后追述=aftermath）。
+        on = extract_statements(1, ["今晚藏宝阁由赵六值守。"])
+        off = extract_statements(1, ["他想起那晚藏宝阁由赵六值守。"])
+        assert on[0].tense == "on_scene" and off[0].tense == "aftermath"
+
+    def test_watch_cross_tense_not_paired(self):
+        # 修复②+④：值守跨时点（当晚 vs 事后）属不同参照夜，不可同真冲突。
+        body = ["今晚藏宝阁由赵六值守。", "他想起那晚藏宝阁由张三值守。"]
+        assert find_statement_conflicts(extract_statements(1, body)) == []
+        same = ["今晚藏宝阁由赵六值守。", "当晚其实是张三守夜。"]
+        assert find_statement_conflicts(extract_statements(1, same)) != []
+
+    @pytest.mark.skipif(not CH50.exists(), reason="wpe50ch 语料不在本机")
+    def test_ch50_anchor1_backfill_li_si_gone(self):
+        from plot_engine.metrics import _section_body
+        body = _section_body(CH50.read_text(encoding="utf-8", errors="replace").splitlines(), "Draft")
+        cands = run_light(50, body)
+        a = [c for c in cands if c.family == "A"]
+        assert any("张三" in c.detail for c in a), "锚①张三未回补"
+        assert not any("李四" in c.detail for c in a), "李四提及造帧工件未消除"

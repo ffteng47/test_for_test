@@ -17,7 +17,7 @@ from plot_engine.l3.temporal_checks import (find_entry_without_source,
                                             find_space_rewind)
 from plot_engine.l3.duplication import find_dup_runs
 
-DEEP_SCENE_SWITCH_THRESHOLD = 6  # 深档确定性代理：章内场景切换数超阈（尺面戳 l3-v0.1）
+DEEP_SCENE_SWITCH_THRESHOLD = 6  # 深档确定性代理：章内场景切换数超阈（尺面戳 l3-v0.2）
 
 
 def run_light(chapter: int, body: Sequence[str],

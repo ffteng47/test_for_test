@@ -5,7 +5,7 @@
 """
 from __future__ import annotations
 
-from typing import List, Literal, Optional
+from typing import Dict, List, Literal, Optional
 
 from pydantic import BaseModel
 
@@ -21,6 +21,8 @@ class SceneFrame(BaseModel):
     present: List[str] = []      # 本场景行内提及的白名单实体
     arrived: List[str] = []      # 本场景有到达叙述的实体
     departed: List[str] = []     # 本场景有硬离开叙述的实体（意图词不算）
+    # 抽取层 v2 修复①②：present/到达/离开=叙述行口径；present_line=实体首次在场的叙述行号
+    present_line: Dict[str, int] = {}
 
 
 class Statement(BaseModel):
@@ -33,6 +35,7 @@ class Statement(BaseModel):
     line_start: int
     line_end: int
     epistemic: Literal["narrator", "dialogue", "speculation"]
+    tense: Literal["on_scene", "aftermath"] = "on_scene"  # v2 修复④：事后/回忆=aftermath
 
 
 class IntervalFact(BaseModel):
