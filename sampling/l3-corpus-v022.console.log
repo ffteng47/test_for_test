@@ -1,0 +1,137 @@
+ch01 场景=1 候选=0 -
+ch02 场景=1 候选=1 C1
+    C|statement_value_conflict|4-4;22-22|key_count: 「1把」(dialogue) ↔ 「2把」(dialogue) [dialogue_dialogue]
+ch03 场景=1 候选=5 A1/C4
+    A|entry_without_source|3-3|赵六 在场景0（藏宝阁）第3行首次在场，此前无到达叙述
+    C|statement_value_conflict|23-23;32-32|key_count: 「2把」(speculation) ↔ 「1把」(speculation) [speculation_speculation]
+    C|statement_value_conflict|24-24;32-32|key_count: 「2把」(dialogue) ↔ 「1把」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|24-24;31-31|key_custody: 「赵六+宗主」(dialogue) ↔ 「张三+赵六」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|32-32;33-33|key_count: 「1把」(speculation) ↔ 「2把」(speculation) [speculation_speculation]
+ch04 场景=1 候选=2 A2
+    A|entry_without_source|5-5|王五 在场景0（藏宝阁）第5行首次在场，此前无到达叙述
+    A|entry_without_source|6-6|李四 在场景0（藏宝阁）第6行首次在场，此前无到达叙述
+ch05 场景=6 候选=0 -
+ch06 场景=2 候选=0 -
+ch07 场景=5 候选=1 A1
+    A|entry_without_source|8-8|王五 在场景2（藏宝阁）第8行首次在场，此前无到达叙述
+ch08 场景=10 候选=2 A2 深档信号
+    A|entry_without_source|6-6|张三 在场景4（藏宝阁）第6行首次在场，此前无到达叙述
+    A|entry_without_source|10-10|王五 在场景5（书房）第10行首次在场，此前无到达叙述
+ch09 场景=1 候选=6 A2/C4
+    A|entry_without_source|10-10|王五 在场景0（藏宝阁）第10行首次在场，此前无到达叙述
+    A|entry_without_source|10-10|李四 在场景0（藏宝阁）第10行首次在场，此前无到达叙述
+    C|statement_value_conflict|4-4;14-14|key_count: 「2把」(speculation) ↔ 「1把」(speculation) [speculation_speculation]
+    C|statement_value_conflict|4-4;13-13|key_custody: 「赵六」(speculation) ↔ 「张三+李四+赵六」(narrator) [narrator_speculation]
+    C|statement_value_conflict|13-13;14-14|key_count: 「2把」(narrator) ↔ 「1把」(speculation) [narrator_speculation]
+    C|statement_value_conflict|14-14;19-19|key_count: 「1把」(speculation) ↔ 「2把」(narrator) [narrator_speculation]
+ch10 场景=3 候选=1 A1
+    A|entry_without_source|28-28|王五 在场景2（藏宝阁）第28行首次在场，此前无到达叙述
+ch11 场景=1 候选=1 A1
+    A|entry_without_source|3-3|张三 在场景0（藏宝阁）第3行首次在场，此前无到达叙述
+ch12 场景=1 候选=2 A1/C1
+    A|entry_without_source|4-4|张三 在场景0（藏宝阁）第4行首次在场，此前无到达叙述
+    C|statement_value_conflict|6-6;21-21|key_custody: 「张三+赵六+守阁人」(dialogue) ↔ 「阁主+守阁人」(dialogue) [dialogue_dialogue]
+ch13 场景=2 候选=5 A2/C3
+    A|entry_without_source|10-10|张三 在场景1（藏宝阁）第10行首次在场，此前无到达叙述
+    A|entry_without_source|11-11|赵六 在场景1（藏宝阁）第11行首次在场，此前无到达叙述
+    C|statement_value_conflict|3-3;8-8|key_custody: 「张三+赵六+长老」(speculation) ↔ 「长老+守夜人」(speculation) [speculation_speculation]
+    C|statement_value_conflict|3-3;17-17|key_custody: 「张三+赵六+长老」(speculation) ↔ 「赵六+守阁人+宗主」(narrator) [narrator_speculation]
+    C|statement_value_conflict|8-8;17-17|key_custody: 「长老+守夜人」(speculation) ↔ 「赵六+守阁人+宗主」(narrator) [narrator_speculation]
+ch14 场景=2 候选=0 -
+ch15 场景=8 候选=2 A2 深档信号
+    A|entry_without_source|10-10|张三 在场景5（书房）第10行首次在场，此前无到达叙述
+    A|entry_without_source|10-10|李四 在场景5（书房）第10行首次在场，此前无到达叙述
+ch16 场景=5 候选=0 -
+ch17 场景=1 候选=1 C1
+    C|statement_value_conflict|12-12;13-13|key_count: 「?把」(narrator) ↔ 「2把」(dialogue) [dialogue_narrator]
+ch18 场景=1 候选=1 A1
+    A|entry_without_source|5-5|王五 在场景0（藏宝阁）第5行首次在场，此前无到达叙述
+ch19 场景=5 候选=0 -
+ch20 场景=3 候选=0 -
+ch21 场景=1 候选=0 -
+ch22 场景=1 候选=0 -
+ch23 场景=1 候选=4 A2/C2
+    A|entry_without_source|3-3|王五 在场景0（藏宝阁）第3行首次在场，此前无到达叙述
+    A|entry_without_source|3-3|赵六 在场景0（藏宝阁）第3行首次在场，此前无到达叙述
+    C|statement_value_conflict|3-3;24-24|key_count: 「1把」(dialogue) ↔ 「2把」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|4-4;24-24|key_count: 「1把」(speculation) ↔ 「2把」(speculation) [speculation_speculation]
+ch24 场景=1 候选=1 A1
+    A|entry_without_source|2-2|王五 在场景0（藏宝阁）第2行首次在场，此前无到达叙述
+ch25 场景=3 候选=1 A1
+    A|entry_without_source|8-8|张三 在场景2（藏宝阁）第8行首次在场，此前无到达叙述
+ch26 场景=1 候选=1 A1
+    A|entry_without_source|6-6|赵六 在场景0（藏宝阁）第6行首次在场，此前无到达叙述
+ch27 场景=1 候选=1 A1
+    A|entry_without_source|10-10|张三 在场景0（藏宝阁）第10行首次在场，此前无到达叙述
+ch28 场景=1 候选=4 A3/C1
+    A|entry_without_source|9-9|张三 在场景0（藏宝阁）第9行首次在场，此前无到达叙述
+    A|entry_without_source|9-9|王五 在场景0（藏宝阁）第9行首次在场，此前无到达叙述
+    A|entry_without_source|18-18|李四 在场景0（藏宝阁）第18行首次在场，此前无到达叙述
+    C|statement_value_conflict|15-15;23-23|key_custody: 「王五+宗主」(dialogue) ↔ 「张三+王五+赵六」(dialogue) [dialogue_dialogue]
+ch29 场景=3 候选=1 C1
+    C|statement_value_conflict|5-5;9-9|key_custody: 「李四+王五」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+ch30 场景=1 候选=1 A1
+    A|entry_without_source|6-6|李四 在场景0（藏宝阁）第6行首次在场，此前无到达叙述
+ch31 场景=3 候选=2 A1/B1
+    A|entry_without_source|8-8|王五 在场景2（藏宝阁）第8行首次在场，此前无到达叙述
+    B|space_rewind|1-4;7-24|王五 场景0离开藏宝阁，场景2又在原地互动，中间无到达
+ch32 场景=1 候选=5 A1/C4
+    A|entry_without_source|6-6|张三 在场景0（藏宝阁）第6行首次在场，此前无到达叙述
+    C|statement_value_conflict|2-2;10-10|key_count: 「1把」(narrator) ↔ 「2把」(dialogue) [dialogue_narrator]
+    C|statement_value_conflict|2-2;13-13|key_count: 「1把」(narrator) ↔ 「2把」(dialogue) [dialogue_narrator]
+    C|statement_value_conflict|8-8;10-10|key_count: 「1把」(speculation) ↔ 「2把」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|8-8;13-13|key_count: 「1把」(speculation) ↔ 「2把」(dialogue) [dialogue_speculation]
+ch33 场景=3 候选=2 A2
+    A|entry_without_source|19-19|张三 在场景2（藏宝阁）第19行首次在场，此前无到达叙述
+    A|entry_without_source|20-20|赵六 在场景2（藏宝阁）第20行首次在场，此前无到达叙述
+ch34 场景=1 候选=1 A1
+    A|entry_without_source|4-4|李四 在场景0（藏宝阁）第4行首次在场，此前无到达叙述
+ch35 场景=1 候选=6 C6
+    C|statement_value_conflict|3-3;10-10|key_custody: 「赵六+门主」(speculation) ↔ 「赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|3-3;11-11|key_custody: 「赵六+门主」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|3-3;16-16|key_custody: 「赵六+门主」(speculation) ↔ 「张三」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|10-10;11-11|key_custody: 「赵六」(dialogue) ↔ 「张三+赵六」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|10-10;16-16|key_custody: 「赵六」(dialogue) ↔ 「张三」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|11-11;16-16|key_custody: 「张三+赵六」(speculation) ↔ 「张三」(dialogue) [dialogue_speculation]
+ch36 场景=3 候选=2 C2
+    C|statement_value_conflict|2-2;12-12|key_count: 「2把」(speculation) ↔ 「1把」(narrator) [narrator_speculation]
+    C|statement_value_conflict|12-12;15-15|key_count: 「1把」(narrator) ↔ 「2把」(speculation) [narrator_speculation]
+ch37 场景=1 候选=1 A1
+    A|entry_without_source|2-2|赵六 在场景0（藏宝阁）第2行首次在场，此前无到达叙述
+ch38 场景=1 候选=0 -
+ch39 场景=1 候选=1 A1
+    A|entry_without_source|6-6|张三 在场景0（藏宝阁）第6行首次在场，此前无到达叙述
+ch40 场景=4 候选=4 A2/B2
+    A|entry_without_source|7-7|张三 在场景1（阁楼）第7行首次在场，此前无到达叙述
+    A|entry_without_source|7-7|赵六 在场景1（阁楼）第7行首次在场，此前无到达叙述
+    B|space_rewind|1-6;11-20|赵六 场景0离开藏宝阁，场景2又在原地互动，中间无到达
+    B|space_rewind|11-20;21-28|张三 场景2离开藏宝阁，场景3又在原地互动，中间无到达
+ch41 场景=1 候选=0 -
+ch42 场景=3 候选=3 A1/C2
+    A|entry_without_source|7-7|张三 在场景0（藏宝阁）第7行首次在场，此前无到达叙述
+    C|statement_value_conflict|3-3;25-25|key_custody: 「赵六+长老」(speculation) ↔ 「赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|4-4;25-25|key_custody: 「赵六+长老」(narrator) ↔ 「赵六」(dialogue) [dialogue_narrator]
+ch43 场景=1 候选=4 A2/C2
+    A|entry_without_source|3-3|赵六 在场景0（藏宝阁）第3行首次在场，此前无到达叙述
+    A|entry_without_source|6-6|张三 在场景0（藏宝阁）第6行首次在场，此前无到达叙述
+    C|statement_value_conflict|2-2;13-13|key_count: 「1把」(speculation) ↔ 「2把」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|2-2;24-24|key_count: 「1把」(speculation) ↔ 「2把」(speculation) [speculation_speculation]
+ch44 场景=1 候选=1 A1
+    A|entry_without_source|7-7|张三 在场景0（藏宝阁）第7行首次在场，此前无到达叙述
+ch45 场景=1 候选=2 A1/C1
+    A|entry_without_source|8-8|张三 在场景0（藏宝阁）第8行首次在场，此前无到达叙述
+    C|statement_value_conflict|4-4;31-31|key_count: 「1把」(narrator) ↔ 「2把」(speculation) [narrator_speculation]
+ch46 场景=1 候选=1 A1
+    A|entry_without_source|9-9|张三 在场景0（藏宝阁）第9行首次在场，此前无到达叙述
+ch47 场景=1 候选=0 -
+ch48 场景=1 候选=0 -
+ch49 场景=4 候选=1 A1
+    A|entry_without_source|10-10|张三 在场景0（藏宝阁）第10行首次在场，此前无到达叙述
+ch50 场景=3 候选=3 A1/B1/C1 [BAD回归闸]
+    A|entry_without_source|9-9|张三 在场景0（藏宝阁）第9行首次在场，此前无到达叙述
+    B|space_rewind|1-20;22-30|赵六 场景0离开藏宝阁，场景2又在原地互动，中间无到达
+    C|statement_value_conflict|3-3;23-23|key_custody: 「赵六+高层」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+
+ch50 回归闸（两锚制）：2/2 全中
+合计：50 章 候选 A43 B4 C36 D0 共 83（零 LLM 成本 $0）
+JSON 出口：l3-corpus-v022.json（sha256[:16]=4eca65c0ff4591e4）

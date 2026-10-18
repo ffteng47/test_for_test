@@ -1,0 +1,1242 @@
+{
+ "1": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": []
+ },
+ "2": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 2,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "22-22"
+    ],
+    "detail": "key_count: 「1把」(dialogue) ↔ 「2把」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "3": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 3,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "3-3"
+    ],
+    "detail": "赵六 在场景0（藏宝阁）第3行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 3,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "23-23",
+     "32-32"
+    ],
+    "detail": "key_count: 「2把」(speculation) ↔ 「1把」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 3,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "24-24",
+     "32-32"
+    ],
+    "detail": "key_count: 「2把」(dialogue) ↔ 「1把」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 3,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "24-24",
+     "31-31"
+    ],
+    "detail": "key_custody: 「赵六+宗主」(dialogue) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 3,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "32-32",
+     "33-33"
+    ],
+    "detail": "key_count: 「1把」(speculation) ↔ 「2把」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "4": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 4,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "5-5"
+    ],
+    "detail": "王五 在场景0（藏宝阁）第5行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 4,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "6-6"
+    ],
+    "detail": "李四 在场景0（藏宝阁）第6行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "5": {
+  "scenes": 6,
+  "needs_deep": false,
+  "candidates": []
+ },
+ "6": {
+  "scenes": 2,
+  "needs_deep": false,
+  "candidates": []
+ },
+ "7": {
+  "scenes": 5,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 7,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "8-8"
+    ],
+    "detail": "王五 在场景2（藏宝阁）第8行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "8": {
+  "scenes": 10,
+  "needs_deep": true,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 8,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "6-6"
+    ],
+    "detail": "张三 在场景4（藏宝阁）第6行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 8,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "10-10"
+    ],
+    "detail": "王五 在场景5（书房）第10行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "9": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 9,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "10-10"
+    ],
+    "detail": "王五 在场景0（藏宝阁）第10行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 9,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "10-10"
+    ],
+    "detail": "李四 在场景0（藏宝阁）第10行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 9,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "14-14"
+    ],
+    "detail": "key_count: 「2把」(speculation) ↔ 「1把」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 9,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "13-13"
+    ],
+    "detail": "key_custody: 「赵六」(speculation) ↔ 「张三+李四+赵六」(narrator)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 9,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "13-13",
+     "14-14"
+    ],
+    "detail": "key_count: 「2把」(narrator) ↔ 「1把」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 9,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "14-14",
+     "19-19"
+    ],
+    "detail": "key_count: 「1把」(speculation) ↔ 「2把」(narrator)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "10": {
+  "scenes": 3,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 10,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "28-28"
+    ],
+    "detail": "王五 在场景2（藏宝阁）第28行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "11": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 11,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "3-3"
+    ],
+    "detail": "张三 在场景0（藏宝阁）第3行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "12": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 12,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "4-4"
+    ],
+    "detail": "张三 在场景0（藏宝阁）第4行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "6-6",
+     "21-21"
+    ],
+    "detail": "key_custody: 「张三+赵六+守阁人」(dialogue) ↔ 「阁主+守阁人」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "13": {
+  "scenes": 2,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 13,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "10-10"
+    ],
+    "detail": "张三 在场景1（藏宝阁）第10行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 13,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "11-11"
+    ],
+    "detail": "赵六 在场景1（藏宝阁）第11行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "8-8"
+    ],
+    "detail": "key_custody: 「张三+赵六+长老」(speculation) ↔ 「长老+守夜人」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "17-17"
+    ],
+    "detail": "key_custody: 「张三+赵六+长老」(speculation) ↔ 「赵六+守阁人+宗主」(narrator)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "8-8",
+     "17-17"
+    ],
+    "detail": "key_custody: 「长老+守夜人」(speculation) ↔ 「赵六+守阁人+宗主」(narrator)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "14": {
+  "scenes": 2,
+  "needs_deep": false,
+  "candidates": []
+ },
+ "15": {
+  "scenes": 8,
+  "needs_deep": true,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 15,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "10-10"
+    ],
+    "detail": "张三 在场景5（书房）第10行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 15,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "10-10"
+    ],
+    "detail": "李四 在场景5（书房）第10行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "16": {
+  "scenes": 5,
+  "needs_deep": false,
+  "candidates": []
+ },
+ "17": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 17,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "12-12",
+     "13-13"
+    ],
+    "detail": "key_count: 「?把」(narrator) ↔ 「2把」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "18": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 18,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "5-5"
+    ],
+    "detail": "王五 在场景0（藏宝阁）第5行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "19": {
+  "scenes": 5,
+  "needs_deep": false,
+  "candidates": []
+ },
+ "20": {
+  "scenes": 3,
+  "needs_deep": false,
+  "candidates": []
+ },
+ "21": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": []
+ },
+ "22": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": []
+ },
+ "23": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 23,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "3-3"
+    ],
+    "detail": "王五 在场景0（藏宝阁）第3行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 23,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "3-3"
+    ],
+    "detail": "赵六 在场景0（藏宝阁）第3行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 23,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "24-24"
+    ],
+    "detail": "key_count: 「1把」(dialogue) ↔ 「2把」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 23,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "24-24"
+    ],
+    "detail": "key_count: 「1把」(speculation) ↔ 「2把」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "24": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 24,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "2-2"
+    ],
+    "detail": "王五 在场景0（藏宝阁）第2行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "25": {
+  "scenes": 3,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 25,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "8-8"
+    ],
+    "detail": "张三 在场景2（藏宝阁）第8行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "26": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 26,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "6-6"
+    ],
+    "detail": "赵六 在场景0（藏宝阁）第6行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "27": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 27,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "10-10"
+    ],
+    "detail": "张三 在场景0（藏宝阁）第10行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "28": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 28,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "9-9"
+    ],
+    "detail": "张三 在场景0（藏宝阁）第9行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 28,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "9-9"
+    ],
+    "detail": "王五 在场景0（藏宝阁）第9行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 28,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "18-18"
+    ],
+    "detail": "李四 在场景0（藏宝阁）第18行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 28,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "15-15",
+     "23-23"
+    ],
+    "detail": "key_custody: 「王五+宗主」(dialogue) ↔ 「张三+王五+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "29": {
+  "scenes": 3,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 29,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "5-5",
+     "9-9"
+    ],
+    "detail": "key_custody: 「李四+王五」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "30": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 30,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "6-6"
+    ],
+    "detail": "李四 在场景0（藏宝阁）第6行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "31": {
+  "scenes": 3,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 31,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "8-8"
+    ],
+    "detail": "王五 在场景2（藏宝阁）第8行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "B",
+    "chapter": 31,
+    "rule_id": "space_rewind",
+    "evidence_refs": [
+     "1-4",
+     "7-24"
+    ],
+    "detail": "王五 场景0离开藏宝阁，场景2又在原地互动，中间无到达",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "32": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 32,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "6-6"
+    ],
+    "detail": "张三 在场景0（藏宝阁）第6行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 32,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "10-10"
+    ],
+    "detail": "key_count: 「1把」(narrator) ↔ 「2把」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 32,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "13-13"
+    ],
+    "detail": "key_count: 「1把」(narrator) ↔ 「2把」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 32,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "8-8",
+     "10-10"
+    ],
+    "detail": "key_count: 「1把」(speculation) ↔ 「2把」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 32,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "8-8",
+     "13-13"
+    ],
+    "detail": "key_count: 「1把」(speculation) ↔ 「2把」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "33": {
+  "scenes": 3,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 33,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "19-19"
+    ],
+    "detail": "张三 在场景2（藏宝阁）第19行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 33,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "20-20"
+    ],
+    "detail": "赵六 在场景2（藏宝阁）第20行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "34": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 34,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "4-4"
+    ],
+    "detail": "李四 在场景0（藏宝阁）第4行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "35": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 35,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "10-10"
+    ],
+    "detail": "key_custody: 「赵六+门主」(speculation) ↔ 「赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 35,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "11-11"
+    ],
+    "detail": "key_custody: 「赵六+门主」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 35,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "16-16"
+    ],
+    "detail": "key_custody: 「赵六+门主」(speculation) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 35,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "10-10",
+     "11-11"
+    ],
+    "detail": "key_custody: 「赵六」(dialogue) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 35,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "10-10",
+     "16-16"
+    ],
+    "detail": "key_custody: 「赵六」(dialogue) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 35,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "11-11",
+     "16-16"
+    ],
+    "detail": "key_custody: 「张三+赵六」(speculation) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "36": {
+  "scenes": 3,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 36,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "12-12"
+    ],
+    "detail": "key_count: 「2把」(speculation) ↔ 「1把」(narrator)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 36,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "12-12",
+     "15-15"
+    ],
+    "detail": "key_count: 「1把」(narrator) ↔ 「2把」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "37": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 37,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "2-2"
+    ],
+    "detail": "赵六 在场景0（藏宝阁）第2行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "38": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": []
+ },
+ "39": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 39,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "6-6"
+    ],
+    "detail": "张三 在场景0（藏宝阁）第6行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "40": {
+  "scenes": 4,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 40,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "7-7"
+    ],
+    "detail": "张三 在场景1（阁楼）第7行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 40,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "7-7"
+    ],
+    "detail": "赵六 在场景1（阁楼）第7行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "B",
+    "chapter": 40,
+    "rule_id": "space_rewind",
+    "evidence_refs": [
+     "1-6",
+     "11-20"
+    ],
+    "detail": "赵六 场景0离开藏宝阁，场景2又在原地互动，中间无到达",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "B",
+    "chapter": 40,
+    "rule_id": "space_rewind",
+    "evidence_refs": [
+     "11-20",
+     "21-28"
+    ],
+    "detail": "张三 场景2离开藏宝阁，场景3又在原地互动，中间无到达",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "41": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": []
+ },
+ "42": {
+  "scenes": 3,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 42,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "7-7"
+    ],
+    "detail": "张三 在场景0（藏宝阁）第7行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 42,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "25-25"
+    ],
+    "detail": "key_custody: 「赵六+长老」(speculation) ↔ 「赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 42,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "25-25"
+    ],
+    "detail": "key_custody: 「赵六+长老」(narrator) ↔ 「赵六」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "43": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 43,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "3-3"
+    ],
+    "detail": "赵六 在场景0（藏宝阁）第3行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 43,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "6-6"
+    ],
+    "detail": "张三 在场景0（藏宝阁）第6行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 43,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "13-13"
+    ],
+    "detail": "key_count: 「1把」(speculation) ↔ 「2把」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 43,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "24-24"
+    ],
+    "detail": "key_count: 「1把」(speculation) ↔ 「2把」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "44": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 44,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "7-7"
+    ],
+    "detail": "张三 在场景0（藏宝阁）第7行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "45": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 45,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "8-8"
+    ],
+    "detail": "张三 在场景0（藏宝阁）第8行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 45,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "31-31"
+    ],
+    "detail": "key_count: 「1把」(narrator) ↔ 「2把」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "46": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 46,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "9-9"
+    ],
+    "detail": "张三 在场景0（藏宝阁）第9行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "47": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": []
+ },
+ "48": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": []
+ },
+ "49": {
+  "scenes": 4,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 49,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "10-10"
+    ],
+    "detail": "张三 在场景0（藏宝阁）第10行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "50": {
+  "scenes": 3,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 50,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "9-9"
+    ],
+    "detail": "张三 在场景0（藏宝阁）第9行首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "B",
+    "chapter": 50,
+    "rule_id": "space_rewind",
+    "evidence_refs": [
+     "1-20",
+     "22-30"
+    ],
+    "detail": "赵六 场景0离开藏宝阁，场景2又在原地互动，中间无到达",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 50,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "23-23"
+    ],
+    "detail": "key_custody: 「赵六+高层」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   }
+  ]
+ }
+}

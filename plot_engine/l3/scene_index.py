@@ -11,17 +11,21 @@ from typing import List, Sequence
 
 from plot_engine.l3.models import SceneFrame
 
-# ---- 词表（尺面戳 l3-v0.2：变更=读数变更，须带戳） ----
+# ---- 词表（尺面戳 l3-v0.2.2：变更=读数变更，须带戳） ----
 DEFAULT_ENTITIES = ["张三", "王五", "李四", "赵六"]
 DEFAULT_LOCATIONS = ["藏宝阁", "书房", "后院", "山下", "门主府", "掌门府",
                      "走廊", "阁楼", "住处"]
 TIME_MARKERS = ["次日", "第二天", "翌日", "入夜", "夜幕降临", "清晨", "天亮",
                 "晌午", "黄昏"]
 
-# 到达叙述（v042 ARRIVAL_RE 同源 + 返回类）
+# 到达叙述（v042 ARRIVAL_RE 同源 + 返回类；v2.2：门窗跨距 8→12 并收「踏进」
+# ——ch35 L6「木门在张三的推力下缓缓打开」=误报级到达漏认）。
 ARRIVE_RE = re.compile(
-    r"(门[^。]{0,8}(推开|打开|敲响|开了))|((推开|打开|敲响)[^。]{0,8}门)"
-    r"|(走了?进来|进来的是|踏入|迈进|推门|破门|闯入|出现在门口|步入|来到|返回|回到)")
+    r"(门[^。]{0,12}(推开|打开|敲响|开了))|((推开|打开|敲响)[^。]{0,8}门)"
+    r"|(走了?进来|踏入|踏进|迈进|推门|破门|闯入|出现在门口|步入|来到|返回|回到)")
+# v2.2：倒装到达句式主语=后置名（ch48 L16「门被推开，进来的是王五」——_subject_near
+# 回看窗抓不到后置主语，会把张三错认成到达者，王五反被悬置成 A 嫌疑）。
+ARRIVE_NAME_RE = re.compile(r"(进来的是|走进来的是|推门进来的是)(张三|王五|李四|赵六)")
 # 硬离开（完成态）；意图词（准备/打算/决定前往）不算——ch20 #22 教训
 DEPART_RE = re.compile(r"(转身离开|离开了?|离去|先走了|告辞|告别|出门|下山|赶往|奔赴)")
 # 意图窗：DEPART 命中点落在意图词跨距内=不计（"准备离开"≠离开，ch20 #22 误报教训）
@@ -34,6 +38,19 @@ _QUOTED_RE = re.compile(r"[「『“‘].*?[」』”’]", re.S)
 # v2.1 修复①姊妹面：叙述行「去找X/去寻X/询问X」=移动意图的目标提及，被找者不在现场
 # （ch27-A「王五则去找李四询问」=去找型造帧，与台词提及同族、行级语用未分）。
 _SEEK_TARGET_RE = re.compile(r"(去找|去寻|去找寻|询问)[^，。；]{0,4}(张三|王五|李四|赵六)")
+# v2.2 修复①（tff 真人终审：A 族宿主独报 27 条全误=同一病根）：含回忆/传闻/追述触发词的
+# 行整行不产在场——生成体一行一思，回忆辖域随冒号与后续子句蔓延（「他想起…：李四最近…」），
+# 小句级剥不净（试点实证）；行级误杀经验者的代价由其邻行真实在场行补偿（锚①同款行不受影响）。
+# v2①堵引号台词、v2.1①堵去找X，本条堵叙述转述层。
+_MENTION_TRIG_RE = re.compile(
+    r"想起|回忆|记起|记得|听说|听到|想到|心想|心中|念头|直觉|预感|怀疑|推测|猜测|揣测|觉得|知道"
+    r"|意识到|明白|得知|所说|笔迹|字迹|模仿|提及|提到|认为|决定|打算|那晚|那夜|那天|那日|昨夜|昨晚"
+    r"|曾经|当年|往事|旧事|行踪|脑海")
+
+
+def _presence_scope(line: str) -> str:
+    """在场只认无回忆/传闻触发词的行。"""
+    return "" if _MENTION_TRIG_RE.search(line) else line
 
 
 def _narration(line: str) -> str:
@@ -108,8 +125,7 @@ def build_scene_index(chapter: int, body: Sequence[str],
         seg = list(enumerate(lines[fr.line_start - 1:fr.line_end], fr.line_start))
         present_line: dict = {}
         for g, ln in seg:
-            n = _narration(ln)  # v2 修复①②：在场=叙述行口径，台词提及不算在场
-            n = _SEEK_TARGET_RE.sub("", n)  # v2.1①：「去找X」目标不算本场景在场
+            n = _presence_scope(_SEEK_TARGET_RE.sub("", _narration(ln)))  # v2①/v2.1①/v2.2①
             for e in entities:
                 if e in n:
                     present_line.setdefault(e, g)
@@ -117,6 +133,8 @@ def build_scene_index(chapter: int, body: Sequence[str],
         fr.present_line = present_line
         arr, dep = set(), set()
         for _, ln in seg:
+            for m in ARRIVE_NAME_RE.finditer(ln):  # v2.2 倒装到达：后置主语直取
+                arr.add(m.group(2))
             for m in ARRIVE_RE.finditer(ln):
                 s = _subject_near(ln, m.span(), entities, last_entity)
                 if s:

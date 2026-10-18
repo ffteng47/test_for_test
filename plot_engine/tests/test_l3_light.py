@@ -171,17 +171,15 @@ class TestExtractorV2:
         assert any(s.predicate == "key_count" and s.value == "2把" for s in ks)
 
     def test_statement_has_tense_field(self):
-        # 修复④：陈述时点字段（当晚=on_scene / 事后追述=aftermath）。
-        on = extract_statements(1, ["今晚藏宝阁由赵六值守。"])
-        off = extract_statements(1, ["他想起那晚藏宝阁由赵六值守。"])
+        # 修复④：陈述时点字段（当晚=on_scene / 事后追述=aftermath，custody 承载）。
+        on = extract_statements(1, ["今晚藏宝阁的钥匙由赵六亲自保管。"])
+        off = extract_statements(1, ["他想起那晚藏宝阁的钥匙由赵六亲自保管。"])
         assert on[0].tense == "on_scene" and off[0].tense == "aftermath"
 
-    def test_watch_cross_tense_not_paired(self):
-        # 修复②+④：值守跨时点（当晚 vs 事后）属不同参照夜，不可同真冲突。
-        body = ["今晚藏宝阁由赵六值守。", "他想起那晚藏宝阁由张三值守。"]
-        assert find_statement_conflicts(extract_statements(1, body)) == []
-        same = ["今晚藏宝阁由赵六值守。", "当晚其实是张三守夜。"]
-        assert find_statement_conflicts(extract_statements(1, same)) != []
+    def test_night_watch_predicate_retired(self):
+        # v2.2②（tff 拍板）：night_watch 全库真人终审零条真=谓词退役，值守不再出陈述。
+        assert extract_statements(1, ["今晚藏宝阁由赵六值守。",
+                                      "当晚其实是张三守夜。"]) == []
 
     @pytest.mark.skipif(not CH50.exists(), reason="wpe50ch 语料不在本机")
     def test_ch50_anchor1_backfill_li_si_gone(self):
@@ -227,14 +225,41 @@ class TestExtractorV21:
         assert "张三" in frames[0].present and "王五" in frames[0].present
 
     def test_watch_question_not_statement(self):
-        # ②ch42/ch32 型：值守询问句不进 night_watch predicate，陈述句照抽。
+        # ②ch42/ch32 型询问句不抽（v2.2 拍板后整谓词退役，问/陈述均出空）。
         assert extract_statements(1, ["张三问：「昨晚在这里值夜班的是谁吗？」"]) == []
-        assert extract_statements(1, ["「你昨晚值守藏宝阁？」王五摇头。"]) == []
-        yes = extract_statements(1, ["赵六说：「我昨晚值夜班的时候，一切如常。」"])
-        assert any(s.predicate == "night_watch" for s in yes)
+        assert extract_statements(1, ["赵六说：「我昨晚值夜班的时候，一切如常。」"]) == []
 
     def test_day_scene_watch_cross_tense_paired_out(self):
-        # ③ch45 型：深夜值守陈述 ↔ 次日白日在场行（阳光词），tense 不同不配对。
-        body = ["赵六在藏宝阁深夜守夜，月光洒在地板上。",
-                "阳光透过窗户，张三和赵六并肩站在门口，守阁的差事无人再提。"]
-        assert find_statement_conflicts(extract_statements(1, body)) == []
+        # ③ch45 型：白日词入时点表（tense 字段仍产，供 key 类跨时点标注）。
+        on = extract_statements(1, ["深夜的藏宝阁钥匙一共两把，由赵六保管。"])
+        day = extract_statements(1, ["阳光透过窗户，藏宝阁钥匙一共三把的说法无人再提，由长老保管。"])
+        assert on[0].tense == "on_scene" and any(s.tense == "aftermath" for s in day)
+
+
+class TestExtractorV22:
+    """v2.2（tff 真人终审 92 卡呈规格：A 族宿主独报 27 条全误=回忆/传闻小句造帧）。"""
+
+    def test_recall_and_hearsay_clauses_not_presence(self):
+        # ①ch05/06/12/20/22/26 型：想起/听说/怀疑/念头小句不造在场帧。
+        body = ["张三独自坐在书房，整理着旧文档。",
+                "他想起赵六曾在藏宝阁出没，又听说李四那晚在山下与外客饮酒。",
+                "王五低声怀疑钥匙的事另有隐情。"]
+        frames = build_scene_index(1, body)
+        for fr in frames:
+            assert "赵六" not in fr.present and "李四" not in fr.present
+        assert any("张三" in fr.present for fr in frames)
+        # 经验者与被提及者同小句时一起剥（「王五低声怀疑…」）；真实在场靠其他行建立。
+        assert all("王五" not in fr.present for fr in frames)
+
+    def test_real_presence_after_mention_line_survives(self):
+        # ①不过杀：提及小句剥掉后，同他行的真实在场互动行仍建立在场（锚①同款句式保真）。
+        body = ["藏宝阁内只剩赵六一人，他守着灯火。",
+                "赵六想起张三昨日的疑话，沉默不语。",
+                "张三和赵六坐在藏宝阁内，四周静悄悄的。"]
+        frames = build_scene_index(1, body)
+        assert frames[-1].present_line["张三"] == 3
+
+    def test_night_watch_gone_from_corpus_predicates(self):
+        # ②退役核验：C 域谓词白名单只剩 key_count/key_custody。
+        cands = run_light(1, ["今晚藏宝阁由赵六值守。", "他想起那晚其实是张三守夜。"])
+        assert all("night_watch" not in c.detail for c in cands if c.family == "C")

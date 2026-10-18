@@ -11,7 +11,7 @@ severity 恒 OBS：候选≠定罪，重演是否算穿帮由人核/判分层裁
 from __future__ import annotations
 
 import re
-from typing import List, Sequence, Tuple
+from typing import Dict, List, Sequence, Tuple
 
 from plot_engine.l3.models import ConsistencyCandidate, SceneFrame
 
@@ -30,11 +30,19 @@ def _topics(seg: Sequence[str]) -> set:
 
 
 def _segments(frames: Sequence[SceneFrame]) -> List[Tuple[str, int, int, set, set]]:
-    """帧 → 子段（location, start, end, 人物集, 话题集）。帧内按首次在场行再切。"""
+    """帧 → 子段（location, start, end, 人物集, 话题集）。帧内按「全章首现行」再切。
+
+    v2.2：在场行经回忆/传闻全行拒绝后变稀疏，逐帧在场行不再等于进场信号；子段边界
+    只认该实体在全章的第一次在场行（=真正的新人物进场，009/022 仍天然成界）。"""
+    first_seen: Dict[str, int] = {}
+    for fr in frames:
+        for e, ln in fr.present_line.items():
+            if ln < first_seen.get(e, 10 ** 9):
+                first_seen[e] = ln
     segs: List[Tuple[str, int, int, set, set]] = []
     for fr in frames:
         cuts = [fr.line_start] + [ln for e, ln in fr.present_line.items()
-                                  if ln > fr.line_start]
+                                  if ln == first_seen.get(e)]
         cuts = sorted(set(cuts))
         bounds = cuts + [fr.line_end + 1]
         for s, e_ex in zip(bounds, bounds[1:]):

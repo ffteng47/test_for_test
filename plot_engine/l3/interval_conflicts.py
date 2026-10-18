@@ -31,10 +31,6 @@ def find_statement_conflicts(statements: Sequence[Statement]) -> List[Consistenc
                 a, b = ss[i], ss[j]
                 if a.predicate != b.predicate or a.value == b.value:
                     continue
-                # v2 修复②：值守=时点受限 predicate，当晚在场与事后/回忆追述分属不同参照夜，
-                # 不可同真冲突（询问/回忆句只作辅证）；narrator 域锚（custody/count）不受此闸。
-                if a.predicate == "night_watch" and a.tense != b.tense:
-                    continue
                 out.append(ConsistencyCandidate(
                     family="C", chapter=ch, rule_id="statement_value_conflict",
                     evidence_refs=[f"{a.line_start}-{a.line_end}", f"{b.line_start}-{b.line_end}"],

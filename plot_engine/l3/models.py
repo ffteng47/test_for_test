@@ -26,10 +26,10 @@ class SceneFrame(BaseModel):
 
 
 class Statement(BaseModel):
-    """静态事实陈述（C 族域：数量/保管/值守），带认识论分层标签。"""
+    """静态事实陈述（C 族域：数量/保管），带认识论分层标签。"""
 
     chapter: int
-    predicate: str               # key_count / key_custody / night_watch（白名单=尺面）
+    predicate: str               # key_count / key_custody（白名单=尺面；night_watch 已于 v2.2 退役）
     value: str                   # 规范化取值（如 "2把" / "赵六+长老"）
     raw: str                     # 原文片段（出处）
     line_start: int

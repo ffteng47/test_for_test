@@ -1,7 +1,7 @@
 ﻿"""有效区间事实视图（第一层，纯派生）：章正文 → 认识论分层陈述 → 跨章区间投影。
 
 C 族结构化抽取=把"找对子"从模型手里拿走（丁批归因鉴别实验本体）：
-- 陈述抽取=确定性模式（数量/保管/值守三 predicate 白名单=尺面戳 l3-v0.2）；
+- 陈述抽取=确定性模式（数量/保管两 predicate 白名单=尺面戳 l3-v0.2.2，值守 v2.2 退役）；
 - 认识论分层（丁批 C 族口径）：narrator=叙述者事实 / dialogue=角色台词 / speculation=角色猜测；
 - 区间投影（InkOS applyFactOps 互证）：只有 narrator 陈述建权威区间，expire 不删行；
   dialogue/speculation 是 claim，不顶替权威事实（角色可以说谎，世界状态不被台词改写）。
@@ -23,10 +23,8 @@ _COUNT_KEY_RE = re.compile(r"([一二两三四几])把钥匙")
 _COUNT_DEIXIS = "另这那每各其"          # 紧跟数词前=逐指代称，非总数
 _COUNT_LOSS_RE = re.compile(r"(消失|失踪|丢失|丢了|少|偷|被拿走)了?\s*$")
 _CUSTODY_VERB = re.compile(r"(保管|持有|掌握|拿着|在[^。]{0,4}手里|随身携带)")
-_WATCH_RE = re.compile(r"(守夜|值守|守阁|值夜)")
-# v2.1 修复②：值守处于询问语境=问事实不是陈述事实（ch42「值夜班的是谁吗？」、
-# ch32「你昨晚值守藏宝阁？」被抽成在场 predicate=试探问句入配对，修复②只堵了在场侧）。
-_WATCH_ASK_RE = re.compile(r"(是谁|谁的|哪几|谁值|谁在)|(值守|守夜|值夜|守阁)[^。？]*[？?]")
+# v2.2②（tff 终审拍板）：night_watch 谓词退役——全库真人终审零条真（值守配对全为
+# 问句/回忆/混主体工件），陈述源就此摘除，C 域白名单=key_count/key_custody 两条。
 _SPEECH_RE = re.compile(r"(说|道|问|答|低声|笑道|喊道|开口|回道|答道|问道)")
 _SPEC_RE = re.compile(r"(觉得|感觉|似乎|好像|心中|暗想|琢磨|怀疑|隐约|猜测|想来)")
 # v2 修复④「陈述时点字段」：事后/回忆语境（非当晚在场）；v2.1③ 补白日在场词
@@ -71,7 +69,7 @@ def extract_statements(chapter: int, body: Sequence[str],
     lines, _map = strip_comments(body)
     out: List[Statement] = []
     for i, ln in enumerate(lines, 1):
-        if "钥匙" not in ln and not _WATCH_RE.search(ln):
+        if "钥匙" not in ln:
             continue
         ep = _epistemic(ln)
         tn = _tense(ln)
@@ -86,12 +84,6 @@ def extract_statements(chapter: int, body: Sequence[str],
             if names or extra:
                 out.append(Statement(chapter=chapter, predicate="key_custody",
                                      value="+".join(names + extra), raw=ln.strip()[:60],
-                                     line_start=i, line_end=i, epistemic=ep, tense=tn))
-        if _WATCH_RE.search(ln) and not _WATCH_ASK_RE.search(ln):
-            names = _names_in(ln, entities)
-            if names:
-                out.append(Statement(chapter=chapter, predicate="night_watch",
-                                     value="+".join(names), raw=ln.strip()[:60],
                                      line_start=i, line_end=i, epistemic=ep, tense=tn))
     return out
 
