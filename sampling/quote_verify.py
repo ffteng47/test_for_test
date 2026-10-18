@@ -64,7 +64,8 @@ for log in (Path(__file__).parent / "level3-pilot.console.log",
             Path(__file__).parent / "level3-pilot-v04.console.log",
             Path(__file__).parent / "level3-pilot-v041.console.log",
 Path(__file__).parent / "level3-pilot-v042.console.log",
-Path(__file__).parent / "level3-pilot-v042-qwen14b.console.log"):
+Path(__file__).parent / "level3-pilot-v042-qwen14b.console.log",
+Path(__file__).parent / "level3-pilot-v05cloud.console.log"):
     print(f"\n== {log.name} ==")
     try:
         agg = verify(log)

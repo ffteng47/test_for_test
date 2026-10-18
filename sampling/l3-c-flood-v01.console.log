@@ -1,0 +1,31 @@
+候选总量=290｜C 族=249
+
+== C 族 epistemic_pair 分布 ==
+  dialogue_speculation               87（35%）
+  speculation_speculation            53（21%）
+  narrator_speculation               41（16%）
+  dialogue_dialogue                  34（14%）
+  dialogue_narrator                  30（12%）
+  narrator_narrator                   4（2%）
+
+== 压制曲线（移出类→剩余 C 候选）==
+  移出 dialogue_speculation             → 剩  162（削 35%）
+  移出 speculation_speculation          → 剩  109（削 56%）
+  移出 narrator_speculation             → 剩   68（削 73%）
+  移出 dialogue_dialogue                → 剩   34（削 86%）
+  移出 dialogue_narrator                → 剩    4（削 98%）
+  移出 narrator_narrator                → 剩    0（削 100%）
+
+== ch50 锚候选的配对类（安全闸反查）==
+  A|entry_without_source|25-29|pair=(空)
+  B|space_rewind|1-20;22-24|pair=(空)
+  C|statement_value_conflict|1-1;10-10|pair=dialogue_speculation
+  C|statement_value_conflict|1-1;12-12|pair=speculation_speculation
+  C|statement_value_conflict|3-3;23-23|pair=speculation_speculation
+  C|statement_value_conflict|5-5;10-10|pair=dialogue_speculation
+  C|statement_value_conflict|5-5;12-12|pair=speculation_speculation
+
+== C 族 predicate 分布 top ==
+  night_watch                  204
+  key_count                    28
+  key_custody                  17
