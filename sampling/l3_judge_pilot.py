@@ -1,17 +1,18 @@
-# L3 批3 判分对照试点（W2 归因实验本体，一次性旁路脚本，不进管线、不经 validator）。
-# 口径：docs/l3-batch3-handoff-brief.md W2——喂**同一候选集**（sampling/l3-corpus-v01.json，
-# 批1-2 宿主确定性配对的 290 候选）给判分端点，模型**只判不找**：真|误报|存疑 + 一句话理由 + 行号区间。
-# 归因读数：精确率对照 v0.4.2 基线（裸 44.8%/宿主压制 54.5%）——跳升=配对瓶颈实锤（模型无辜），
+# L3 批3 判分对照（W2 归因实验本体，一次性旁路脚本，不进管线、不经 validator）。
+# v1.1 复跑：口径 docs/l3-batch3-handoff-brief.md W2——喂**同一候选集**（sampling/l3-corpus-v02.json，
+# 抽取层 v2 四条修复后宿主确定性配对候选）给判分端点，模型**只判不找**：真|误报|存疑 + 一句话理由 + 行号区间。
+# 归因读数：精确率对照 v0.4.2 基线（裸 44.8%/宿主压制 54.5%）+ v1.0（裸 46.7%）——跳升=配对瓶颈实锤（模型无辜），
 # 仍塌=模型语义判断实锤。终裁权在 tff。
-# 两条 W1 预警兑现：①epistemic_pair 只作宿主先验展示，禁写模型可执行禁令（防自我撤回 ch50 C 锚）；
-# ②撤回收纳过滤：理由含「撤回/按规不得报」或判定非法词 → 该候选记 存疑 并打 RETRACT 标。
+# 三条 W1 预警兑现：①epistemic_pair 只作宿主先验展示，禁写模型可执行禁令（防自我撤回 ch50 C 锚）；
+# ②撤回收纳过滤：理由含「撤回/按规不得报」或判定非法词 → 该候选记 存疑 并打 RETRACT 标；
+# ③v1.1 判据措辞修订（tff 终审授权）：补丁台词不构成叙事自愈，矛盾照算真 + 恢复 timeline-first 关照。
 # 送检面（§3.3 检索增强形态）：C 族=证据帧（区间宿主回填，零全章）；A/B 族=全章编号正文
 # （无到达/无回卷是全称否定判断，帧内不可判——如实分开计量）。
-# 尺面戳：l3-judge-v1.0（判定提示词逐字归档在本文件）。
+# 尺面戳：l3-judge-v1.1（判定提示词逐字归档在本文件）。
 # 行号基准（冒烟实证坑，风险①同型）：evidence_refs=Draft body 剥注释/空行（l3 strip_comments 输出）后
 # 1 基——对未剥基准回填=系统性引到空行；空引文按 [区间失守] 计。冒烟另修：误报口径须逐字贴 §7.9
 # 台账（「台词/推测对立」写宽一圈=宿主亲手压死 ch50 锚所在 dialogue/speculation 类，违反 W3 锚安全闸）。
-# 复现：PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe sampling/l3_judge_pilot.py [章号...] > sampling/l3-judge-v10.console.log 2>&1
+# 复现：PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe sampling/l3_judge_pilot.py [章号...] > sampling/l3-judge-v11.console.log 2>&1
 import json
 import os
 import re
@@ -27,7 +28,7 @@ OK_CH = [1, 8, 12, 13, 21, 22, 23, 26, 35, 40, 42, 44, 48]
 NH_CH = [2, 5, 6, 14, 15, 20]
 BAD_CH = [50]
 DUMP = Path(__file__).resolve().parent / "wpe50ch"
-CORPUS = json.loads((Path(__file__).resolve().parent / "l3-corpus-v01.json")
+CORPUS = json.loads((Path(__file__).resolve().parent / "l3-corpus-v02.json")
                     .read_text(encoding="utf-8"))
 
 JUDGE_HEADER = """你是穿帮候选的**判分器**。候选由宿主程序确定性配对产出，你只判定每一条候选是否成立，
@@ -35,7 +36,8 @@ JUDGE_HEADER = """你是穿帮候选的**判分器**。候选由宿主程序确�
 - 真：两处/一处证据之间存在**作者层面**的自相矛盾（同一事实两种说法且不可同真；在场但前文无到达且非章首开场；离开后无到达又回原地）。
 - 误报：可同真（如「都在」与「各保管一把」）；人物说辞与物证/旁白陈述对立（侦探文悬念设计——说的和事实不一致，是人物在骗，不是作者在矛盾）；引文本身含到达或离开叙述、与候选主张相悖；章首段落的开场在场；单处陈述、无冲突方。
 - 存疑：证据不足以裁定。
-注意两条：①不同人物各自的推测互不一致不是矛盾，但**叙述层**对同一事实的两种说法不可同真仍是真；②候选若已被叙事自觉摆上台面（角色自己指出规则前后不一），仍可判真。标注仅供参考，不是禁令，一切以证据文本为准。
+注意两条：①不同人物各自的推测互不一致不是矛盾，但**叙述层**对同一事实的两种说法不可同真仍是真；②候选若已被叙事自觉摆上台面——角色自己指出规则前后不一的「补丁台词」（如「似乎有人偷偷更改了规则」）——**这不构成叙事自愈，矛盾照算真**。标注仅供参考，不是禁令，一切以证据文本为准。
+判断在场/回卷类候选前，先沿编号正文把该角色的**事件时间线**排出来（首次出现处、到达/离开叙述、当前所在），再据此裁定——不要只看单行。
 输出纪律：每条候选一行，格式 `序号|真|误报|存疑三选一|一句话理由（必须针对该候选的证据文本，不得照抄口径条目）|依据行号区间(如12-13)`；
 不要输出判定行以外的内容。
 """
@@ -160,7 +162,7 @@ print(f"送检面：C 证据帧 tokens={frame_tokens}｜A/B 全章 tokens={full_
 print(f"调用 {len(client.calls)} 次 tokens={client.total_tokens} 成本=${client.total_cost_usd:.4f}（本地=0）")
 
 # 出口自证：判定台账 JSON（人核/秤量用，沿五态对照组先例——构造性不靠肉眼）
-Path(__file__).with_name("l3-judge-v10.verdicts.json").write_text(
+Path(__file__).with_name("l3-judge-v11.verdicts.json").write_text(
     json.dumps([{"family": f, "chapter": c["chapter"], "detail": c["detail"],
                  "refs": c["evidence_refs"], "pair": c["epistemic_pair"], "verdict": v, "reason": r}
                 for f, c, v, r in verdicts], ensure_ascii=False, indent=1), encoding="utf-8")
