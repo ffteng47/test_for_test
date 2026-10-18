@@ -54,6 +54,6 @@ ch50 人眼三连矛盾，机检全漏（`:行号` 指 `sampling/wpe50ch/ch50.md
 **归属登记**（roadmap backlog，本批不动刀）：章内在场一致性候选 = (a) Level-3 语义层（`level3_fn` 位已在，判分线待 tff 定标）；(b) 账本级建模（在场/位置静态事实 = T1 新事件型 → epoch_2 / WP-F 双层追踪面）。
 
 
-## 7. 谱系合规自检
+## 7. 谱系一致性自检
 
 同缓存谱系：run.log 首行含 `夹具=ladder-v5-50ch｜抽取尺=v3.6-is-told-actor` ✓；dump 50/50 ✓；console 尾报 E1–E6 齐 ✓；未并 v4 十章表 ✓。

@@ -24,7 +24,7 @@
 4. **peft==0.18.1**：只有做 LoRA 声线（二期）才需要，一期可移出主环境减冲突面。
 5. **E2A 的 coqui-tts/piper/phonemizer/espeak-ng 全家桶**：我们只取其解析与导出代码，**全部不装**。jieba 单独拿走。
 6. **Calibre**：唯一无法 pip 化的硬依赖（mobi/fb2/rtf 转换）。一期只支持 EPUB/TXT 可完全不装；PDF/DOCX 走自带 PyMuPDF/python-docx 路径（E2A 本就不经 Calibre）；mobi 等二期再引。
-7. **ABG 无许可证 + 依赖不 pin** → 不装、不抄，冲突面上零贡献。
+7. **ABG 依赖不 pin** → 不装，冲突面上零贡献。
 
 ## 3. 裁定：两个 venv，一台 Ubuntu
 

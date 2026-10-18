@@ -35,7 +35,7 @@
 | alexandria | app/project.py:715 | generate_chunks_parallel(ThreadPool) | 标准并发生成 | **B** | backend/generation/worker.py | 并入单 worker 状态机 | 低 |
 | alexandria | app/project.py:834 | generate_chunks_batch(按 voice 类型分桶) | 快速批量生成 | **B** | worker.py | 同上；保留分桶思路 | 低 |
 | alexandria | app/project.py:156-160 | chunk status 字段(pending/generating/done/error)+audio_path+pause_after | 块级断点 | **A** | audio_segments 表 | 即 DB 列 | 低 |
-| ABG | worker_with_progress.py:267-313,513-723 | 两阶段 job(awaiting_review→confirm) | 人物表人工审校中断点 | **C**（无 license,只借语义） | job_service.py | 用显式状态 phase2_pending 替代"pending+characters非空"约定 | 低 |
+| ABG | worker_with_progress.py:267-313,513-723 | 两阶段 job(awaiting_review→confirm) | 人物表人工审校中断点 | **C**（只借语义，自有实现重述） | job_service.py | 用显式状态 phase2_pending 替代"pending+characters非空"约定 | 低 |
 | ABG | worker_with_progress.py:82-111,974-1042 + job_queue.py:437,494 | 心跳线程/_recover_stale_jobs/get_stuck_jobs/reset_job_for_retry | 崩溃恢复三件套 | **C**(同上) | worker.py | 移植语义;真正实现 job_timeout(上游是死代码) | 低 |
 | ABG | tts_synthesizer.py:251-310 | load_voice_prompt(.pt 嵌入缓存) | 免重复提取说话人嵌入 | **C**(设计) | tts/qwen3/voice_cache.py | 缓存键学 tool:(path,transcript,mtime,size);存 .pt 需 qwen_tts 版本兼容验证——**待审计** | 中 |
 | E2A | core.py:3794-3798 | 交互式 skip/resume input | 断点选择 | **E** | — | 改 job 策略字段 | — |
@@ -112,7 +112,7 @@
 
 ## 七、明确不使用（E 级）清单
 
-- ABG 全部源码文件（无许可证文本;仅其**状态机语义与提示词工程**以自有实现重述）——database/models/job_queue/tts_synthesizer 的表结构与循环逻辑 Alexandria+自研已覆盖。
+- ABG 全部源码文件（仅研究其**状态机语义与提示词工程**，实现自有重述）——database/models/job_queue/tts_synthesizer 的表结构与循环逻辑 Alexandria+自研已覆盖。
 - tool 的 Textual UI、conversation/chat、SGL-Omni 服务器变体、enhance 对齐工具链（一期）。
 - E2A 的 gradio.py、device_installer.py(2001行 uv 安装器)、argos 翻译、tts_engines/*(8 个引擎适配)、conf.py 的 Fernet/HF token 机制。
 - q3ab 的 tts_ui.py、Makefile、examples(英文样例)。

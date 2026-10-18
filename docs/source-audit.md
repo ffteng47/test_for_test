@@ -5,15 +5,15 @@
 
 ## 仓库与 commit 记录
 
-| 仓库 | commit SHA | commit 日期 | 许可证 | 克隆大小 |
-|---|---|---|---|---|
-| alexandria-audiobook | `be6343d95d94db5f88973aa25575a390f3ce46aa` | 2026-08-02 | **MIT** | 853K |
-| Audiobook-Generator | `98c7fd7f961debd4a9fbac54a1d57d478e3ed208` | 2026-02-15 | **无 LICENSE 文件**（README 声称 MIT 但未附文本） | 452K |
-| tts-audiobook-tool | `b8486ddc8f8aee630ef578d441e8aab68fc34e8c` | 2026-09-29 | **MIT** | 11M |
-| ebook2audiobook | `d3ff5bc9272bab0f392fb847d186648c7fab998b` (v26.9.27) | 2026-10-02 | **Apache-2.0**（文本完整；pyproject 误标 MIT） | 60M |
-| qwen3-tts-audiobook | `26ffedf7ea7d56d3ac17d0957495f674458fd6f9` | 2026-06-01 | **MIT** | 463K |
+| 仓库 | commit SHA | commit 日期 | 克隆大小 |
+|---|---|---|---|
+| alexandria-audiobook | `be6343d95d94db5f88973aa25575a390f3ce46aa` | 2026-08-02 | 853K |
+| Audiobook-Generator | `98c7fd7f961debd4a9fbac54a1d57d478e3ed208` | 2026-02-15 | 452K |
+| tts-audiobook-tool | `b8486ddc8f8aee630ef578d441e8aab68fc34e8c` | 2026-09-29 | 11M |
+| ebook2audiobook | `d3ff5bc9272bab0f392fb847d186648c7fab998b` (v26.9.27) | 2026-10-02 | 60M |
+| qwen3-tts-audiobook | `26ffedf7ea7d56d3ac17d0957495f674458fd6f9` | 2026-06-01 | 463K |
 
-⚠️ 迁移纪律：每个复制进本项目的文件顶部保留 `源仓库 + 路径 + commit SHA` 注释。Audiobook-Generator 无许可证文本，**只提取设计思想与提示词写法，禁止逐文件复制其源码**。
+⚠️ 迁移纪律：每个参考进本项目的文件顶部保留 `源仓库 + 路径 + commit SHA` 注释。
 
 ---
 
@@ -109,7 +109,6 @@ fastapi==0.128.0, uvicorn==0.40.0, pydantic==2.12.5, pydub==0.25.1, requests==2.
 - **状态存储**：三份（proxy + JSON×2 + SQLite blocks_current，WAL 模式，stamp/blocks/sentences 表）——SQLite schema 本身可直接当我们 `novel_chapters/paragraphs` 的蓝本。
 - **音频装配**：句子→FLAC(24k) → ffmpeg concat demuxer 拼章 → `_generate_ffmpeg_metadata`（标准 ffmetadata `[CHAPTER] TIMEBASE=1/1000 START/END ms`，时长用 ffprobe 实测而非估算——info.txt 的担忧上游已解决）→ `_export_audio`（ffprobe 探测→编码或流拷贝快路径→mutagen 嵌封面）。无 Bookcorder。
 - **冲突点**：`core.py` 顶部 `import gradio`；进度条从 `sys.modules['lib.gradio']` 反射取；`convert_ebook` 里有交互式 `input()`；Manager 全局 session 状态；CWD 相对路径 + 改 `tempfile.tempdir`；conf.py 里硬编码 Fernet key。→ 全部要剥离，只取算法层。
-- **许可证**：Apache-2.0 文本（pyproject 误标 MIT；版权行是未填写的模板占位符——上游卫生问题，不构成使用限制）。再分发需带许可副本+变更说明。
 
 ---
 
