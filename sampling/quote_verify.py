@@ -61,9 +61,16 @@ def verify(log):
 
 for log in (Path(__file__).parent / "level3-pilot.console.log",
             Path(__file__).parent / "level3-pilot-v03.console.log",
-            Path(__file__).parent / "level3-pilot-v04.console.log"):
+            Path(__file__).parent / "level3-pilot-v04.console.log",
+            Path(__file__).parent / "level3-pilot-v041.console.log",
+Path(__file__).parent / "level3-pilot-v042.console.log",
+Path(__file__).parent / "level3-pilot-v042-qwen14b.console.log"):
     print(f"\n== {log.name} ==")
-    agg = verify(log)
+    try:
+        agg = verify(log)
+    except (UnicodeDecodeError, FileNotFoundError) as exc:
+        print(f"  [跳过] 日志不可读（在写/编码异常）：{exc.__class__.__name__}")
+        continue
     tot = {}
     for grp in ("BAD", "NH", "OK"):
         if grp not in agg:

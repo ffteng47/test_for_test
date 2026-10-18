@@ -1,0 +1,345 @@
+﻿重算一致性：一致 （sha256[:16]=178feecaeb74f7da）
+ch01 场景=1 候选=0 -
+ch02 场景=1 候选=9 C9
+    C|statement_value_conflict|4-4;22-22|key_count: 「1把」(dialogue) ↔ 「2把」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|19-19;30-30|night_watch: 「张三+王五」(narrator) ↔ 「张三」(speculation) [narrator_speculation]
+    C|statement_value_conflict|19-19;31-31|night_watch: 「张三+王五」(narrator) ↔ 「王五」(dialogue) [dialogue_narrator]
+    C|statement_value_conflict|19-19;33-33|night_watch: 「张三+王五」(narrator) ↔ 「王五」(dialogue) [dialogue_narrator]
+    C|statement_value_conflict|19-19;34-34|night_watch: 「张三+王五」(narrator) ↔ 「张三」(speculation) [narrator_speculation]
+    C|statement_value_conflict|30-30;31-31|night_watch: 「张三」(speculation) ↔ 「王五」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|30-30;33-33|night_watch: 「张三」(speculation) ↔ 「王五」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|31-31;34-34|night_watch: 「王五」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|33-33;34-34|night_watch: 「王五」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+ch03 场景=1 候选=11 C11
+    C|statement_value_conflict|3-3;17-17|night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(narrator) [dialogue_narrator]
+    C|statement_value_conflict|10-10;17-17|night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(narrator) [dialogue_narrator]
+    C|statement_value_conflict|11-11;17-17|night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(narrator) [dialogue_narrator]
+    C|statement_value_conflict|17-17;19-19|night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(dialogue) [dialogue_narrator]
+    C|statement_value_conflict|17-17;26-26|night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(narrator) [narrator_narrator]
+    C|statement_value_conflict|17-17;32-32|night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(speculation) [narrator_speculation]
+    C|statement_value_conflict|17-17;33-33|night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(speculation) [narrator_speculation]
+    C|statement_value_conflict|23-23;32-32|key_count: 「2把」(speculation) ↔ 「1把」(speculation) [speculation_speculation]
+    C|statement_value_conflict|24-24;32-32|key_count: 「2把」(dialogue) ↔ 「1把」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|24-24;31-31|key_custody: 「赵六+宗主」(dialogue) ↔ 「张三+赵六」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|32-32;33-33|key_count: 「1把」(speculation) ↔ 「2把」(speculation) [speculation_speculation]
+ch04 场景=1 候选=0 -
+ch05 场景=6 候选=4 A2/C2
+    A|entry_without_source|5-7|李四 在场景1（山下）首次在场，此前无到达叙述
+    A|entry_without_source|9-12|王五 在场景3（山下）首次在场，此前无到达叙述
+    C|statement_value_conflict|4-4;14-14|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation) [speculation_speculation]
+    C|statement_value_conflict|13-13;14-14|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation) [speculation_speculation]
+ch06 场景=2 候选=1 C1
+    C|statement_value_conflict|13-13;25-25|night_watch: 「张三」(dialogue) ↔ 「赵六」(dialogue) [dialogue_dialogue]
+ch07 场景=5 候选=3 A3
+    A|entry_without_source|4-7|李四 在场景1（山下）首次在场，此前无到达叙述
+    A|entry_without_source|4-7|赵六 在场景1（山下）首次在场，此前无到达叙述
+    A|entry_without_source|8-20|王五 在场景2（藏宝阁）首次在场，此前无到达叙述
+ch08 场景=10 候选=3 A3 深档信号
+    A|entry_without_source|3-4|赵六 在场景2（藏宝阁）首次在场，此前无到达叙述
+    A|entry_without_source|7-14|李四 在场景5（书房）首次在场，此前无到达叙述
+    A|entry_without_source|7-14|王五 在场景5（书房）首次在场，此前无到达叙述
+ch09 场景=1 候选=15 C15
+    C|statement_value_conflict|3-3;4-4|night_watch: 「张三」(speculation) ↔ 「赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|3-3;6-6|night_watch: 「张三」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|3-3;9-9|night_watch: 「张三」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|3-3;17-17|night_watch: 「张三」(speculation) ↔ 「张三+赵六」(narrator) [narrator_speculation]
+    C|statement_value_conflict|4-4;14-14|key_count: 「2把」(speculation) ↔ 「1把」(speculation) [speculation_speculation]
+    C|statement_value_conflict|4-4;13-13|key_custody: 「赵六」(speculation) ↔ 「张三+李四+赵六」(narrator) [narrator_speculation]
+    C|statement_value_conflict|4-4;6-6|night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|4-4;9-9|night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|4-4;16-16|night_watch: 「赵六」(speculation) ↔ 「张三」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|4-4;17-17|night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(narrator) [narrator_speculation]
+    C|statement_value_conflict|6-6;16-16|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|9-9;16-16|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|13-13;14-14|key_count: 「2把」(narrator) ↔ 「1把」(speculation) [narrator_speculation]
+    C|statement_value_conflict|14-14;19-19|key_count: 「1把」(speculation) ↔ 「2把」(narrator) [narrator_speculation]
+    C|statement_value_conflict|16-16;17-17|night_watch: 「张三」(dialogue) ↔ 「张三+赵六」(narrator) [dialogue_narrator]
+ch10 场景=5 候选=3 A1/B1/C1
+    A|entry_without_source|12-34|王五 在场景2（藏宝阁）首次在场，此前无到达叙述
+    B|space_rewind|12-34;44-46|张三 场景2离开藏宝阁，场景4又在原地互动，中间无到达
+    C|statement_value_conflict|3-3;24-24|night_watch: 「张三+李四+赵六」(dialogue) ↔ 「张三」(dialogue) [dialogue_dialogue]
+ch11 场景=1 候选=1 C1
+    C|statement_value_conflict|4-4;7-7|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(dialogue) [dialogue_speculation]
+ch12 场景=1 候选=21 C21
+    C|statement_value_conflict|5-5;17-17|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|5-5;18-18|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation) [speculation_speculation]
+    C|statement_value_conflict|5-5;23-23|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation) [speculation_speculation]
+    C|statement_value_conflict|5-5;24-24|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation) [speculation_speculation]
+    C|statement_value_conflict|5-5;26-26|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation) [speculation_speculation]
+    C|statement_value_conflict|6-6;21-21|key_custody: 「张三+赵六+守阁人」(dialogue) ↔ 「阁主+守阁人」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|6-6;17-17|night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|6-6;18-18|night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|6-6;23-23|night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|6-6;24-24|night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|6-6;26-26|night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|11-11;17-17|night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|11-11;18-18|night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|11-11;23-23|night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|11-11;24-24|night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|11-11;26-26|night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|12-12;17-17|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|12-12;18-18|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation) [speculation_speculation]
+    C|statement_value_conflict|12-12;23-23|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation) [speculation_speculation]
+    C|statement_value_conflict|12-12;24-24|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation) [speculation_speculation]
+    C|statement_value_conflict|12-12;26-26|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation) [speculation_speculation]
+ch13 场景=2 候选=19 A1/C18
+    A|entry_without_source|2-20|赵六 在场景1（藏宝阁）首次在场，此前无到达叙述
+    C|statement_value_conflict|3-3;4-4|key_count: 「2把」(speculation) ↔ 「1把」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|3-3;8-8|key_custody: 「张三+赵六+长老」(speculation) ↔ 「长老+守夜人」(speculation) [speculation_speculation]
+    C|statement_value_conflict|3-3;17-17|key_custody: 「张三+赵六+长老」(speculation) ↔ 「赵六+守阁人+宗主」(narrator) [narrator_speculation]
+    C|statement_value_conflict|4-4;8-8|key_count: 「1把」(dialogue) ↔ 「2把」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|4-4;11-11|key_count: 「1把」(dialogue) ↔ 「2把」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|4-4;17-17|key_count: 「1把」(dialogue) ↔ 「2把」(narrator) [dialogue_narrator]
+    C|statement_value_conflict|7-7;10-10|night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|7-7;17-17|night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(narrator) [dialogue_narrator]
+    C|statement_value_conflict|7-7;20-20|night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|8-8;17-17|key_custody: 「长老+守夜人」(speculation) ↔ 「赵六+守阁人+宗主」(narrator) [narrator_speculation]
+    C|statement_value_conflict|10-10;16-16|night_watch: 「张三」(dialogue) ↔ 「张三+赵六」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|10-10;17-17|night_watch: 「张三」(dialogue) ↔ 「赵六」(narrator) [dialogue_narrator]
+    C|statement_value_conflict|10-10;19-19|night_watch: 「张三」(dialogue) ↔ 「张三+赵六」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|16-16;17-17|night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(narrator) [narrator_speculation]
+    C|statement_value_conflict|16-16;20-20|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation) [speculation_speculation]
+    C|statement_value_conflict|17-17;19-19|night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(speculation) [narrator_speculation]
+    C|statement_value_conflict|17-17;20-20|night_watch: 「赵六」(narrator) ↔ 「张三」(speculation) [narrator_speculation]
+    C|statement_value_conflict|19-19;20-20|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation) [speculation_speculation]
+ch14 场景=2 候选=0 -
+ch15 场景=8 候选=3 A1/C2 深档信号
+    A|entry_without_source|12-13|赵六 在场景6（藏宝阁）首次在场，此前无到达叙述
+    C|statement_value_conflict|3-3;12-12|night_watch: 「张三+李四」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|6-6;12-12|night_watch: 「张三+李四」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+ch16 场景=5 候选=3 A2/B1
+    A|entry_without_source|4-5|李四 在场景1（山下）首次在场，此前无到达叙述
+    A|entry_without_source|4-5|赵六 在场景1（山下）首次在场，此前无到达叙述
+    B|space_rewind|4-5;7-11|赵六 场景1离开山下，场景3又在原地互动，中间无到达
+ch17 场景=1 候选=6 C6
+    C|statement_value_conflict|4-4;5-5|night_watch: 「王五」(narrator) ↔ 「王五+赵六」(speculation) [narrator_speculation]
+    C|statement_value_conflict|4-4;23-23|night_watch: 「王五」(narrator) ↔ 「张三+王五+赵六」(speculation) [narrator_speculation]
+    C|statement_value_conflict|5-5;8-8|night_watch: 「王五+赵六」(speculation) ↔ 「王五」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|5-5;23-23|night_watch: 「王五+赵六」(speculation) ↔ 「张三+王五+赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|8-8;23-23|night_watch: 「王五」(dialogue) ↔ 「张三+王五+赵六」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|12-12;13-13|key_count: 「?把」(narrator) ↔ 「2把」(dialogue) [dialogue_narrator]
+ch18 场景=1 候选=3 C3
+    C|statement_value_conflict|10-10;11-11|night_watch: 「张三」(dialogue) ↔ 「王五」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|10-10;39-39|night_watch: 「张三」(dialogue) ↔ 「张三+王五」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|11-11;39-39|night_watch: 「王五」(dialogue) ↔ 「张三+王五」(dialogue) [dialogue_dialogue]
+ch19 场景=5 候选=10 B1/C9
+    B|space_rewind|12-14;17-17|张三 场景2离开藏宝阁，场景4又在原地互动，中间无到达
+    C|statement_value_conflict|3-3;4-4|night_watch: 「王五+赵六」(dialogue) ↔ 「王五」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|3-3;10-10|night_watch: 「王五+赵六」(dialogue) ↔ 「张三+赵六」(narrator) [dialogue_narrator]
+    C|statement_value_conflict|3-3;13-13|night_watch: 「王五+赵六」(dialogue) ↔ 「张三+赵六」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|3-3;15-15|night_watch: 「王五+赵六」(dialogue) ↔ 「张三+李四+赵六」(narrator) [dialogue_narrator]
+    C|statement_value_conflict|4-4;10-10|night_watch: 「王五」(dialogue) ↔ 「张三+赵六」(narrator) [dialogue_narrator]
+    C|statement_value_conflict|4-4;13-13|night_watch: 「王五」(dialogue) ↔ 「张三+赵六」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|4-4;15-15|night_watch: 「王五」(dialogue) ↔ 「张三+李四+赵六」(narrator) [dialogue_narrator]
+    C|statement_value_conflict|10-10;15-15|night_watch: 「张三+赵六」(narrator) ↔ 「张三+李四+赵六」(narrator) [narrator_narrator]
+    C|statement_value_conflict|13-13;15-15|night_watch: 「张三+赵六」(speculation) ↔ 「张三+李四+赵六」(narrator) [narrator_speculation]
+ch20 场景=3 候选=5 A2/C3
+    A|entry_without_source|2-5|李四 在场景1（阁楼）首次在场，此前无到达叙述
+    A|entry_without_source|2-5|赵六 在场景1（阁楼）首次在场，此前无到达叙述
+    C|statement_value_conflict|5-5;29-29|key_count: 「2把」(speculation) ↔ 「1把」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|8-8;22-22|night_watch: 「张三+赵六」(speculation) ↔ 「张三+王五」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|21-21;22-22|night_watch: 「张三+赵六」(speculation) ↔ 「张三+王五」(dialogue) [dialogue_speculation]
+ch21 场景=1 候选=1 C1
+    C|statement_value_conflict|9-9;14-14|night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+ch22 场景=1 候选=24 C24
+    C|statement_value_conflict|1-1;2-2|key_count: 「1把」(narrator) ↔ 「2把」(speculation) [narrator_speculation]
+    C|statement_value_conflict|1-1;8-8|night_watch: 「王五」(narrator) ↔ 「张三+赵六」(speculation) [narrator_speculation]
+    C|statement_value_conflict|1-1;16-16|night_watch: 「王五」(narrator) ↔ 「张三」(dialogue) [dialogue_narrator]
+    C|statement_value_conflict|1-1;25-25|night_watch: 「王五」(narrator) ↔ 「张三」(speculation) [narrator_speculation]
+    C|statement_value_conflict|1-1;35-35|night_watch: 「王五」(narrator) ↔ 「张三」(speculation) [narrator_speculation]
+    C|statement_value_conflict|5-5;8-8|night_watch: 「王五」(dialogue) ↔ 「张三+赵六」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|5-5;16-16|night_watch: 「王五」(dialogue) ↔ 「张三」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|5-5;25-25|night_watch: 「王五」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|5-5;35-35|night_watch: 「王五」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|8-8;16-16|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|8-8;17-17|night_watch: 「张三+赵六」(speculation) ↔ 「王五」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|8-8;22-22|night_watch: 「张三+赵六」(speculation) ↔ 「王五」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|8-8;24-24|night_watch: 「张三+赵六」(speculation) ↔ 「王五」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|8-8;25-25|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation) [speculation_speculation]
+    C|statement_value_conflict|8-8;35-35|night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation) [speculation_speculation]
+    C|statement_value_conflict|16-16;17-17|night_watch: 「张三」(dialogue) ↔ 「王五」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|16-16;22-22|night_watch: 「张三」(dialogue) ↔ 「王五」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|16-16;24-24|night_watch: 「张三」(dialogue) ↔ 「王五」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|17-17;25-25|night_watch: 「王五」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|17-17;35-35|night_watch: 「王五」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|22-22;25-25|night_watch: 「王五」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|22-22;35-35|night_watch: 「王五」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|24-24;25-25|night_watch: 「王五」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|24-24;35-35|night_watch: 「王五」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+ch23 场景=1 候选=4 C4
+    C|statement_value_conflict|1-1;24-24|night_watch: 「王五+赵六」(dialogue) ↔ 「李四+王五+赵六」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|1-1;28-28|night_watch: 「王五+赵六」(dialogue) ↔ 「李四+王五+赵六」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|3-3;24-24|key_count: 「1把」(dialogue) ↔ 「2把」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|4-4;24-24|key_count: 「1把」(speculation) ↔ 「2把」(speculation) [speculation_speculation]
+ch24 场景=1 候选=0 -
+ch25 场景=5 候选=10 A2/B2/C6
+    A|entry_without_source|4-26|张三 在场景2（藏宝阁）首次在场，此前无到达叙述
+    A|entry_without_source|4-26|赵六 在场景2（藏宝阁）首次在场，此前无到达叙述
+    B|space_rewind|4-26;31-32|张三 场景2离开藏宝阁，场景4又在原地互动，中间无到达
+    B|space_rewind|4-26;31-32|王五 场景2离开藏宝阁，场景4又在原地互动，中间无到达
+    C|statement_value_conflict|13-13;21-21|night_watch: 「王五+赵六」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|13-13;24-24|night_watch: 「王五+赵六」(dialogue) ↔ 「张三+王五」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|13-13;25-25|night_watch: 「王五+赵六」(dialogue) ↔ 「张三+王五」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|21-21;24-24|night_watch: 「张三」(speculation) ↔ 「张三+王五」(speculation) [speculation_speculation]
+    C|statement_value_conflict|21-21;25-25|night_watch: 「张三」(speculation) ↔ 「张三+王五」(speculation) [speculation_speculation]
+    C|statement_value_conflict|31-31;32-32|key_count: 「2把」(dialogue) ↔ 「1把」(dialogue) [dialogue_dialogue]
+ch26 场景=3 候选=1 B1
+    B|space_rewind|1-26;30-35|赵六 场景0离开藏宝阁，场景2又在原地互动，中间无到达
+ch27 场景=3 候选=4 A2/C2
+    A|entry_without_source|15-16|李四 在场景1（山下）首次在场，此前无到达叙述
+    A|entry_without_source|17-29|赵六 在场景2（藏宝阁）首次在场，此前无到达叙述
+    C|statement_value_conflict|1-1;22-22|night_watch: 「王五」(narrator) ↔ 「张三+赵六」(speculation) [narrator_speculation]
+    C|statement_value_conflict|3-3;22-22|night_watch: 「王五」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+ch28 场景=3 候选=4 C4
+    C|statement_value_conflict|2-2;27-27|night_watch: 「王五+赵六」(speculation) ↔ 「张三+王五」(narrator) [narrator_speculation]
+    C|statement_value_conflict|3-3;27-27|night_watch: 「王五+赵六」(speculation) ↔ 「张三+王五」(narrator) [narrator_speculation]
+    C|statement_value_conflict|6-6;27-27|night_watch: 「王五+赵六」(speculation) ↔ 「张三+王五」(narrator) [narrator_speculation]
+    C|statement_value_conflict|15-15;23-23|key_custody: 「王五+宗主」(dialogue) ↔ 「张三+王五+赵六」(dialogue) [dialogue_dialogue]
+ch29 场景=3 候选=1 C1
+    C|statement_value_conflict|5-5;9-9|key_custody: 「李四+王五」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+ch30 场景=3 候选=2 B1/C1
+    B|space_rewind|1-30;33-42|张三 场景0离开藏宝阁，场景2又在原地互动，中间无到达
+    C|statement_value_conflict|17-17;29-29|key_count: 「2把」(dialogue) ↔ 「1把」(dialogue) [dialogue_dialogue]
+ch31 场景=3 候选=3 A1/B1/C1
+    A|entry_without_source|7-24|赵六 在场景2（藏宝阁）首次在场，此前无到达叙述
+    B|space_rewind|1-4;7-24|王五 场景0离开藏宝阁，场景2又在原地互动，中间无到达
+    C|statement_value_conflict|2-2;23-23|night_watch: 「张三+王五」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+ch32 场景=1 候选=12 C12
+    C|statement_value_conflict|2-2;10-10|key_count: 「1把」(narrator) ↔ 「2把」(dialogue) [dialogue_narrator]
+    C|statement_value_conflict|2-2;13-13|key_count: 「1把」(narrator) ↔ 「2把」(dialogue) [dialogue_narrator]
+    C|statement_value_conflict|2-2;3-3|night_watch: 「王五」(narrator) ↔ 「王五+赵六」(speculation) [narrator_speculation]
+    C|statement_value_conflict|2-2;7-7|night_watch: 「王五」(narrator) ↔ 「张三+王五」(speculation) [narrator_speculation]
+    C|statement_value_conflict|2-2;18-18|night_watch: 「王五」(narrator) ↔ 「张三+王五」(speculation) [narrator_speculation]
+    C|statement_value_conflict|3-3;5-5|night_watch: 「王五+赵六」(speculation) ↔ 「王五」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|3-3;7-7|night_watch: 「王五+赵六」(speculation) ↔ 「张三+王五」(speculation) [speculation_speculation]
+    C|statement_value_conflict|3-3;18-18|night_watch: 「王五+赵六」(speculation) ↔ 「张三+王五」(speculation) [speculation_speculation]
+    C|statement_value_conflict|5-5;7-7|night_watch: 「王五」(dialogue) ↔ 「张三+王五」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|5-5;18-18|night_watch: 「王五」(dialogue) ↔ 「张三+王五」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|8-8;10-10|key_count: 「1把」(speculation) ↔ 「2把」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|8-8;13-13|key_count: 「1把」(speculation) ↔ 「2把」(dialogue) [dialogue_speculation]
+ch33 场景=3 候选=11 A2/C9
+    A|entry_without_source|9-10|李四 在场景1（山下）首次在场，此前无到达叙述
+    A|entry_without_source|11-31|张三 在场景2（藏宝阁）首次在场，此前无到达叙述
+    C|statement_value_conflict|2-2;12-12|night_watch: 「王五+赵六」(narrator) ↔ 「张三+赵六」(speculation) [narrator_speculation]
+    C|statement_value_conflict|2-2;13-13|night_watch: 「王五+赵六」(narrator) ↔ 「张三+王五+赵六」(speculation) [narrator_speculation]
+    C|statement_value_conflict|2-2;18-18|night_watch: 「王五+赵六」(narrator) ↔ 「张三+赵六」(speculation) [narrator_speculation]
+    C|statement_value_conflict|2-2;19-19|night_watch: 「王五+赵六」(narrator) ↔ 「张三+赵六」(dialogue) [dialogue_narrator]
+    C|statement_value_conflict|2-2;23-23|night_watch: 「王五+赵六」(narrator) ↔ 「张三+赵六」(narrator) [narrator_narrator]
+    C|statement_value_conflict|12-12;13-13|night_watch: 「张三+赵六」(speculation) ↔ 「张三+王五+赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|13-13;18-18|night_watch: 「张三+王五+赵六」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|13-13;19-19|night_watch: 「张三+王五+赵六」(speculation) ↔ 「张三+赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|13-13;23-23|night_watch: 「张三+王五+赵六」(speculation) ↔ 「张三+赵六」(narrator) [narrator_speculation]
+ch34 场景=1 候选=6 C6
+    C|statement_value_conflict|13-13;16-16|night_watch: 「张三+李四+赵六」(speculation) ↔ 「张三+王五」(speculation) [speculation_speculation]
+    C|statement_value_conflict|13-13;27-27|night_watch: 「张三+李四+赵六」(speculation) ↔ 「张三+王五+赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|13-13;28-28|night_watch: 「张三+李四+赵六」(speculation) ↔ 「李四+赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|16-16;27-27|night_watch: 「张三+王五」(speculation) ↔ 「张三+王五+赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|16-16;28-28|night_watch: 「张三+王五」(speculation) ↔ 「李四+赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|27-27;28-28|night_watch: 「张三+王五+赵六」(dialogue) ↔ 「李四+赵六」(dialogue) [dialogue_dialogue]
+ch35 场景=1 候选=8 C8
+    C|statement_value_conflict|3-3;10-10|key_custody: 「赵六+门主」(speculation) ↔ 「赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|3-3;11-11|key_custody: 「赵六+门主」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|3-3;16-16|key_custody: 「赵六+门主」(speculation) ↔ 「张三」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|3-3;9-9|night_watch: 「赵六」(speculation) ↔ 「张三」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|9-9;10-10|night_watch: 「张三」(dialogue) ↔ 「赵六」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|10-10;11-11|key_custody: 「赵六」(dialogue) ↔ 「张三+赵六」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|10-10;16-16|key_custody: 「赵六」(dialogue) ↔ 「张三」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|11-11;16-16|key_custody: 「张三+赵六」(speculation) ↔ 「张三」(dialogue) [dialogue_speculation]
+ch36 场景=3 候选=4 A1/C3
+    A|entry_without_source|4-4|李四 在场景1（山下）首次在场，此前无到达叙述
+    C|statement_value_conflict|1-1;18-18|night_watch: 「赵六」(speculation) ↔ 「李四+赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|2-2;12-12|key_count: 「2把」(speculation) ↔ 「1把」(narrator) [narrator_speculation]
+    C|statement_value_conflict|12-12;15-15|key_count: 「1把」(narrator) ↔ 「2把」(speculation) [narrator_speculation]
+ch37 场景=1 候选=0 -
+ch38 场景=3 候选=5 C5
+    C|statement_value_conflict|1-1;9-9|night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|1-1;28-28|night_watch: 「赵六」(speculation) ↔ 「张三」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|1-1;34-34|night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|9-9;28-28|night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|28-28;34-34|night_watch: 「张三」(dialogue) ↔ 「张三+赵六」(speculation) [dialogue_speculation]
+ch39 场景=1 候选=5 C5
+    C|statement_value_conflict|6-6;12-12|night_watch: 「张三+赵六」(narrator) ↔ 「张三」(narrator) [narrator_narrator]
+    C|statement_value_conflict|6-6;19-19|night_watch: 「张三+赵六」(narrator) ↔ 「赵六」(dialogue) [dialogue_narrator]
+    C|statement_value_conflict|12-12;13-13|night_watch: 「张三」(narrator) ↔ 「张三+赵六」(dialogue) [dialogue_narrator]
+    C|statement_value_conflict|12-12;19-19|night_watch: 「张三」(narrator) ↔ 「赵六」(dialogue) [dialogue_narrator]
+    C|statement_value_conflict|13-13;19-19|night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(dialogue) [dialogue_dialogue]
+ch40 场景=4 候选=8 B2/C6
+    B|space_rewind|1-6;9-20|赵六 场景0离开藏宝阁，场景2又在原地互动，中间无到达
+    B|space_rewind|9-20;21-28|张三 场景2离开藏宝阁，场景3又在原地互动，中间无到达
+    C|statement_value_conflict|1-1;14-14|night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|1-1;22-22|night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|14-14;19-19|night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|14-14;23-23|night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|19-19;22-22|night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|22-22;23-23|night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(dialogue) [dialogue_dialogue]
+ch41 场景=1 候选=1 C1
+    C|statement_value_conflict|2-2;10-10|night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(dialogue) [dialogue_narrator]
+ch42 场景=5 候选=11 A2/C9
+    A|entry_without_source|14-15|李四 在场景1（山下）首次在场，此前无到达叙述
+    A|entry_without_source|16-21|王五 在场景2（藏宝阁）首次在场，此前无到达叙述
+    C|statement_value_conflict|2-2;7-7|night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(narrator) [dialogue_narrator]
+    C|statement_value_conflict|2-2;17-17|night_watch: 「赵六」(dialogue) ↔ 「张三」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|3-3;25-25|key_custody: 「赵六+长老」(speculation) ↔ 「赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|4-4;25-25|key_custody: 「赵六+长老」(narrator) ↔ 「赵六」(dialogue) [dialogue_narrator]
+    C|statement_value_conflict|7-7;10-10|night_watch: 「张三+赵六」(narrator) ↔ 「赵六」(speculation) [narrator_speculation]
+    C|statement_value_conflict|7-7;17-17|night_watch: 「张三+赵六」(narrator) ↔ 「张三」(speculation) [narrator_speculation]
+    C|statement_value_conflict|7-7;23-23|night_watch: 「张三+赵六」(narrator) ↔ 「赵六」(speculation) [narrator_speculation]
+    C|statement_value_conflict|10-10;17-17|night_watch: 「赵六」(speculation) ↔ 「张三」(speculation) [speculation_speculation]
+    C|statement_value_conflict|17-17;23-23|night_watch: 「张三」(speculation) ↔ 「赵六」(speculation) [speculation_speculation]
+ch43 场景=1 候选=2 C2
+    C|statement_value_conflict|2-2;13-13|key_count: 「1把」(speculation) ↔ 「2把」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|2-2;24-24|key_count: 「1把」(speculation) ↔ 「2把」(speculation) [speculation_speculation]
+ch44 场景=1 候选=1 C1
+    C|statement_value_conflict|23-23;24-24|night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(speculation) [speculation_speculation]
+ch45 场景=1 候选=5 C5
+    C|statement_value_conflict|1-1;10-10|night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|1-1;17-17|night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(narrator) [narrator_speculation]
+    C|statement_value_conflict|4-4;31-31|key_count: 「1把」(narrator) ↔ 「2把」(speculation) [narrator_speculation]
+    C|statement_value_conflict|6-6;10-10|night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|6-6;17-17|night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(narrator) [dialogue_narrator]
+ch46 场景=5 候选=4 A2/B2
+    A|entry_without_source|14-22|李四 在场景2（藏宝阁）首次在场，此前无到达叙述
+    A|entry_without_source|14-22|王五 在场景2（藏宝阁）首次在场，此前无到达叙述
+    B|space_rewind|1-9;14-22|赵六 场景0离开藏宝阁，场景2又在原地互动，中间无到达
+    B|space_rewind|14-22;27-28|张三 场景2离开藏宝阁，场景4又在原地互动，中间无到达
+ch47 场景=1 候选=9 C9
+    C|statement_value_conflict|1-1;11-11|night_watch: 「赵六」(narrator) ↔ 「张三」(dialogue) [dialogue_narrator]
+    C|statement_value_conflict|1-1;24-24|night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(dialogue) [dialogue_narrator]
+    C|statement_value_conflict|3-3;11-11|night_watch: 「赵六」(speculation) ↔ 「张三」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|3-3;24-24|night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|11-11;12-12|night_watch: 「张三」(dialogue) ↔ 「赵六」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|11-11;14-14|night_watch: 「张三」(dialogue) ↔ 「赵六」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|11-11;24-24|night_watch: 「张三」(dialogue) ↔ 「张三+赵六」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|12-12;24-24|night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|14-14;24-24|night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(dialogue) [dialogue_dialogue]
+ch48 场景=1 候选=16 C16
+    C|statement_value_conflict|1-1;7-7|night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(speculation) [narrator_speculation]
+    C|statement_value_conflict|1-1;23-23|night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(dialogue) [dialogue_narrator]
+    C|statement_value_conflict|1-1;25-25|night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(speculation) [narrator_speculation]
+    C|statement_value_conflict|1-1;27-27|night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(dialogue) [dialogue_narrator]
+    C|statement_value_conflict|4-4;7-7|night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|4-4;23-23|night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|4-4;25-25|night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|4-4;27-27|night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|7-7;24-24|night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|7-7;26-26|night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|23-23;24-24|night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|23-23;26-26|night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|24-24;25-25|night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(speculation) [dialogue_speculation]
+    C|statement_value_conflict|24-24;27-27|night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(dialogue) [dialogue_dialogue]
+    C|statement_value_conflict|25-25;26-26|night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|26-26;27-27|night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue) [dialogue_speculation]
+ch49 场景=5 候选=1 C1
+    C|statement_value_conflict|1-1;27-27|key_count: 「1把」(speculation) ↔ 「2把」(speculation) [speculation_speculation]
+ch50 场景=5 候选=7 A1/B1/C5 [BAD回归闸]
+    A|entry_without_source|25-29|李四 在场景3（山下）首次在场，此前无到达叙述
+    B|space_rewind|1-20;22-24|赵六 场景0离开藏宝阁，场景2又在原地互动，中间无到达
+    C|statement_value_conflict|1-1;10-10|night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|1-1;12-12|night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|3-3;23-23|key_custody: 「赵六+高层」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+    C|statement_value_conflict|5-5;10-10|night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue) [dialogue_speculation]
+    C|statement_value_conflict|5-5;12-12|night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation) [speculation_speculation]
+
+ch50 回归闸：3/3 全中
+合计：50 章 候选 A28 B13 C249 D0 共 290（零 LLM 成本 $0）
+JSON 出口：l3-corpus-v01.json（sha256[:16]=178feecaeb74f7da）

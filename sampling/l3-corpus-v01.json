@@ -1,0 +1,3749 @@
+{
+ "1": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": []
+ },
+ "2": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 2,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "22-22"
+    ],
+    "detail": "key_count: 「1把」(dialogue) ↔ 「2把」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 2,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "19-19",
+     "30-30"
+    ],
+    "detail": "night_watch: 「张三+王五」(narrator) ↔ 「张三」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 2,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "19-19",
+     "31-31"
+    ],
+    "detail": "night_watch: 「张三+王五」(narrator) ↔ 「王五」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 2,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "19-19",
+     "33-33"
+    ],
+    "detail": "night_watch: 「张三+王五」(narrator) ↔ 「王五」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 2,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "19-19",
+     "34-34"
+    ],
+    "detail": "night_watch: 「张三+王五」(narrator) ↔ 「张三」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 2,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "30-30",
+     "31-31"
+    ],
+    "detail": "night_watch: 「张三」(speculation) ↔ 「王五」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 2,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "30-30",
+     "33-33"
+    ],
+    "detail": "night_watch: 「张三」(speculation) ↔ 「王五」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 2,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "31-31",
+     "34-34"
+    ],
+    "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 2,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "33-33",
+     "34-34"
+    ],
+    "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "3": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 3,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "17-17"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(narrator)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 3,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "10-10",
+     "17-17"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(narrator)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 3,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "11-11",
+     "17-17"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(narrator)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 3,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "17-17",
+     "19-19"
+    ],
+    "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 3,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "17-17",
+     "26-26"
+    ],
+    "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(narrator)",
+    "epistemic_pair": "narrator_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 3,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "17-17",
+     "32-32"
+    ],
+    "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 3,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "17-17",
+     "33-33"
+    ],
+    "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 3,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "23-23",
+     "32-32"
+    ],
+    "detail": "key_count: 「2把」(speculation) ↔ 「1把」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 3,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "24-24",
+     "32-32"
+    ],
+    "detail": "key_count: 「2把」(dialogue) ↔ 「1把」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 3,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "24-24",
+     "31-31"
+    ],
+    "detail": "key_custody: 「赵六+宗主」(dialogue) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 3,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "32-32",
+     "33-33"
+    ],
+    "detail": "key_count: 「1把」(speculation) ↔ 「2把」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "4": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": []
+ },
+ "5": {
+  "scenes": 6,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 5,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "5-7"
+    ],
+    "detail": "李四 在场景1（山下）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 5,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "9-12"
+    ],
+    "detail": "王五 在场景3（山下）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 5,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "14-14"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 5,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "13-13",
+     "14-14"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "6": {
+  "scenes": 2,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 6,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "13-13",
+     "25-25"
+    ],
+    "detail": "night_watch: 「张三」(dialogue) ↔ 「赵六」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "7": {
+  "scenes": 5,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 7,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "4-7"
+    ],
+    "detail": "李四 在场景1（山下）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 7,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "4-7"
+    ],
+    "detail": "赵六 在场景1（山下）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 7,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "8-20"
+    ],
+    "detail": "王五 在场景2（藏宝阁）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "8": {
+  "scenes": 10,
+  "needs_deep": true,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 8,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "3-4"
+    ],
+    "detail": "赵六 在场景2（藏宝阁）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 8,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "7-14"
+    ],
+    "detail": "李四 在场景5（书房）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 8,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "7-14"
+    ],
+    "detail": "王五 在场景5（书房）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "9": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 9,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "4-4"
+    ],
+    "detail": "night_watch: 「张三」(speculation) ↔ 「赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 9,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "6-6"
+    ],
+    "detail": "night_watch: 「张三」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 9,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "9-9"
+    ],
+    "detail": "night_watch: 「张三」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 9,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "17-17"
+    ],
+    "detail": "night_watch: 「张三」(speculation) ↔ 「张三+赵六」(narrator)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 9,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "14-14"
+    ],
+    "detail": "key_count: 「2把」(speculation) ↔ 「1把」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 9,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "13-13"
+    ],
+    "detail": "key_custody: 「赵六」(speculation) ↔ 「张三+李四+赵六」(narrator)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 9,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "6-6"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 9,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "9-9"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 9,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "16-16"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 9,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "17-17"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(narrator)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 9,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "6-6",
+     "16-16"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 9,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "9-9",
+     "16-16"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 9,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "13-13",
+     "14-14"
+    ],
+    "detail": "key_count: 「2把」(narrator) ↔ 「1把」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 9,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "14-14",
+     "19-19"
+    ],
+    "detail": "key_count: 「1把」(speculation) ↔ 「2把」(narrator)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 9,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "16-16",
+     "17-17"
+    ],
+    "detail": "night_watch: 「张三」(dialogue) ↔ 「张三+赵六」(narrator)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "10": {
+  "scenes": 5,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 10,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "12-34"
+    ],
+    "detail": "王五 在场景2（藏宝阁）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "B",
+    "chapter": 10,
+    "rule_id": "space_rewind",
+    "evidence_refs": [
+     "12-34",
+     "44-46"
+    ],
+    "detail": "张三 场景2离开藏宝阁，场景4又在原地互动，中间无到达",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 10,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "24-24"
+    ],
+    "detail": "night_watch: 「张三+李四+赵六」(dialogue) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "11": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 11,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "7-7"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "12": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "5-5",
+     "17-17"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "5-5",
+     "18-18"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "5-5",
+     "23-23"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "5-5",
+     "24-24"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "5-5",
+     "26-26"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "6-6",
+     "21-21"
+    ],
+    "detail": "key_custody: 「张三+赵六+守阁人」(dialogue) ↔ 「阁主+守阁人」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "6-6",
+     "17-17"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "6-6",
+     "18-18"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "6-6",
+     "23-23"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "6-6",
+     "24-24"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "6-6",
+     "26-26"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "11-11",
+     "17-17"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "11-11",
+     "18-18"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "11-11",
+     "23-23"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "11-11",
+     "24-24"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "11-11",
+     "26-26"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "12-12",
+     "17-17"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "12-12",
+     "18-18"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "12-12",
+     "23-23"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "12-12",
+     "24-24"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 12,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "12-12",
+     "26-26"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "13": {
+  "scenes": 2,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 13,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "2-20"
+    ],
+    "detail": "赵六 在场景1（藏宝阁）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "4-4"
+    ],
+    "detail": "key_count: 「2把」(speculation) ↔ 「1把」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "8-8"
+    ],
+    "detail": "key_custody: 「张三+赵六+长老」(speculation) ↔ 「长老+守夜人」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "17-17"
+    ],
+    "detail": "key_custody: 「张三+赵六+长老」(speculation) ↔ 「赵六+守阁人+宗主」(narrator)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "8-8"
+    ],
+    "detail": "key_count: 「1把」(dialogue) ↔ 「2把」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "11-11"
+    ],
+    "detail": "key_count: 「1把」(dialogue) ↔ 「2把」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "17-17"
+    ],
+    "detail": "key_count: 「1把」(dialogue) ↔ 「2把」(narrator)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "7-7",
+     "10-10"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "7-7",
+     "17-17"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(narrator)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "7-7",
+     "20-20"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "8-8",
+     "17-17"
+    ],
+    "detail": "key_custody: 「长老+守夜人」(speculation) ↔ 「赵六+守阁人+宗主」(narrator)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "10-10",
+     "16-16"
+    ],
+    "detail": "night_watch: 「张三」(dialogue) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "10-10",
+     "17-17"
+    ],
+    "detail": "night_watch: 「张三」(dialogue) ↔ 「赵六」(narrator)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "10-10",
+     "19-19"
+    ],
+    "detail": "night_watch: 「张三」(dialogue) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "16-16",
+     "17-17"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(narrator)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "16-16",
+     "20-20"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "17-17",
+     "19-19"
+    ],
+    "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "17-17",
+     "20-20"
+    ],
+    "detail": "night_watch: 「赵六」(narrator) ↔ 「张三」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 13,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "19-19",
+     "20-20"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "14": {
+  "scenes": 2,
+  "needs_deep": false,
+  "candidates": []
+ },
+ "15": {
+  "scenes": 8,
+  "needs_deep": true,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 15,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "12-13"
+    ],
+    "detail": "赵六 在场景6（藏宝阁）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 15,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "12-12"
+    ],
+    "detail": "night_watch: 「张三+李四」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 15,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "6-6",
+     "12-12"
+    ],
+    "detail": "night_watch: 「张三+李四」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "16": {
+  "scenes": 5,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 16,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "4-5"
+    ],
+    "detail": "李四 在场景1（山下）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 16,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "4-5"
+    ],
+    "detail": "赵六 在场景1（山下）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "B",
+    "chapter": 16,
+    "rule_id": "space_rewind",
+    "evidence_refs": [
+     "4-5",
+     "7-11"
+    ],
+    "detail": "赵六 场景1离开山下，场景3又在原地互动，中间无到达",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "17": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 17,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "5-5"
+    ],
+    "detail": "night_watch: 「王五」(narrator) ↔ 「王五+赵六」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 17,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "23-23"
+    ],
+    "detail": "night_watch: 「王五」(narrator) ↔ 「张三+王五+赵六」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 17,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "5-5",
+     "8-8"
+    ],
+    "detail": "night_watch: 「王五+赵六」(speculation) ↔ 「王五」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 17,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "5-5",
+     "23-23"
+    ],
+    "detail": "night_watch: 「王五+赵六」(speculation) ↔ 「张三+王五+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 17,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "8-8",
+     "23-23"
+    ],
+    "detail": "night_watch: 「王五」(dialogue) ↔ 「张三+王五+赵六」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 17,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "12-12",
+     "13-13"
+    ],
+    "detail": "key_count: 「?把」(narrator) ↔ 「2把」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "18": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 18,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "10-10",
+     "11-11"
+    ],
+    "detail": "night_watch: 「张三」(dialogue) ↔ 「王五」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 18,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "10-10",
+     "39-39"
+    ],
+    "detail": "night_watch: 「张三」(dialogue) ↔ 「张三+王五」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 18,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "11-11",
+     "39-39"
+    ],
+    "detail": "night_watch: 「王五」(dialogue) ↔ 「张三+王五」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "19": {
+  "scenes": 5,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "B",
+    "chapter": 19,
+    "rule_id": "space_rewind",
+    "evidence_refs": [
+     "12-14",
+     "17-17"
+    ],
+    "detail": "张三 场景2离开藏宝阁，场景4又在原地互动，中间无到达",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 19,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "4-4"
+    ],
+    "detail": "night_watch: 「王五+赵六」(dialogue) ↔ 「王五」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 19,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "10-10"
+    ],
+    "detail": "night_watch: 「王五+赵六」(dialogue) ↔ 「张三+赵六」(narrator)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 19,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "13-13"
+    ],
+    "detail": "night_watch: 「王五+赵六」(dialogue) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 19,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "15-15"
+    ],
+    "detail": "night_watch: 「王五+赵六」(dialogue) ↔ 「张三+李四+赵六」(narrator)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 19,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "10-10"
+    ],
+    "detail": "night_watch: 「王五」(dialogue) ↔ 「张三+赵六」(narrator)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 19,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "13-13"
+    ],
+    "detail": "night_watch: 「王五」(dialogue) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 19,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "15-15"
+    ],
+    "detail": "night_watch: 「王五」(dialogue) ↔ 「张三+李四+赵六」(narrator)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 19,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "10-10",
+     "15-15"
+    ],
+    "detail": "night_watch: 「张三+赵六」(narrator) ↔ 「张三+李四+赵六」(narrator)",
+    "epistemic_pair": "narrator_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 19,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "13-13",
+     "15-15"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三+李四+赵六」(narrator)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "20": {
+  "scenes": 3,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 20,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "2-5"
+    ],
+    "detail": "李四 在场景1（阁楼）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 20,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "2-5"
+    ],
+    "detail": "赵六 在场景1（阁楼）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 20,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "5-5",
+     "29-29"
+    ],
+    "detail": "key_count: 「2把」(speculation) ↔ 「1把」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 20,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "8-8",
+     "22-22"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三+王五」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 20,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "21-21",
+     "22-22"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三+王五」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "21": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 21,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "9-9",
+     "14-14"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "22": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "2-2"
+    ],
+    "detail": "key_count: 「1把」(narrator) ↔ 「2把」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "8-8"
+    ],
+    "detail": "night_watch: 「王五」(narrator) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "16-16"
+    ],
+    "detail": "night_watch: 「王五」(narrator) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "25-25"
+    ],
+    "detail": "night_watch: 「王五」(narrator) ↔ 「张三」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "35-35"
+    ],
+    "detail": "night_watch: 「王五」(narrator) ↔ 「张三」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "5-5",
+     "8-8"
+    ],
+    "detail": "night_watch: 「王五」(dialogue) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "5-5",
+     "16-16"
+    ],
+    "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "5-5",
+     "25-25"
+    ],
+    "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "5-5",
+     "35-35"
+    ],
+    "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "8-8",
+     "16-16"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "8-8",
+     "17-17"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「王五」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "8-8",
+     "22-22"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「王五」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "8-8",
+     "24-24"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「王五」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "8-8",
+     "25-25"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "8-8",
+     "35-35"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "16-16",
+     "17-17"
+    ],
+    "detail": "night_watch: 「张三」(dialogue) ↔ 「王五」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "16-16",
+     "22-22"
+    ],
+    "detail": "night_watch: 「张三」(dialogue) ↔ 「王五」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "16-16",
+     "24-24"
+    ],
+    "detail": "night_watch: 「张三」(dialogue) ↔ 「王五」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "17-17",
+     "25-25"
+    ],
+    "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "17-17",
+     "35-35"
+    ],
+    "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "22-22",
+     "25-25"
+    ],
+    "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "22-22",
+     "35-35"
+    ],
+    "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "24-24",
+     "25-25"
+    ],
+    "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 22,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "24-24",
+     "35-35"
+    ],
+    "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "23": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 23,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "24-24"
+    ],
+    "detail": "night_watch: 「王五+赵六」(dialogue) ↔ 「李四+王五+赵六」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 23,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "28-28"
+    ],
+    "detail": "night_watch: 「王五+赵六」(dialogue) ↔ 「李四+王五+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 23,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "24-24"
+    ],
+    "detail": "key_count: 「1把」(dialogue) ↔ 「2把」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 23,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "24-24"
+    ],
+    "detail": "key_count: 「1把」(speculation) ↔ 「2把」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "24": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": []
+ },
+ "25": {
+  "scenes": 5,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 25,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "4-26"
+    ],
+    "detail": "张三 在场景2（藏宝阁）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 25,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "4-26"
+    ],
+    "detail": "赵六 在场景2（藏宝阁）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "B",
+    "chapter": 25,
+    "rule_id": "space_rewind",
+    "evidence_refs": [
+     "4-26",
+     "31-32"
+    ],
+    "detail": "张三 场景2离开藏宝阁，场景4又在原地互动，中间无到达",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "B",
+    "chapter": 25,
+    "rule_id": "space_rewind",
+    "evidence_refs": [
+     "4-26",
+     "31-32"
+    ],
+    "detail": "王五 场景2离开藏宝阁，场景4又在原地互动，中间无到达",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 25,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "13-13",
+     "21-21"
+    ],
+    "detail": "night_watch: 「王五+赵六」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 25,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "13-13",
+     "24-24"
+    ],
+    "detail": "night_watch: 「王五+赵六」(dialogue) ↔ 「张三+王五」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 25,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "13-13",
+     "25-25"
+    ],
+    "detail": "night_watch: 「王五+赵六」(dialogue) ↔ 「张三+王五」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 25,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "21-21",
+     "24-24"
+    ],
+    "detail": "night_watch: 「张三」(speculation) ↔ 「张三+王五」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 25,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "21-21",
+     "25-25"
+    ],
+    "detail": "night_watch: 「张三」(speculation) ↔ 「张三+王五」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 25,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "31-31",
+     "32-32"
+    ],
+    "detail": "key_count: 「2把」(dialogue) ↔ 「1把」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "26": {
+  "scenes": 3,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "B",
+    "chapter": 26,
+    "rule_id": "space_rewind",
+    "evidence_refs": [
+     "1-26",
+     "30-35"
+    ],
+    "detail": "赵六 场景0离开藏宝阁，场景2又在原地互动，中间无到达",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "27": {
+  "scenes": 3,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 27,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "15-16"
+    ],
+    "detail": "李四 在场景1（山下）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 27,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "17-29"
+    ],
+    "detail": "赵六 在场景2（藏宝阁）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 27,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "22-22"
+    ],
+    "detail": "night_watch: 「王五」(narrator) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 27,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "22-22"
+    ],
+    "detail": "night_watch: 「王五」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "28": {
+  "scenes": 3,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 28,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "27-27"
+    ],
+    "detail": "night_watch: 「王五+赵六」(speculation) ↔ 「张三+王五」(narrator)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 28,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "27-27"
+    ],
+    "detail": "night_watch: 「王五+赵六」(speculation) ↔ 「张三+王五」(narrator)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 28,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "6-6",
+     "27-27"
+    ],
+    "detail": "night_watch: 「王五+赵六」(speculation) ↔ 「张三+王五」(narrator)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 28,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "15-15",
+     "23-23"
+    ],
+    "detail": "key_custody: 「王五+宗主」(dialogue) ↔ 「张三+王五+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "29": {
+  "scenes": 3,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 29,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "5-5",
+     "9-9"
+    ],
+    "detail": "key_custody: 「李四+王五」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "30": {
+  "scenes": 3,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "B",
+    "chapter": 30,
+    "rule_id": "space_rewind",
+    "evidence_refs": [
+     "1-30",
+     "33-42"
+    ],
+    "detail": "张三 场景0离开藏宝阁，场景2又在原地互动，中间无到达",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 30,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "17-17",
+     "29-29"
+    ],
+    "detail": "key_count: 「2把」(dialogue) ↔ 「1把」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "31": {
+  "scenes": 3,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 31,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "7-24"
+    ],
+    "detail": "赵六 在场景2（藏宝阁）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "B",
+    "chapter": 31,
+    "rule_id": "space_rewind",
+    "evidence_refs": [
+     "1-4",
+     "7-24"
+    ],
+    "detail": "王五 场景0离开藏宝阁，场景2又在原地互动，中间无到达",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 31,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "23-23"
+    ],
+    "detail": "night_watch: 「张三+王五」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "32": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 32,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "10-10"
+    ],
+    "detail": "key_count: 「1把」(narrator) ↔ 「2把」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 32,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "13-13"
+    ],
+    "detail": "key_count: 「1把」(narrator) ↔ 「2把」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 32,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "3-3"
+    ],
+    "detail": "night_watch: 「王五」(narrator) ↔ 「王五+赵六」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 32,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "7-7"
+    ],
+    "detail": "night_watch: 「王五」(narrator) ↔ 「张三+王五」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 32,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "18-18"
+    ],
+    "detail": "night_watch: 「王五」(narrator) ↔ 「张三+王五」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 32,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "5-5"
+    ],
+    "detail": "night_watch: 「王五+赵六」(speculation) ↔ 「王五」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 32,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "7-7"
+    ],
+    "detail": "night_watch: 「王五+赵六」(speculation) ↔ 「张三+王五」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 32,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "18-18"
+    ],
+    "detail": "night_watch: 「王五+赵六」(speculation) ↔ 「张三+王五」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 32,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "5-5",
+     "7-7"
+    ],
+    "detail": "night_watch: 「王五」(dialogue) ↔ 「张三+王五」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 32,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "5-5",
+     "18-18"
+    ],
+    "detail": "night_watch: 「王五」(dialogue) ↔ 「张三+王五」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 32,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "8-8",
+     "10-10"
+    ],
+    "detail": "key_count: 「1把」(speculation) ↔ 「2把」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 32,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "8-8",
+     "13-13"
+    ],
+    "detail": "key_count: 「1把」(speculation) ↔ 「2把」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "33": {
+  "scenes": 3,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 33,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "9-10"
+    ],
+    "detail": "李四 在场景1（山下）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 33,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "11-31"
+    ],
+    "detail": "张三 在场景2（藏宝阁）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 33,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "12-12"
+    ],
+    "detail": "night_watch: 「王五+赵六」(narrator) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 33,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "13-13"
+    ],
+    "detail": "night_watch: 「王五+赵六」(narrator) ↔ 「张三+王五+赵六」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 33,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "18-18"
+    ],
+    "detail": "night_watch: 「王五+赵六」(narrator) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 33,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "19-19"
+    ],
+    "detail": "night_watch: 「王五+赵六」(narrator) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 33,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "23-23"
+    ],
+    "detail": "night_watch: 「王五+赵六」(narrator) ↔ 「张三+赵六」(narrator)",
+    "epistemic_pair": "narrator_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 33,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "12-12",
+     "13-13"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三+王五+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 33,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "13-13",
+     "18-18"
+    ],
+    "detail": "night_watch: 「张三+王五+赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 33,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "13-13",
+     "19-19"
+    ],
+    "detail": "night_watch: 「张三+王五+赵六」(speculation) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 33,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "13-13",
+     "23-23"
+    ],
+    "detail": "night_watch: 「张三+王五+赵六」(speculation) ↔ 「张三+赵六」(narrator)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "34": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 34,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "13-13",
+     "16-16"
+    ],
+    "detail": "night_watch: 「张三+李四+赵六」(speculation) ↔ 「张三+王五」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 34,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "13-13",
+     "27-27"
+    ],
+    "detail": "night_watch: 「张三+李四+赵六」(speculation) ↔ 「张三+王五+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 34,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "13-13",
+     "28-28"
+    ],
+    "detail": "night_watch: 「张三+李四+赵六」(speculation) ↔ 「李四+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 34,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "16-16",
+     "27-27"
+    ],
+    "detail": "night_watch: 「张三+王五」(speculation) ↔ 「张三+王五+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 34,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "16-16",
+     "28-28"
+    ],
+    "detail": "night_watch: 「张三+王五」(speculation) ↔ 「李四+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 34,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "27-27",
+     "28-28"
+    ],
+    "detail": "night_watch: 「张三+王五+赵六」(dialogue) ↔ 「李四+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "35": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 35,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "10-10"
+    ],
+    "detail": "key_custody: 「赵六+门主」(speculation) ↔ 「赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 35,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "11-11"
+    ],
+    "detail": "key_custody: 「赵六+门主」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 35,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "16-16"
+    ],
+    "detail": "key_custody: 「赵六+门主」(speculation) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 35,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "9-9"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 35,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "9-9",
+     "10-10"
+    ],
+    "detail": "night_watch: 「张三」(dialogue) ↔ 「赵六」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 35,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "10-10",
+     "11-11"
+    ],
+    "detail": "key_custody: 「赵六」(dialogue) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 35,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "10-10",
+     "16-16"
+    ],
+    "detail": "key_custody: 「赵六」(dialogue) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 35,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "11-11",
+     "16-16"
+    ],
+    "detail": "key_custody: 「张三+赵六」(speculation) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "36": {
+  "scenes": 3,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 36,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "4-4"
+    ],
+    "detail": "李四 在场景1（山下）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 36,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "18-18"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「李四+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 36,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "12-12"
+    ],
+    "detail": "key_count: 「2把」(speculation) ↔ 「1把」(narrator)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 36,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "12-12",
+     "15-15"
+    ],
+    "detail": "key_count: 「1把」(narrator) ↔ 「2把」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "37": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": []
+ },
+ "38": {
+  "scenes": 3,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 38,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "9-9"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 38,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "28-28"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 38,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "34-34"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 38,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "9-9",
+     "28-28"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 38,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "28-28",
+     "34-34"
+    ],
+    "detail": "night_watch: 「张三」(dialogue) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "39": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 39,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "6-6",
+     "12-12"
+    ],
+    "detail": "night_watch: 「张三+赵六」(narrator) ↔ 「张三」(narrator)",
+    "epistemic_pair": "narrator_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 39,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "6-6",
+     "19-19"
+    ],
+    "detail": "night_watch: 「张三+赵六」(narrator) ↔ 「赵六」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 39,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "12-12",
+     "13-13"
+    ],
+    "detail": "night_watch: 「张三」(narrator) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 39,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "12-12",
+     "19-19"
+    ],
+    "detail": "night_watch: 「张三」(narrator) ↔ 「赵六」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 39,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "13-13",
+     "19-19"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "40": {
+  "scenes": 4,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "B",
+    "chapter": 40,
+    "rule_id": "space_rewind",
+    "evidence_refs": [
+     "1-6",
+     "9-20"
+    ],
+    "detail": "赵六 场景0离开藏宝阁，场景2又在原地互动，中间无到达",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "B",
+    "chapter": 40,
+    "rule_id": "space_rewind",
+    "evidence_refs": [
+     "9-20",
+     "21-28"
+    ],
+    "detail": "张三 场景2离开藏宝阁，场景3又在原地互动，中间无到达",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 40,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "14-14"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 40,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "22-22"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 40,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "14-14",
+     "19-19"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 40,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "14-14",
+     "23-23"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 40,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "19-19",
+     "22-22"
+    ],
+    "detail": "night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 40,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "22-22",
+     "23-23"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "41": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 41,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "10-10"
+    ],
+    "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "42": {
+  "scenes": 5,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 42,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "14-15"
+    ],
+    "detail": "李四 在场景1（山下）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 42,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "16-21"
+    ],
+    "detail": "王五 在场景2（藏宝阁）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 42,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "7-7"
+    ],
+    "detail": "night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(narrator)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 42,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "17-17"
+    ],
+    "detail": "night_watch: 「赵六」(dialogue) ↔ 「张三」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 42,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "25-25"
+    ],
+    "detail": "key_custody: 「赵六+长老」(speculation) ↔ 「赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 42,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "25-25"
+    ],
+    "detail": "key_custody: 「赵六+长老」(narrator) ↔ 「赵六」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 42,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "7-7",
+     "10-10"
+    ],
+    "detail": "night_watch: 「张三+赵六」(narrator) ↔ 「赵六」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 42,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "7-7",
+     "17-17"
+    ],
+    "detail": "night_watch: 「张三+赵六」(narrator) ↔ 「张三」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 42,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "7-7",
+     "23-23"
+    ],
+    "detail": "night_watch: 「张三+赵六」(narrator) ↔ 「赵六」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 42,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "10-10",
+     "17-17"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 42,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "17-17",
+     "23-23"
+    ],
+    "detail": "night_watch: 「张三」(speculation) ↔ 「赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "43": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 43,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "13-13"
+    ],
+    "detail": "key_count: 「1把」(speculation) ↔ 「2把」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 43,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "2-2",
+     "24-24"
+    ],
+    "detail": "key_count: 「1把」(speculation) ↔ 「2把」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "44": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 44,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "23-23",
+     "24-24"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "45": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 45,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "10-10"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 45,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "17-17"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(narrator)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 45,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "31-31"
+    ],
+    "detail": "key_count: 「1把」(narrator) ↔ 「2把」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 45,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "6-6",
+     "10-10"
+    ],
+    "detail": "night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 45,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "6-6",
+     "17-17"
+    ],
+    "detail": "night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(narrator)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "46": {
+  "scenes": 5,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 46,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "14-22"
+    ],
+    "detail": "李四 在场景2（藏宝阁）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "A",
+    "chapter": 46,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "14-22"
+    ],
+    "detail": "王五 在场景2（藏宝阁）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "B",
+    "chapter": 46,
+    "rule_id": "space_rewind",
+    "evidence_refs": [
+     "1-9",
+     "14-22"
+    ],
+    "detail": "赵六 场景0离开藏宝阁，场景2又在原地互动，中间无到达",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "B",
+    "chapter": 46,
+    "rule_id": "space_rewind",
+    "evidence_refs": [
+     "14-22",
+     "27-28"
+    ],
+    "detail": "张三 场景2离开藏宝阁，场景4又在原地互动，中间无到达",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "47": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 47,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "11-11"
+    ],
+    "detail": "night_watch: 「赵六」(narrator) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 47,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "24-24"
+    ],
+    "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 47,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "11-11"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 47,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "24-24"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 47,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "11-11",
+     "12-12"
+    ],
+    "detail": "night_watch: 「张三」(dialogue) ↔ 「赵六」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 47,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "11-11",
+     "14-14"
+    ],
+    "detail": "night_watch: 「张三」(dialogue) ↔ 「赵六」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 47,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "11-11",
+     "24-24"
+    ],
+    "detail": "night_watch: 「张三」(dialogue) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 47,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "12-12",
+     "24-24"
+    ],
+    "detail": "night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 47,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "14-14",
+     "24-24"
+    ],
+    "detail": "night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "48": {
+  "scenes": 1,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 48,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "7-7"
+    ],
+    "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 48,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "23-23"
+    ],
+    "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 48,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "25-25"
+    ],
+    "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "narrator_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 48,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "27-27"
+    ],
+    "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_narrator",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 48,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "7-7"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 48,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "23-23"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 48,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "25-25"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 48,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "4-4",
+     "27-27"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 48,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "7-7",
+     "24-24"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 48,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "7-7",
+     "26-26"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 48,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "23-23",
+     "24-24"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 48,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "23-23",
+     "26-26"
+    ],
+    "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 48,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "24-24",
+     "25-25"
+    ],
+    "detail": "night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 48,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "24-24",
+     "27-27"
+    ],
+    "detail": "night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_dialogue",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 48,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "25-25",
+     "26-26"
+    ],
+    "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 48,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "26-26",
+     "27-27"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "49": {
+  "scenes": 5,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "C",
+    "chapter": 49,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "27-27"
+    ],
+    "detail": "key_count: 「1把」(speculation) ↔ 「2把」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   }
+  ]
+ },
+ "50": {
+  "scenes": 5,
+  "needs_deep": false,
+  "candidates": [
+   {
+    "family": "A",
+    "chapter": 50,
+    "rule_id": "entry_without_source",
+    "evidence_refs": [
+     "25-29"
+    ],
+    "detail": "李四 在场景3（山下）首次在场，此前无到达叙述",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "B",
+    "chapter": 50,
+    "rule_id": "space_rewind",
+    "evidence_refs": [
+     "1-20",
+     "22-24"
+    ],
+    "detail": "赵六 场景0离开藏宝阁，场景2又在原地互动，中间无到达",
+    "epistemic_pair": "",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 50,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "10-10"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 50,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "1-1",
+     "12-12"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 50,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "3-3",
+     "23-23"
+    ],
+    "detail": "key_custody: 「赵六+高层」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 50,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "5-5",
+     "10-10"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue)",
+    "epistemic_pair": "dialogue_speculation",
+    "severity": "OBS"
+   },
+   {
+    "family": "C",
+    "chapter": 50,
+    "rule_id": "statement_value_conflict",
+    "evidence_refs": [
+     "5-5",
+     "12-12"
+    ],
+    "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+    "epistemic_pair": "speculation_speculation",
+    "severity": "OBS"
+   }
+  ]
+ }
+}
