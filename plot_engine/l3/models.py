@@ -20,6 +20,8 @@ class SceneFrame(BaseModel):
     line_end: int
     present: List[str] = []      # 本场景行内提及的白名单实体
     arrived: List[str] = []      # 本场景有到达叙述的实体
+    arrived_move: List[str] = []  # v0.3 §7.18：arrived 的子集=有位移词到达（强到达）；
+    # 只在 arrived 不在 arrived_move=仅门窗口到达（弱到达，人不曾移动、门被推开而已）。
     departed: List[str] = []     # 本场景有硬离开叙述的实体（意图词不算）
     # 抽取层 v2 修复①②：present/到达/离开=叙述行口径；present_line=实体首次在场的叙述行号
     present_line: Dict[str, int] = {}

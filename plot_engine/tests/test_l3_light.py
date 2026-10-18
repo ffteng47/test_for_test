@@ -191,6 +191,46 @@ class TestExtractorV2:
         assert not any("李四" in c.detail for c in a), "李四提及造帧工件未消除"
 
 
+class TestSkydropArrival:
+    """§7.18 空降到达闸（v0.3 中批后续，旁路确定性检查，本批不接 run_light=待 tff 双面验收裁定）。
+
+    双面验收：①真穿帮 ch08（山下落定→凭空进书房）必须过闸；②§7.16 判误的「到达叙述被误引为
+    证据」型 B 不得因本闸转成宿主新火。
+    """
+
+    def test_door_only_arrival_after_elsewhere_fires(self):
+        from plot_engine.l3.temporal_checks import find_skydrop_arrivals
+        frames = build_scene_index(8, ["张三在书房内翻查簿记。",
+                                       "走出院门，张三向山下走去，来到了山下的一家小酒馆。",
+                                       "张三推开书房的门，一股墨香扑面而来。"])
+        e = find_skydrop_arrivals(frames)
+        assert len(e) == 1 and e[0].family == "B" and e[0].rule_id == "skydrop_arrival"
+        assert "空降到达" in e[0].detail
+
+    def test_movement_arrival_not_fired(self):
+        from plot_engine.l3.temporal_checks import find_skydrop_arrivals
+        frames = build_scene_index(8, ["张三在书房内翻查簿记。",
+                                       "走出院门，张三向山下走去，来到了山下的一家小酒馆。",
+                                       "张三回到书房，把灯点上。"])
+        assert find_skydrop_arrivals(frames) == []  # 位移支到达=续接位移链，保留全消解权
+
+    def test_same_location_door_arrival_not_fired(self):
+        from plot_engine.l3.temporal_checks import find_skydrop_arrivals
+        frames = build_scene_index(8, ["赵六在藏宝阁内值守，翻着簿记。",
+                                       "赵六推开藏宝阁的门，取出钥匙。"])
+        assert find_skydrop_arrivals(frames) == []  # 人没换地方=没有位移蒸发
+
+    @pytest.mark.skipif(not (CH50.parent / "ch08.md").exists(), reason="wpe50ch 语料不在本机")
+    def test_ch08_real_evaporation_fires(self):
+        """tff 亲裁真穿帮：ch08 L015 人已落到山下 ↔ L016 凭空推开书房的门。"""
+        from plot_engine.metrics import _section_body
+        from plot_engine.l3.temporal_checks import find_skydrop_arrivals
+        body = _section_body((CH50.parent / "ch08.md").read_text(
+            encoding="utf-8", errors="replace").splitlines(), "Draft")
+        e = find_skydrop_arrivals(build_scene_index(8, body))
+        assert [c.evidence_refs for c in e] == [["15-15", "16-18"]]
+
+
 class TestSceneReplay:
     """E 族旁路：语义级场景重演（不接 run_light，本批尺面 v0.2 不含 E）。"""
 
@@ -291,3 +331,38 @@ class TestExtractorV23:
         frames = build_scene_index(1, ["书房内张三翻查着卷宗。",
                                        "他发现了新的线索，那就是李四在山下与一个陌生人会饮。"])
         assert all("李四" not in fr.present for fr in frames)
+
+
+class TestExtractorV3:
+    """v0.3 中批（tff 2026-10-19 拍板=启动中批）：在场认定改「叙述层施事」双闸，根治稽核 F2。"""
+
+    def test_subject_before_trigger_survives(self):
+        # F2 根治主案：触发词在后半句不再把主语连坐（ch08 L1 型=整行拒绝的头号误杀）。
+        frames = build_scene_index(1, ["张三站在藏宝阁外，心中满是疑惑。",
+                                       "他知道这把钥匙只有两枚。"])
+        assert frames[0].present_line.get("张三") == 1
+
+    def test_mentioned_entity_not_presence(self):
+        # 闸二：被提及者不是施事=不在场（ch08 L7 型=笔迹与王五的手书相似）。
+        frames = build_scene_index(1, ["张三独自坐在书房，整理着旧文档。",
+                                       "他凝视着密信，笔迹与王五的手书有几分类似。"])
+        assert all("王五" not in fr.present for fr in frames)
+        assert frames[0].present_line.get("张三") == 1
+
+    def test_memory_clause_scope_until_sentence_end(self):
+        # 闸一：触发词小句起、到句末为止的辖域内一律不建立在场（冒号蔓延案）。
+        frames = build_scene_index(1, ["藏宝阁内只剩下赵六一人。",
+                                       "他想起那些消失的簿记：李四曾在山下会饮，王五也来过这里。"])
+        assert frames[0].present_line.get("赵六") == 1
+        assert all("李四" not in fr.present and "王五" not in fr.present for fr in frames)
+
+    def test_ch08_movement_anchor_lines_visible(self):
+        # §7.18 前置实证：位移锚行 L015 与再入场行 L016 不再被整行拒绝吞掉（v2.2/v2.3 面上两帧 present 全空）。
+        body = ["张三走出书房，来到后院，王五正在院中独自饮酒。",
+                "走出院门，张三向山下走去，来到了山下的一家小酒馆。",
+                "张三推开书房的门，一股淡淡的墨香扑面而来。"]
+        frames = build_scene_index(8, body)
+        at山下 = [fr for fr in frames if fr.location_text == "山下"]
+        at书房 = [fr for fr in frames if fr.location_text == "书房"]
+        assert "张三" in at山下[0].present and "张三" in at书房[-1].present
+

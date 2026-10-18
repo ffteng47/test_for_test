@@ -39,6 +39,33 @@ def find_entry_without_source(frames: Sequence[SceneFrame]) -> List[ConsistencyC
     return out
 
 
+def find_skydrop_arrivals(frames: Sequence[SceneFrame]) -> List[ConsistencyCandidate]:
+    """B-空降（v0.3 中批后续，pack §7.18 tff 亲裁 ch08-B=真穿帮「位移蒸发」）：
+
+    主体被**位移叙述明确落到**某地（prev 帧 arrived_move），随后一帧只在门窗口出现
+    （arrived 但不在 arrived_move）=位移蒸发。门窗口支由「全消解」降为「条件消解」——
+    推开的门只证明门动了，不证明人怎么到的这里。
+    落定锚取 prev 帧强到达（非「prev 帧在场」）：这是 §7.16 的判据入码——同为门+推开，
+    ch08-B 判真（前一行「来到了山下的一家小酒馆」把人落到别处）、ch14/21/22/26/35/42/48-B
+    判误（前一行只写开门/移动意图，人从未被落到另一地点）。"""
+    out: List[ConsistencyCandidate] = []
+    landed: Dict[str, SceneFrame] = {}   # 实体 → 最近一次「被位移叙述落到」的帧
+    for fr in frames:
+        weak = [e for e in fr.arrived if e not in fr.arrived_move]
+        for e in fr.arrived_move:
+            landed[e] = fr               # 落定锚刷新（含本帧，之后失效）
+        for e in weak:
+            prev = landed.get(e)
+            if prev is not None and prev.location_text != fr.location_text:
+                out.append(ConsistencyCandidate(
+                    family="B", chapter=fr.chapter, rule_id="skydrop_arrival",
+                    evidence_refs=[f"{prev.line_start}-{prev.line_end}",
+                                   f"{fr.line_start}-{fr.line_end}"],
+                    detail=f"{e} 场景{prev.scene_seq}由位移叙述落到{prev.location_text}，场景{fr.scene_seq}"
+                           f"仅有门窗口到达入{fr.location_text}，中间无位移叙述 [工件标注:空降到达]"))
+    return out
+
+
 def find_space_rewind(frames: Sequence[SceneFrame]) -> List[ConsistencyCandidate]:
     """B：实体硬离开后又在同地点在场，中间无到达叙述。"""
     out: List[ConsistencyCandidate] = []

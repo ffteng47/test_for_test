@@ -11,7 +11,7 @@ from typing import List, Sequence
 
 from plot_engine.l3.models import SceneFrame
 
-# ---- 词表（尺面戳 l3-v0.2.3：变更=读数变更，须带戳） ----
+# ---- 词表（尺面戳 l3-v0.3.0：变更=读数变更，须带戳） ----
 DEFAULT_ENTITIES = ["张三", "王五", "李四", "赵六"]
 DEFAULT_LOCATIONS = ["藏宝阁", "书房", "后院", "山下", "门主府", "掌门府",
                      "走廊", "阁楼", "住处"]
@@ -24,6 +24,12 @@ TIME_MARKERS = ["次日", "第二天", "翌日", "入夜", "夜幕降临", "清�
 ARRIVE_RE = re.compile(
     r"(门[^。]{0,12}(推开|打开|敲响|开了))|((推开|打开|敲响)[^。]{0,8}门)"
     r"|(走了?进来|踏入|踏进|迈进|推门|破门|闯入|出现在门口|步入|来到|返回|回到"
+    r"|前来|赶来|过来)")
+# v0.3 §7.18（tff 亲裁 ch08-B=真穿帮「位移蒸发」）：到达支拆两半。
+# 位移支=主语真的从甲地移动到乙地（来到/走进/赶来…），可续接位移链、保留全消解权；
+# 门窗口支=只写「门被推开/打开」，不写人怎么到的此处——上一帧把人落在别处时不构成消解。
+ARRIVE_MOVE_RE = re.compile(
+    r"(走了?进来|踏入|踏进|迈进|推门|破门|闯入|出现在门口|步入|来到|返回|回到"
     r"|前来|赶来|过来)")
 # v2.2：倒装到达句式主语=后置名（ch48 L16「门被推开，进来的是王五」——_subject_near
 # 回看窗抓不到后置主语，会把张三错认成到达者，王五反被悬置成 A 嫌疑）。
@@ -56,11 +62,6 @@ _MENTION_TRIG_RE = re.compile(
     r"|曾经|当年|往事|旧事|行踪|脑海|那就是|这便是")
 
 
-def _line_scope(line: str) -> str:
-    """在场只认无回忆/传闻/转述触发词的行。"""
-    return "" if _MENTION_TRIG_RE.search(line) else line
-
-
 _CLAUSE_RE = re.compile(r"[^。！？，；]+")
 
 
@@ -75,6 +76,61 @@ def _action_scope(line: str) -> str:
             for i in range(m.start(), m.end()):
                 out[i] = "。"
     return "".join(out)
+
+
+# ---- v0.3 中批：在场认定改「叙述层施事」双闸（tff 2026-10-19 拍板，稽核 F2 根治） ----
+# 病根（l3-v022-audit F2 + pack §7.19 实测）：v2.2 的整行拒绝把「张三站在藏宝阁外，心中满是疑惑」
+# 这类**真在场行连主语一起杀掉**，在场链被切碎=A 族独报残余 8/8 的唯一成因；同时 ch08 的位移锚行
+# L015/L016 也被整行杀掉，导致 tff 判真的位移蒸发在宿主面结构性不可见。
+# 闸一（辖域）=心理/传闻触发词所在小句及其后直到句末（。！？）的小句=被想/被传的内容层，不建立在场；
+#   承接副词（便/于是/随后…）开头的子句退出辖域=叙述动作的续行，否则 ch50 L30「…觉得…便转身离开」
+#   这类真动作会被辖域吞掉。
+# 闸二（施事）=实体须是动作/状态谓词的施事（名后 ≤12 字内命中，跨不过句末与辖域），
+#   「笔迹与王五的手书有几分类似」「李四在山下与外客会饮」型被提及者天然不命中。
+_CLAUSE_SPLIT_RE = re.compile(r"[。！？，；]")
+_CONNECT_RE = re.compile(r"^\s*(便|于是|然后|随后|接着|紧接着|这才|随即|立刻|马上|就|才|转身|起身|站起|抬起|转头|开口)")
+_AGENT_ACTION_RE = re.compile(
+    r"(坐|站|立|倚|躺|蹲|守|陪|待|在|走|奔|赶|跑|冲|进|出|回|推|拉|敲|开|关|锁|拿|握|持|抓|举|放|扔|取"
+    r"|只剩|剩下|只有|唯有|独自|孤身"
+    r"|翻|看|望|盯|扫|听|闻|嗅|说|道|问|答|喊|笑|哭|点头|摇头|皱眉|环顾|踱步|伸手|写|读|查|摸|抚|指|靠"
+    r"|停|凝视|打量|端详|查看|抬|低|闭|睁|转身|起身|走近|来到|转身)")
+_AGENT_WINDOW = 12
+
+
+def _clause_scopes(line: str) -> List[tuple]:
+    """行 → [(小句, 起始偏移, 是否落在回忆/传闻辖域内)]。"""
+    out, start, scoped = [], 0, False
+    for m in _CLAUSE_SPLIT_RE.finditer(line + "。"):
+        seg = line[start:m.start()]
+        if seg:
+            head = seg.lstrip()
+            if _CONNECT_RE.match(head):
+                scoped = False  # 承接副词=叙述动作续行，退出辖域
+            hit_trig = bool(_MENTION_TRIG_RE.search(seg))
+            out.append((seg, start, scoped or hit_trig))  # 触发词小句自身=内容层，其后沿用
+            scoped = scoped or hit_trig
+        start = m.end()
+    return out
+
+
+def _presence_agents(line: str, entities: Sequence[str]) -> List[str]:
+    """在场实体=与非动作/状态谓词相邻（前后 ≤12 字）的、位于非辖域小句里的实体。
+    前后双向都要看：汉语存现句「藏宝阁内只剩下赵六一人」动词在主语前，只查后向会把开场在场者漏掉。"""
+    hit = []
+    for seg, _start, scoped in _clause_scopes(line):
+        if scoped:
+            continue
+        for e in entities:
+            p = seg.find(e)
+            while p >= 0:
+                win = (seg[p + len(e):p + len(e) + _AGENT_WINDOW]        # 后向：张三推开书房的门
+                       + seg[max(0, p - _AGENT_WINDOW):p])               # 前向：藏宝阁内只剩下赵六一人
+                if _AGENT_ACTION_RE.search(win):
+                    hit.append(e)
+                    break
+                p = seg.find(e, p + 1)
+    return hit
+
 
 
 def _narration(line: str) -> str:
@@ -155,21 +211,23 @@ def build_scene_index(chapter: int, body: Sequence[str],
         seg = list(enumerate(lines[fr.line_start - 1:fr.line_end], fr.line_start))
         present_line: dict = {}
         for g, ln in seg:
-            n = _line_scope(_SEEK_TARGET_RE.sub("", _narration(ln)))  # v2①/v2.1①/v2.2①/v2.3 F4
-            for e in entities:
-                if e in n:
-                    present_line.setdefault(e, g)
+            # v0.3 中批：在场=叙述层施事双闸（不再整行拒绝，F2 根治）；引号台词/去找X 仍先剥。
+            for e in _presence_agents(_SEEK_TARGET_RE.sub("", _narration(ln)), entities):
+                present_line.setdefault(e, g)
         fr.present = sorted(present_line)
         fr.present_line = present_line
-        arr, dep = set(), set()
+        arr, arr_move, dep = set(), set(), set()
         for _, ln in seg:
             sc = _action_scope(ln)  # v2.3 F1：作用域从在场扩到到达/离开（稽核=B 族输入面裸露），小句级非整行
             for m in ARRIVE_NAME_RE.finditer(sc):  # v2.2 倒装到达：后置主语直取
                 arr.add(m.group(2))
+                arr_move.add(m.group(2))  # 「进来的是X」=位移（v0.3 §7.18）
             for m in ARRIVE_RE.finditer(sc):
                 s = _subject_near(sc, m.span(), entities, last_entity)
                 if s:
                     arr.add(s)
+                    if ARRIVE_MOVE_RE.search(m.group()):
+                        arr_move.add(s)  # v0.3：位移支到达=可续接位移链
             intent_spans = [m.span() for m in DEPART_INTENT_RE.finditer(sc)]
             for m in DEPART_RE.finditer(sc):
                 if any(a <= m.start() < b for a, b in intent_spans):
@@ -182,5 +240,5 @@ def build_scene_index(chapter: int, body: Sequence[str],
             mentioned = [e for e in entities if e in ln]
             if mentioned:
                 last_entity = mentioned[0]  # 叙事主语连续性（代词行回落用）
-        fr.arrived, fr.departed = sorted(arr), sorted(dep)
+        fr.arrived, fr.arrived_move, fr.departed = sorted(arr), sorted(arr_move), sorted(dep)
     return frames

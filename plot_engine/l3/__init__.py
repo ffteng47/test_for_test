@@ -8,7 +8,7 @@
 3. 候选不是定罪：severity 恒 OBS，L3 永不产 HARD。
 
 与既有 `consistency.py`（L0 账面自洽）划界：本层管"账与文的一致性"，不管"账内部自洽"。
-尺面戳：l3-v0.2.3（predicate 白名单/实体白名单/地点名词表/触发词表变更=读数变更，须带戳）。
+尺面戳：l3-v0.3.0（predicate 白名单/实体白名单/地点名词表/触发词表变更=读数变更，须带戳）。
 """
 from plot_engine.l3.models import (ConsistencyCandidate, IntervalFact, SceneFrame,  # noqa: F401
                                    Statement)
