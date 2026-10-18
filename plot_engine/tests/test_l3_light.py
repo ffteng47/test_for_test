@@ -191,3 +191,26 @@ class TestExtractorV2:
         a = [c for c in cands if c.family == "A"]
         assert any("张三" in c.detail for c in a), "锚①张三未回补"
         assert not any("李四" in c.detail for c in a), "李四提及造帧工件未消除"
+
+
+class TestSceneReplay:
+    """E 族旁路：语义级场景重演（不接 run_light，本批尺面 v0.2 不含 E）。"""
+
+    def test_same_scene_three_segments_fire(self):
+        from plot_engine.l3.scene_replay import find_scene_replay
+        body = ["藏宝阁内赵六查钥匙，盘点簿记。", "赵六盯着那枚印章。",
+                "张三走进藏宝阁查钥匙，翻看记录。", "张三怀疑有人动过。",
+                "王五赶到藏宝阁查钥匙，核对簿记。", "赵六又谈起伪造的印章。"]
+        frames = build_scene_index(1, body)
+        e = find_scene_replay(1, strip_comments(body)[0], frames)
+        assert e and e[0].family == "E" and e[0].rule_id == "scene_replay"
+        assert e[0].evidence_refs == ["1-2", "3-4", "5-6"]
+
+    @pytest.mark.skipif(not CH50.exists(), reason="wpe50ch 语料不在本机")
+    def test_ch50_three_segments_calibrated(self):
+        from plot_engine.l3.scene_replay import find_scene_replay
+        from plot_engine.metrics import _section_body
+        body = _section_body(CH50.read_text(encoding="utf-8", errors="replace").splitlines(), "Draft")
+        e = find_scene_replay(50, strip_comments(body)[0], build_scene_index(50, body))
+        assert [c.evidence_refs for c in e if c.family == "E"] == [["1-8", "9-20", "22-30"]], \
+            "ch50 三段重演（001-008/009-021/022-030）校准未命中"

@@ -56,7 +56,7 @@ class IntervalFact(BaseModel):
 class ConsistencyCandidate(BaseModel):
     """一致性候选。候选不是定罪——severity 恒 OBS，判分在旁路车道。"""
 
-    family: Literal["A", "B", "C", "D"]
+    family: Literal["A", "B", "C", "D", "E"]
     chapter: int
     rule_id: str                 # 触发规则（如 "entry_without_source"）
     evidence_refs: List[str]     # 行号区间，宿主可回填
