@@ -2,7 +2,6 @@
 
 - 代码基线：`refrence_projects/oh-story-claudecode`（816 文件）
 - 架构与商业分析见 `docs/commercial/oh-story-architecture-and-commercial-analysis-v1.0.md`；本文档只补**代码流实现细节**
-- License：MIT
 
 ## 1. 写作脚本草（`skills/story-long-write/scripts/`，13 个）
 
@@ -12,7 +11,7 @@
 | `tracking_commit.py` | 追踪提交（_tracking-state.json） | commit 事务化 |
 | `build_writer_prompt.py` | **写作提示词由脚本组装** | 提示词构建外置为确定性代码，不靠宿主即兴 |
 | `build_architect_brief.py` | 架构简报组装 | 同上 |
-| `check-outline-contract.js` | **细纲契约检查** | 无合规细纲不得写正文（门禁前置） |
+| `check-outline-contract.js` | **细纲契约检查** | 细纲契约不过不得写正文（门禁前置） |
 | `check-outline-copy.js` | 细纲照搬检测（细纲写成散文句→正文誊抄） | 配「复沓锚句」白名单字段 |
 | `check-degeneration.js`（316 行） | 退化指纹检测（详见 §2） | 与我方 prose_audit 互证 |
 | `check-ai-patterns.js` | AI 句式模板命中 | deslop lint 核心 |
@@ -27,7 +26,7 @@
 - **复读/打转**：长句（可见字符 ≥12）出现 ≥3 次判打转；紧邻整行重复（≥8 字）判即时循环；**短句/弹幕墙/对话刷屏豁免**（网文排比、复读、弹幕是合法修辞）
 - **截断**：文件结尾无终止/闭合标点
 - **占位/拒绝/元信息泄漏**：「作为AI」（须自指位置、型号后缀可选吃掉、对话行豁免）、「我无法继续生成」、「（此处省略…）」、乱码替换符、英文 AI 腔（Sure/Certainly/As an AI）
-- **工程词泄漏**：细纲/情节点/本章/下一章/任务描述 渗入正文，**两层级**——tier1 正文永不合规=blocking；tier2 对话行内工程词=advisory 交 LLM 判
+- **工程词泄漏**：细纲/情节点/本章/下一章/任务描述 渗入正文，**两层级**——tier1 正文永远违规=blocking；tier2 对话行内工程词=advisory 交 LLM 判
 - **哲学**：Report-only，永不改写正文；安全响应 = 带着 finding 作为约束**重新生成受影响单元**（章/摘要），重试封顶，证据浮出水面给用户
 
 ## 3. 方法论资产库（`skills/story-long-write/references/`，30+ 份）

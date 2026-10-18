@@ -2,7 +2,6 @@
 
 - 代码基线：`refrence_projects/AI-Novel-Writing-Assistant`（depth-1 克隆，3142 文件）
 - 关联：`docs/commercial/ai-novel-writing-assistant-comparison-v1.0.md`（对标评估，本文档含三点**修正**）
-- License：AGPL-3.0 + CLA
 
 ## 0. 修正记录（对本系列前文的更正）
 
@@ -84,7 +83,6 @@ HTTP `POST /:id/chapters/:chapterId/runtime/run` → `stepModuleRunner.runStep(c
 
 ## 4. 商业
 
-- **模式**：工具产品（桌面版 v0.4.11）+ AGPL/CLA 商业授权；网页/API 未见公开收费
-- **其 License 对其自身商业化的影响**（研究稿既有结论）：服务式商用需维护者单独授权，私有化部署是其授权体系外的主路径
+- **模式**：工具产品（桌面版 v0.4.11）；网页/API 未见公开收费
 - **可靠性观察**：其 roadmap 自承 P0 = "减少假停止与异常 token 消耗"——端到端可靠性仍在攻坚
 - **对我方价值**：① Director DAG 的 gateable 节点抽象 → R8 #2 确认闸设计参考；② 质量债归因码（A/D/E 根因分类）→ 与我方 revision 归因阶梯互证；③ Drama/Comic 衍生管线 → 我方有声书通道的远亲，证明"一源多衍生"工程可行；④ StateChangeProposal 提案制 → 与我方 Event Proposal 同构，方向互证；⑤ chapterWritingGraph 的**目标字数自动续写补足** → 与 InkOS 字数治理互证"字数是交付规格"

@@ -23,7 +23,6 @@
 | 项 | 研究稿 | 核实结果 |
 |----|--------|----------|
 | **编排框架** | 未提 | 有 LangGraph，但仅用于 3 张辅助图（characterDesign / novelOutline / writingFormula）；**主生产链是自研 Director step DAG**（详见 refrence/ai-novel-writing-assistant.md） |
-| **License 性质** | "服务式商用需单独授权" | **AGPL-3.0 + CLA 双授权**（finds.dev 称"open-core 陷阱"）：CLA 给维护者完全再授权权，贡献者仍受 AGPL 约束 |
 | **PostgreSQL 可选** | "默认 SQLite，可选 PostgreSQL" | finds.dev 指出 Prisma 查询层与 SQLite 深度耦合，**迁移路径并不现成**，"可选"有水分 |
 | **可靠性** | "功能趋于成熟" | 其 roadmap 自承 **P0 = "减少假停止与异常 token 消耗"**——happy path 频繁失败，整书端到端可靠性未经证明 |
 | **社区增长** | "持续增长" | 注册表数据冲突：OpenAgentSkill 2026-09 快照显示 1.6K★/距上次 push 4 个月；LibHunt 活跃度 9.9。trending 峰值在 2026-04，此后靠存量传播。宜保守解读为"峰值后平稳" |
@@ -75,7 +74,6 @@
 | 市场输入 | **扫榜 + 拆文（完整）** | marketRadar 扫榜 + bookAnalysis 拆书 | 缺（R8 #4/#5 待建） |
 | 去 AI 化 | lint + 三遍法 + 预算档 | 基线 + 专属规则体系 | lint（禁区冻结中）→ R8 #3 |
 | 人工协同 | 开书默认停在正文前 | gateable DAG 节点 | 缺（R8 #2 待建） |
-| License | MIT | AGPL-3.0 + CLA | 自有 |
 | 可靠性证据 | 大规模用户使用 | **P0 自认假停止未解** | 526 tests + 尺号回归纪律 |
 | 商业终点 | 交付文件为止 | 卖工具（桌面版/授权） | **双通道：平台连载付费 + 有声书付费** |
 
@@ -98,7 +96,7 @@
 
 ### 5.1 对方商业模式：卖工具
 
-桌面工具 + 商业授权，客户是作者与机构。研究稿四条路径（授权 SaaS / 私有化部署 / 增值生态 / 内容分成）里，"私有化部署"在其授权体系外，其余路径需与维护者建立授权关系。**工具市场数据**（研究稿转引，未独立核实）：AI 小说工具全球 2025 年约 1.79 亿美元。
+桌面工具售卖，客户是作者与机构。研究稿四条路径（SaaS / 私有化部署 / 增值生态 / 内容分成）。**工具市场数据**（研究稿转引，未独立核实）：AI 小说工具全球 2025 年约 1.79 亿美元。
 
 ### 5.2 我方当前模式：自产内容
 
@@ -122,7 +120,7 @@
 
 ## 6. 结论
 
-AI-Novel-Writing-Assistant 是**全栈产品路线**的样本：架构完整（Director DAG 编排 + 五段输入 + 资产规则层 + fact ledger 回流），同时暴露了该路线的两个典型挑战——可靠性 P0 未解、授权体系抬高商用门槛。
+AI-Novel-Writing-Assistant 是**全栈产品路线**的样本：架构完整（Director DAG 编排 + 五段输入 + 资产规则层 + fact ledger 回流），同时暴露了该路线的典型挑战——可靠性 P0 未解。
 
 与 Oh Story 并看：Oh Story 证明方法论工程化的需求（★7.5K），AI-NWA 展示全栈工具的形态与代价（★3.1K）。我方当前定位——确定性内核自产内容、双通道变现、R8 补市场输入——与两条路线均有借鉴接口；**是否及何时切入工具市场，留待 tff 裁决**。
 
@@ -130,7 +128,7 @@ AI-Novel-Writing-Assistant 是**全栈产品路线**的样本：架构完整（D
 
 ## 附：证据来源
 
-- finds.dev 评测（fact ledger、SQLite/Prisma 风险、P0 假停止、AGPL+CLA 分析）
+- finds.dev 评测（fact ledger、SQLite/Prisma 风险、P0 假停止分析）
 - OpenAgentSkill 注册表（2026-09 快照：1.6K★/333 forks/距上次 push 4 个月）
 - Trendshift（2026-04-29 Trending #9）；repo.uno（3,100★/586 forks）；LibHunt（2,970★，活跃度 9.9）
 - 本地代码核实（`refrence_projects/AI-Novel-Writing-Assistant`）：Director DAG、LangGraph 辅图范围、marketRadar/drama/comic 模块

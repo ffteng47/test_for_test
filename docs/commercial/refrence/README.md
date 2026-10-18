@@ -20,7 +20,6 @@
 | 维度 | AI-NWA（★3.1K） | InkOS | Oh Story（★7.5K） | SillyTavern |
 |------|-----------------|-------|-------------------|-------------|
 | 形态 | 全栈桌面/Web 产品 | npm 内核+CLI+Studio | Skill 包（寄生宿主） | RP 前端（Server+SPA） |
-| License | AGPL-3.0+CLA | AGPL-3.0 | MIT | AGPL-3.0 |
 | 编排 | 自研 Director DAG（gateable 节点） | pipeline runner 直排 | 宿主 Agent+Hook | 单轮组装，无链 |
 | 状态 | Prisma/SQLite + StateChangeProposal | **delta 单调入账+校验+按章回放** | 文件+storyctl commit | 无状态会话 |
 | 语义记忆 | RAG（Qdrant 可选） | retrieval/ | 无 | **8 源向量适配器** |
@@ -28,7 +27,7 @@
 | 拆书 | bookAnalysis+写法编译 | references/ | story-*-analyze | 无 |
 | 去 AI | AntiAiRule 基线+专属 | — | lint 两层级+三遍法 | 无 |
 | 质量 | 质量债归因码（A/D/E） | 字数治理遥测+审后对账 | 退化指纹+CI 脚本锁 | 无 |
-| 商业模式 | 工具+授权 | **赞助型开源**（Kimi/火山） | 流量入口（免费） | 纯社区 |
+| 商业模式 | 工具销售 | **赞助型开源**（Kimi/火山） | 流量入口（免费） | 纯社区 |
 | 商业终点 | 卖工具 | 赞助+托管+数据 API | 交付文件 | — |
 
 ## 3. 机制参考总表（机制 → 来源 → 我方落点）
@@ -54,3 +53,13 @@
 - 我方 = InkOS 式内核纵深 + Oh Story 式方法论语料（R8 待补）+ 双通道内容变现终点
 - 四方无一家做**爽点/去味的量化闭环 + 付费节奏对齐**——R8 排序维持，空位仍在
 - 是否进入工具市场：**开放决策，由 tff 定夺**；相关事实数据见 `comparison.md` §5
+## 5. 深度审查文档（deep-dive/，2026-10-17 逐函数核实版）
+
+每项目一份，含详细业务逻辑流 + 代码流（文件:行号证据）+ 针对我方当前困境的解决方案对照：
+
+| 文档 | 项目 | 核心收获 |
+|------|------|----------|
+| `deep-dive/inkos.md` | InkOS | 引文核验三件套（行号区间→宿主解析→子串核验）、结算失败保正典、钩子仲裁/时态事实 |
+| `deep-dive/oh-story.md` | Oh Story | 细纲爽点必填字段、时间线作者真相/读者已知双视图、chapter check 五态出口码、退化指纹五族 |
+| `deep-dive/ai-novel-writing-assistant.md` | AI-NWA | gateable 闸+gateId 绑产物版本、A/D/E 质量债机器归因、debt 源状态提案强制人工复核、writer_extend 续写补足 |
+| `deep-dive/sillytavern.md` | SillyTavern | World Info 按需召回五件套（关键词/预算/递归/时态/概率）、21 源向量适配器矩阵、一层一文件后端抽象 |

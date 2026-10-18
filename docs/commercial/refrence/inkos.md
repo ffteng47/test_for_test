@@ -1,7 +1,6 @@
 # InkOS（Narcooo/inkos）— 架构 / 商业 / 业务流 / 代码流
 
 - 代码基线：`refrence_projects/inkos`（792 文件，v2.0.0 开发分支）
-- License：AGPL-3.0
 - npm：`@actalk/inkos`；赞助方：Moonshot Kimi、字节火山引擎；网页版托管于 huohuaapi.com
 
 ## 0. 一句话定位

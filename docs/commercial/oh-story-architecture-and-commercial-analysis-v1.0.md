@@ -2,7 +2,7 @@
 
 - 状态：分析稿（证据已联网核实，2026-10-15）
 - 关联文档：`docs/commercial/r8-commercial-input-requirements-v1.0.md`（差距结论已获五项裁决确认）
-- 证据基线：GitHub `zenstory-ai/oh-story-claudecode`，★7.5k，MIT License，4 天前仍有更新；主力作者单人（worldwonderer），版本线从 v0.6.11（约 140 commits）演进到 `agents_version` 25 / v0.7.3+
+- 证据基线：GitHub `zenstory-ai/oh-story-claudecode`，★7.5k，4 天前仍有更新；主力作者单人（worldwonderer），版本线从 v0.6.11（约 140 commits）演进到 `agents_version` 25 / v0.7.3+
 
 ---
 
@@ -116,7 +116,7 @@
 
 ### 4.1 商业模式：本体免费，商业闭环在用户侧
 
-- MIT 开源、零收费层——它是**流量与品牌入口**，不是收入产品。用户成本 = 宿主模型 API 费（需自带 key）。
+- 开源免费、零收费层——它是**流量与品牌入口**，不是收入产品。用户成本 = 宿主模型 API 费（需自带 key）。
 - 真正的商业闭环发生在使用者一侧：作者用它产文 → 上架起点/番茄/知乎盐言 → 连载付费/短篇付费。
 - 单人维护（worldwonderer），140+ commits 到 v0.6.11 后仍高频迭代（agents_version 25）——典型"一人公司"式开源项目。
 
