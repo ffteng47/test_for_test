@@ -1,10 +1,10 @@
-# L3 双腿审计试点（l3-audit-v2.3，同对账逻辑吃 v0.3.0 底料复跑，tff 2026-10-19「确认启动中批」=稽核 F2 根治面）。
-# 腿一=inkos 式整章自报（qwen2.5:32b@temp0，level3-pilot-v044=宿主标注换成 v0.2.3 候选后的复跑，编号行+引文行号+空结果合法）；
+# L3 双腿审计试点（l3-audit-v2.4，tff 2026-10-19「需要重跑」=腿一换 v045、与腿二 v0.3.0 同批生产）。
+# 腿一=inkos 式整章自报（qwen2.5:32b@temp0，level3-pilot-v045；宿主标注面自 v044 起不吃 l3 尺面——本层无 run_light 入口，pack §7.19 结构事实）；
 # 腿二=oh-story 式宿主确定性直出（run_light 候选=l3-corpus-v030.json，零 LLM）。
 # 审判=宿主侧零 LLM 对账：同章同族、证据行集合有交集=双证；只腿一有=LLM独报（新域候选/幻觉待核）；
 #   只腿二有=宿主独报（工件或模型漏检待核）。候选≠定罪 severity 恒 OBS，终审=HTML 呈 tff 真人裁。
 # 复现：PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe sampling/l3_audit_pilot.py
-#       > sampling/l3-audit-v23.console.log 2>&1
+#       > sampling/l3-audit-v24.console.log 2>&1
 # v2.0 归档（v043 腿一 + v021 腿二 + l3-audit-v20.trial.json + l3-audit-review.html）不动，tff 终审在 pack §7.16。
 import html as htmlmod
 import json
@@ -17,7 +17,7 @@ sys.path.insert(0, str(HERE.parent))
 from plot_engine.metrics import _section_body                    # noqa: E402
 from plot_engine.l3.scene_index import strip_comments            # noqa: E402
 
-LOG = (HERE / "level3-pilot-v044.console.log").read_text(encoding="utf-8")
+LOG = (HERE / "level3-pilot-v045.console.log").read_text(encoding="utf-8")
 HOST = json.loads((HERE / "l3-corpus-v030.json").read_text(encoding="utf-8"))
 CHS = sorted({int(m.group(1)) for m in re.finditer(r"^ch(\d+) \[", LOG, re.M)})
 
@@ -90,8 +90,9 @@ for ch in CHS:
 from collections import Counter
 cls_cnt = Counter(t["class"] for t in trial)
 fam_cnt = Counter((t["fam"], t["class"]) for t in trial)  # Counter=缺组合读 0（v2.2 面 B 宿主独报归零暴露旧写法 KeyError）
-print(f"腿一=32b@temp0 整章自报（v044 复跑 {sum(len(v) for v in llm.values())} 条，$0）"
-      f"｜腿二=宿主 v0.3.0 候选｜审判=行集合交集对账（零 LLM；腿一 v044 底料仍为 v0.2.3 标注=滞后一版）")
+print(f"腿一=32b@temp0 整章自报（v045 复跑 {sum(len(v) for v in llm.values())} 条，$0）"
+      f"｜腿二=宿主 v0.3.0 候选｜审判=行集合交集对账（零 LLM；两腿同批=v0.3.0 生产窗口，"
+      f"但腿一宿主标注面本层无 run_light 入口，同批指时间窗而非底料依赖）")
 for fam in "ABC":
     print(f"  {fam}: " + " ".join(f"{c}{fam_cnt[(fam, c)]}" for c in ("双证", "LLM独报", "宿主独报")
                                   if fam_cnt[(fam, c)]))
@@ -104,7 +105,7 @@ for t in trial:
     refs = ((t.get("llm", {}).get("lines") or []) + [str(r) for r in t.get("host", {}).get("refs", [])])
     print(f"  {tag}|{t['ch']:02d}|{t['fam']}|{d}|{refs[:6]}")
 
-Path(HERE / "l3-audit-v23.trial.json").write_text(
+Path(HERE / "l3-audit-v24.trial.json").write_text(
     json.dumps(trial, ensure_ascii=False, indent=1), encoding="utf-8")
 
 # ---- HTML 呈堂（版式沿 l3-judge-review.html 先例）----
@@ -158,17 +159,17 @@ for ch in sorted(cards):
                  f'双证 {n["双证"]} / LLM独 {n["LLM独报"]} / 宿主独 {n["宿主独报"]}）</h2>'
                  + "\n".join(cards[ch]) + f"<pre class=body>{page}</pre>")
     toc.append(f'<a href="#ch{ch}"><i></i>ch{ch:02d}<s>{len(cards[ch])} 条</s></a>')
-Path(HERE.parent / "docs" / "samples" / "l3-audit-review-v23.html").write_text(
+Path(HERE.parent / "docs" / "samples" / "l3-audit-review-v24.html").write_text(
     f"""<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1"><title>L3 双腿审计审判页 · l3-audit-v2.3</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>L3 双腿审计审判页 · l3-audit-v2.4</title>
 <style>{STYLE}</style></head><body><div id="app">
 <aside><h1>条目导航</h1>
 <p>腿一=整章自报（32b@temp0，inkos 式，v044 复跑）；腿二=宿主确定性候选（l3-v0.2.3）；审判=证据行交集对账（零 LLM）。
 <b>红=双证（两条腿同指） 蓝=LLM独报 橙=宿主独报</b>。候选≠定罪，请 tff 真人裁。行号=strip_comments 基准。</p>
 <nav id="toc">{''.join(toc)}</nav></aside>
-<main><h2 style="margin-top:0">L3 双腿审计 · 同输入交叉审判呈堂页（l3-audit-v2.3，v0.3.0 底料复跑）</h2>
+<main><h2 style="margin-top:0">L3 双腿审计 · 同输入交叉审判呈堂页（l3-audit-v2.4，v0.3.0 同批复跑）</h2>
 <p class=legend>数据源 sampling/level3-pilot-v044.console.log（腿一）+ sampling/l3-corpus-v030.json（腿二）
-+ l3-audit-v23.trial.json（审判台账）。口径 pack §7.9+勘误；<b>判据现势=§7.16 tff 亲拍（含「文本容许多义可同真读法→不算穿帮」条款）；
++ l3-audit-v24.trial.json（审判台账）。口径 pack §7.9+勘误；<b>判据现势=§7.16 tff 亲拍（含「文本容许多义可同真读法→不算穿帮」条款）；
 ch50 锚=①②两锚制</b>。前页 v2.0/v2.1（tff 已终审）保留不动，本页为其 v2.3 底料对照复跑。</p>
 {''.join(parts)}</main></div></body></html>""", encoding="utf-8")
-print("HTML 呈堂：docs/samples/l3-audit-review-v23.html")
+print("HTML 呈堂：docs/samples/l3-audit-review-v24.html")

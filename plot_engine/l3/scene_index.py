@@ -33,7 +33,13 @@ ARRIVE_MOVE_RE = re.compile(
     r"|前来|赶来|过来)")
 # v2.2：倒装到达句式主语=后置名（ch48 L16「门被推开，进来的是王五」——_subject_near
 # 回看窗抓不到后置主语，会把张三错认成到达者，王五反被悬置成 A 嫌疑）。
-ARRIVE_NAME_RE = re.compile(r"(进来的是|走进来的是|推门进来的是)(张三|王五|李四|赵六)")
+ARRIVE_NAME_HEAD = "(进来的是|走进来的是|推门进来的是)"
+
+
+def _arrive_name_re(entities: Sequence[str]) -> re.Pattern:
+    """倒装到达后置主语，名单从尺面实体表取（F5：原硬编码四名单）。"""
+    alt = "|".join(sorted((re.escape(e) for e in entities), key=len, reverse=True))
+    return re.compile(ARRIVE_NAME_HEAD + f"({alt})")
 # 硬离开（完成态）；意图词（准备/打算/决定前往）不算——ch20 #22 教训
 DEPART_RE = re.compile(r"(转身离开|离开了?|离去|先走了|告辞|告别|出门|下山|赶往|奔赴)")
 # 意图窗：DEPART 命中点落在意图词跨距内=不计（"准备离开"≠离开，ch20 #22 误报教训）
@@ -177,6 +183,7 @@ def build_scene_index(chapter: int, body: Sequence[str],
                       locations: Sequence[str] = DEFAULT_LOCATIONS) -> List[SceneFrame]:
     """行列表 → 场景帧。行号=剥注释后的送检行号（与原稿映射由 strip_comments 给出）。"""
     lines, _map = strip_comments(body)
+    arrive_name = _arrive_name_re(entities)
     frames: List[SceneFrame] = []
     cur_loc, cur_start = "-", 1
 
@@ -219,7 +226,7 @@ def build_scene_index(chapter: int, body: Sequence[str],
         arr, arr_move, dep = set(), set(), set()
         for _, ln in seg:
             sc = _action_scope(ln)  # v2.3 F1：作用域从在场扩到到达/离开（稽核=B 族输入面裸露），小句级非整行
-            for m in ARRIVE_NAME_RE.finditer(sc):  # v2.2 倒装到达：后置主语直取
+            for m in arrive_name.finditer(sc):  # v2.2 倒装到达：后置主语直取
                 arr.add(m.group(2))
                 arr_move.add(m.group(2))  # 「进来的是X」=位移（v0.3 §7.18）
             for m in ARRIVE_RE.finditer(sc):
