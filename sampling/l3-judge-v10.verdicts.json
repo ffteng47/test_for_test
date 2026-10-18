@@ -1,0 +1,3454 @@
+[
+ {
+  "family": "C",
+  "chapter": 2,
+  "detail": "key_count: 「1把」(dialogue) ↔ 「2把」(dialogue)",
+  "refs": [
+   "4-4",
+   "22-22"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "真",
+  "reason": "行4中提到钥匙只有一把，而行22中提到钥匙共有两把，存在自相矛盾|依据行号区间4-22"
+ },
+ {
+  "family": "C",
+  "chapter": 2,
+  "detail": "night_watch: 「张三+王五」(narrator) ↔ 「张三」(speculation)",
+  "refs": [
+   "19-19",
+   "30-30"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "张三的内心活动是对事实的推测，与徐长老的叙述不构成矛盾|依据行号区间19-30"
+ },
+ {
+  "family": "C",
+  "chapter": 2,
+  "detail": "night_watch: 「张三+王五」(narrator) ↔ 「王五」(dialogue)",
+  "refs": [
+   "19-19",
+   "31-31"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "王五的对话并未否定张三和王五一同进入藏宝阁的事实，只是询问张三的行为|依据行号区间19-31"
+ },
+ {
+  "family": "C",
+  "chapter": 2,
+  "detail": "night_watch: 「张三+王五」(narrator) ↔ 「王五」(dialogue)",
+  "refs": [
+   "19-19",
+   "33-33"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "王五的对话并未否定张三和王五一同进入藏宝阁的事实，只是表达对守阁人信任的看法|依据行号区间19-33"
+ },
+ {
+  "family": "C",
+  "chapter": 2,
+  "detail": "night_watch: 「张三+王五」(narrator) ↔ 「张三」(speculation)",
+  "refs": [
+   "19-19",
+   "34-34"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "张三的内心活动是对事实的推测，与徐长老的叙述不构成矛盾|依据行号区间19-34"
+ },
+ {
+  "family": "C",
+  "chapter": 2,
+  "detail": "night_watch: 「张三」(speculation) ↔ 「王五」(dialogue)",
+  "refs": [
+   "30-30",
+   "31-31"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "王五的对话是对张三行为的询问，不构成对张三内心推测的矛盾|依据行号区间30-31"
+ },
+ {
+  "family": "C",
+  "chapter": 2,
+  "detail": "night_watch: 「张三」(speculation) ↔ 「王五」(dialogue)",
+  "refs": [
+   "30-30",
+   "33-33"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "王五的对话是对张三行为的询问，不构成对张三内心推测的矛盾|依据行号区间30-33"
+ },
+ {
+  "family": "C",
+  "chapter": 2,
+  "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "31-31",
+   "34-34"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的内心活动是对事实的推测，与王五的对话不构成矛盾|依据行号区间31-34"
+ },
+ {
+  "family": "C",
+  "chapter": 2,
+  "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "33-33",
+   "34-34"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的内心活动是对事实的推测，与王五的对话不构成矛盾|依据行号区间33-34"
+ },
+ {
+  "family": "C",
+  "chapter": 3,
+  "detail": "key_count: 「2把」(speculation) ↔ 「1把」(speculation)",
+  "refs": [
+   "23-23",
+   "32-32"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与实际发现的钥匙数量一致，不存在自相矛盾|23-33"
+ },
+ {
+  "family": "C",
+  "chapter": 3,
+  "detail": "key_count: 「2把」(dialogue) ↔ 「1把」(speculation)",
+  "refs": [
+   "24-24",
+   "32-32"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "赵六的对话与张三的发现并不矛盾，张三的发现只是对赵六话的验证过程|24-32"
+ },
+ {
+  "family": "C",
+  "chapter": 3,
+  "detail": "key_count: 「1把」(speculation) ↔ 「2把」(speculation)",
+  "refs": [
+   "32-32",
+   "33-33"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与实际发现的钥匙数量一致，不存在自相矛盾|32-33"
+ },
+ {
+  "family": "C",
+  "chapter": 3,
+  "detail": "key_custody: 「赵六+宗主」(dialogue) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "24-24",
+   "31-31"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "赵六的对话与张三的推测并不矛盾，张三的推测只是基于赵六的对话和自己的发现|24-31"
+ },
+ {
+  "family": "C",
+  "chapter": 3,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(narrator)",
+  "refs": [
+   "10-10",
+   "17-17"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "张三与赵六的对话中提到张三和赵六都在值守，但叙述层并未明确排除张三的参与，只是强调赵六的值守责任|10-17"
+ },
+ {
+  "family": "C",
+  "chapter": 3,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(narrator)",
+  "refs": [
+   "11-11",
+   "17-17"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "张三与赵六的对话中提到张三和赵六都在值守，但叙述层并未明确排除张三的参与，只是强调赵六的值守责任|11-17"
+ },
+ {
+  "family": "C",
+  "chapter": 3,
+  "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "17-17",
+   "19-19"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "叙述层提到赵六负责值守，而对话中张三询问赵六和自己是否都在值守，两者并不矛盾|17-19"
+ },
+ {
+  "family": "C",
+  "chapter": 3,
+  "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(narrator)",
+  "refs": [
+   "17-17",
+   "26-26"
+  ],
+  "pair": "narrator_narrator",
+  "verdict": "误报",
+  "reason": "叙述层提到赵六负责值守，而张三的推测中提到赵六和自己都在值守，两者并不矛盾|17-26"
+ },
+ {
+  "family": "C",
+  "chapter": 3,
+  "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "17-17",
+   "32-32"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "叙述层提到赵六负责值守，而张三的推测中提到赵六和自己都在值守，两者并不矛盾|17-32"
+ },
+ {
+  "family": "C",
+  "chapter": 3,
+  "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "17-17",
+   "33-33"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "叙述层提到赵六负责值守，而张三的推测中提到赵六和自己都在值守，两者并不矛盾|17-33"
+ },
+ {
+  "family": "C",
+  "chapter": 3,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(narrator)",
+  "refs": [
+   "3-3",
+   "17-17"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "张三与赵六的对话中提到张三和赵六都在值守，但叙述层并未明确排除张三的参与，只是强调赵六的值守责任|3-17"
+ },
+ {
+  "family": "C",
+  "chapter": 5,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+  "refs": [
+   "13-13",
+   "14-14"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三的回忆和思考都是其个人推测，不构成作者层面的自相矛盾|13-14"
+ },
+ {
+  "family": "C",
+  "chapter": 5,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+  "refs": [
+   "4-4",
+   "14-14"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三的回忆和思考都是其个人推测，不构成作者层面的自相矛盾|4-14"
+ },
+ {
+  "family": "A",
+  "chapter": 5,
+  "detail": "李四 在场景1（山下）首次在场，此前无到达叙述",
+  "refs": [
+   "5-7"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "李四首次在场互动前虽然没有直接的到达叙述，但作为侦探文常见的悬念设计，这种处理方式并不构成矛盾|依据行号区间5-7"
+ },
+ {
+  "family": "A",
+  "chapter": 5,
+  "detail": "王五 在场景3（山下）首次在场，此前无到达叙述",
+  "refs": [
+   "9-12"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "王五首次在场互动前虽然没有直接的到达叙述，但通过密信笔迹相似间接提及，符合侦探文的悬念设计，不构成矛盾|依据行号区间9-12"
+ },
+ {
+  "family": "C",
+  "chapter": 6,
+  "detail": "night_watch: 「张三」(dialogue) ↔ 「赵六」(dialogue)",
+  "refs": [
+   "13-13",
+   "25-25"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "张三和赵六的对话内容并不构成自相矛盾，赵六的叙述中提到他确实值守过，并且接到了掌门的命令离开，这与张三的提问可以共存，不违背逻辑。|13-25"
+ },
+ {
+  "family": "A",
+  "chapter": 7,
+  "detail": "李四 在场景1（山下）首次在场，此前无到达叙述",
+  "refs": [
+   "4-7"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "李四和赵六的出场是作为背景信息的一部分，用于构建情节，而非即时场景互动，因此不违反进场规则|依据行号区间4-7"
+ },
+ {
+  "family": "A",
+  "chapter": 7,
+  "detail": "赵六 在场景1（山下）首次在场，此前无到达叙述",
+  "refs": [
+   "4-7"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "同上，赵六作为背景信息的一部分出场，不违反进场规则|依据行号区间4-7"
+ },
+ {
+  "family": "A",
+  "chapter": 7,
+  "detail": "王五 在场景2（藏宝阁）首次在场，此前无到达叙述",
+  "refs": [
+   "8-20"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "王五在藏宝阁的首次互动前虽无直接到达叙述，但作为情节推进的一部分，且在场作为张三的同伴，符合叙事逻辑|依据行号区间8-20"
+ },
+ {
+  "family": "A",
+  "chapter": 8,
+  "detail": "赵六 在场景2（藏宝阁）首次在场，此前无到达叙述",
+  "refs": [
+   "3-4"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "赵六作为可能的嫌疑人被提及，并未直接在场互动，因此无需到达叙述|依据行号区间3-4"
+ },
+ {
+  "family": "A",
+  "chapter": 8,
+  "detail": "李四 在场景5（书房）首次在场，此前无到达叙述",
+  "refs": [
+   "7-14"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "李四作为背景信息被提及，并未直接在场互动，因此无需到达叙述|依据行号区间7-14"
+ },
+ {
+  "family": "A",
+  "chapter": 8,
+  "detail": "王五 在场景5（书房）首次在场，此前无到达叙述",
+  "refs": [
+   "7-14"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "王五作为直接对话对象在场，但其首次提及是在对话中，符合侦探文悬念设计|依据行号区间7-14"
+ },
+ {
+  "family": "C",
+  "chapter": 9,
+  "detail": "key_count: 「2把」(narrator) ↔ 「1把」(speculation)",
+  "refs": [
+   "13-13",
+   "14-14"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "两处证据均为推测，且推测内容可以共存，不构成矛盾|13-13"
+ },
+ {
+  "family": "C",
+  "chapter": 9,
+  "detail": "key_count: 「1把」(speculation) ↔ 「2把」(narrator)",
+  "refs": [
+   "14-14",
+   "19-19"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "两处证据均为推测，且推测内容可以共存，不构成矛盾|14-19"
+ },
+ {
+  "family": "C",
+  "chapter": 9,
+  "detail": "key_count: 「2把」(speculation) ↔ 「1把」(speculation)",
+  "refs": [
+   "4-4",
+   "14-14"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "两处证据均为推测，且推测内容可以共存，不构成矛盾|4-14"
+ },
+ {
+  "family": "C",
+  "chapter": 9,
+  "detail": "key_custody: 「赵六」(speculation) ↔ 「张三+李四+赵六」(narrator)",
+  "refs": [
+   "4-4",
+   "13-13"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "真",
+  "reason": "叙述层对藏宝阁钥匙的保管人存在两种说法，不可同真|4-13"
+ },
+ {
+  "family": "C",
+  "chapter": 9,
+  "detail": "night_watch: 「张三」(dialogue) ↔ 「张三+赵六」(narrator)",
+  "refs": [
+   "16-16",
+   "17-17"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "对话与叙述均为推测，推测内容可以共存，不构成矛盾|16-17"
+ },
+ {
+  "family": "C",
+  "chapter": 9,
+  "detail": "night_watch: 「张三」(speculation) ↔ 「张三+赵六」(narrator)",
+  "refs": [
+   "3-3",
+   "17-17"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "推测内容可以共存，不构成矛盾|3-17"
+ },
+ {
+  "family": "C",
+  "chapter": 9,
+  "detail": "night_watch: 「张三」(speculation) ↔ 「赵六」(speculation)",
+  "refs": [
+   "3-3",
+   "4-4"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "推测内容可以共存，不构成矛盾|3-4"
+ },
+ {
+  "family": "C",
+  "chapter": 9,
+  "detail": "night_watch: 「张三」(speculation) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "3-3",
+   "6-6"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "推测内容可以共存，不构成矛盾|3-6"
+ },
+ {
+  "family": "C",
+  "chapter": 9,
+  "detail": "night_watch: 「张三」(speculation) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "3-3",
+   "9-9"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "推测内容可以共存，不构成矛盾|3-9"
+ },
+ {
+  "family": "C",
+  "chapter": 9,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三」(dialogue)",
+  "refs": [
+   "4-4",
+   "16-16"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "推测与对话内容可以共存，不构成矛盾|4-16"
+ },
+ {
+  "family": "C",
+  "chapter": 9,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(narrator)",
+  "refs": [
+   "4-4",
+   "17-17"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "推测与叙述内容可以共存，不构成矛盾|4-17"
+ },
+ {
+  "family": "C",
+  "chapter": 9,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "4-4",
+   "6-6"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "推测内容可以共存，不构成矛盾|4-6"
+ },
+ {
+  "family": "C",
+  "chapter": 9,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "4-4",
+   "9-9"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "推测内容可以共存，不构成矛盾|4-9"
+ },
+ {
+  "family": "C",
+  "chapter": 9,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(dialogue)",
+  "refs": [
+   "6-6",
+   "16-16"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "推测与对话内容可以共存，不构成矛盾|6-16"
+ },
+ {
+  "family": "C",
+  "chapter": 9,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(dialogue)",
+  "refs": [
+   "9-9",
+   "16-16"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "推测与对话内容可以共存，不构成矛盾|9-16"
+ },
+ {
+  "family": "C",
+  "chapter": 10,
+  "detail": "night_watch: 「张三+李四+赵六」(dialogue) ↔ 「张三」(dialogue)",
+  "refs": [
+   "3-3",
+   "24-24"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "对话中的不同提及并不构成矛盾，因为赵六的提及和张三的询问可以同时为真，且此处为人物间的对话，可能存在信息差。|3-3, 24-24"
+ },
+ {
+  "family": "A",
+  "chapter": 10,
+  "detail": "王五 在场景2（藏宝阁）首次在场，此前无到达叙述",
+  "refs": [
+   "12-34"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "尽管王五在场景2中首次在场互动前无到达叙述，但王五并未实际出现在藏宝阁的互动中，仅通过张三手中的密信和手书间接提及，因此不构成自相矛盾。|依据行号区间12-34"
+ },
+ {
+  "family": "B",
+  "chapter": 10,
+  "detail": "张三 场景2离开藏宝阁，场景4又在原地互动，中间无到达",
+  "refs": [
+   "12-34",
+   "44-46"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "张三在场景2和场景4中均在藏宝阁内互动，但场景4并未明确表示张三离开后再返回，因此不能确定存在空间回卷的矛盾。|依据行号区间12-34、44-46"
+ },
+ {
+  "family": "C",
+  "chapter": 11,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(dialogue)",
+  "refs": [
+   "4-4",
+   "7-7"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "人物说辞与物证/旁白陈述对立，属于侦探文悬念设计，人物在骗或记忆有误，不是作者自相矛盾|依据行号区间4-7"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "key_custody: 「张三+赵六+守阁人」(dialogue) ↔ 「阁主+守阁人」(dialogue)",
+  "refs": [
+   "6-6",
+   "21-21"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "两处证据分别涉及不同钥匙的保管情况，不构成矛盾|6-6, 21-21"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(dialogue)",
+  "refs": [
+   "11-11",
+   "17-17"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|11-11, 17-17"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "11-11",
+   "18-18"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|11-11, 18-18"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "11-11",
+   "23-23"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|11-11, 23-23"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "11-11",
+   "24-24"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|11-11, 24-24"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "11-11",
+   "26-26"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|11-11, 26-26"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(dialogue)",
+  "refs": [
+   "12-12",
+   "17-17"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|12-12, 17-17"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+  "refs": [
+   "12-12",
+   "18-18"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|12-12, 18-18"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+  "refs": [
+   "12-12",
+   "23-23"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|12-12, 23-23"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+  "refs": [
+   "12-12",
+   "24-24"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|12-12, 24-24"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+  "refs": [
+   "12-12",
+   "26-26"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|12-12, 26-26"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(dialogue)",
+  "refs": [
+   "5-5",
+   "17-17"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|5-5, 17-17"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+  "refs": [
+   "5-5",
+   "18-18"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|5-5, 18-18"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+  "refs": [
+   "5-5",
+   "23-23"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|5-5, 23-23"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+  "refs": [
+   "5-5",
+   "24-24"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|5-5, 24-24"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+  "refs": [
+   "5-5",
+   "26-26"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|5-5, 26-26"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(dialogue)",
+  "refs": [
+   "6-6",
+   "17-17"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|6-6, 17-17"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "6-6",
+   "18-18"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|6-6, 18-18"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "6-6",
+   "23-23"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|6-6, 23-23"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "6-6",
+   "24-24"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|6-6, 24-24"
+ },
+ {
+  "family": "C",
+  "chapter": 12,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "6-6",
+   "26-26"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容不构成矛盾，属于推理过程|6-6, 26-26"
+ },
+ {
+  "family": "C",
+  "chapter": 13,
+  "detail": "key_count: 「2把」(speculation) ↔ 「1把」(dialogue)",
+  "refs": [
+   "3-3",
+   "4-4"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与赵六的直接陈述不构成作者层面的矛盾，属于侦探文悬念设计|3-3"
+ },
+ {
+  "family": "C",
+  "chapter": 13,
+  "detail": "key_count: 「1把」(dialogue) ↔ 「2把」(dialogue)",
+  "refs": [
+   "4-4",
+   "11-11"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "赵六的直接陈述与张三的推测不构成作者层面的矛盾，属于侦探文悬念设计|4-4, 11-11"
+ },
+ {
+  "family": "C",
+  "chapter": 13,
+  "detail": "key_count: 「1把」(dialogue) ↔ 「2把」(narrator)",
+  "refs": [
+   "4-4",
+   "17-17"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "赵六的直接陈述与张三的推测不构成作者层面的矛盾，属于侦探文悬念设计|4-4, 17-17"
+ },
+ {
+  "family": "C",
+  "chapter": 13,
+  "detail": "key_count: 「1把」(dialogue) ↔ 「2把」(speculation)",
+  "refs": [
+   "4-4",
+   "8-8"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "赵六的直接陈述与张三的推测不构成作者层面的矛盾，属于侦探文悬念设计|4-4, 8-8"
+ },
+ {
+  "family": "C",
+  "chapter": 13,
+  "detail": "key_custody: 「张三+赵六+长老」(speculation) ↔ 「赵六+守阁人+宗主」(narrator)",
+  "refs": [
+   "3-3",
+   "17-17"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "真",
+  "reason": "张三的推测与张三从其他守阁人那里获得的信息存在作者层面的矛盾|3-3, 17-17"
+ },
+ {
+  "family": "C",
+  "chapter": 13,
+  "detail": "key_custody: 「张三+赵六+长老」(speculation) ↔ 「长老+守夜人」(speculation)",
+  "refs": [
+   "3-3",
+   "8-8"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "真",
+  "reason": "张三的推测与张三的推测存在作者层面的矛盾|3-3, 8-8"
+ },
+ {
+  "family": "C",
+  "chapter": 13,
+  "detail": "key_custody: 「长老+守夜人」(speculation) ↔ 「赵六+守阁人+宗主」(narrator)",
+  "refs": [
+   "8-8",
+   "17-17"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "真",
+  "reason": "张三的推测与张三从其他守阁人那里获得的信息存在作者层面的矛盾|8-8, 17-17"
+ },
+ {
+  "family": "C",
+  "chapter": 13,
+  "detail": "night_watch: 「张三」(dialogue) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "10-10",
+   "16-16"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的对话与张三的推测不构成作者层面的矛盾，属于侦探文悬念设计|10-10, 16-16"
+ },
+ {
+  "family": "C",
+  "chapter": 13,
+  "detail": "night_watch: 「张三」(dialogue) ↔ 「赵六」(narrator)",
+  "refs": [
+   "10-10",
+   "17-17"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "张三的对话与张三的推测不构成作者层面的矛盾，属于侦探文悬念设计|10-10, 17-17"
+ },
+ {
+  "family": "C",
+  "chapter": 13,
+  "detail": "night_watch: 「张三」(dialogue) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "10-10",
+   "19-19"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的对话与张三的推测不构成作者层面的矛盾，属于侦探文悬念设计|10-10, 19-19"
+ },
+ {
+  "family": "C",
+  "chapter": 13,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(narrator)",
+  "refs": [
+   "16-16",
+   "17-17"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与张三的推测不构成作者层面的矛盾，属于侦探文悬念设计|16-16, 17-17"
+ },
+ {
+  "family": "C",
+  "chapter": 13,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+  "refs": [
+   "16-16",
+   "20-20"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与张三的推测不构成作者层面的矛盾，属于侦探文悬念设计|16-16, 20-20"
+ },
+ {
+  "family": "C",
+  "chapter": 13,
+  "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "17-17",
+   "19-19"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与张三的推测不构成作者层面的矛盾，属于侦探文悬念设计|17-17, 19-19"
+ },
+ {
+  "family": "C",
+  "chapter": 13,
+  "detail": "night_watch: 「赵六」(narrator) ↔ 「张三」(speculation)",
+  "refs": [
+   "17-17",
+   "20-20"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与张三的推测不构成作者层面的矛盾，属于侦探文悬念设计|17-17, 20-20"
+ },
+ {
+  "family": "C",
+  "chapter": 13,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+  "refs": [
+   "19-19",
+   "20-20"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与张三的推测不构成作者层面的矛盾，属于侦探文悬念设计|19-19, 20-20"
+ },
+ {
+  "family": "C",
+  "chapter": 13,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(dialogue)",
+  "refs": [
+   "7-7",
+   "10-10"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "张三的对话与张三的对话不构成作者层面的矛盾，属于侦探文悬念设计|7-7, 10-10"
+ },
+ {
+  "family": "C",
+  "chapter": 13,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(narrator)",
+  "refs": [
+   "7-7",
+   "17-17"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "张三的对话与张三的推测不构成作者层面的矛盾，属于侦探文悬念设计|7-7, 17-17"
+ },
+ {
+  "family": "C",
+  "chapter": 13,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "7-7",
+   "20-20"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的对话与张三的推测不构成作者层面的矛盾，属于侦探文悬念设计|7-7, 20-20"
+ },
+ {
+  "family": "A",
+  "chapter": 13,
+  "detail": "赵六 在场景1（藏宝阁）首次在场，此前无到达叙述",
+  "refs": [
+   "2-20"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "赵六的在场是通过张三的拜访行为间接给出的，且后续有赵六与张三对话的叙述，表明赵六确实在场。|2-20"
+ },
+ {
+  "family": "C",
+  "chapter": 15,
+  "detail": "night_watch: 「张三+李四」(speculation) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "3-3",
+   "12-12"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三对李四和赵六的怀疑是基于不同的线索和回忆，不构成自相矛盾|3-3, 12-12"
+ },
+ {
+  "family": "C",
+  "chapter": 15,
+  "detail": "night_watch: 「张三+李四」(speculation) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "6-6",
+   "12-12"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三对李四和赵六的怀疑是基于不同的线索和回忆，不构成自相矛盾|6-6, 12-12"
+ },
+ {
+  "family": "A",
+  "chapter": 15,
+  "detail": "赵六 在场景6（藏宝阁）首次在场，此前无到达叙述",
+  "refs": [
+   "12-13"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "赵六的出场是为了回忆藏宝阁的事件，并非当前场景的人物互动，不构成矛盾|依据行号区间12-13"
+ },
+ {
+  "family": "A",
+  "chapter": 16,
+  "detail": "李四 在场景1（山下）首次在场，此前无到达叙述",
+  "refs": [
+   "4-5"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "李四的在场是为了描述张三的疑虑和推理，并非实际互动场景，因此无需到达叙述|依据行号区间4-5"
+ },
+ {
+  "family": "A",
+  "chapter": 16,
+  "detail": "赵六 在场景1（山下）首次在场，此前无到达叙述",
+  "refs": [
+   "4-5"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "赵六的在场是为了描述张三的决策过程，并非实际互动场景，因此无需到达叙述|依据行号区间4-5"
+ },
+ {
+  "family": "B",
+  "chapter": 16,
+  "detail": "赵六 场景1离开山下，场景3又在原地互动，中间无到达",
+  "refs": [
+   "4-5",
+   "7-11"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "赵六在场景3的出现是为了推进情节发展，属于叙事需要，中间无到达叙述并不构成矛盾|依据行号区间4-5、7-11"
+ },
+ {
+  "family": "C",
+  "chapter": 17,
+  "detail": "key_count: 「?把」(narrator) ↔ 「2把」(dialogue)",
+  "refs": [
+   "12-12",
+   "13-13"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "真",
+  "reason": "行12中提到墙上挂着的几把钥匙，但行13中张三明确说只有两把钥匙，存在自相矛盾。|12-13"
+ },
+ {
+  "family": "C",
+  "chapter": 17,
+  "detail": "night_watch: 「王五」(narrator) ↔ 「张三+王五+赵六」(speculation)",
+  "refs": [
+   "4-4",
+   "23-23"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "王五的叙述是他的推测，而张三的叙述是基于调查后的怀疑，两者可以同时成立。|4-23"
+ },
+ {
+  "family": "C",
+  "chapter": 17,
+  "detail": "night_watch: 「王五」(narrator) ↔ 「王五+赵六」(speculation)",
+  "refs": [
+   "4-4",
+   "5-5"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "王五的叙述是他的推测，而行5中王五也提到了赵六，两者可以同时成立。|4-5"
+ },
+ {
+  "family": "C",
+  "chapter": 17,
+  "detail": "night_watch: 「王五+赵六」(speculation) ↔ 「张三+王五+赵六」(speculation)",
+  "refs": [
+   "5-5",
+   "23-23"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "两个推测可以同时存在，因为它们都是基于不同的信息来源和角度。|5-23"
+ },
+ {
+  "family": "C",
+  "chapter": 17,
+  "detail": "night_watch: 「王五+赵六」(speculation) ↔ 「王五」(dialogue)",
+  "refs": [
+   "5-5",
+   "8-8"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "王五的推测和对话中的叙述可以同时成立，因为它们代表了不同阶段的思考。|5-8"
+ },
+ {
+  "family": "C",
+  "chapter": 17,
+  "detail": "night_watch: 「王五」(dialogue) ↔ 「张三+王五+赵六」(speculation)",
+  "refs": [
+   "8-8",
+   "23-23"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "王五的对话和张三的推测可以同时成立，因为它们代表了不同角色的视角和信息。|8-23"
+ },
+ {
+  "family": "C",
+  "chapter": 18,
+  "detail": "night_watch: 「张三」(dialogue) ↔ 「王五」(dialogue)",
+  "refs": [
+   "10-10",
+   "11-11"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "张三和王五的对话可以同真，因为王五承认了自己在藏宝阁值守，没有出现自相矛盾的情况|10-11"
+ },
+ {
+  "family": "C",
+  "chapter": 18,
+  "detail": "night_watch: 「张三」(dialogue) ↔ 「张三+王五」(dialogue)",
+  "refs": [
+   "10-10",
+   "39-39"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "张三的记忆和王五的陈述可以同真，王五的陈述只是补充说明，并未否定张三的记忆|10,39"
+ },
+ {
+  "family": "C",
+  "chapter": 18,
+  "detail": "night_watch: 「王五」(dialogue) ↔ 「张三+王五」(dialogue)",
+  "refs": [
+   "11-11",
+   "39-39"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "王五的两次陈述可以同真，第二次陈述是对第一次陈述的补充说明，没有出现自相矛盾的情况|11,39"
+ },
+ {
+  "family": "C",
+  "chapter": 19,
+  "detail": "night_watch: 「张三+赵六」(narrator) ↔ 「张三+李四+赵六」(narrator)",
+  "refs": [
+   "10-10",
+   "15-15"
+  ],
+  "pair": "narrator_narrator",
+  "verdict": "误报",
+  "reason": "两处证据都描述了赵六在藏宝阁的行为，但没有直接矛盾，且第二处证据提到了李四，但并未否定第一处证据的描述|10-15"
+ },
+ {
+  "family": "C",
+  "chapter": 19,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三+李四+赵六」(narrator)",
+  "refs": [
+   "13-13",
+   "15-15"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "一处是张三的推测，另一处是叙述层的补充信息，两者并不矛盾|13-15"
+ },
+ {
+  "family": "C",
+  "chapter": 19,
+  "detail": "night_watch: 「王五+赵六」(dialogue) ↔ 「张三+赵六」(narrator)",
+  "refs": [
+   "3-3",
+   "10-10"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "两处证据分别描述了王五和张三对赵六的怀疑，但没有直接矛盾|3-10"
+ },
+ {
+  "family": "C",
+  "chapter": 19,
+  "detail": "night_watch: 「王五+赵六」(dialogue) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "3-3",
+   "13-13"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "一处是王五的对话，另一处是张三的推测，两者并不矛盾|3-13"
+ },
+ {
+  "family": "C",
+  "chapter": 19,
+  "detail": "night_watch: 「王五+赵六」(dialogue) ↔ 「张三+李四+赵六」(narrator)",
+  "refs": [
+   "3-3",
+   "15-15"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "一处是王五的对话，另一处是叙述层的补充信息，两者并不矛盾|3-15"
+ },
+ {
+  "family": "C",
+  "chapter": 19,
+  "detail": "night_watch: 「王五+赵六」(dialogue) ↔ 「王五」(dialogue)",
+  "refs": [
+   "3-3",
+   "4-4"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "两处证据都是王五的回忆，描述了同一晚的事件，没有直接矛盾|3-4"
+ },
+ {
+  "family": "C",
+  "chapter": 19,
+  "detail": "night_watch: 「王五」(dialogue) ↔ 「张三+赵六」(narrator)",
+  "refs": [
+   "4-4",
+   "10-10"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "一处是王五的对话，另一处是叙述层对张三的描述，两者并不矛盾|4-10"
+ },
+ {
+  "family": "C",
+  "chapter": 19,
+  "detail": "night_watch: 「王五」(dialogue) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "4-4",
+   "13-13"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "一处是王五的对话，另一处是张三的推测，两者并不矛盾|4-13"
+ },
+ {
+  "family": "C",
+  "chapter": 19,
+  "detail": "night_watch: 「王五」(dialogue) ↔ 「张三+李四+赵六」(narrator)",
+  "refs": [
+   "4-4",
+   "15-15"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "一处是王五的对话，另一处是叙述层的补充信息，两者并不矛盾|4-15"
+ },
+ {
+  "family": "B",
+  "chapter": 19,
+  "detail": "张三 场景2离开藏宝阁，场景4又在原地互动，中间无到达",
+  "refs": [
+   "12-14",
+   "17-17"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "张三在场景2离开藏宝阁后，在场景4再次出现，但这是合理的，因为张三作为调查者，有理由再次进入藏宝阁继续调查，且中间没有明确表示他没有回到藏宝阁。|12-14、17-17"
+ },
+ {
+  "family": "C",
+  "chapter": 20,
+  "detail": "key_count: 「2把」(speculation) ↔ 「1把」(dialogue)",
+  "refs": [
+   "5-5",
+   "29-29"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "真",
+  "reason": "两处证据之间存在关于钥匙数量的自相矛盾，一处说两把钥匙，另一处说另一把钥匙的事，且没有解释钥匙数量的变化|5-5, 29-29"
+ },
+ {
+  "family": "C",
+  "chapter": 20,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三+王五」(dialogue)",
+  "refs": [
+   "21-21",
+   "22-22"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "候选中的不同人物守夜的推测不构成叙述层的矛盾，属于人物间的不同信息来源|21-21, 22-22"
+ },
+ {
+  "family": "C",
+  "chapter": 20,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三+王五」(dialogue)",
+  "refs": [
+   "8-8",
+   "22-22"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "候选中的不同人物守夜的推测不构成叙述层的矛盾，属于人物间的不同信息来源|8-8, 22-22"
+ },
+ {
+  "family": "A",
+  "chapter": 20,
+  "detail": "李四 在场景1（阁楼）首次在场，此前无到达叙述",
+  "refs": [
+   "2-5"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "李四并未在场景中实际出现，只是作为王五自言自语中的对象提及，不构成实际在场|依据行号区间2-5"
+ },
+ {
+  "family": "A",
+  "chapter": 20,
+  "detail": "赵六 在场景1（阁楼）首次在场，此前无到达叙述",
+  "refs": [
+   "2-5"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "赵六并未在场景中实际出现，只是作为王五自言自语中的对象提及，不构成实际在场|依据行号区间2-5"
+ },
+ {
+  "family": "C",
+  "chapter": 21,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "9-9",
+   "14-14"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "这是张三的个人疑虑和回忆，并不构成作者层面的自相矛盾|依据行号区间9-9,14-14"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "key_count: 「1把」(narrator) ↔ 「2把」(speculation)",
+  "refs": [
+   "1-1",
+   "2-2"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "两处说法可以同真，一处是守阁人的检查结果，另一处是王五的推测|1-2"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「王五」(narrator) ↔ 「张三」(dialogue)",
+  "refs": [
+   "1-1",
+   "16-16"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "张三的对话是询问王五，不是自相矛盾的叙述|1-16"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「王五」(narrator) ↔ 「张三」(speculation)",
+  "refs": [
+   "1-1",
+   "25-25"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测是基于王五的叙述，不是自相矛盾的叙述|1-25"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「王五」(narrator) ↔ 「张三」(speculation)",
+  "refs": [
+   "1-1",
+   "35-35"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测是基于王五的叙述，不是自相矛盾的叙述|1-35"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「王五」(narrator) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "1-1",
+   "8-8"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "张三和赵六的推测是基于守阁人的叙述，不是自相矛盾的叙述|1-8"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「张三」(dialogue) ↔ 「王五」(dialogue)",
+  "refs": [
+   "16-16",
+   "17-17"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "张三和王五的对话是询问和回答的关系，不是自相矛盾的叙述|16-17"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「张三」(dialogue) ↔ 「王五」(dialogue)",
+  "refs": [
+   "16-16",
+   "22-22"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "张三和王五的对话是询问和回答的关系，不是自相矛盾的叙述|16-22"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「张三」(dialogue) ↔ 「王五」(dialogue)",
+  "refs": [
+   "16-16",
+   "24-24"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "张三和王五的对话是询问和回答的关系，不是自相矛盾的叙述|16-24"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "17-17",
+   "25-25"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测是基于王五的回答，不是自相矛盾的叙述|17-25"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "17-17",
+   "35-35"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测是基于王五的回答，不是自相矛盾的叙述|17-35"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "22-22",
+   "25-25"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测是基于王五的回答，不是自相矛盾的叙述|22-25"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "22-22",
+   "35-35"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测是基于王五的回答，不是自相矛盾的叙述|22-35"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "24-24",
+   "25-25"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测是基于王五的回答，不是自相矛盾的叙述|24-25"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "24-24",
+   "35-35"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测是基于王五的回答，不是自相矛盾的叙述|24-35"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(dialogue)",
+  "refs": [
+   "5-5",
+   "16-16"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "张三和王五的对话是询问和回答的关系，不是自相矛盾的叙述|5-16"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "5-5",
+   "25-25"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测是基于王五的回答，不是自相矛盾的叙述|5-25"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「王五」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "5-5",
+   "35-35"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测是基于王五的回答，不是自相矛盾的叙述|5-35"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「王五」(dialogue) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "5-5",
+   "8-8"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三和赵六的推测是基于王五的回答，不是自相矛盾的叙述|5-8"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(dialogue)",
+  "refs": [
+   "8-8",
+   "16-16"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的对话是询问王五，不是自相矛盾的叙述|8-16"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「王五」(dialogue)",
+  "refs": [
+   "8-8",
+   "17-17"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三和赵六的推测是基于王五的回答，不是自相矛盾的叙述|8-17"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「王五」(dialogue)",
+  "refs": [
+   "8-8",
+   "22-22"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三和赵六的推测是基于王五的回答，不是自相矛盾的叙述|8-22"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「王五」(dialogue)",
+  "refs": [
+   "8-8",
+   "24-24"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三和赵六的推测是基于王五的回答，不是自相矛盾的叙述|8-24"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+  "refs": [
+   "8-8",
+   "25-25"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三和赵六的推测是基于王五的回答，不是自相矛盾的叙述|8-25"
+ },
+ {
+  "family": "C",
+  "chapter": 22,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三」(speculation)",
+  "refs": [
+   "8-8",
+   "35-35"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三和赵六的推测是基于王五的回答，不是自相矛盾的叙述|8-35"
+ },
+ {
+  "family": "C",
+  "chapter": 23,
+  "detail": "key_count: 「1把」(dialogue) ↔ 「2把」(speculation)",
+  "refs": [
+   "3-3",
+   "24-24"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "人物的推测与对话内容对立，属于侦探文悬念设计|依据行号区间3-3, 24-24"
+ },
+ {
+  "family": "C",
+  "chapter": 23,
+  "detail": "key_count: 「1把」(speculation) ↔ 「2把」(speculation)",
+  "refs": [
+   "4-4",
+   "24-24"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "人物的推测与推测对立，属于侦探文悬念设计|依据行号区间4-4, 24-24"
+ },
+ {
+  "family": "C",
+  "chapter": 23,
+  "detail": "night_watch: 「王五+赵六」(dialogue) ↔ 「李四+王五+赵六」(speculation)",
+  "refs": [
+   "1-1",
+   "24-24"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "人物的推测与对话内容对立，属于侦探文悬念设计|依据行号区间1-1, 24-24"
+ },
+ {
+  "family": "C",
+  "chapter": 23,
+  "detail": "night_watch: 「王五+赵六」(dialogue) ↔ 「李四+王五+赵六」(dialogue)",
+  "refs": [
+   "1-1",
+   "28-28"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "真",
+  "reason": "对话中关于守夜人员的描述存在自相矛盾|依据行号区间1-1, 28-28"
+ },
+ {
+  "family": "C",
+  "chapter": 25,
+  "detail": "key_count: 「2把」(dialogue) ↔ 「1把」(dialogue)",
+  "refs": [
+   "31-31",
+   "32-32"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "真",
+  "reason": "行31中张三提到钥匙共有两把，而行32中王五只提到另一把钥匙在宗主那里，未提及第二把钥匙的存在|31-32"
+ },
+ {
+  "family": "C",
+  "chapter": 25,
+  "detail": "night_watch: 「王五+赵六」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "13-13",
+   "21-21"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与王五的对话内容不构成矛盾，因为张三的推测是基于自己的观察和怀疑，而王五的对话是提供事实信息|13-21"
+ },
+ {
+  "family": "C",
+  "chapter": 25,
+  "detail": "night_watch: 「王五+赵六」(dialogue) ↔ 「张三+王五」(speculation)",
+  "refs": [
+   "13-13",
+   "24-24"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三和王五的对话与王五的解释不构成矛盾，因为张三的推测是基于谨慎考虑，而王五的对话是提供事实信息|13-24"
+ },
+ {
+  "family": "C",
+  "chapter": 25,
+  "detail": "night_watch: 「王五+赵六」(dialogue) ↔ 「张三+王五」(speculation)",
+  "refs": [
+   "13-13",
+   "25-25"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三和王五的对话与王五的解释不构成矛盾，因为张三的推测是基于谨慎考虑，而王五的对话是提供事实信息|13-25"
+ },
+ {
+  "family": "C",
+  "chapter": 25,
+  "detail": "night_watch: 「张三」(speculation) ↔ 「张三+王五」(speculation)",
+  "refs": [
+   "21-21",
+   "24-24"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与张三和王五的对话不构成矛盾，因为张三的推测是基于自己的观察和怀疑，而张三和王五的对话是讨论如何处理这些观察|21-24"
+ },
+ {
+  "family": "C",
+  "chapter": 25,
+  "detail": "night_watch: 「张三」(speculation) ↔ 「张三+王五」(speculation)",
+  "refs": [
+   "21-21",
+   "25-25"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与张三和王五的对话不构成矛盾，因为张三的推测是基于自己的观察和怀疑，而张三和王五的对话是讨论如何处理这些观察|21-25"
+ },
+ {
+  "family": "A",
+  "chapter": 25,
+  "detail": "张三 在场景2（藏宝阁）首次在场，此前无到达叙述",
+  "refs": [
+   "4-26"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "张三在场景2的首次在场是章节内容的一部分，没有明确要求前文必须有到达叙述，且符合侦探文常见的情节推进方式|4-26"
+ },
+ {
+  "family": "A",
+  "chapter": 25,
+  "detail": "赵六 在场景2（藏宝阁）首次在场，此前无到达叙述",
+  "refs": [
+   "4-26"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "赵六并未实际在场，仅作为对话中的提及对象，不涉及实际到达叙述|4-26"
+ },
+ {
+  "family": "B",
+  "chapter": 25,
+  "detail": "张三 场景2离开藏宝阁，场景4又在原地互动，中间无到达",
+  "refs": [
+   "4-26",
+   "31-32"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "张三在场景4的再次出现是情节发展的需要，中间未明确要求必须有到达叙述，且符合侦探文常见的情节推进方式|4-26、31-32"
+ },
+ {
+  "family": "B",
+  "chapter": 25,
+  "detail": "王五 场景2离开藏宝阁，场景4又在原地互动，中间无到达",
+  "refs": [
+   "4-26",
+   "31-32"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "王五在场景4的再次出现是情节发展的需要，中间未明确要求必须有到达叙述，且符合侦探文常见的情节推进方式|4-26、31-32"
+ },
+ {
+  "family": "B",
+  "chapter": 26,
+  "detail": "赵六 场景0离开藏宝阁，场景2又在原地互动，中间无到达",
+  "refs": [
+   "1-26",
+   "30-35"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "虽然赵六在场景中离开后又出现在原地，但文本中并未明确表示赵六在离开藏宝阁后没有到达其他地方，且在场景中赵六的出现是合理的剧情发展，不构成自相矛盾|1-26、30-35"
+ },
+ {
+  "family": "C",
+  "chapter": 27,
+  "detail": "night_watch: 「王五」(narrator) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "1-1",
+   "22-22"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "张三和赵六的推测并不影响王五对藏宝阁的了解程度，属于不同人物的推测，不构成作者层面的矛盾|1-1, 22-22"
+ },
+ {
+  "family": "C",
+  "chapter": 27,
+  "detail": "night_watch: 「王五」(speculation) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "3-3",
+   "22-22"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "王五的警觉和张三对赵六行为的推测属于不同人物的观察和推测，不构成作者层面的矛盾|3-3, 22-22"
+ },
+ {
+  "family": "A",
+  "chapter": 27,
+  "detail": "李四 在场景1（山下）首次在场，此前无到达叙述",
+  "refs": [
+   "15-16"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "李四的首次在场是通过对话提及，并非实际在场互动，因此不违反进场无源的规则|依据行号区间15-16"
+ },
+ {
+  "family": "A",
+  "chapter": 27,
+  "detail": "赵六 在场景2（藏宝阁）首次在场，此前无到达叙述",
+  "refs": [
+   "17-29"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "赵六的首次在场是通过张三的回忆提及，并非实际在场互动，因此不违反进场无源的规则|依据行号区间22-29"
+ },
+ {
+  "family": "C",
+  "chapter": 28,
+  "detail": "key_custody: 「王五+宗主」(dialogue) ↔ 「张三+王五+赵六」(dialogue)",
+  "refs": [
+   "15-15",
+   "23-23"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "两处对话分别描述了钥匙的保管情况，一处是宗主和王五，另一处是王五、张三和赵六，但并不矛盾，因为可以理解为不同时间段或不同钥匙的保管情况|15-23"
+ },
+ {
+  "family": "C",
+  "chapter": 28,
+  "detail": "night_watch: 「王五+赵六」(speculation) ↔ 「张三+王五」(narrator)",
+  "refs": [
+   "2-2",
+   "27-27"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "两处叙述都是基于不同人物的推测，王五推测赵六可能有问题，而张三根据记录推测王五有过值守，这属于人物推测的差异，不是作者层面的矛盾|2-27"
+ },
+ {
+  "family": "C",
+  "chapter": 28,
+  "detail": "night_watch: 「王五+赵六」(speculation) ↔ 「张三+王五」(narrator)",
+  "refs": [
+   "3-3",
+   "27-27"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "两处叙述都是基于不同人物的推测，一处是王五对赵六的怀疑，另一处是张三根据记录推测王五有过值守，这属于人物推测的差异，不是作者层面的矛盾|3-27"
+ },
+ {
+  "family": "C",
+  "chapter": 28,
+  "detail": "night_watch: 「王五+赵六」(speculation) ↔ 「张三+王五」(narrator)",
+  "refs": [
+   "6-6",
+   "27-27"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "两处叙述都是基于不同人物的推测，一处是王五对赵六的怀疑，另一处是张三根据记录推测王五有过值守，这属于人物推测的差异，不是作者层面的矛盾|6-27"
+ },
+ {
+  "family": "C",
+  "chapter": 29,
+  "detail": "key_custody: 「李四+王五」(speculation) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "5-5",
+   "9-9"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "这是不同人物的推测，不代表作者层面的自相矛盾|依据行号区间5-9"
+ },
+ {
+  "family": "C",
+  "chapter": 30,
+  "detail": "key_count: 「2把」(dialogue) ↔ 「1把」(dialogue)",
+  "refs": [
+   "17-17",
+   "29-29"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "真",
+  "reason": "行17中提到藏宝阁的钥匙一共有两把，而行29中却说藏宝阁的钥匙失踪了一把，前后说法矛盾，无法同真|17-29"
+ },
+ {
+  "family": "B",
+  "chapter": 30,
+  "detail": "张三 场景0离开藏宝阁，场景2又在原地互动，中间无到达",
+  "refs": [
+   "1-30",
+   "33-42"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "张三在场景0和场景2的互动并不构成空间上的矛盾，因为中间可能有到达的叙述，只是未详细描述|1-30、33-42"
+ },
+ {
+  "family": "C",
+  "chapter": 31,
+  "detail": "night_watch: 「张三+王五」(speculation) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "2-2",
+   "23-23"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "两条候选均为人物的猜测，而非叙述层的直接陈述，因此不构成作者层面的自相矛盾。|2-2, 23-23"
+ },
+ {
+  "family": "A",
+  "chapter": 31,
+  "detail": "赵六 在场景2（藏宝阁）首次在场，此前无到达叙述",
+  "refs": [
+   "7-24"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "赵六并未在文本中实际出现，而是通过王五的叙述提及，因此不构成自相矛盾|依据行号区间7-24"
+ },
+ {
+  "family": "B",
+  "chapter": 31,
+  "detail": "王五 场景0离开藏宝阁，场景2又在原地互动，中间无到达",
+  "refs": [
+   "1-4",
+   "7-24"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "王五在场景0离开藏宝阁后，场景2中再次出现，但这是通过叙述转换实现的，不违反叙事逻辑，且符合侦探文常见的情节推进方式|依据行号区间1-4、7-24"
+ },
+ {
+  "family": "C",
+  "chapter": 32,
+  "detail": "key_count: 「1把」(narrator) ↔ 「2把」(dialogue)",
+  "refs": [
+   "2-2",
+   "10-10"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "真",
+  "reason": "行2中明确提到钥匙只有一把，而行10中王五提到钥匙有两把，存在自相矛盾|2-10"
+ },
+ {
+  "family": "C",
+  "chapter": 32,
+  "detail": "key_count: 「1把」(narrator) ↔ 「2把」(dialogue)",
+  "refs": [
+   "2-2",
+   "13-13"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "真",
+  "reason": "行2中明确提到钥匙只有一把，而行13中张三提到钥匙有两把，存在自相矛盾|2-13"
+ },
+ {
+  "family": "C",
+  "chapter": 32,
+  "detail": "key_count: 「1把」(speculation) ↔ 「2把」(dialogue)",
+  "refs": [
+   "8-8",
+   "10-10"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "王五的推测与对话中的说法不一致，但这是人物的推测，不是作者层面的矛盾|8-10"
+ },
+ {
+  "family": "C",
+  "chapter": 32,
+  "detail": "key_count: 「1把」(speculation) ↔ 「2把」(dialogue)",
+  "refs": [
+   "8-8",
+   "13-13"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "王五的推测与对话中的说法不一致，但这是人物的推测，不是作者层面的矛盾|8-13"
+ },
+ {
+  "family": "C",
+  "chapter": 32,
+  "detail": "night_watch: 「王五」(narrator) ↔ 「张三+王五」(speculation)",
+  "refs": [
+   "2-2",
+   "18-18"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "这是张三对王五的推测，不是作者层面的矛盾|2-18"
+ },
+ {
+  "family": "C",
+  "chapter": 32,
+  "detail": "night_watch: 「王五」(narrator) ↔ 「王五+赵六」(speculation)",
+  "refs": [
+   "2-2",
+   "3-3"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "这是王五的推测，不是作者层面的矛盾|2-3"
+ },
+ {
+  "family": "C",
+  "chapter": 32,
+  "detail": "night_watch: 「王五」(narrator) ↔ 「张三+王五」(speculation)",
+  "refs": [
+   "2-2",
+   "7-7"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "这是张三对王五的推测，不是作者层面的矛盾|2-7"
+ },
+ {
+  "family": "C",
+  "chapter": 32,
+  "detail": "night_watch: 「王五+赵六」(speculation) ↔ 「张三+王五」(speculation)",
+  "refs": [
+   "3-3",
+   "18-18"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "这是王五和张三各自的推测，不是作者层面的矛盾|3-18"
+ },
+ {
+  "family": "C",
+  "chapter": 32,
+  "detail": "night_watch: 「王五+赵六」(speculation) ↔ 「王五」(dialogue)",
+  "refs": [
+   "3-3",
+   "5-5"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "这是王五的推测，不是作者层面的矛盾|3-5"
+ },
+ {
+  "family": "C",
+  "chapter": 32,
+  "detail": "night_watch: 「王五+赵六」(speculation) ↔ 「张三+王五」(speculation)",
+  "refs": [
+   "3-3",
+   "7-7"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "这是王五和张三各自的推测，不是作者层面的矛盾|3-7"
+ },
+ {
+  "family": "C",
+  "chapter": 32,
+  "detail": "night_watch: 「王五」(dialogue) ↔ 「张三+王五」(speculation)",
+  "refs": [
+   "5-5",
+   "18-18"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "这是张三对王五的推测，不是作者层面的矛盾|5-18"
+ },
+ {
+  "family": "C",
+  "chapter": 32,
+  "detail": "night_watch: 「王五」(dialogue) ↔ 「张三+王五」(speculation)",
+  "refs": [
+   "5-5",
+   "7-7"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "这是张三对王五的推测，不是作者层面的矛盾|5-7"
+ },
+ {
+  "family": "C",
+  "chapter": 33,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「张三+王五+赵六」(speculation)",
+  "refs": [
+   "12-12",
+   "13-13"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "不同人物的推测不一致，不是叙述层的矛盾|12-13"
+ },
+ {
+  "family": "C",
+  "chapter": 33,
+  "detail": "night_watch: 「张三+王五+赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "13-13",
+   "18-18"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "不同人物的推测不一致，不是叙述层的矛盾|13-18"
+ },
+ {
+  "family": "C",
+  "chapter": 33,
+  "detail": "night_watch: 「张三+王五+赵六」(speculation) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "13-13",
+   "19-19"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "不同人物的推测与对话内容不一致，不是叙述层的矛盾|13-19"
+ },
+ {
+  "family": "C",
+  "chapter": 33,
+  "detail": "night_watch: 「张三+王五+赵六」(speculation) ↔ 「张三+赵六」(narrator)",
+  "refs": [
+   "13-13",
+   "23-23"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "叙述层对同一事实的推测不一致，但没有直接矛盾的叙述|13-23"
+ },
+ {
+  "family": "C",
+  "chapter": 33,
+  "detail": "night_watch: 「王五+赵六」(narrator) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "2-2",
+   "12-12"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "不同人物对同一事实的推测不一致，不是叙述层的矛盾|2-12"
+ },
+ {
+  "family": "C",
+  "chapter": 33,
+  "detail": "night_watch: 「王五+赵六」(narrator) ↔ 「张三+王五+赵六」(speculation)",
+  "refs": [
+   "2-2",
+   "13-13"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "不同人物的推测不一致，不是叙述层的矛盾|2-13"
+ },
+ {
+  "family": "C",
+  "chapter": 33,
+  "detail": "night_watch: 「王五+赵六」(narrator) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "2-2",
+   "18-18"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "不同人物对同一事实的推测不一致，不是叙述层的矛盾|2-18"
+ },
+ {
+  "family": "C",
+  "chapter": 33,
+  "detail": "night_watch: 「王五+赵六」(narrator) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "2-2",
+   "19-19"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "人物对话与叙述层的推测不一致，不是叙述层的矛盾|2-19"
+ },
+ {
+  "family": "C",
+  "chapter": 33,
+  "detail": "night_watch: 「王五+赵六」(narrator) ↔ 「张三+赵六」(narrator)",
+  "refs": [
+   "2-2",
+   "23-23"
+  ],
+  "pair": "narrator_narrator",
+  "verdict": "误报",
+  "reason": "不同叙述层对同一事实的推测不一致，但没有直接矛盾的叙述|2-23"
+ },
+ {
+  "family": "A",
+  "chapter": 33,
+  "detail": "李四 在场景1（山下）首次在场，此前无到达叙述",
+  "refs": [
+   "9-10"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "尽管李四在场景1首次在场互动前无到达叙述，但该段落为章首段落的开场在场，符合误报标准|依据行号区间9-10"
+ },
+ {
+  "family": "A",
+  "chapter": 33,
+  "detail": "张三 在场景2（藏宝阁）首次在场，此前无到达叙述",
+  "refs": [
+   "11-31"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "张三在场景2首次在场互动前无到达叙述，但该段落为章首段落的开场在场，符合误报标准|依据行号区间11-31"
+ },
+ {
+  "family": "C",
+  "chapter": 34,
+  "detail": "night_watch: 「张三+李四+赵六」(speculation) ↔ 「张三+王五」(speculation)",
+  "refs": [
+   "13-13",
+   "16-16"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与王五的推测可以同时存在，因为都是基于各自的观察和理解|13-16"
+ },
+ {
+  "family": "C",
+  "chapter": 34,
+  "detail": "night_watch: 「张三+李四+赵六」(speculation) ↔ 「张三+王五+赵六」(dialogue)",
+  "refs": [
+   "13-13",
+   "27-27"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话中的信息可以同时存在，因为对话中并未否定张三的推测，只是提供了新的视角|13-27"
+ },
+ {
+  "family": "C",
+  "chapter": 34,
+  "detail": "night_watch: 「张三+李四+赵六」(speculation) ↔ 「李四+赵六」(dialogue)",
+  "refs": [
+   "13-13",
+   "28-28"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与李四的对话可以同时存在，因为李四的反驳只是对指纹证据的质疑，并未否定张三的推测|13-28"
+ },
+ {
+  "family": "C",
+  "chapter": 34,
+  "detail": "night_watch: 「张三+王五」(speculation) ↔ 「张三+王五+赵六」(dialogue)",
+  "refs": [
+   "16-16",
+   "27-27"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话中的信息可以同时存在，因为对话中并未否定张三的推测，只是提供了新的视角|16-27"
+ },
+ {
+  "family": "C",
+  "chapter": 34,
+  "detail": "night_watch: 「张三+王五」(speculation) ↔ 「李四+赵六」(dialogue)",
+  "refs": [
+   "16-16",
+   "28-28"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与李四的对话可以同时存在，因为李四的反驳只是对指纹证据的质疑，并未否定张三的推测|16-28"
+ },
+ {
+  "family": "C",
+  "chapter": 34,
+  "detail": "night_watch: 「张三+王五+赵六」(dialogue) ↔ 「李四+赵六」(dialogue)",
+  "refs": [
+   "27-27",
+   "28-28"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "对话中的信息可以同时存在，因为两者都是对赵六守阁这一事实的不同解读|27-28"
+ },
+ {
+  "family": "C",
+  "chapter": 35,
+  "detail": "key_custody: 「赵六」(dialogue) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "10-10",
+   "11-11"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与赵六的叙述并不矛盾，只是推测钥匙的去向。|10-11"
+ },
+ {
+  "family": "C",
+  "chapter": 35,
+  "detail": "key_custody: 「赵六」(dialogue) ↔ 「张三」(dialogue)",
+  "refs": [
+   "10-10",
+   "16-16"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "张三的对话是基于赵六的叙述进行推测，不构成矛盾。|10-16"
+ },
+ {
+  "family": "C",
+  "chapter": 35,
+  "detail": "key_custody: 「张三+赵六」(speculation) ↔ 「张三」(dialogue)",
+  "refs": [
+   "11-11",
+   "16-16"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与对话内容一致，只是推测钥匙的去向。|11-16"
+ },
+ {
+  "family": "C",
+  "chapter": 35,
+  "detail": "key_custody: 「赵六+门主」(speculation) ↔ 「赵六」(dialogue)",
+  "refs": [
+   "3-3",
+   "10-10"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "赵六的叙述与他的推测并不矛盾，只是说明了钥匙的持有情况。|3-10"
+ },
+ {
+  "family": "C",
+  "chapter": 35,
+  "detail": "key_custody: 「赵六+门主」(speculation) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "3-3",
+   "11-11"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "两处推测并不矛盾，都在讨论钥匙的持有情况。|3-11"
+ },
+ {
+  "family": "C",
+  "chapter": 35,
+  "detail": "key_custody: 「赵六+门主」(speculation) ↔ 「张三」(dialogue)",
+  "refs": [
+   "3-3",
+   "16-16"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "赵六的推测与张三的对话内容并不矛盾，只是推测钥匙的去向。|3-16"
+ },
+ {
+  "family": "C",
+  "chapter": 35,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三」(dialogue)",
+  "refs": [
+   "3-3",
+   "9-9"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "赵六的推测与张三的对话内容并不矛盾，只是询问守夜时的异常情况。|3-9"
+ },
+ {
+  "family": "C",
+  "chapter": 35,
+  "detail": "night_watch: 「张三」(dialogue) ↔ 「赵六」(dialogue)",
+  "refs": [
+   "9-9",
+   "10-10"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "张三的询问与赵六的回答并不矛盾，赵六回答了守夜时的情况。|9-10"
+ },
+ {
+  "family": "C",
+  "chapter": 36,
+  "detail": "key_count: 「1把」(narrator) ↔ 「2把」(speculation)",
+  "refs": [
+   "12-12",
+   "15-15"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "真",
+  "reason": "行12提到只有张三取出了一把备用钥匙，而行15却说藏宝阁的钥匙仅存两把，其中一把由大弟子李四保管，另一把由张三掌管，存在自相矛盾。|12-15"
+ },
+ {
+  "family": "C",
+  "chapter": 36,
+  "detail": "key_count: 「2把」(speculation) ↔ 「1把」(narrator)",
+  "refs": [
+   "2-2",
+   "12-12"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "真",
+  "reason": "行2提到藏宝阁的钥匙有两把，一把在掌门手中，另一把由本人保管，而行12却说张三从怀中取出的是藏宝阁的备用钥匙，只有几个核心弟子才配得上，存在自相矛盾。|2-12"
+ },
+ {
+  "family": "C",
+  "chapter": 36,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「李四+赵六」(dialogue)",
+  "refs": [
+   "1-1",
+   "18-18"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "行1中赵六回忆自己值夜，而行18中赵六提到昨晚守夜时查出了印泥的来源，这属于不同时间点的叙述，不构成矛盾。|1-18"
+ },
+ {
+  "family": "A",
+  "chapter": 36,
+  "detail": "李四 在场景1（山下）首次在场，此前无到达叙述",
+  "refs": [
+   "4-4"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "尽管李四在场景1（山下）首次在场互动前无到达叙述，但这是通过赵六的回忆和叙述来传达的，属于侦探文中常见的悬念设计，不构成作者层面的自相矛盾。|4-4"
+ },
+ {
+  "family": "C",
+  "chapter": 38,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三」(dialogue)",
+  "refs": [
+   "1-1",
+   "28-28"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "赵六的内心活动与张三的对话内容不构成矛盾，属于不同视角的描述|1-1, 28-28"
+ },
+ {
+  "family": "C",
+  "chapter": 38,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "1-1",
+   "34-34"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "赵六的内心活动与张三和赵六的对话内容不构成矛盾，属于不同视角的描述|1-1, 34-34"
+ },
+ {
+  "family": "C",
+  "chapter": 38,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "1-1",
+   "9-9"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "赵六的内心活动与张三的对话内容不构成矛盾，属于不同视角的描述|1-1, 9-9"
+ },
+ {
+  "family": "C",
+  "chapter": 38,
+  "detail": "night_watch: 「张三」(dialogue) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "28-28",
+   "34-34"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "张三的安慰话语与张三和赵六的对话内容不构成矛盾，属于不同视角的描述|28-28, 34-34"
+ },
+ {
+  "family": "C",
+  "chapter": 38,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「张三」(dialogue)",
+  "refs": [
+   "9-9",
+   "28-28"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "张三和赵六的对话内容与张三的安慰话语不构成矛盾，属于不同情境下的对话|9-9, 28-28"
+ },
+ {
+  "family": "C",
+  "chapter": 39,
+  "detail": "night_watch: 「张三」(narrator) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "12-12",
+   "13-13"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "张三的叙述只是他在思考和推测，赵六的回答并不构成自相矛盾，而是对张三的试探性提问进行回应|12-13"
+ },
+ {
+  "family": "C",
+  "chapter": 39,
+  "detail": "night_watch: 「张三」(narrator) ↔ 「赵六」(dialogue)",
+  "refs": [
+   "12-12",
+   "19-19"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "赵六的回答是对张三的提问进行澄清，不存在自相矛盾的情况，只是人物之间的对话交流|12-19"
+ },
+ {
+  "family": "C",
+  "chapter": 39,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(dialogue)",
+  "refs": [
+   "13-13",
+   "19-19"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "张三的提问和赵六的回答是对话的一部分，赵六的回答是对张三提问的直接回应，不存在自相矛盾|13-19"
+ },
+ {
+  "family": "C",
+  "chapter": 39,
+  "detail": "night_watch: 「张三+赵六」(narrator) ↔ 「张三」(narrator)",
+  "refs": [
+   "6-6",
+   "12-12"
+  ],
+  "pair": "narrator_narrator",
+  "verdict": "误报",
+  "reason": "两处叙述分别描述了张三和赵六的行为，没有在同一事实上的不同说法，不存在自相矛盾|6-12"
+ },
+ {
+  "family": "C",
+  "chapter": 39,
+  "detail": "night_watch: 「张三+赵六」(narrator) ↔ 「赵六」(dialogue)",
+  "refs": [
+   "6-6",
+   "19-19"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "张三和赵六的行为描述与赵六的回答之间没有自相矛盾，赵六的回答是对张三提问的回应|6-19"
+ },
+ {
+  "family": "C",
+  "chapter": 40,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "1-1",
+   "14-14"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "两处均为推测，且不构成自相矛盾|1-1, 14-14"
+ },
+ {
+  "family": "C",
+  "chapter": 40,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "1-1",
+   "22-22"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "对话与推测不构成自相矛盾，属于人物间的询问与回应|1-1, 22-22"
+ },
+ {
+  "family": "C",
+  "chapter": 40,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(dialogue)",
+  "refs": [
+   "14-14",
+   "19-19"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "两处均为人物对话，且不构成自相矛盾，属于对同一问题的不同回答|14-14, 19-19"
+ },
+ {
+  "family": "C",
+  "chapter": 40,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(dialogue)",
+  "refs": [
+   "14-14",
+   "23-23"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "两处均为人物对话，且不构成自相矛盾，属于对同一问题的不同回答|14-14, 23-23"
+ },
+ {
+  "family": "C",
+  "chapter": 40,
+  "detail": "night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "19-19",
+   "22-22"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "两处均为人物对话，且不构成自相矛盾，属于对同一问题的不同回答|19-19, 22-22"
+ },
+ {
+  "family": "C",
+  "chapter": 40,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(dialogue)",
+  "refs": [
+   "22-22",
+   "23-23"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "两处均为人物对话，且不构成自相矛盾，属于对同一问题的不同回答|22-22, 23-23"
+ },
+ {
+  "family": "B",
+  "chapter": 40,
+  "detail": "赵六 场景0离开藏宝阁，场景2又在原地互动，中间无到达",
+  "refs": [
+   "1-6",
+   "9-20"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "赵六在场景间的位置变化是由于叙事视角的转换，而非实际的离开与到达，且文本中并未明确表示赵六离开了藏宝阁（证据行1-6、9-20）"
+ },
+ {
+  "family": "B",
+  "chapter": 40,
+  "detail": "张三 场景2离开藏宝阁，场景3又在原地互动，中间无到达",
+  "refs": [
+   "9-20",
+   "21-28"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "张三在场景间的位置变化同样是因为叙事视角的转换，文本中并未明确表示张三离开了藏宝阁（证据行9-20、21-28）"
+ },
+ {
+  "family": "C",
+  "chapter": 41,
+  "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "2-2",
+   "10-10"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "虽然叙述中赵六在两个场景中都出现了，但第一个场景是赵六的回忆，第二个场景是现实中的互动，两者并不矛盾，回忆中的赵六和现实中的赵六可以同时存在。|2-2, 10-10"
+ },
+ {
+  "family": "C",
+  "chapter": 42,
+  "detail": "key_custody: 「赵六+长老」(speculation) ↔ 「赵六」(dialogue)",
+  "refs": [
+   "3-3",
+   "25-25"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "两处证据都表明赵六保管一把钥匙，长老保管另一把，没有矛盾|3-3, 25-25"
+ },
+ {
+  "family": "C",
+  "chapter": 42,
+  "detail": "key_custody: 「赵六+长老」(narrator) ↔ 「赵六」(dialogue)",
+  "refs": [
+   "4-4",
+   "25-25"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "两处证据都表明赵六保管一把钥匙，长老保管另一把，没有矛盾|4-4, 25-25"
+ },
+ {
+  "family": "C",
+  "chapter": 42,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三」(speculation)",
+  "refs": [
+   "10-10",
+   "17-17"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "两处证据分别来自赵六和张三的推测，推测不一致不代表矛盾|10-10, 17-17"
+ },
+ {
+  "family": "C",
+  "chapter": 42,
+  "detail": "night_watch: 「张三」(speculation) ↔ 「赵六」(speculation)",
+  "refs": [
+   "17-17",
+   "23-23"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "两处证据分别来自张三和赵六的推测，推测不一致不代表矛盾|17-17, 23-23"
+ },
+ {
+  "family": "C",
+  "chapter": 42,
+  "detail": "night_watch: 「赵六」(dialogue) ↔ 「张三」(speculation)",
+  "refs": [
+   "2-2",
+   "17-17"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "两处证据分别来自赵六的直接叙述和张三的推测，推测不一致不代表矛盾|2-2, 17-17"
+ },
+ {
+  "family": "C",
+  "chapter": 42,
+  "detail": "night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(narrator)",
+  "refs": [
+   "2-2",
+   "7-7"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "两处证据分别来自赵六的直接叙述和旁白叙述，旁白叙述中赵六是守阁人，没有矛盾|2-2, 7-7"
+ },
+ {
+  "family": "C",
+  "chapter": 42,
+  "detail": "night_watch: 「张三+赵六」(narrator) ↔ 「赵六」(speculation)",
+  "refs": [
+   "7-7",
+   "10-10"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "两处证据分别来自旁白叙述和赵六的推测，推测不一致不代表矛盾|7-7, 10-10"
+ },
+ {
+  "family": "C",
+  "chapter": 42,
+  "detail": "night_watch: 「张三+赵六」(narrator) ↔ 「张三」(speculation)",
+  "refs": [
+   "7-7",
+   "17-17"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "两处证据分别来自旁白叙述和张三的推测，推测不一致不代表矛盾|7-7, 17-17"
+ },
+ {
+  "family": "C",
+  "chapter": 42,
+  "detail": "night_watch: 「张三+赵六」(narrator) ↔ 「赵六」(speculation)",
+  "refs": [
+   "7-7",
+   "23-23"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "两处证据分别来自旁白叙述和赵六的推测，推测不一致不代表矛盾|7-7, 23-23"
+ },
+ {
+  "family": "A",
+  "chapter": 42,
+  "detail": "李四 在场景1（山下）首次在场，此前无到达叙述",
+  "refs": [
+   "14-15"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "尽管李四首次在场互动前无到达叙述，但该场景为对话中提及，属于人物说辞，不构成作者层面的自相矛盾|依据行号区间14-15"
+ },
+ {
+  "family": "A",
+  "chapter": 42,
+  "detail": "王五 在场景2（藏宝阁）首次在场，此前无到达叙述",
+  "refs": [
+   "16-21"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "王五首次在场互动前无到达叙述，但该信息为对话中提及，属于人物说辞，不构成作者层面的自相矛盾|依据行号区间16-21"
+ },
+ {
+  "family": "C",
+  "chapter": 43,
+  "detail": "key_count: 「1把」(speculation) ↔ 「2把」(dialogue)",
+  "refs": [
+   "2-2",
+   "13-13"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "赵六的回忆和张三的疑虑分别代表了不同人物的观点，不构成作者层面的自相矛盾|2-2, 13-13"
+ },
+ {
+  "family": "C",
+  "chapter": 43,
+  "detail": "key_count: 「1把」(speculation) ↔ 「2把」(speculation)",
+  "refs": [
+   "2-2",
+   "24-24"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "赵六的回忆和张三的疑虑分别代表了不同人物的观点，不构成作者层面的自相矛盾|2-2, 24-24"
+ },
+ {
+  "family": "C",
+  "chapter": 44,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(speculation)",
+  "refs": [
+   "23-23",
+   "24-24"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "人物的回忆和描述不构成作者层面的自相矛盾，属于叙述中的信息提供，没有出现对同一事实两种不可同真的说法。|23-24"
+ },
+ {
+  "family": "C",
+  "chapter": 45,
+  "detail": "key_count: 「1把」(narrator) ↔ 「2把」(speculation)",
+  "refs": [
+   "4-4",
+   "31-31"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "两处证据描述的是不同场景下的钥匙数量，一处是实际操作中的钥匙，另一处是张三心中的推测，可以同真|4-4, 31-31"
+ },
+ {
+  "family": "C",
+  "chapter": 45,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "1-1",
+   "10-10"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "两处证据都是人物的推测，不同人物各自的推测互不一致不是矛盾|1-1, 10-10"
+ },
+ {
+  "family": "C",
+  "chapter": 45,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(narrator)",
+  "refs": [
+   "1-1",
+   "17-17"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "一处是张三的推测，另一处是叙述层对实际场景的描述，可以同真|1-1, 17-17"
+ },
+ {
+  "family": "C",
+  "chapter": 45,
+  "detail": "night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "6-6",
+   "10-10"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "一处是赵六的对话，另一处是张三的推测，人物说辞与推测对立不是矛盾|6-6, 10-10"
+ },
+ {
+  "family": "C",
+  "chapter": 45,
+  "detail": "night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(narrator)",
+  "refs": [
+   "6-6",
+   "17-17"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "一处是赵六的对话，另一处是叙述层对实际场景的描述，可以同真|6-6, 17-17"
+ },
+ {
+  "family": "A",
+  "chapter": 46,
+  "detail": "李四 在场景2（藏宝阁）首次在场，此前无到达叙述",
+  "refs": [
+   "14-22"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "李四并未在场景2中实际在场互动，而是通过赵六的叙述提及，属于人物说辞，不是作者层面的自相矛盾|依据行号区间14-22"
+ },
+ {
+  "family": "A",
+  "chapter": 46,
+  "detail": "王五 在场景2（藏宝阁）首次在场，此前无到达叙述",
+  "refs": [
+   "14-22"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "王五并未在场景2中实际在场互动，而是通过张三的回忆提及，属于人物说辞，不是作者层面的自相矛盾|依据行号区间14-22"
+ },
+ {
+  "family": "B",
+  "chapter": 46,
+  "detail": "赵六 场景0离开藏宝阁，场景2又在原地互动，中间无到达",
+  "refs": [
+   "1-9",
+   "14-22"
+  ],
+  "pair": "",
+  "verdict": "真",
+  "reason": "赵六在场景0离开藏宝阁后，场景2又在藏宝阁内与张三互动，中间无到达叙述，存在自相矛盾|依据行号区间1-9、14-22"
+ },
+ {
+  "family": "B",
+  "chapter": 46,
+  "detail": "张三 场景2离开藏宝阁，场景4又在原地互动，中间无到达",
+  "refs": [
+   "14-22",
+   "27-28"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "张三在场景2并未离开藏宝阁，场景4仍在藏宝阁内整理证据，不存在离开后无到达又回原地的情况|依据行号区间14-22、27-28"
+ },
+ {
+  "family": "C",
+  "chapter": 47,
+  "detail": "night_watch: 「赵六」(narrator) ↔ 「张三」(dialogue)",
+  "refs": [
+   "1-1",
+   "11-11"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "张三的提问并不与赵六的叙述相矛盾，只是询问信息。|1-11"
+ },
+ {
+  "family": "C",
+  "chapter": 47,
+  "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "1-1",
+   "24-24"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "张三的行动与赵六的叙述不冲突，只是后续行动。|1-24"
+ },
+ {
+  "family": "C",
+  "chapter": 47,
+  "detail": "night_watch: 「张三」(dialogue) ↔ 「赵六」(dialogue)",
+  "refs": [
+   "11-11",
+   "12-12"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "赵六的回答与张三的提问一致，没有矛盾。|11-12"
+ },
+ {
+  "family": "C",
+  "chapter": 47,
+  "detail": "night_watch: 「张三」(dialogue) ↔ 「赵六」(dialogue)",
+  "refs": [
+   "11-11",
+   "14-14"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "赵六的回答与张三的提问一致，没有矛盾。|11-14"
+ },
+ {
+  "family": "C",
+  "chapter": 47,
+  "detail": "night_watch: 「张三」(dialogue) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "11-11",
+   "24-24"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "张三的行动与赵六的叙述不冲突，只是后续行动。|11-24"
+ },
+ {
+  "family": "C",
+  "chapter": 47,
+  "detail": "night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "12-12",
+   "24-24"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "赵六的回答与张三的行动不冲突，只是后续行动。|12-24"
+ },
+ {
+  "family": "C",
+  "chapter": 47,
+  "detail": "night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "14-14",
+   "24-24"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "赵六的回答与张三的行动不冲突，只是后续行动。|14-24"
+ },
+ {
+  "family": "C",
+  "chapter": 47,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三」(dialogue)",
+  "refs": [
+   "3-3",
+   "11-11"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "赵六的内心活动与张三的提问不矛盾，只是背景信息。|3-11"
+ },
+ {
+  "family": "C",
+  "chapter": 47,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "3-3",
+   "24-24"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "赵六的内心活动与张三的行动不矛盾，只是背景信息。|3-24"
+ },
+ {
+  "family": "C",
+  "chapter": 48,
+  "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "1-1",
+   "23-23"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "张三的提问与赵六的独白并不矛盾，只是对话的一部分。|1-1, 23-23"
+ },
+ {
+  "family": "C",
+  "chapter": 48,
+  "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "1-1",
+   "25-25"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与赵六的独白不构成矛盾，只是对话推进的一部分。|1-1, 25-25"
+ },
+ {
+  "family": "C",
+  "chapter": 48,
+  "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "1-1",
+   "27-27"
+  ],
+  "pair": "dialogue_narrator",
+  "verdict": "误报",
+  "reason": "张三的提问与赵六的独白不构成矛盾，只是对话的一部分。|1-1, 27-27"
+ },
+ {
+  "family": "C",
+  "chapter": 48,
+  "detail": "night_watch: 「赵六」(narrator) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "1-1",
+   "7-7"
+  ],
+  "pair": "narrator_speculation",
+  "verdict": "误报",
+  "reason": "张三的推测与赵六的独白不构成矛盾，只是对话推进的一部分。|1-1, 7-7"
+ },
+ {
+  "family": "C",
+  "chapter": 48,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(dialogue)",
+  "refs": [
+   "23-23",
+   "24-24"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "赵六的回答与张三的提问不构成矛盾，只是对话的一部分。|23-23, 24-24"
+ },
+ {
+  "family": "C",
+  "chapter": 48,
+  "detail": "night_watch: 「张三+赵六」(dialogue) ↔ 「赵六」(speculation)",
+  "refs": [
+   "23-23",
+   "26-26"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "赵六的回答与张三的提问不构成矛盾，只是对话的一部分。|23-23, 26-26"
+ },
+ {
+  "family": "C",
+  "chapter": 48,
+  "detail": "night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "24-24",
+   "25-25"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "赵六的回答与张三的推测不构成矛盾，只是对话推进的一部分。|24-24, 25-25"
+ },
+ {
+  "family": "C",
+  "chapter": 48,
+  "detail": "night_watch: 「赵六」(dialogue) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "24-24",
+   "27-27"
+  ],
+  "pair": "dialogue_dialogue",
+  "verdict": "误报",
+  "reason": "赵六的回答与张三的提问不构成矛盾，只是对话的一部分。|24-24, 27-27"
+ },
+ {
+  "family": "C",
+  "chapter": 48,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(speculation)",
+  "refs": [
+   "25-25",
+   "26-26"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "赵六的推测与张三的推测不构成矛盾，只是对话推进的一部分。|25-25, 26-26"
+ },
+ {
+  "family": "C",
+  "chapter": 48,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "26-26",
+   "27-27"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "赵六的推测与张三的提问不构成矛盾，只是对话的一部分。|26-26, 27-27"
+ },
+ {
+  "family": "C",
+  "chapter": 48,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "4-4",
+   "23-23"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "赵六的推测与张三的提问不构成矛盾，只是对话的一部分。|4-4, 23-23"
+ },
+ {
+  "family": "C",
+  "chapter": 48,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "4-4",
+   "25-25"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "赵六的推测与张三的推测不构成矛盾，只是对话推进的一部分。|4-4, 25-25"
+ },
+ {
+  "family": "C",
+  "chapter": 48,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "4-4",
+   "27-27"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "赵六的推测与张三的提问不构成矛盾，只是对话的一部分。|4-4, 27-27"
+ },
+ {
+  "family": "C",
+  "chapter": 48,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "4-4",
+   "7-7"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "赵六的推测与张三的推测不构成矛盾，只是对话推进的一部分。|4-4, 7-7"
+ },
+ {
+  "family": "C",
+  "chapter": 48,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(dialogue)",
+  "refs": [
+   "7-7",
+   "24-24"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "赵六的回答与张三的推测不构成矛盾，只是对话的一部分。|7-7, 24-24"
+ },
+ {
+  "family": "C",
+  "chapter": 48,
+  "detail": "night_watch: 「张三+赵六」(speculation) ↔ 「赵六」(speculation)",
+  "refs": [
+   "7-7",
+   "26-26"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "赵六的推测与张三的推测不构成矛盾，只是对话推进的一部分。|7-7, 26-26"
+ },
+ {
+  "family": "C",
+  "chapter": 49,
+  "detail": "key_count: 「1把」(speculation) ↔ 「2把」(speculation)",
+  "refs": [
+   "1-1",
+   "27-27"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "虽然赵六手中只有一把钥匙，但张三提到藏宝阁有两把钥匙，这并不矛盾，因为张三的叙述表明其中一把由阁主保管，另一把由夜值弟子保存，而赵六作为夜值弟子持有其中一把钥匙。|1-1, 27-27"
+ },
+ {
+  "family": "C",
+  "chapter": 50,
+  "detail": "key_custody: 「赵六+高层」(speculation) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "3-3",
+   "23-23"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "两处均为推测，且推测内容并不矛盾，只是不同人物对藏宝阁钥匙保管方式的不同理解|3-3, 23-23"
+ },
+ {
+  "family": "C",
+  "chapter": 50,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "1-1",
+   "10-10"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "赵六独自守夜与张三询问赵六守夜情况并不矛盾，只是不同时间点的描述|1-1, 10-10"
+ },
+ {
+  "family": "C",
+  "chapter": 50,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "1-1",
+   "12-12"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "赵六独自守夜与张三推测赵六守夜情况并不矛盾，只是不同时间点的描述|1-1, 12-12"
+ },
+ {
+  "family": "C",
+  "chapter": 50,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(dialogue)",
+  "refs": [
+   "5-5",
+   "10-10"
+  ],
+  "pair": "dialogue_speculation",
+  "verdict": "误报",
+  "reason": "赵六独自守夜与张三询问赵六守夜情况并不矛盾，只是不同时间点的描述|5-5, 10-10"
+ },
+ {
+  "family": "C",
+  "chapter": 50,
+  "detail": "night_watch: 「赵六」(speculation) ↔ 「张三+赵六」(speculation)",
+  "refs": [
+   "5-5",
+   "12-12"
+  ],
+  "pair": "speculation_speculation",
+  "verdict": "误报",
+  "reason": "赵六独自守夜与张三推测赵六守夜情况并不矛盾，只是不同时间点的描述|5-5, 12-12"
+ },
+ {
+  "family": "A",
+  "chapter": 50,
+  "detail": "李四 在场景3（山下）首次在场，此前无到达叙述",
+  "refs": [
+   "25-29"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "人物说辞与物证/旁白陈述对立，属于侦探文悬念设计，不是作者层面的矛盾|李四的在场是通过对话提及，属于人物推测而非实际在场互动|25-29"
+ },
+ {
+  "family": "B",
+  "chapter": 50,
+  "detail": "赵六 场景0离开藏宝阁，场景2又在原地互动，中间无到达",
+  "refs": [
+   "1-20",
+   "22-24"
+  ],
+  "pair": "",
+  "verdict": "误报",
+  "reason": "赵六在不同场景中的在场是叙述视角转换的结果，不是实际空间移动，且场景间存在合理的时间和情节间隔|1-20、22-24"
+ }
+]
